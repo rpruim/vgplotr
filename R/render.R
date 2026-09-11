@@ -12,8 +12,7 @@
 #' `publish()` naming (see `design/api-brainstorming.qmd`) is still an open
 #' design question; `vg_render()` is a placeholder name.
 #'
-#' @param spec A `vgspec` with a single plot (no `vconcat()`/`hconcat()`,
-#'   which aren't implemented yet).
+#' @param spec A `vgspec` with a layout of plots/vconcat()/hconcat().
 #' @param width,height Widget sizing, in CSS units (e.g. `"100%"`) or pixels.
 #' @param elementId Optional DOM element ID for the widget.
 #' @export
@@ -21,8 +20,10 @@ vg_render <- function(spec, width = NULL, height = NULL, elementId = NULL) {
   payload <- as_spec_payload(spec)
   x <- list(spec = payload$spec, tables = payload$tables)
   # Data frames in `tables` need to become arrays of row objects in JSON
-  # (what the JS side expects), not htmlwidgets' columnar default.
-  attr(x, "TOJSON_ARGS") <- list(dataframe = "rows")
+  # (what the JS side expects), not htmlwidgets' columnar default. NULL
+  # needs to become JSON `null` (jsonlite's default turns it into `{}`),
+  # which matters for zero-argument transforms like vg_count()/vg_rank().
+  attr(x, "TOJSON_ARGS") <- list(dataframe = "rows", null = "null")
 
   htmlwidgets::createWidget(
     name = "vgplotr",

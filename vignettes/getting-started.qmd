@@ -129,6 +129,44 @@ spec3
 vg_render(spec3)
 ```
 
+## Transform functions: binning and aggregation
+
+Encoding formulas can use transform functions like `vg_bin()`/`vg_count()`
+(mirroring mosaic's own `bin`/`count` transforms) instead of a bare column
+reference. This reproduces the histogram pattern from mosaic's
+`flights-200k.yaml` example (`x: {bin: delay}`, `y: {count:}`), binning a
+continuous variable and counting rows per bin -- all computed by DuckDB, not
+in R.
+
+```{r}
+delays <- data.frame(delay = rgamma(2000, shape = 2, rate = 0.3) - 5)
+
+spec4 <-
+  vg_create() |>
+  vg_data(name = "delays", data = delays) |>
+  vg_rect_y(
+    data_from = "delays",
+    x = ~ vg_bin(delay, step = 2),
+    y = ~ vg_count(),
+    fill = "steelblue",
+    inset = 0.5
+  ) |>
+  vg_attributes(width = 680, height = 200)
+
+spec4
+```
+
+Every transform function also works called directly, without a formula --
+useful for inspecting what it builds:
+
+```{r}
+vg_bin(delay, step = 2)
+```
+
+```{r}
+vg_render(spec4)
+```
+
 ## What happens when two marks disagree
 
 Plot-level attributes (like `width`) accumulate silently across marks when

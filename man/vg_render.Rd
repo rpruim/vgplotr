@@ -7,8 +7,7 @@
 vg_render(spec, width = NULL, height = NULL, elementId = NULL)
 }
 \arguments{
-\item{spec}{A \code{vgspec} with a single plot (no \code{vconcat()}/\code{hconcat()},
-which aren't implemented yet).}
+\item{spec}{A \code{vgspec} with a layout of plots/vconcat()/hconcat().}
 
 \item{width, height}{Widget sizing, in CSS units (e.g. \code{"100\%"}) or pixels.}
 

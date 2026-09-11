@@ -100,21 +100,50 @@ serialize_value <- function(x) {
     serialize_formula(x)
   } else if (is_vg_param(x)) {
     format(x)
+  } else if (is_vg_transform(x)) {
+    serialize_transform(x)
   } else {
     x
   }
 }
 
 serialize_formula <- function(f) {
-  rhs <- f[[2]]
-  if (is.symbol(rhs)) {
-    as.character(rhs)
+  serialize_expr(f[[2]], environment(f))
+}
+
+# Recognizes a mapping formula's RHS: a bare column-name symbol, a literal,
+# or a call to one of the vg_transform_specs functions (vg_bin(), vg_count(),
+# ...) -- recognized here purely syntactically, via match.call() against the
+# real function's formals, without ever evaluating the call itself (which
+# would fail, since e.g. `delay` in `~vg_bin(delay)` isn't a bound variable).
+serialize_expr <- function(expr, env) {
+  if (is.symbol(expr)) {
+    as.character(expr)
+  } else if (is.call(expr)) {
+    fn_name <- as.character(expr[[1]])
+    spec <- vg_transform_specs[[fn_name]]
+    if (is.null(spec)) {
+      stop(
+        "Only simple column references (e.g. ~Date) or known transform ",
+        "functions (", paste(names(vg_transform_specs), collapse = "(), "), "()) ",
+        "can be used inside a mapping formula. Got a call to `", fn_name, "()`.",
+        call. = FALSE
+      )
+    }
+    fn <- get(fn_name, mode = "function")
+    mc <- match.call(definition = fn, call = expr)
+    serialize_transform(build_vg_transform(spec, mc, env))
+  } else if (is.numeric(expr) || is.character(expr) || is.logical(expr) || is.null(expr)) {
+    expr
   } else {
-    stop(
-      "Only simple column-reference formulas (e.g. ~Date) can be serialized ",
-      "so far -- transform functions like bin()/count() aren't implemented ",
-      "yet. Got: ", deparse(f),
-      call. = FALSE
-    )
+    stop("Can't use this inside a mapping formula: ", deparse(expr), call. = FALSE)
   }
+}
+
+serialize_transform <- function(x) {
+  field_json <- lapply(x$field, serialize_expr, env = x$env)
+  value <- if (length(field_json) == 0) NULL
+    else if (length(field_json) == 1) field_json[[1]]
+    else field_json
+  c(named_list(x$key, value), x$options)
 }
