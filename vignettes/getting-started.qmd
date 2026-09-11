@@ -38,7 +38,8 @@ aapl <- data.frame(
   Close = c(296.24, 313.05, 254.29, 293.80, 317.94, 364.80)
 )
 
-spec <- vg_create() |>
+spec <-
+  vg_create() |>
   vg_data(name = "aapl", data = aapl) |>
   vg_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
   vg_attributes(width = 680, height = 200)
@@ -68,7 +69,8 @@ without needing to wrap them in `vg_plot()` explicitly. Interactors
 ```{r}
 walk <- data.frame(t = 1:100, v = cumsum(rnorm(100)))
 
-spec2 <- vg_create() |>
+spec2 <-
+  vg_create() |>
   vg_data(name = "walk", data = walk) |>
   vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
   vg_interval_x(as = param(brush)) |>
@@ -100,14 +102,23 @@ Passing separate mark/interactor chains to `vg_vconcat()` stacks them as
 on one shared plot.
 
 ```{r}
-overview <- vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
+overview <-
+  vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
   vg_interval_x(as = param(brush)) |>
   vg_plot(width = 680, height = 150)
 
-detail <- vg_area_y(data_from = "walk", filter_by = param(brush), x = ~t, y = ~v, fill = "steelblue") |>
+detail <-
+  vg_area_y(
+    data_from = "walk",
+    filter_by = param(brush),
+    x = ~t,
+    y = ~v,
+    fill = "steelblue"
+  ) |>
   vg_plot(width = 680, height = 150)
 
-spec3 <- vg_create() |>
+spec3 <-
+  vg_create() |>
   vg_data(name = "walk", data = walk) |>
   vg_vconcat(overview, detail)
 
@@ -125,7 +136,8 @@ they agree, but a genuine conflict is not resolved silently -- the later
 value wins, and you get a warning so it doesn't happen by surprise.
 
 ```{r}
-plot3 <- vg_dot(x = ~a, y = ~b, width = 400) |>
+plot3 <-
+  vg_dot(x = ~a, y = ~b, width = 400) |>
   vg_line_y(x = ~a, y = ~c, width = 680)
 
 plot3$attrs$width
