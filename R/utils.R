@@ -54,3 +54,10 @@ merge_attrs <- function(old, new, context = NULL) {
 deparse_short <- function(x) {
   paste(deparse(x, width.cutoff = 30L), collapse = " ")
 }
+
+# list(x = value) without deparsing/quasiquotation, for a dynamic name.
+named_list <- function(name, value) {
+  out <- list(value)
+  names(out) <- name
+  out
+}

@@ -13,12 +13,8 @@
 #' @noRd
 as_spec_payload <- function(spec) {
   stopifnot(is_vgspec(spec))
-  if (!is_vg_plot_fragment(spec$layout)) {
-    stop(
-      "Only specs with a single plot (no vconcat()/hconcat(), which aren't ",
-      "implemented yet) can be rendered so far.",
-      call. = FALSE
-    )
+  if (is.null(spec$layout)) {
+    stop("This vgspec doesn't have any plots yet.", call. = FALSE)
   }
 
   tables <- list()
@@ -36,16 +32,33 @@ as_spec_payload <- function(spec) {
   if (length(spec$meta)) out$meta <- spec$meta
   if (length(data_entries)) out$data <- data_entries
   if (length(spec$params)) out$params <- spec$params
-  out$plot <- lapply(spec$layout$items, serialize_item)
-
-  # With only a single plot (no vconcat()/hconcat() yet), plotDefaults and
-  # this plot's own attributes both just apply to that one plot; merge them
-  # (the plot's own attrs win) rather than emitting a separate, currently
-  # meaningless `plotDefaults` key. This will need revisiting once multiple
-  # plots (and therefore a real plotDefaults use case) exist.
-  out <- utils::modifyList(out, utils::modifyList(spec$plot_defaults, spec$layout$attrs))
+  out <- c(out, serialize_layout(spec$layout, spec$plot_defaults))
 
   list(spec = out, tables = tables)
+}
+
+# Recursively serializes a layout node -- a single plot, a vconcat/hconcat
+# of further layout nodes, or a spacer. `plot_defaults` (mosaic-spec's
+# `plotDefaults`) is threaded down and merged into *every* plot found in the
+# tree (the plot's own attributes win on conflict) rather than emitted as a
+# separate top-level `plotDefaults` key -- simpler, and equivalent as long as
+# plotDefaults is only ever used for static attributes like width/height.
+serialize_layout <- function(layout, plot_defaults = list()) {
+  if (is_vg_plot_fragment(layout)) {
+    attrs <- utils::modifyList(plot_defaults, layout$attrs)
+    c(list(plot = lapply(layout$items, serialize_item)), attrs)
+  } else if (is_vg_concat(layout)) {
+    children <- lapply(layout$children, serialize_layout, plot_defaults = plot_defaults)
+    named_list(layout$direction, children)
+  } else if (is_vg_space(layout)) {
+    named_list(layout$direction, layout$amount)
+  } else {
+    stop(
+      "Don't know how to serialize a layout of class ",
+      paste(class(layout), collapse = "/"), ".",
+      call. = FALSE
+    )
+  }
 }
 
 serialize_item <- function(item) {

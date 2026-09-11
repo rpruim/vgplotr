@@ -63,9 +63,7 @@ vg_render(spec)
 
 Piping one mark straight into another appends it to the *same* plot,
 without needing to wrap them in `vg_plot()` explicitly. Interactors
-(`vg_interval_x()` here) can be piped in the same way. This mirrors the
-`overview-detail.yaml` example from mosaic's own docs -- drag a selection on
-the chart below to see the brush interactor in action.
+(`vg_interval_x()` here) can be piped in the same way.
 
 ```{r}
 walk <- data.frame(t = 1:100, v = cumsum(rnorm(100)))
@@ -88,6 +86,36 @@ param(brush)
 
 ```{r}
 vg_render(spec2)
+```
+
+## Two linked plots with vg_vconcat()
+
+This reproduces mosaic's own `overview-detail.yaml` example: an "overview"
+plot with a brush interactor, stacked above a "detail" plot that's filtered
+by whatever the brush selects. Drag a selection on the top plot to see the
+bottom one update.
+
+Passing separate mark/interactor chains to `vg_vconcat()` stacks them as
+*separate* plots -- unlike piping them together, which (as above) keeps them
+on one shared plot.
+
+```{r}
+overview <- vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
+  vg_interval_x(as = param(brush)) |>
+  vg_plot(width = 680, height = 150)
+
+detail <- vg_area_y(data_from = "walk", filter_by = param(brush), x = ~t, y = ~v, fill = "steelblue") |>
+  vg_plot(width = 680, height = 150)
+
+spec3 <- vg_create() |>
+  vg_data(name = "walk", data = walk) |>
+  vg_vconcat(overview, detail)
+
+spec3
+```
+
+```{r}
+vg_render(spec3)
 ```
 
 ## What happens when two marks disagree
@@ -114,5 +142,5 @@ vg_interactor(NULL, "slider", as = param(scale))
 
 ```{r}
 #| error: true
-vg_dot(x = ~a, y = ~b) |> vg_vconcat(vg_dot(x = ~a, y = ~c))
+vg_legend(spec3, type = "color", for_plot = "focus")
 ```

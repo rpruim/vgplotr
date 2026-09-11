@@ -39,10 +39,14 @@ test_that("as_spec_payload() rejects formulas with more than a bare column name"
   expect_error(as_spec_payload(spec), "transform functions")
 })
 
-test_that("as_spec_payload() refuses non-single-plot layouts", {
+test_that("as_spec_payload() rejects a spec with no plots yet", {
+  expect_error(as_spec_payload(vg_create()), "doesn't have any plots yet")
+})
+
+test_that("as_spec_payload() rejects an unrecognized layout object", {
   spec <- vg_create()
-  spec$layout <- "not a plot fragment"
-  expect_error(as_spec_payload(spec), "no vconcat")
+  spec$layout <- "not a valid layout"
+  expect_error(as_spec_payload(spec), "Don't know how to serialize a layout")
 })
 
 test_that("vg_data() with `data` stores a data frame, otherwise stores file/query options", {
