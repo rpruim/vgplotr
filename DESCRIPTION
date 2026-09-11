@@ -1,0 +1,21 @@
+Package: vgplotr
+Title: An R Interface to Mosaic vgplot
+Version: 0.0.0.9000
+Authors@R:
+    person("Randall", "Pruim", , "rpruim@gmail.com", role = c("aut", "cre"))
+Description: Provides a piped, tidyverse-flavored R API for building
+    declarative 'mosaic' vgplot specifications
+    (<https://github.com/uwdata/mosaic>), which can be rendered as
+    interactive, database-backed graphics in HTML output (e.g. via
+    'htmlwidgets' and Quarto/R Markdown documents).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Imports:
+    rlang
+Suggests:
+    quarto,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: quarto
+Config/roxygen2/version: 8.0.0

@@ -1,0 +1,95 @@
+---
+title: "Getting Started with vgplotr"
+vignette: >
+  %\VignetteIndexEntry{Getting Started with vgplotr}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+format: html
+engine: knitr
+---
+
+```{r setup}
+library(vgplotr)
+```
+
+vgplotr is still very early: there is no JSON/YAML export and no rendering
+to an actual mosaic plot yet. What *does* exist is the R-side object model
+-- `vg_create()`, `vg_plot()`, marks, interactors, and `param()` -- so this
+vignette just builds a few specs and prints their internal structure, as a
+sanity check that the pieces fit together the way they're supposed to.
+
+## A single mark
+
+This reproduces the "simple one-layer plot" example from
+`design/api-brainstorming.qmd`: one data source, one mark, and a couple of
+plot-wide defaults.
+
+```{r}
+spec <- vg_create() |>
+  vg_data(
+    name = "aapl",
+    file = "data/stocks.parquet",
+    where = "Symbol = 'AAPL'"
+  ) |>
+  vg_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
+  vg_attributes(width = 680, height = 200)
+
+spec
+```
+
+`vg_attributes()` sets top-level `plotDefaults` (`spec$plot_defaults`), not
+this plot's own attributes:
+
+```{r}
+spec$plot_defaults
+spec$layout$attrs
+```
+
+## Combining marks and an interactor on one plot
+
+Piping one mark straight into another appends it to the *same* plot,
+without needing to wrap them in `vg_plot()` explicitly. Interactors
+(`vg_interval_x()` here) can be piped in the same way. This mirrors the
+`overview-detail.yaml` example from mosaic's own docs.
+
+```{r}
+plot1 <- vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
+  vg_interval_x(as = param(brush)) |>
+  vg_plot(width = 680, height = 200, name = "focus")
+
+plot1
+```
+
+`param(brush)` is how a `$brush`-style reference to a Param/Selection gets
+written in valid R -- `$brush` alone isn't parseable:
+
+```{r}
+param(brush)
+```
+
+## What happens when two marks disagree
+
+Plot-level attributes (like `width`) accumulate silently across marks when
+they agree, but a genuine conflict is not resolved silently -- the later
+value wins, and you get a warning so it doesn't happen by surprise.
+
+```{r}
+plot2 <- vg_dot(x = ~a, y = ~b, width = 400) |>
+  vg_line_y(x = ~a, y = ~c, width = 680)
+
+plot2$attrs$width
+```
+
+## Not yet implemented
+
+A couple of things you might reach for that aren't built yet:
+
+```{r}
+#| error: true
+vg_interactor(NULL, "slider", as = param(scale))
+```
+
+```{r}
+#| error: true
+vg_dot(x = ~a, y = ~b) |> vg_vconcat(vg_dot(x = ~a, y = ~c))
+```

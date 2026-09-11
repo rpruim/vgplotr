@@ -4,3 +4,10 @@
 .Ruserdata
 
 design/
+
+# Quarto render artifacts
+/.quarto/
+vignettes/*.html
+vignettes/*_files/
+vignettes/*_cache/
+vignettes/.quarto/
