@@ -4,6 +4,10 @@
 \alias{vg_interactor}
 \alias{vg_interval_x}
 \alias{vg_toggle}
+\alias{vg_slider}
+\alias{vg_menu}
+\alias{vg_search}
+\alias{vg_table}
 \title{Add an interactor (a selection like \code{intervalX}, or a standalone input
 widget like a slider) to a spec}
 \usage{
@@ -12,15 +16,26 @@ vg_interactor(spec = NULL, type, ...)
 vg_interval_x(spec = NULL, ...)
 
 vg_toggle(spec = NULL, ...)
+
+vg_slider(...)
+
+vg_menu(...)
+
+vg_search(...)
+
+vg_table(...)
 }
 \arguments{
-\item{spec}{A plot fragment or \code{vgspec} to add this interactor to, or
-\code{NULL} to start a new plot with just this interactor.}
+\item{spec}{For a plot-embedded interactor: a plot fragment or \code{vgspec}
+to add it to, or \code{NULL} to start a new plot with just this interactor.
+Layout-level inputs (e.g. \code{"slider"}) don't take a \code{spec} -- combine
+them with plots using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}} instead.}
 
 \item{type}{The interactor/input type, e.g. \code{"intervalX"}, \code{"slider"}.}
 
-\item{...}{Options for the interactor (e.g. \code{as = param(brush)}), and/or,
-for plot-embedded interactors, plot-level attributes.}
+\item{...}{Options for the interactor/input (e.g. \code{as = param(brush)},
+\code{label = "Bias"}, \code{min = 0}, \code{max = 100}), and/or, for plot-embedded
+interactors, plot-level attributes.}
 }
 \description{
 Mosaic distinguishes interactors that live inside a plot, alongside its

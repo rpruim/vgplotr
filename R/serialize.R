@@ -52,6 +52,10 @@ serialize_layout <- function(layout, plot_defaults = list()) {
     named_list(layout$direction, children)
   } else if (is_vg_space(layout)) {
     named_list(layout$direction, layout$amount)
+  } else if (inherits(layout, "vg_input")) {
+    serialize_input(layout)
+  } else if (inherits(layout, "vg_legend")) {
+    serialize_legend(layout)
   } else {
     stop(
       "Don't know how to serialize a layout of class ",
@@ -66,6 +70,8 @@ serialize_item <- function(item) {
     c(list(mark = item$mark), serialize_encodings(item$encodings))
   } else if (inherits(item, "vg_interactor")) {
     c(list(select = item$type), serialize_encodings(item$options))
+  } else if (inherits(item, "vg_legend")) {
+    serialize_legend(item)
   } else {
     stop(
       "Don't know how to serialize an object of class ",
@@ -73,6 +79,16 @@ serialize_item <- function(item) {
       call. = FALSE
     )
   }
+}
+
+serialize_input <- function(x) {
+  c(list(input = x$type), serialize_encodings(x$options))
+}
+
+serialize_legend <- function(x) {
+  out <- c(list(legend = x$type), serialize_encodings(x$options))
+  if (!is.null(x$for_plot)) out[["for"]] <- x$for_plot
+  out
 }
 
 # Pulls data_from/filter_by out of a mark's encodings into the nested

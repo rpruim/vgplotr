@@ -44,6 +44,8 @@ test_that("a plot with a mark and a plot-embedded interactor (cf. overview-detai
   expect_equal(spec$plot_defaults, list(width = 680, height = 200))
 })
 
-test_that("layout-level inputs (e.g. sliders) aren't implemented yet, and say so clearly", {
-  expect_error(vg_interactor(NULL, "slider", as = param(point)), "isn't implemented yet")
+test_that("layout-level inputs (e.g. sliders) build a standalone vg_input", {
+  input <- vg_interactor(NULL, "slider", as = param(point))
+  expect_s3_class(input, "vg_input")
+  expect_equal(input$type, "slider")
 })

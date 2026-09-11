@@ -167,6 +167,52 @@ vg_bin(delay, step = 2)
 vg_render(spec4)
 ```
 
+## Legends
+
+A legend embedded in a plot (piped in alongside its marks, with no
+`for_plot`) picks up a matching encoding automatically -- here, the color
+mapping from `fill = ~group`.
+
+```{r}
+pts <- data.frame(
+  x = rnorm(90),
+  y = rnorm(90),
+  group = sample(c("a", "b", "c"), 90, replace = TRUE)
+)
+
+spec5 <-
+  vg_create() |>
+  vg_data(name = "pts", data = pts) |>
+  vg_dot(data_from = "pts", x = ~x, y = ~y, fill = ~group) |>
+  vg_legend(type = "color") |>
+  vg_plot(width = 400, height = 300)
+
+vg_render(spec5)
+```
+
+## Layout-level inputs
+
+Inputs like `vg_menu()`/`vg_slider()` are standalone widgets that live
+alongside plots in the layout (via `vg_vconcat()`/`vg_hconcat()`), rather
+than inside one. Here a menu drives a `param()` that's used directly as a
+mark's `fill` (no formula needed, since it isn't a column mapping) -- pick a
+different color and the plot updates.
+
+```{r}
+color_picker <- vg_menu(label = "Color", as = param(dotcolor), options = c("steelblue", "orange", "firebrick"))
+
+colored_plot <-
+  vg_dot(data_from = "pts", x = ~x, y = ~y, fill = param(dotcolor)) |>
+  vg_plot(width = 400, height = 300)
+
+spec6 <-
+  vg_create() |>
+  vg_data(name = "pts", data = pts) |>
+  vg_vconcat(color_picker, colored_plot)
+
+vg_render(spec6)
+```
+
 ## What happens when two marks disagree
 
 Plot-level attributes (like `width`) accumulate silently across marks when
@@ -183,14 +229,14 @@ plot3$attrs$width
 
 ## Not yet implemented
 
-A couple of things you might reach for that aren't built yet:
+`sql()`, for encodings that need a raw SQL expression, isn't built yet:
 
 ```{r}
 #| error: true
-vg_interactor(NULL, "slider", as = param(scale))
+sql(v + param(point))
 ```
 
-```{r}
-#| error: true
-vg_legend(spec3, type = "color", for_plot = "focus")
-```
+File- and query-based data sources (`vg_data(name, file = ...)`, as opposed
+to `vg_data(name, data = a_data_frame)`) build without error, but haven't
+actually been confirmed to *render* correctly -- only inline data frames
+have been checked end to end so far.

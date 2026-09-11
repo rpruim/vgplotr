@@ -32,11 +32,14 @@ vg_interactor_placement <- function(type) {
 #' `vg_interactor()` covers both; which kind a given `type` is gets looked up
 #' internally (see `vg_interactor_placement()`).
 #'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or
-#'   `NULL` to start a new plot with just this interactor.
+#' @param spec For a plot-embedded interactor: a plot fragment or `vgspec`
+#'   to add it to, or `NULL` to start a new plot with just this interactor.
+#'   Layout-level inputs (e.g. `"slider"`) don't take a `spec` -- combine
+#'   them with plots using [vg_vconcat()]/[vg_hconcat()] instead.
 #' @param type The interactor/input type, e.g. `"intervalX"`, `"slider"`.
-#' @param ... Options for the interactor (e.g. `as = param(brush)`), and/or,
-#'   for plot-embedded interactors, plot-level attributes.
+#' @param ... Options for the interactor/input (e.g. `as = param(brush)`,
+#'   `label = "Bias"`, `min = 0`, `max = 100`), and/or, for plot-embedded
+#'   interactors, plot-level attributes.
 #' @export
 vg_interactor <- function(spec = NULL, type, ...) {
   placement <- vg_interactor_placement(type)
@@ -52,12 +55,15 @@ vg_interactor <- function(spec = NULL, type, ...) {
     fragment$attrs <- merge_attrs(fragment$attrs, split$plot_attrs, context = paste0("interactor `", type, "`"))
     update_layout(spec, fragment)
   } else {
-    stop(
-      "`", type, "` is a layout-level input, not a plot-embedded interactor. ",
-      "Placing standalone inputs in the layout (alongside plots, via ",
-      "vg_vconcat()/vg_hconcat()) isn't implemented yet.",
-      call. = FALSE
-    )
+    if (!is.null(spec)) {
+      stop(
+        "`", type, "` is a layout-level input; it doesn't take a spec/plot ",
+        "to extend. Combine it with plots using vg_vconcat()/vg_hconcat() ",
+        "instead, e.g. vg_vconcat(vg_", type, "(...), your_plot).",
+        call. = FALSE
+      )
+    }
+    structure(list(type = type, options = list(...)), class = "vg_input")
   }
 }
 
@@ -69,9 +75,35 @@ vg_interval_x <- function(spec = NULL, ...) vg_interactor(spec, "intervalX", ...
 #' @export
 vg_toggle <- function(spec = NULL, ...) vg_interactor(spec, "toggle", ...)
 
+#' @rdname vg_interactor
+#' @export
+vg_slider <- function(...) vg_interactor(NULL, "slider", ...)
+
+#' @rdname vg_interactor
+#' @export
+vg_menu <- function(...) vg_interactor(NULL, "menu", ...)
+
+#' @rdname vg_interactor
+#' @export
+vg_search <- function(...) vg_interactor(NULL, "search", ...)
+
+#' @rdname vg_interactor
+#' @export
+vg_table <- function(...) vg_interactor(NULL, "table", ...)
+
 #' @export
 print.vg_interactor <- function(x, ...) {
   cat("<vg_interactor:", x$type, ">\n")
+  if (length(x$options)) {
+    str_opt <- vapply(x$options, deparse_short, character(1))
+    cat(paste0("  ", names(x$options), " = ", str_opt, collapse = "\n"), "\n")
+  }
+  invisible(x)
+}
+
+#' @export
+print.vg_input <- function(x, ...) {
+  cat("<vg_input:", x$type, ">\n")
   if (length(x$options)) {
     str_opt <- vapply(x$options, deparse_short, character(1))
     cat(paste0("  ", names(x$options), " = ", str_opt, collapse = "\n"), "\n")
