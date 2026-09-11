@@ -43,14 +43,19 @@ vg_meta <- function(spec, ...) {
 }
 
 #' Add a data source to a vgspec
+#'
+#' A data frame passed as `data` is loaded into DuckDB directly (see
+#' [vg_render()]); other arguments (`file =`, `query =`, `where =`, ...)
+#' describe a source for mosaic's own data loading instead.
 #' @param spec A `vgspec`.
 #' @param name The name other parts of the spec use to refer to this data
 #'   (via `data_from =`/`filter_by =` on marks and interactors).
+#' @param data An optional data frame to use as this data source.
 #' @param ... Data source options, e.g. `file =`, `query =`, `where =`.
 #' @export
-vg_data <- function(spec, name, ...) {
+vg_data <- function(spec, name, data = NULL, ...) {
   stopifnot(is_vgspec(spec))
-  spec$data[[name]] <- list(...)
+  spec$data[[name]] <- if (!is.null(data)) list(data = data) else list(...)
   spec
 }
 

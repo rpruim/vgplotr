@@ -12,25 +12,34 @@ engine: knitr
 library(vgplotr)
 ```
 
-vgplotr is still very early: there is no JSON/YAML export and no rendering
-to an actual mosaic plot yet. What *does* exist is the R-side object model
--- `vg_create()`, `vg_plot()`, marks, interactors, and `param()` -- so this
-vignette just builds a few specs and prints their internal structure, as a
-sanity check that the pieces fit together the way they're supposed to.
+vgplotr is still very early, but it can now render a live mosaic vgplot:
+this vignette builds a couple of specs with the R-side object model --
+`vg_create()`, `vg_plot()`, marks, interactors, and `param()` -- prints
+their internal structure as a sanity check, and then renders them with
+`vg_render()`.
+
+**Rendering currently requires an internet connection.** `vg_render()`
+fetches the mosaic JS runtime and a client-side DuckDB (duckdb-wasm) from a
+CDN when the plot is *viewed*, rather than from assets bundled with the
+package. Vendoring those assets for offline/reproducible use is planned but
+not done yet.
 
 ## A single mark
 
 This reproduces the "simple one-layer plot" example from
-`design/api-brainstorming.qmd`: one data source, one mark, and a couple of
-plot-wide defaults.
+`design/api-brainstorming.qmd`, using a small inline data frame in place of
+the fictional `data/stocks.parquet` file from the original example (loading
+data from an external file isn't wired up yet -- only data frames passed
+directly to `vg_data()` render so far).
 
 ```{r}
+aapl <- data.frame(
+  Date = c("2020-01-01", "2020-02-01", "2020-03-01", "2020-04-01", "2020-05-01", "2020-06-01"),
+  Close = c(296.24, 313.05, 254.29, 293.80, 317.94, 364.80)
+)
+
 spec <- vg_create() |>
-  vg_data(
-    name = "aapl",
-    file = "data/stocks.parquet",
-    where = "Symbol = 'AAPL'"
-  ) |>
+  vg_data(name = "aapl", data = aapl) |>
   vg_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
   vg_attributes(width = 680, height = 200)
 
@@ -38,11 +47,16 @@ spec
 ```
 
 `vg_attributes()` sets top-level `plotDefaults` (`spec$plot_defaults`), not
-this plot's own attributes:
+this plot's own attributes -- with only one plot, `vg_render()` merges the
+two, but that will need revisiting once multiple plots exist:
 
 ```{r}
 spec$plot_defaults
 spec$layout$attrs
+```
+
+```{r}
+vg_render(spec)
 ```
 
 ## Combining marks and an interactor on one plot
@@ -50,14 +64,19 @@ spec$layout$attrs
 Piping one mark straight into another appends it to the *same* plot,
 without needing to wrap them in `vg_plot()` explicitly. Interactors
 (`vg_interval_x()` here) can be piped in the same way. This mirrors the
-`overview-detail.yaml` example from mosaic's own docs.
+`overview-detail.yaml` example from mosaic's own docs -- drag a selection on
+the chart below to see the brush interactor in action.
 
 ```{r}
-plot1 <- vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
+walk <- data.frame(t = 1:100, v = cumsum(rnorm(100)))
+
+spec2 <- vg_create() |>
+  vg_data(name = "walk", data = walk) |>
+  vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
   vg_interval_x(as = param(brush)) |>
   vg_plot(width = 680, height = 200, name = "focus")
 
-plot1
+spec2
 ```
 
 `param(brush)` is how a `$brush`-style reference to a Param/Selection gets
@@ -67,6 +86,10 @@ written in valid R -- `$brush` alone isn't parseable:
 param(brush)
 ```
 
+```{r}
+vg_render(spec2)
+```
+
 ## What happens when two marks disagree
 
 Plot-level attributes (like `width`) accumulate silently across marks when
@@ -74,10 +97,10 @@ they agree, but a genuine conflict is not resolved silently -- the later
 value wins, and you get a warning so it doesn't happen by surprise.
 
 ```{r}
-plot2 <- vg_dot(x = ~a, y = ~b, width = 400) |>
+plot3 <- vg_dot(x = ~a, y = ~b, width = 400) |>
   vg_line_y(x = ~a, y = ~c, width = 680)
 
-plot2$attrs$width
+plot3$attrs$width
 ```
 
 ## Not yet implemented

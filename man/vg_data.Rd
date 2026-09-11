@@ -4,7 +4,7 @@
 \alias{vg_data}
 \title{Add a data source to a vgspec}
 \usage{
-vg_data(spec, name, ...)
+vg_data(spec, name, data = NULL, ...)
 }
 \arguments{
 \item{spec}{A \code{vgspec}.}
@@ -12,8 +12,12 @@ vg_data(spec, name, ...)
 \item{name}{The name other parts of the spec use to refer to this data
 (via \verb{data_from =}/\verb{filter_by =} on marks and interactors).}
 
+\item{data}{An optional data frame to use as this data source.}
+
 \item{...}{Data source options, e.g. \verb{file =}, \verb{query =}, \verb{where =}.}
 }
 \description{
-Add a data source to a vgspec
+A data frame passed as \code{data} is loaded into DuckDB directly (see
+\code{\link[=vg_render]{vg_render()}}); other arguments (\verb{file =}, \verb{query =}, \verb{where =}, ...)
+describe a source for mosaic's own data loading instead.
 }
