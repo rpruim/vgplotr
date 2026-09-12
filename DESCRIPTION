@@ -15,7 +15,8 @@ Imports:
     htmltools,
     htmlwidgets,
     jsonlite,
-    rlang
+    rlang,
+    yaml
 Suggests:
     quarto,
     testthat (>= 3.0.0)

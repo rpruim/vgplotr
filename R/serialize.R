@@ -221,3 +221,45 @@ serialize_transform <- function(x) {
     else field_json
   c(named_list(x$key, value), x$options)
 }
+
+# Converts a vgspec or bare layout fragment (a plot fragment, a
+# vconcat()/hconcat(), an hspace()/vspace(), or a standalone legend/input)
+# into mosaic-spec's own portable JSON/YAML shape, as a plain nested list --
+# used by to_json()/to_yaml() (see R/export.R). Unlike as_spec_payload()
+# (vg_render()'s own widget payload), this never rewrites data sources for
+# the render pipeline's benefit: a data frame becomes mosaic-spec's own
+# inline `{data: [...]}` array-of-row-objects form (its documented
+# `DataJSONObjects` shape) instead of being pulled out into a separate
+# `tables` list, and a `file =`/`query =` source is left exactly as given
+# rather than having its content read and embedded -- there's no widget to
+# embed it into, and the point is a spec a human could write by hand or
+# feed to mosaic's own tools. `plotDefaults` is also emitted as its own
+# top-level key here (mosaic-spec's real `SpecHead.plotDefaults`), rather
+# than merged into every plot the way as_spec_payload() simplifies it.
+spec_to_list <- function(spec) {
+  if (is_vgspec(spec)) {
+    if (is.null(spec$layout)) {
+      stop("This vgspec doesn't have any plots yet.", call. = FALSE)
+    }
+    out <- list()
+    if (length(spec$meta)) out$meta <- spec$meta
+    if (length(spec$data)) out$data <- lapply(spec$data, serialize_data_source)
+    if (length(spec$params)) out$params <- spec$params
+    if (length(spec$plot_defaults)) out$plotDefaults <- spec$plot_defaults
+    c(out, serialize_layout(spec$layout))
+  } else {
+    serialize_layout(spec)
+  }
+}
+
+serialize_data_source <- function(src) {
+  if (!is.null(src$data) && is.data.frame(src$data)) {
+    utils::modifyList(src, list(data = df_to_rows(src$data)))
+  } else {
+    src
+  }
+}
+
+df_to_rows <- function(df) {
+  lapply(seq_len(nrow(df)), function(i) as.list(df[i, , drop = FALSE]))
+}
