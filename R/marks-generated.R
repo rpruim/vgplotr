@@ -322,7 +322,7 @@ vg_arrow <- function(spec = NULL, ariaDescription = vg_unset, ariaHidden = vg_un
 #' @param strokeOpacity The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the *opacity* scale.
 #' @param strokeWidth The stroke-width; a constant number in pixels, or a channel.
 #' @param target The target; a constant string specifying the target window (_e.g._, *_blank*) for clickable links; used in conjunction with the **href** option.
-#' @param text The text contents channel, possibly with line breaks (\n, \r\n, or \r).
+#' @param text The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).
 #' @param textAnchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param textOverflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param textStroke The tick text **stroke**, say for a *white* outline to improve legibility; defaults to null.
@@ -414,7 +414,7 @@ vg_axis_fx <- function(spec = NULL, anchor = vg_unset, ariaDescription = vg_unse
 #' @param strokeOpacity The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the *opacity* scale.
 #' @param strokeWidth The stroke-width; a constant number in pixels, or a channel.
 #' @param target The target; a constant string specifying the target window (_e.g._, *_blank*) for clickable links; used in conjunction with the **href** option.
-#' @param text The text contents channel, possibly with line breaks (\n, \r\n, or \r).
+#' @param text The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).
 #' @param textAnchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param textOverflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param textStroke The tick text **stroke**, say for a *white* outline to improve legibility; defaults to null.
@@ -506,7 +506,7 @@ vg_axis_fy <- function(spec = NULL, anchor = vg_unset, ariaDescription = vg_unse
 #' @param strokeOpacity The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the *opacity* scale.
 #' @param strokeWidth The stroke-width; a constant number in pixels, or a channel.
 #' @param target The target; a constant string specifying the target window (_e.g._, *_blank*) for clickable links; used in conjunction with the **href** option.
-#' @param text The text contents channel, possibly with line breaks (\n, \r\n, or \r).
+#' @param text The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).
 #' @param textAnchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param textOverflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param textStroke The tick text **stroke**, say for a *white* outline to improve legibility; defaults to null.
@@ -598,7 +598,7 @@ vg_axis_x <- function(spec = NULL, anchor = vg_unset, ariaDescription = vg_unset
 #' @param strokeOpacity The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the *opacity* scale.
 #' @param strokeWidth The stroke-width; a constant number in pixels, or a channel.
 #' @param target The target; a constant string specifying the target window (_e.g._, *_blank*) for clickable links; used in conjunction with the **href** option.
-#' @param text The text contents channel, possibly with line breaks (\n, \r\n, or \r).
+#' @param text The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).
 #' @param textAnchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param textOverflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param textStroke The tick text **stroke**, say for a *white* outline to improve legibility; defaults to null.
@@ -1393,7 +1393,7 @@ vg_density <- function(spec = NULL, ariaDescription = vg_unset, ariaHidden = vg_
 #' @param lineHeight The line height in ems; defaults to 1.
 #' @param lineWidth The line width in ems (e.g., 10 for about 20 characters); defaults to infinity, disabling wrapping and clipping.
 #' @param monospace If true, changes the default **fontFamily** to *monospace*, and uses simplified monospaced text metrics calculations.
-#' @param text The text contents channel, possibly with line breaks (\n, \r\n, or \r).
+#' @param text The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).
 #' @param textAnchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param textOverflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param ... Additional options or plot-level attributes.
@@ -1476,7 +1476,7 @@ vg_density_x <- function(spec = NULL, ariaDescription = vg_unset, ariaHidden = v
 #' @param lineHeight The line height in ems; defaults to 1.
 #' @param lineWidth The line width in ems (e.g., 10 for about 20 characters); defaults to infinity, disabling wrapping and clipping.
 #' @param monospace If true, changes the default **fontFamily** to *monospace*, and uses simplified monospaced text metrics calculations.
-#' @param text The text contents channel, possibly with line breaks (\n, \r\n, or \r).
+#' @param text The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).
 #' @param textAnchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param textOverflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param ... Additional options or plot-level attributes.
@@ -3519,7 +3519,7 @@ vg_spike <- function(spec = NULL, anchor = vg_unset, ariaDescription = vg_unset,
 #' @param strokeOpacity The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the *opacity* scale.
 #' @param strokeWidth The stroke-width; a constant number in pixels, or a channel.
 #' @param target The target; a constant string specifying the target window (_e.g._, *_blank*) for clickable links; used in conjunction with the **href** option.
-#' @param text The text contents channel, possibly with line breaks (\n, \r\n, or \r).
+#' @param text The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).
 #' @param textAnchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param textOverflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
@@ -3589,7 +3589,7 @@ vg_text <- function(spec = NULL, ariaDescription = vg_unset, ariaHidden = vg_uns
 #' @param strokeOpacity The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the *opacity* scale.
 #' @param strokeWidth The stroke-width; a constant number in pixels, or a channel.
 #' @param target The target; a constant string specifying the target window (_e.g._, *_blank*) for clickable links; used in conjunction with the **href** option.
-#' @param text The text contents channel, possibly with line breaks (\n, \r\n, or \r).
+#' @param text The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).
 #' @param textAnchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param textOverflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
@@ -3659,7 +3659,7 @@ vg_text_x <- function(spec = NULL, ariaDescription = vg_unset, ariaHidden = vg_u
 #' @param strokeOpacity The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the *opacity* scale.
 #' @param strokeWidth The stroke-width; a constant number in pixels, or a channel.
 #' @param target The target; a constant string specifying the target window (_e.g._, *_blank*) for clickable links; used in conjunction with the **href** option.
-#' @param text The text contents channel, possibly with line breaks (\n, \r\n, or \r).
+#' @param text The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).
 #' @param textAnchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param textOverflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.

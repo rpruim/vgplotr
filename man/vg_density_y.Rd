@@ -221,7 +221,7 @@ vg_density_y(
 
 \item{monospace}{If true, changes the default \strong{fontFamily} to \emph{monospace}, and uses simplified monospaced text metrics calculations.}
 
-\item{text}{The text contents channel, possibly with line breaks (\n, \r\n, or \r).}
+\item{text}{The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).}
 
 \item{textAnchor}{The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of \emph{start}, \emph{end}, or \emph{middle}.}
 

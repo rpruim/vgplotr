@@ -220,7 +220,7 @@ vg_axis_fx(
 
 \item{target}{The target; a constant string specifying the target window (\emph{e.g.}, \emph{_blank}) for clickable links; used in conjunction with the \strong{href} option.}
 
-\item{text}{The text contents channel, possibly with line breaks (\n, \r\n, or \r).}
+\item{text}{The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).}
 
 \item{textAnchor}{The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of \emph{start}, \emph{end}, or \emph{middle}.}
 

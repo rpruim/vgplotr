@@ -45,16 +45,25 @@ or_else <- function(x, default) if (is.null(x)) default else x
 docline <- function(desc, fallback) {
   text <- desc
   if (is.null(text) || !nzchar(trimws(text))) text <- fallback
-  text <- gsub("\\[([^]]+)\\]\\([^)]*\\)", "\\1", text) # [text](url)
-  text <- gsub("\\[([^]]+)\\]\\[[^]]*\\]", "\\1", text) # [text][ref]
-  text <- gsub("\\[(\\d+)\\]", "", text)                # bare footnote [1]
-  text <- gsub("\\[([^]]+)\\]", "\\1", text)            # [text] shortcut
+  text <- gsub(r"(\[([^]]+)\]\([^)]*\))", "\\1", text) # [text](url)
+  text <- gsub(r"(\[([^]]+)\]\[[^]]*\])", "\\1", text) # [text][ref]
+  text <- gsub(r"(\[(\d+)\])", "", text)                # bare footnote [1]
+  text <- gsub(r"(\[([^]]+)\])", "\\1", text)           # [text] shortcut
   text <- gsub("[\r\n]+", " ", text)
   text <- gsub("\\s+", " ", text)
   text <- trimws(text)
   first <- strsplit(text, "(?<=\\.)\\s", perl = TRUE)[[1]][1]
   if (is.na(first) || !nzchar(first)) first <- fallback
-  first
+  # A literal backslash in the schema text (e.g. "line breaks (\n, \r\n, or
+  # \r)", describing escape sequences as a documentation topic, not actual
+  # newlines) would otherwise reach the .Rd file unescaped, where Rd's own
+  # macro processor tries to interpret \n/\r as macro calls ("unknown macro
+  # '\n'"). Doubling it is the markdown-level escape for a literal
+  # backslash, which roxygen2 (Roxygen: list(markdown = TRUE)) then turns
+  # into a properly Rd-escaped backslash. Raw strings make the intent
+  # legible here: r"(\)" is one literal backslash, r"(\\)" is two, vs. the
+  # equivalent normal-string forms "\\" and "\\\\".
+  gsub(r"(\)", r"(\\)", first, fixed = TRUE)
 }
 
 # A mark definition either has `properties` directly, or is a union
