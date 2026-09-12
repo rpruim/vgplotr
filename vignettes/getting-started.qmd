@@ -44,7 +44,7 @@ aapl <- data.frame(
 )
 
 spec <-
-  vg_create() |>
+  vg_create(title = "AAPL closing price") |>
   vg_data(name = "aapl", data = aapl) |>
   vg_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
   vg_attributes(width = 680, height = 200)
@@ -52,13 +52,24 @@ spec <-
 spec
 ```
 
-`vg_attributes()` sets top-level `plotDefaults` (`spec$plot_defaults`), not
-this plot's own attributes -- with only one plot, `vg_render()` merges the
-two, but that will need revisiting once multiple plots exist:
+`vg_attributes()` sets attributes directly on the spec's own top level --
+distinct from this plot's own attributes (`spec$layout$attrs`, accumulated
+from marks/interactors, e.g. via `width =` on `vg_dot()`) and from
+mosaic-spec's `plotDefaults` (set via `vg_plot_defaults()`, applied to
+*every* plot in the spec -- see the two-plot example below):
 
 ```{r}
-spec$plot_defaults
+spec$attrs
 spec$layout$attrs
+```
+
+`vg_create()`'s `title` went to `spec$meta` instead, since it isn't one of
+mosaic's plot attributes -- mosaic's own JS runtime never actually reads
+`meta` (it's inert, spec-level metadata), but `vg_render()` renders
+`meta$title` as a caption above the plot as a vgplotr-level convenience:
+
+```{r}
+spec$meta
 ```
 
 ```{r}
@@ -126,13 +137,15 @@ bottom one update.
 
 Passing separate mark/interactor chains to `vg_vconcat()` stacks them as
 *separate* plots -- unlike piping them together, which (as above) keeps them
-on one shared plot.
+on one shared plot. `vg_plot_defaults()` sets mosaic-spec's `plotDefaults`,
+applied to *every* plot in the spec -- here, both `overview` and `detail`
+get `width`/`height` without repeating them on each `vg_plot()` call:
 
 ```{r}
 overview <-
   vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
   vg_interval_x(as = param(brush)) |>
-  vg_plot(width = 680, height = 150)
+  vg_plot()
 
 detail <-
   vg_area_y(
@@ -142,12 +155,13 @@ detail <-
     y = ~v,
     fill = "steelblue"
   ) |>
-  vg_plot(width = 680, height = 150)
+  vg_plot()
 
 spec3 <-
   vg_create() |>
   vg_data(name = "walk", data = walk) |>
-  vg_vconcat(overview, detail)
+  vg_vconcat(overview, detail) |>
+  vg_plot_defaults(width = 680, height = 150)
 
 spec3
 ```

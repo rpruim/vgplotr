@@ -65,7 +65,9 @@ update_layout <- function(spec, fragment) {
 #'
 #' When two sibling marks/interactors set the same plot-level attribute to
 #' different values, the later one wins and a warning is emitted; identical
-#' values accumulate silently.
+#' values accumulate silently. A named argument that isn't one of mosaic's
+#' own plot attributes also triggers a warning, since it won't do anything
+#' to the rendered plot -- see [vg_attributes()].
 #'
 #' @param spec A plot fragment or `vgspec` to extend, or `NULL` to start a new plot.
 #' @param ... Additional plot fragments (marks/interactors) to include, and/or
@@ -75,6 +77,7 @@ vg_plot <- function(spec = NULL, ...) {
   args <- list(...)
   children <- Filter(is_vg_plot_fragment, args)
   attrs <- args[!vapply(args, is_vg_plot_fragment, logical(1))]
+  warn_unknown_attrs(names(attrs), "vg_plot()")
 
   fragment <- as_vg_plot_fragment(spec)
   for (child in children) {

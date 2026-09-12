@@ -13,12 +13,27 @@ test_that("to_json()/to_yaml() serialize a full vgspec, inlining a data frame as
       list(Date = "2020-02-01", Close = 313.05)
     )
   )
-  expect_equal(parsed_json$plotDefaults, list(width = 680L, height = 200L))
+  expect_equal(parsed_json$width, 680L)
+  expect_equal(parsed_json$height, 200L)
+  expect_null(parsed_json$plotDefaults)
   expect_equal(parsed_json$plot[[1]]$mark, "lineY")
   expect_equal(parsed_json$plot[[1]]$data, list(from = "aapl"))
 
   parsed_yaml <- yaml::yaml.load(as.character(to_yaml(spec)))
   expect_equal(parsed_json, parsed_yaml)
+})
+
+test_that("to_json() puts vg_attributes() at the top level, but vg_plot_defaults() in plotDefaults", {
+  spec <- vg_create() |>
+    vg_dot(x = ~a, y = ~b) |>
+    vg_attributes(width = 680) |>
+    vg_plot_defaults(height = 200)
+
+  parsed <- jsonlite::fromJSON(to_json(spec), simplifyVector = FALSE)
+  expect_equal(parsed$width, 680L)
+  expect_null(parsed$height)
+  expect_equal(parsed$plotDefaults, list(height = 200L))
+  expect_null(parsed$plot[[1]]$height)
 })
 
 test_that("to_json()/to_yaml() leave a file/query data source as a plain reference", {

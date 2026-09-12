@@ -44,6 +44,15 @@ up for you the first time you call it in an interactive session; see
 The relationship between this function, \code{print()}, and mosaic's own
 \code{publish()} naming (see \code{design/api-brainstorming.qmd}) is still an open
 design question; \code{vg_render()} is a placeholder name.
+
+Mosaic-spec's own \code{meta} (title/description/credit -- see \code{\link[=vg_meta]{vg_meta()}})
+isn't rendered by mosaic's JS runtime at all; it's inert, spec-level
+metadata (confirmed directly in \verb{@uwdata/mosaic-spec}'s own
+\code{astToDOM()}, which never reads it). Since a title is nonetheless the
+most commonly expected use of it, \code{vg_render()} renders \code{meta$title}
+itself -- as a caption prepended above the widget -- as a vgplotr-level
+convenience layered on top of what mosaic itself does; \code{description}/
+\code{credit} remain inert for now.
 }
 \seealso{
 Other duckdb caching functions:

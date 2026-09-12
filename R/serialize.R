@@ -49,6 +49,11 @@ as_spec_payload <- function(spec) {
   if (length(data_entries)) out$data <- data_entries
   if (length(spec$params)) out$params <- spec$params
   out <- c(out, serialize_layout(spec$layout, spec$plot_defaults))
+  # spec$attrs (from vg_attributes()) are the spec's own top-level
+  # attributes -- merged once here, at the very top, as opposed to
+  # spec$plot_defaults just above, which serialize_layout() already
+  # threaded into *every* plot in the tree.
+  if (length(spec$attrs)) out <- merge_attrs(out, spec$attrs, context = "vg_attributes()")
 
   list(spec = out, tables = tables, files = files)
 }
@@ -81,11 +86,15 @@ read_local_data_file <- function(path) {
 }
 
 # Recursively serializes a layout node -- a single plot, a vconcat/hconcat
-# of further layout nodes, or a spacer. `plot_defaults` (mosaic-spec's
-# `plotDefaults`) is threaded down and merged into *every* plot found in the
-# tree (the plot's own attributes win on conflict) rather than emitted as a
-# separate top-level `plotDefaults` key -- simpler, and equivalent as long as
-# plotDefaults is only ever used for static attributes like width/height.
+# of further layout nodes, or a spacer. `plot_defaults` (mosaic-spec's real
+# `plotDefaults`, set via vg_plot_defaults()) is threaded down and merged
+# into *every* plot found in the tree (the plot's own attributes win on
+# conflict) rather than emitted as a separate top-level `plotDefaults` key
+# here -- simpler, and equivalent as long as plotDefaults is only ever used
+# for static attributes like width/height. This is distinct from a spec's
+# own top-level attrs (set via vg_attributes()), which the caller
+# (as_spec_payload()/spec_to_list()) merges in exactly once, at the very
+# top, rather than threading down into every plot.
 serialize_layout <- function(layout, plot_defaults = list()) {
   if (is_vg_plot_fragment(layout)) {
     attrs <- utils::modifyList(plot_defaults, layout$attrs)
@@ -235,7 +244,10 @@ serialize_transform <- function(x) {
 # embed it into, and the point is a spec a human could write by hand or
 # feed to mosaic's own tools. `plotDefaults` is also emitted as its own
 # top-level key here (mosaic-spec's real `SpecHead.plotDefaults`), rather
-# than merged into every plot the way as_spec_payload() simplifies it.
+# than merged into every plot the way as_spec_payload() simplifies it --
+# spec$attrs (the spec's own top-level attrs, from vg_attributes()) are a
+# separate thing again, merged in once at the very top, exactly like
+# as_spec_payload() does.
 spec_to_list <- function(spec) {
   if (is_vgspec(spec)) {
     if (is.null(spec$layout)) {
@@ -246,7 +258,9 @@ spec_to_list <- function(spec) {
     if (length(spec$data)) out$data <- lapply(spec$data, serialize_data_source)
     if (length(spec$params)) out$params <- spec$params
     if (length(spec$plot_defaults)) out$plotDefaults <- spec$plot_defaults
-    c(out, serialize_layout(spec$layout))
+    out <- c(out, serialize_layout(spec$layout))
+    if (length(spec$attrs)) out <- merge_attrs(out, spec$attrs, context = "vg_attributes()")
+    out
   } else {
     serialize_layout(spec)
   }

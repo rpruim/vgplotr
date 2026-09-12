@@ -33,3 +33,16 @@ test_that("mark encodings don't leak into plot-level attrs", {
   expect_equal(frag$items[[1]]$encodings, list(x = ~a, y = ~b))
   expect_equal(frag$attrs, list(width = 680))
 })
+
+test_that("vg_plot() warns about a name that isn't a real plot attribute", {
+  expect_warning(
+    vg_plot(vg_dot(x = ~a, y = ~b), bogus = 1),
+    "`bogus`.*is not a recognized mosaic-spec plot attribute"
+  )
+})
+
+test_that("vg_plot() doesn't warn about attrs inherited from a child mark/interactor", {
+  # width here comes through vg_dot()'s own split_plot_args(), already known
+  # valid -- only vg_plot()'s own directly-supplied `...` should be checked.
+  expect_no_warning(vg_plot(vg_dot(x = ~a, y = ~b, width = 680)))
+})

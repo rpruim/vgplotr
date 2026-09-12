@@ -2,21 +2,29 @@
 % Please edit documentation in R/create.R
 \name{vg_attributes}
 \alias{vg_attributes}
-\title{Set plot defaults on a vgspec}
+\title{Set top-level attributes on a vgspec}
 \usage{
 vg_attributes(spec, ...)
 }
 \arguments{
 \item{spec}{A \code{vgspec}.}
 
-\item{...}{Named plot-default attributes, e.g. \verb{width =}, \verb{height =}.}
+\item{...}{Named top-level attributes, e.g. \verb{width =}, \verb{height =}.}
 }
 \description{
-Sets mosaic-spec's top-level \code{plotDefaults}: attributes applied to \emph{every}
-plot in the spec, not just the current one. This is distinct from a single
-plot's own attributes (set via arguments to \code{\link[=vg_plot]{vg_plot()}}, possibly
-accumulated from several marks/interactors -- see \code{\link[=vg_plot]{vg_plot()}} for that
-merge policy) and from a single mark's encodings. If per-plot or
-per-mark attribute-setting is needed later, that should get its own
-function rather than overloading this one.
+Sets attributes directly on the spec's own top level -- e.g. for a
+single-plot spec, sibling keys to \verb{plot:} such as \code{width}/\code{height},
+exactly like mosaic's own example specs write them. This is distinct
+from \code{\link[=vg_plot_defaults]{vg_plot_defaults()}} (mosaic-spec's \code{plotDefaults}, applied to
+\emph{every} plot in the spec, including ones nested in a
+\code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}), from a single plot's own attributes (set
+via arguments to \code{\link[=vg_plot]{vg_plot()}}, possibly accumulated from several
+marks/interactors -- see \code{\link[=vg_plot]{vg_plot()}} for that merge policy), and from a
+single mark's encodings.
+}
+\details{
+A name that isn't one of mosaic's own plot attributes triggers a warning,
+since it won't do anything to the rendered plot (there's nowhere else it
+could still take effect) -- e.g. \code{title}, which belongs in \code{\link[=vg_meta]{vg_meta()}}
+instead.
 }

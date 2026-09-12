@@ -60,7 +60,7 @@ test_that("as_spec_payload() serializes vconcat/hconcat, spacers, and threads pl
       vg_hspace(10),
       vg_hconcat(vg_dot(x = ~t, y = ~v), vg_dot(x = ~t, y = ~v, height = 300))
     ) |>
-    vg_attributes(width = 680)
+    vg_plot_defaults(width = 680)
 
   payload <- as_spec_payload(spec)
   vconcat <- payload$spec$vconcat

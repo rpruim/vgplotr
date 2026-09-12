@@ -16,6 +16,15 @@
 #' `publish()` naming (see `design/api-brainstorming.qmd`) is still an open
 #' design question; `vg_render()` is a placeholder name.
 #'
+#' Mosaic-spec's own `meta` (title/description/credit -- see [vg_meta()])
+#' isn't rendered by mosaic's JS runtime at all; it's inert, spec-level
+#' metadata (confirmed directly in `@uwdata/mosaic-spec`'s own
+#' `astToDOM()`, which never reads it). Since a title is nonetheless the
+#' most commonly expected use of it, `vg_render()` renders `meta$title`
+#' itself -- as a caption prepended above the widget -- as a vgplotr-level
+#' convenience layered on top of what mosaic itself does; `description`/
+#' `credit` remain inert for now.
+#'
 #' @param spec A `vgspec` with a layout of plots/vconcat()/hconcat().
 #' @param width,height Widget sizing, in CSS units (e.g. `"100%"`) or pixels.
 #' @param elementId Optional DOM element ID for the widget.
@@ -51,7 +60,7 @@ vg_render <- function(
   # immediately, in the same render, rather than only from the next call on.
   dep <- if (isTRUE(use_cache)) vg_duckdb_cache_dependency() else NULL
 
-  htmlwidgets::createWidget(
+  widget <- htmlwidgets::createWidget(
     name = "vgplotr",
     x = x,
     width = width,
@@ -65,4 +74,16 @@ vg_render <- function(
       knitr.figure = FALSE
     )
   )
+
+  if (!is.null(spec$meta$title)) {
+    widget <- htmlwidgets::prependContent(
+      widget,
+      htmltools::div(
+        spec$meta$title,
+        style = "font-weight: 600; font-size: 1.1em; margin-bottom: 0.4em;"
+      )
+    )
+  }
+
+  widget
 }

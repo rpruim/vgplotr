@@ -24,7 +24,7 @@ test_that("simple one-layer plot (design doc example 1) builds the expected stru
   expect_equal(sort(names(mark$encodings)), c("data_from", "x", "y"))
 
   expect_equal(spec$layout$attrs, list())
-  expect_equal(spec$plot_defaults, list(width = 680, height = 200))
+  expect_equal(spec$attrs, list(width = 680, height = 200))
 })
 
 test_that("a plot with a mark and a plot-embedded interactor (cf. overview-detail.yaml)", {
@@ -45,7 +45,7 @@ test_that("a plot with a mark and a plot-embedded interactor (cf. overview-detai
   expect_true(is_vg_param(interactor$options$as))
   expect_equal(format(interactor$options$as), "$brush")
 
-  expect_equal(spec$plot_defaults, list(width = 680, height = 200))
+  expect_equal(spec$attrs, list(width = 680, height = 200))
 })
 
 test_that("layout-level inputs (e.g. sliders) build a standalone vg_input", {

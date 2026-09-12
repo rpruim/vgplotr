@@ -47,6 +47,37 @@ merge_attrs <- function(old, new, context = NULL) {
   old
 }
 
+#' Warn about names that aren't recognized mosaic-spec plot attributes.
+#'
+#' For functions whose *entire* purpose is setting plot-level attributes
+#' (`vg_attributes()`, `vg_plot_defaults()`, `vg_plot()`) -- unlike
+#' `vg_mark()`/`vg_interactor()`, an unrecognized name here has no other
+#' place it could still take effect (it isn't a mark/interactor encoding),
+#' so it's silently inert: it'll show up in `spec$attrs`/`spec$plot_defaults`
+#' and even round-trip through `to_json()`/`to_yaml()`, but never affect the
+#' rendered plot. A typo (or reaching for the wrong function -- `title`
+#' belongs in `vg_meta()`, not here) would otherwise fail silently.
+#' @noRd
+warn_unknown_attrs <- function(names, context) {
+  unknown <- setdiff(names, vg_plot_level_args())
+  if (length(unknown) == 0) return(invisible(NULL))
+  names_str <- paste0("`", unknown, "`", collapse = ", ")
+  if (length(unknown) == 1) {
+    subject <- paste0(names_str, " is not a recognized mosaic-spec plot attribute")
+    pronoun <- "it"
+  } else {
+    subject <- paste0(names_str, " are not recognized mosaic-spec plot attributes")
+    pronoun <- "they"
+  }
+  warning(
+    sprintf(
+      "In %s: %s, so %s won't affect the rendered plot. Check spelling (mosaic's plot-attribute names are camelCase, e.g. `marginLeft`), or use vg_meta() for spec-level metadata like `title`.",
+      context, subject, pronoun
+    ),
+    call. = FALSE
+  )
+}
+
 deparse_short <- function(x) {
   paste(deparse(x, width.cutoff = 30L), collapse = " ")
 }

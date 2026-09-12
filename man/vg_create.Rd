@@ -11,10 +11,15 @@ vg_create(data = NULL, ...)
 (Full support for passing an in-memory data frame is not yet
 implemented -- see the design notes.)}
 
-\item{...}{Top-level plot defaults (mosaic-spec's \code{plotDefaults}): applied
-to every plot in the spec, as opposed to one plot's own attributes (set
-via \code{\link[=vg_plot]{vg_plot()}}) or a single mark's encodings. Equivalent to calling
-\code{\link[=vg_attributes]{vg_attributes()}} right after \code{vg_create()}.}
+\item{...}{Named values routed automatically to wherever mosaic-spec
+allows them: a known plot-level attribute (e.g. \verb{width =}, \verb{height =})
+goes to the spec's own top level (as if passed to \code{\link[=vg_attributes]{vg_attributes()}});
+anything else goes to \code{meta} (as if passed to \code{\link[=vg_meta]{vg_meta()}}), since
+mosaic-spec's metadata accepts arbitrary keys (e.g. \verb{title =}). To set
+mosaic-spec's \code{plotDefaults} (applied to \emph{every} plot, as opposed to
+just the spec's own top level) instead, call \code{\link[=vg_plot_defaults]{vg_plot_defaults()}}
+explicitly -- it's never chosen automatically, since every name valid
+there is also valid at the top level, which is preferred.}
 }
 \description{
 \code{vg_create()} starts a new \code{vgspec}, the top-level object that other
