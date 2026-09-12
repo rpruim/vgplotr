@@ -49,12 +49,30 @@
     }
   }
 
+  // duckdb-wasm only fetches fully-qualified http(s) URLs; a bare relative
+  // path (e.g. "data/stocks.parquet", as in a file-based vg_data()) fails
+  // with an opaque "no files found" error rather than being resolved
+  // against the page. Resolve any `file` path in the spec's data block
+  // against the rendered document's own location, so ordinary relative
+  // paths -- the file living alongside the rendered HTML, as in a normal
+  // Quarto/R Markdown project -- work the way a user would expect.
+  function resolveDataFileUrls(dataBlock) {
+    if (!dataBlock) return;
+    for (var name in dataBlock) {
+      var entry = dataBlock[name];
+      if (entry && typeof entry === "object" && typeof entry.file === "string") {
+        entry.file = new URL(entry.file, document.baseURI).href;
+      }
+    }
+  }
+
   async function renderVgplotr(el, x) {
     var mosaicSpec = await import(cdn("@uwdata/mosaic-spec"));
     var mosaicCore = await import(cdn("@uwdata/mosaic-core"));
 
     var coord = await getCoordinator(mosaicCore);
     await loadTables(coord, x.tables);
+    resolveDataFileUrls(x.spec.data);
 
     var ast = mosaicSpec.parseSpec(x.spec);
     var app = await mosaicSpec.astToDOM(ast);

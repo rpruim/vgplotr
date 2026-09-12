@@ -27,10 +27,9 @@ not done yet.
 ## A single mark
 
 This reproduces the "simple one-layer plot" example from
-`design/api-brainstorming.qmd`, using a small inline data frame in place of
-the fictional `data/stocks.parquet` file from the original example (loading
-data from an external file isn't wired up yet -- only data frames passed
-directly to `vg_data()` render so far).
+`design/api-brainstorming.qmd`, using a small inline data frame passed
+directly to `vg_data()` -- see the next section for the file-based version
+closer to the original example.
 
 ```{r}
 aapl <- data.frame(
@@ -58,6 +57,28 @@ spec$layout$attrs
 
 ```{r}
 vg_render(spec)
+```
+
+## Loading data from a file
+
+`vg_data()` can also point at a file instead of an inline data frame -- the
+fictional `data/stocks.parquet` from the original design doc, made real as
+a small `.csv` file shipped alongside this vignette. A relative path like
+this resolves against wherever the rendered document itself ends up, the
+same way a relative link or image would in an ordinary web page.
+
+(Named `"aapl_file"` here, not `"aapl"` -- every `vg_render()` call on this
+page shares one DuckDB instance behind the scenes, so two different specs
+loading different data under the same name would collide.)
+
+```{r}
+spec1b <-
+  vg_create() |>
+  vg_data(name = "aapl_file", file = "data/stocks.csv", where = "Symbol = 'AAPL'") |>
+  vg_line_y(data_from = "aapl_file", x = ~Date, y = ~Close) |>
+  vg_attributes(width = 680, height = 200)
+
+vg_render(spec1b)
 ```
 
 ## Combining marks and an interactor on one plot
@@ -235,8 +256,3 @@ plot3$attrs$width
 #| error: true
 sql(v + param(point))
 ```
-
-File- and query-based data sources (`vg_data(name, file = ...)`, as opposed
-to `vg_data(name, data = a_data_frame)`) build without error, but haven't
-actually been confirmed to *render* correctly -- only inline data frames
-have been checked end to end so far.
