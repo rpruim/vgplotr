@@ -1,15 +1,26 @@
 # Converts a vgspec into the shape needed to render it: a mosaic-spec JSON
-# object (as a plain R list, ready for htmlwidgets/jsonlite), plus a separate
-# set of tables to load into DuckDB *before* that spec is parsed.
+# object (as a plain R list, ready for htmlwidgets/jsonlite), plus a set of
+# tables and local files to load into DuckDB *before* that spec is parsed.
 #
 # Data frames are deliberately kept out of the spec's own `data:` block and
 # loaded explicitly beforehand (see vg_render()/inst/htmlwidgets/vgplotr.js)
 # rather than relying on mosaic-spec's own declarative data loading -- in
 # testing, astToDOM() would sometimes query a mark's table before an inline
 # `data: [...]` array had finished loading, and this preload avoids that
-# race. Data sources given as file/query specs (not a data frame) are passed
-# through in the spec's `data:` block as before; that path hasn't been
-# render-tested yet.
+# race.
+#
+# Local files (a `file =` value that isn't a fully-qualified http(s) URL)
+# are handled the same way, but for a different reason: duckdb-wasm can
+# only *fetch* http(s) URLs, so any relative/local path referenced directly
+# in the spec's `data:` block fails whenever the rendered page is opened as
+# a plain file (`file://`, e.g. a Positron/RStudio viewer or just opening
+# the .html directly) rather than served over HTTP. Reading the file here
+# and embedding its bytes sidesteps that entirely -- it's loaded into
+# DuckDB from memory, with no fetch involved, so it works the same way
+# regardless of how the page itself was opened. A genuine http(s) URL is
+# left in the spec's `data:` block, since mosaic's own loading already
+# handles that reliably (tested directly) and fetching it eagerly here
+# would be wrong for a large or possibly-updated-later remote file.
 #' @noRd
 as_spec_payload <- function(spec) {
   stopifnot(is_vgspec(spec))
@@ -18,11 +29,16 @@ as_spec_payload <- function(spec) {
   }
 
   tables <- list()
+  files <- list()
   data_entries <- list()
   for (nm in names(spec$data)) {
     src <- spec$data[[nm]]
     if (!is.null(src$data) && is.data.frame(src$data)) {
       tables[[nm]] <- src$data
+    } else if (!is.null(src$file) && !grepl("^https?://", src$file, ignore.case = TRUE)) {
+      file_info <- read_local_data_file(src$file)
+      file_info$options <- src[setdiff(names(src), c("file", "type"))]
+      files[[nm]] <- file_info
     } else {
       data_entries[[nm]] <- src
     }
@@ -34,7 +50,34 @@ as_spec_payload <- function(spec) {
   if (length(spec$params)) out$params <- spec$params
   out <- c(out, serialize_layout(spec$layout, spec$plot_defaults))
 
-  list(spec = out, tables = tables)
+  list(spec = out, tables = tables, files = files)
+}
+
+# Reads a local data file into a form embeddable in the htmlwidget payload:
+# raw text for csv/json (read directly by DuckDB via registerFileText), or
+# base64 for parquet (binary, via registerFileBuffer). Type is inferred
+# from the file extension, mirroring mosaic-spec's own inference rule.
+read_local_data_file <- function(path) {
+  if (!file.exists(path)) {
+    stop(
+      "Data file not found: '", path, "' (looked relative to the current ",
+      "working directory, ", getwd(), ").",
+      call. = FALSE
+    )
+  }
+  ext <- tolower(tools::file_ext(path))
+  bytes <- readBin(path, "raw", file.info(path)$size)
+  if (ext == "parquet") {
+    list(ext = ext, encoding = "base64", content = jsonlite::base64_enc(bytes))
+  } else if (ext %in% c("csv", "json")) {
+    list(ext = ext, encoding = "text", content = rawToChar(bytes))
+  } else {
+    stop(
+      "Don't know how to load a local data file with extension `.", ext, "` ",
+      "(expected .csv, .json, or .parquet).",
+      call. = FALSE
+    )
+  }
 }
 
 # Recursively serializes a layout node -- a single plot, a vconcat/hconcat

@@ -18,7 +18,7 @@
 #' @export
 vg_render <- function(spec, width = NULL, height = NULL, elementId = NULL) {
   payload <- as_spec_payload(spec)
-  x <- list(spec = payload$spec, tables = payload$tables)
+  x <- list(spec = payload$spec, tables = payload$tables, files = payload$files)
   # Data frames in `tables` need to become arrays of row objects in JSON
   # (what the JS side expects), not htmlwidgets' columnar default. NULL
   # needs to become JSON `null` (jsonlite's default turns it into `{}`),

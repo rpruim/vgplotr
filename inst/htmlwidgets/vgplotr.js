@@ -49,20 +49,46 @@
     }
   }
 
-  // duckdb-wasm only fetches fully-qualified http(s) URLs; a bare relative
-  // path (e.g. "data/stocks.parquet", as in a file-based vg_data()) fails
-  // with an opaque "no files found" error rather than being resolved
-  // against the page. Resolve any `file` path in the spec's data block
-  // against the rendered document's own location, so ordinary relative
-  // paths -- the file living alongside the rendered HTML, as in a normal
-  // Quarto/R Markdown project -- work the way a user would expect.
-  function resolveDataFileUrls(dataBlock) {
-    if (!dataBlock) return;
-    for (var name in dataBlock) {
-      var entry = dataBlock[name];
-      if (entry && typeof entry === "object" && typeof entry.file === "string") {
-        entry.file = new URL(entry.file, document.baseURI).href;
+  var READERS = { csv: "read_csv_auto", json: "read_json_auto", parquet: "read_parquet" };
+
+  function base64ToBytes(base64) {
+    var binary = atob(base64);
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+  }
+
+  // Local data files (as opposed to genuine http(s) URLs, which stay in
+  // the spec's own data: block -- see as_spec_payload() in R/serialize.R)
+  // arrive here with their content already embedded by R, so loading them
+  // never involves fetching anything: register the bytes, then run the
+  // same kind of CREATE TABLE ... FROM read_*(...) that mosaic's own
+  // declarative data loading would, replicating its `where`/`select`
+  // handling since we're bypassing that loading path entirely.
+  async function loadFiles(coord, files) {
+    if (!files) return;
+    var db = await coord.databaseConnector().getDuckDB();
+    for (var name in files) {
+      var f = files[name];
+      var fname = name + "." + f.ext;
+      if (f.encoding === "base64") {
+        await db.registerFileBuffer(fname, base64ToBytes(f.content));
+      } else {
+        await db.registerFileText(fname, f.content);
       }
+
+      var opts = f.options || {};
+      var cols = "*";
+      if (opts.select && opts.select.length) {
+        cols = opts.select.map(function (c) { return '"' + c + '"'; }).join(", ");
+      }
+      var sql = 'CREATE OR REPLACE TABLE "' + name + '" AS SELECT ' + cols +
+        " FROM " + READERS[f.ext] + "('" + fname + "')";
+      if (opts.where) {
+        var clauses = Array.isArray(opts.where) ? opts.where.join(" AND ") : opts.where;
+        sql += " WHERE " + clauses;
+      }
+      await coord.exec([sql]);
     }
   }
 
@@ -72,7 +98,7 @@
 
     var coord = await getCoordinator(mosaicCore);
     await loadTables(coord, x.tables);
-    resolveDataFileUrls(x.spec.data);
+    await loadFiles(coord, x.files);
 
     var ast = mosaicSpec.parseSpec(x.spec);
     var app = await mosaicSpec.astToDOM(ast);
