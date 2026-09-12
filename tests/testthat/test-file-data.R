@@ -1,7 +1,11 @@
-# The real data file lives in vignettes/data/ (it's what the vignette
-# itself uses); test_path() resolves relative to tests/testthat/ regardless
-# of the test runner's working directory.
-stocks_csv <- testthat::test_path("..", "..", "vignettes", "data", "stocks.csv")
+# A copy of vignettes/data/stocks.csv (which is what the vignette itself
+# uses) -- kept as its own fixture, rather than reached for via a relative
+# ../../vignettes/data path, because only tests/ (not vignettes/) is
+# guaranteed to exist alongside the test suite: R CMD check always installs
+# with --install-tests, which copies tests/ into the installed package, but
+# vignette sources (and their data/ subdirectories) aren't installed anywhere
+# system.file() or a relative path from the tests can rely on.
+stocks_csv <- testthat::test_path("fixtures", "stocks.csv")
 
 test_that("vg_data() with file/where stores the options as given", {
   spec <- vg_create() |> vg_data(name = "aapl", file = "data/stocks.csv", where = "Symbol = 'AAPL'")
