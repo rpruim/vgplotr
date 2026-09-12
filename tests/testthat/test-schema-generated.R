@@ -55,3 +55,19 @@ test_that("as_spec_payload() correctly places a previously-unsupported plot attr
   expect_null(payload$spec$plot[[1]]$xDomain)
   expect_null(payload$spec$plot[[1]]$marginLeft)
 })
+
+test_that("a mark/interactor's own property can be set under its exact schema name, even when that name would otherwise collide with vg_mark()/vg_interactor()'s own discriminant parameter", {
+  # vg_search() has its own "type" option (query mode: contains/prefix/
+  # suffix/regexp) distinct from the interactor/input type ("search").
+  # vg_mark()/vg_interactor() are named `mark`/`interactor` (not `type`)
+  # specifically so this doesn't collide -- see their documentation.
+  input <- vg_search(type = "prefix", column = "name")
+  expect_equal(input$type, "search")
+  expect_equal(input$options$type, "prefix")
+  expect_equal(input$options$column, "name")
+
+  # Same guarantee calling the generic constructor directly.
+  input2 <- vg_interactor(NULL, "search", type = "prefix", column = "name")
+  expect_equal(input2$type, "search")
+  expect_equal(input2$options$type, "prefix")
+})

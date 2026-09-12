@@ -31,14 +31,14 @@ vg_mark <- function(spec = NULL, mark, ...) {
 # drops whichever named arguments the caller left at their vg_unset
 # default (i.e. didn't actually supply) before dispatching to vg_mark().
 #
-# The mark type is `.vg_mark` (not `mark`) so it can't collide with a mark
-# property forwarded through `...` by exact-name argument matching -- no
-# current mark has a property literally called "mark" (it's excluded as
-# the schema's own discriminant key), but vg_interactor_()'s analogous
-# parameter name did collide with a real property (Search's own "type"),
-# so this is named defensively too.
-vg_mark_ <- function(spec, .vg_mark, ...) {
-  do.call(vg_mark, c(list(spec = spec, mark = .vg_mark), drop_unset(list(...))))
+# Safe to name this parameter `mark` (matching vg_mark()'s own parameter):
+# "mark" is always excluded from a mark's own generated properties (it's
+# the schema's discriminant key for the mark itself), so no mark ever has
+# a same-named option that could collide by exact-name argument matching
+# the way vg_interactor_()'s equivalent parameter did (Search's own "type"
+# option) -- see vg_interactor()'s docs for that story.
+vg_mark_ <- function(spec, mark, ...) {
+  do.call(vg_mark, c(list(spec = spec, mark = mark), drop_unset(list(...))))
 }
 
 #' @export

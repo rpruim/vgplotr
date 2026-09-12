@@ -110,6 +110,25 @@ plot_attrs <- sort(names(defs$PlotAttributes$properties))
 cat(length(mark_defs), "marks,", length(interactor_types), "interactors,",
     length(input_types), "inputs,", length(plot_attrs), "plot attributes\n")
 
+# vg_mark_()/vg_interactor_() (R/mark.R, R/interactor.R) pass a mark/
+# interactor's own properties through to vg_mark()/vg_interactor() using
+# their *exact* schema names, so that e.g. Search's own "type" option (its
+# query mode) can be set under its real name. That only works because
+# vg_mark()'s/vg_interactor()'s own discriminant parameters are named
+# `mark`/`interactor`, not (say) `type` -- R matches named arguments by
+# exact name before position, so a same-named forwarded property would
+# otherwise silently hijack the discriminant slot instead of landing in
+# `...` (this happened for real with Search's "type" during development).
+# Fail loudly here if a future schema version ever adds a mark property
+# literally called "mark" or an interactor/input property literally called
+# "interactor", rather than letting that ship as a silent, hard-to-spot bug.
+stopifnot(
+  "a mark now has a property literally named `mark`, which would collide with vg_mark()'s discriminant parameter -- rename it there too" =
+    !any(vapply(mark_defs, function(m) "mark" %in% names(m$properties), logical(1))),
+  "an interactor/input now has a property literally named `interactor`, which would collide with vg_interactor()'s discriminant parameter -- rename it there too" =
+    !any(vapply(interactor_defs, function(m) "interactor" %in% names(m$properties), logical(1)))
+)
+
 # First-seen description for a given property name, reused across every
 # mark/interactor/input that has a property of that name (these mean the
 # same thing everywhere in mosaic's grammar, so one description per name is
