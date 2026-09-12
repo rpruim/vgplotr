@@ -188,6 +188,35 @@ vg_bin(delay, step = 2)
 vg_render(spec4)
 ```
 
+## Generated marks and attributes
+
+vgplotr now has a wrapper for every mark type mosaic supports (65, generated
+from mosaic's own JSON schema by `data-raw/update-schema.R` -- see
+`vg_hexbin()`, `vg_text()`, `vg_rule_x()`, ... alongside the marks used
+above), and correctly recognizes every plot-level attribute (215) as
+belonging to the plot, not the mark. That fixed a real bug along the way:
+`marginLeft`/`marginRight`/`marginTop`/`marginBottom` and `aspectRatio` used
+to only be checked for under invented names (`margin_left`, `aspect_ratio`)
+that were never mosaic-spec's actual attribute names, so setting them
+silently did nothing.
+
+```{r}
+spec4b <-
+  vg_create() |>
+  vg_data(name = "delays", data = delays) |>
+  vg_rect_y(
+    data_from = "delays",
+    x = ~ vg_bin(delay, step = 2),
+    y = ~ vg_count(),
+    fill = "steelblue",
+    inset = 0.5
+  ) |>
+  vg_rule_x(x = 0, stroke = "firebrick", strokeWidth = 2) |>
+  vg_plot(width = 680, height = 200, marginLeft = 60, aspectRatio = 1)
+
+vg_render(spec4b)
+```
+
 ## Legends
 
 A legend embedded in a plot (piped in alongside its marks, with no

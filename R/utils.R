@@ -2,18 +2,14 @@
 # groups one or more marks/interactors on shared axes), as opposed to
 # encodings/options that belong to a single mark or interactor.
 #
-# This list is hand-maintained for now. Once the function-factory /
-# JSON-schema generation described in design/api-brainstorming.qmd exists,
-# it should be derived from the mosaic-spec schema instead.
+# .vg_plot_attrs comes from mosaic's own JSON schema (R/attrs-generated.R,
+# produced by data-raw/update-schema.R) -- note these are the *exact*
+# camelCase names mosaic-spec uses (e.g. "marginLeft", "xDomain"), not a
+# snake_case translation: there's no case-conversion layer for plot
+# attributes, they're passed straight through into the JSON spec, so the
+# name used here has to be the name mosaic itself expects.
 vg_plot_level_args <- function() {
-  c(
-    "name", "style", "width", "height",
-    "margin", "margin_left", "margin_right", "margin_top", "margin_bottom", "margins",
-    "align", "aspect_ratio", "inset", "axis", "grid", "label", "padding", "round",
-    "xDomain", "yDomain", "xyDomain", "zDomain",
-    "xLabel", "yLabel", "xAxis", "yAxis", "xLabelAnchor", "yLabelAnchor",
-    "xTickFormat", "yTickFormat", "colorScheme", "colorScale"
-  )
+  .vg_plot_attrs
 }
 
 #' Split `...` arguments into plot-level attributes and local (mark/interactor)

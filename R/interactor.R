@@ -1,24 +1,17 @@
 # Which vg_interactor() types are embedded inside a plot's mark list
 # (mosaic calls these "interactors"/selections: intervalX, toggle, pan, ...)
 # vs. which live in the surrounding layout, as standalone widgets (mosaic
-# calls these "inputs": slider, menu, table, search, ...).
+# calls these "inputs": slider, menu, table, search).
 #
-# Hand-maintained for now; see the note on vg_plot_level_args() in utils.R --
-# this should eventually come from the mosaic-spec schema instead.
+# .vg_interactor_types/.vg_input_types come from mosaic's own JSON schema
+# (R/interactors-generated.R, produced by data-raw/update-schema.R).
 vg_interactor_placement <- function(type) {
-  plot_embedded <- c(
-    "intervalX", "intervalY", "interval",
-    "toggle", "toggleX", "toggleY",
-    "panX", "panY", "panZoom", "pan",
-    "highlight", "nearest", "nearestX", "nearestY"
-  )
-  layout_level <- c("slider", "menu", "table", "search")
-
-  if (type %in% plot_embedded) "plot"
-  else if (type %in% layout_level) "layout"
+  if (type %in% .vg_interactor_types) "plot"
+  else if (type %in% .vg_input_types) "layout"
   else stop(
     "Unknown interactor type `", type, "`. If this is a valid mosaic ",
-    "interactor/input type, it needs to be added to vg_interactor_placement().",
+    "interactor/input type, rerun data-raw/update-schema.R (it may need ",
+    "MOSAIC_VERSION bumped first).",
     call. = FALSE
   )
 }
@@ -30,7 +23,9 @@ vg_interactor_placement <- function(type) {
 #' marks (e.g. `intervalX`, which brushes a Selection), from inputs that live
 #' in the surrounding layout as standalone widgets (e.g. `slider`, `menu`).
 #' `vg_interactor()` covers both; which kind a given `type` is gets looked up
-#' internally (see `vg_interactor_placement()`).
+#' internally (see `vg_interactor_placement()`). One convenience wrapper per
+#' type -- `vg_toggle()`, `vg_menu()`, etc. -- is generated from mosaic's own
+#' JSON schema into `R/interactors-generated.R`.
 #'
 #' @param spec For a plot-embedded interactor: a plot fragment or `vgspec`
 #'   to add it to, or `NULL` to start a new plot with just this interactor.
@@ -66,30 +61,6 @@ vg_interactor <- function(spec = NULL, type, ...) {
     structure(list(type = type, options = list(...)), class = "vg_input")
   }
 }
-
-#' @rdname vg_interactor
-#' @export
-vg_interval_x <- function(spec = NULL, ...) vg_interactor(spec, "intervalX", ...)
-
-#' @rdname vg_interactor
-#' @export
-vg_toggle <- function(spec = NULL, ...) vg_interactor(spec, "toggle", ...)
-
-#' @rdname vg_interactor
-#' @export
-vg_slider <- function(...) vg_interactor(NULL, "slider", ...)
-
-#' @rdname vg_interactor
-#' @export
-vg_menu <- function(...) vg_interactor(NULL, "menu", ...)
-
-#' @rdname vg_interactor
-#' @export
-vg_search <- function(...) vg_interactor(NULL, "search", ...)
-
-#' @rdname vg_interactor
-#' @export
-vg_table <- function(...) vg_interactor(NULL, "table", ...)
 
 #' @export
 print.vg_interactor <- function(x, ...) {
