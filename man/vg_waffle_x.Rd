@@ -201,7 +201,7 @@ vg_waffle_x(
 The waffleX mark.
 }
 \seealso{
-Other vg_marks:
+Other mark functions:
 \code{\link[=vg_area]{vg_area()}},
 \code{\link[=vg_area_x]{vg_area_x()}},
 \code{\link[=vg_area_y]{vg_area_y()}},
@@ -267,4 +267,4 @@ Other vg_marks:
 \code{\link[=vg_voronoi_mesh]{vg_voronoi_mesh()}},
 \code{\link[=vg_waffle_y]{vg_waffle_y()}}
 }
-\concept{vg_marks}
+\concept{mark functions}

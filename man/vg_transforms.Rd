@@ -72,3 +72,4 @@ these mirror \verb{@uwdata/mosaic-spec}'s \code{Transform.ts} exactly). All can 
 be called directly (outside a formula, no \code{~} needed) to inspect the
 resulting \code{vg_transform} object.
 }
+\concept{transform function}

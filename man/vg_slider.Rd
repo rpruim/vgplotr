@@ -51,7 +51,7 @@ vg_slider(
 A slider input component.
 }
 \seealso{
-Other vg_interactors:
+Other interactor function:
 \code{\link[=vg_highlight]{vg_highlight()}},
 \code{\link[=vg_interval_x]{vg_interval_x()}},
 \code{\link[=vg_interval_xy]{vg_interval_xy()}},
@@ -73,4 +73,4 @@ Other vg_interactors:
 \code{\link[=vg_toggle_x]{vg_toggle_x()}},
 \code{\link[=vg_toggle_y]{vg_toggle_y()}}
 }
-\concept{vg_interactors}
+\concept{interactor function}

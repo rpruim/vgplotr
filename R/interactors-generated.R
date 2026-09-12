@@ -48,7 +48,7 @@
 #' @param stroke The stroke color of deemphasized marks.
 #' @param strokeOpacity The stroke opacity of deemphasized marks.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_highlight <- function(spec = NULL, by = vg_unset, fill = vg_unset, fillOpacity = vg_unset, opacity = vg_unset, stroke = vg_unset, strokeOpacity = vg_unset, ...) {
   vg_interactor_(spec, "highlight", by = by, fill = fill, fillOpacity = fillOpacity, opacity = opacity, stroke = stroke, strokeOpacity = strokeOpacity, ...)
@@ -63,7 +63,7 @@ vg_highlight <- function(spec = NULL, by = vg_unset, fill = vg_unset, fillOpacit
 #' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param pixelSize The size of an interactive pixel (default `1`).
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_interval_x <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = vg_unset, peers = vg_unset, pixelSize = vg_unset, ...) {
   vg_interactor_(spec, "intervalX", as = as, brush = brush, field = field, peers = peers, pixelSize = pixelSize, ...)
@@ -78,7 +78,7 @@ vg_interval_x <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = 
 #' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param pixelSize The size of an interactive pixel (default `1`).
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_interval_y <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = vg_unset, peers = vg_unset, pixelSize = vg_unset, ...) {
   vg_interactor_(spec, "intervalY", as = as, brush = brush, field = field, peers = peers, pixelSize = pixelSize, ...)
@@ -94,7 +94,7 @@ vg_interval_y <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = 
 #' @param xfield The name of the field (database column) over which the `x`-component of the interval selection should be defined.
 #' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_interval_xy <- function(spec = NULL, as = vg_unset, brush = vg_unset, peers = vg_unset, pixelSize = vg_unset, xfield = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "intervalXY", as = as, brush = brush, peers = peers, pixelSize = pixelSize, xfield = xfield, yfield = yfield, ...)
@@ -108,7 +108,7 @@ vg_interval_xy <- function(spec = NULL, as = vg_unset, brush = vg_unset, peers =
 #' @param fields The fields (database column names) to use in generated selection clause predicates.
 #' @param maxRadius The maximum radius of a nearest selection (default 40).
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_nearest_x <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, maxRadius = vg_unset, ...) {
   vg_interactor_(spec, "nearestX", as = as, channels = channels, fields = fields, maxRadius = maxRadius, ...)
@@ -122,7 +122,7 @@ vg_nearest_x <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields
 #' @param fields The fields (database column names) to use in generated selection clause predicates.
 #' @param maxRadius The maximum radius of a nearest selection (default 40).
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_nearest_y <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, maxRadius = vg_unset, ...) {
   vg_interactor_(spec, "nearestY", as = as, channels = channels, fields = fields, maxRadius = maxRadius, ...)
@@ -136,7 +136,7 @@ vg_nearest_y <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields
 #' @param y The output selection for the `y` domain.
 #' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_pan <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "pan", x = x, xfield = xfield, y = y, yfield = yfield, ...)
@@ -150,7 +150,7 @@ vg_pan <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, y
 #' @param y The output selection for the `y` domain.
 #' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_pan_x <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panX", x = x, xfield = xfield, y = y, yfield = yfield, ...)
@@ -164,7 +164,7 @@ vg_pan_x <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset,
 #' @param y The output selection for the `y` domain.
 #' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_pan_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panY", x = x, xfield = xfield, y = y, yfield = yfield, ...)
@@ -178,7 +178,7 @@ vg_pan_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset,
 #' @param y The output selection for the `y` domain.
 #' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_pan_zoom <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panZoom", x = x, xfield = xfield, y = y, yfield = yfield, ...)
@@ -192,7 +192,7 @@ vg_pan_zoom <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_uns
 #' @param y The output selection for the `y` domain.
 #' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_pan_zoom_x <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panZoomX", x = x, xfield = xfield, y = y, yfield = yfield, ...)
@@ -206,7 +206,7 @@ vg_pan_zoom_x <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_u
 #' @param y The output selection for the `y` domain.
 #' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_pan_zoom_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panZoomY", x = x, xfield = xfield, y = y, yfield = yfield, ...)
@@ -220,7 +220,7 @@ vg_pan_zoom_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_u
 #' @param channels The encoding channels whose domain values should be selected.
 #' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_region <- function(spec = NULL, as = vg_unset, brush = vg_unset, channels = vg_unset, peers = vg_unset, ...) {
   vg_interactor_(spec, "region", as = as, brush = brush, channels = channels, peers = peers, ...)
@@ -233,7 +233,7 @@ vg_region <- function(spec = NULL, as = vg_unset, brush = vg_unset, channels = v
 #' @param channels The encoding channels whose domain values should be selected.
 #' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_toggle <- function(spec = NULL, as = vg_unset, channels = vg_unset, peers = vg_unset, ...) {
   vg_interactor_(spec, "toggle", as = as, channels = channels, peers = peers, ...)
@@ -245,7 +245,7 @@ vg_toggle <- function(spec = NULL, as = vg_unset, channels = vg_unset, peers = v
 #' @param as The output selection.
 #' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_toggle_x <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
   vg_interactor_(spec, "toggleX", as = as, peers = peers, ...)
@@ -257,7 +257,7 @@ vg_toggle_x <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 #' @param as The output selection.
 #' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_toggle_y <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
   vg_interactor_(spec, "toggleY", as = as, peers = peers, ...)
@@ -269,7 +269,7 @@ vg_toggle_y <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 #' @param as The output selection.
 #' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_toggle_color <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
   vg_interactor_(spec, "toggleColor", as = as, peers = peers, ...)
@@ -287,7 +287,7 @@ vg_toggle_color <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 #' @param options An array of menu options, as literal values or option objects.
 #' @param value The initial selected menu value.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_menu <- function(as = vg_unset, column = vg_unset, field = vg_unset, filterBy = vg_unset, from = vg_unset, label = vg_unset, listMatch = vg_unset, options = vg_unset, value = vg_unset, ...) {
   vg_interactor_(NULL, "menu", as = as, column = column, field = field, filterBy = filterBy, from = from, label = label, listMatch = listMatch, options = options, value = value, ...)
@@ -303,7 +303,7 @@ vg_menu <- function(as = vg_unset, column = vg_unset, field = vg_unset, filterBy
 #' @param label A text label for this input.
 #' @param type The type of text search query to perform.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_search <- function(as = vg_unset, column = vg_unset, field = vg_unset, filterBy = vg_unset, from = vg_unset, label = vg_unset, type = vg_unset, ...) {
   vg_interactor_(NULL, "search", as = as, column = column, field = field, filterBy = filterBy, from = from, label = label, type = type, ...)
@@ -324,7 +324,7 @@ vg_search <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter
 #' @param value The initial selected menu value.
 #' @param width The width of the slider in screen pixels.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_slider <- function(as = vg_unset, column = vg_unset, field = vg_unset, filterBy = vg_unset, from = vg_unset, label = vg_unset, max = vg_unset, min = vg_unset, select = vg_unset, step = vg_unset, value = vg_unset, width = vg_unset, ...) {
   vg_interactor_(NULL, "slider", as = as, column = column, field = field, filterBy = filterBy, from = from, label = label, max = max, min = min, select = select, step = step, value = value, width = width, ...)
@@ -342,7 +342,7 @@ vg_slider <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter
 #' @param rowBatch The number of rows load in a new batch upon table scroll.
 #' @param width The width of the slider in screen pixels.
 #' @param ... Additional options or plot-level attributes.
-#' @family vg_interactors
+#' @family interactor function
 #' @export
 vg_table <- function(align = vg_unset, as = vg_unset, columns = vg_unset, filterBy = vg_unset, from = vg_unset, height = vg_unset, maxWidth = vg_unset, rowBatch = vg_unset, width = vg_unset, ...) {
   vg_interactor_(NULL, "table", align = align, as = as, columns = columns, filterBy = filterBy, from = from, height = height, maxWidth = maxWidth, rowBatch = rowBatch, width = width, ...)

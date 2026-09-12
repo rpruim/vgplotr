@@ -6,6 +6,27 @@
 \usage{
 vg_duckdb_cache_status()
 }
+\value{
+An object of class \code{vg_duckdb_cache_status}, with a \code{print()}
+method, containing:
+\describe{
+\item{\code{cached}}{Logical: is the engine cached locally?}
+\item{\code{dir}}{The version-pinned cache directory (whether or not it
+currently exists).}
+\item{\code{version}}{The pinned duckdb-wasm version this vgplotr version
+expects.}
+\item{\code{size}}{Total size of the cached files in bytes, or \code{NA} if not
+cached.}
+}
+}
 \description{
 See \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}.
 }
+\seealso{
+Other duckdb caching functions:
+\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}},
+\code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}},
+\code{\link[=vg_render]{vg_render()}},
+\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}}
+}
+\concept{duckdb caching functions}

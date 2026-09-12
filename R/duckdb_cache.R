@@ -21,6 +21,8 @@ vg_duckdb_cache_decline <- function() {
 
 #' Reset the "don't ask again" preference set by declining to cache the
 #' DuckDB WASM engine
+#' @return Invisibly, `NULL`.
+#' @family duckdb caching functions
 #' @export
 vg_duckdb_cache_reset_preference <- function() {
   f <- vg_duckdb_cache_pref_file()
@@ -38,6 +40,18 @@ vg_duckdb_cache_exists <- function() all(file.exists(vg_duckdb_cache_files()))
 #' Check whether the DuckDB WASM engine is cached locally
 #'
 #' See [vg_cache_duckdb()].
+#' @return An object of class `vg_duckdb_cache_status`, with a `print()`
+#'   method, containing:
+#'   \describe{
+#'     \item{`cached`}{Logical: is the engine cached locally?}
+#'     \item{`dir`}{The version-pinned cache directory (whether or not it
+#'       currently exists).}
+#'     \item{`version`}{The pinned duckdb-wasm version this vgplotr version
+#'       expects.}
+#'     \item{`size`}{Total size of the cached files in bytes, or `NA` if not
+#'       cached.}
+#'   }
+#' @family duckdb caching functions
 #' @export
 vg_duckdb_cache_status <- function() {
   files <- vg_duckdb_cache_files()
@@ -77,22 +91,28 @@ print.vg_duckdb_cache_status <- function(x, ...) {
 #' [vg_render()] needs a client-side DuckDB to query data in the browser.
 #' Most of the JS runtime it uses ships with vgplotr, but the database
 #' engine itself is a compiled WebAssembly binary too large to include in
-#' the package (about 35 MB) -- by default, `vg_render()` fetches it from a
-#' CDN each time a plot is *viewed*. Calling `vg_cache_duckdb()` once
-#' downloads it into a local, version-pinned cache
-#' (`tools::R_user_dir("vgplotr", "cache")`) instead; every `vg_render()`
-#' after that uses the cached copy, with no CDN involved at all -- including
-#' when the rendered page is viewed completely offline, and without the
-#' cached version ever silently changing later.
+#' the package (about 35 MB). Without this, `vg_render()` must fetch it from a
+#' CDN each time a plot is *viewed*.
 #'
-#' This is entirely opt-in: without calling it, vgplotr behaves exactly as
-#' before (fetching from a CDN at view time). [vg_render()] will offer to
-#' run this for you interactively (at most once per session, and never
-#' again if you decline permanently -- see [vg_duckdb_cache_reset_preference()])
-#' when the cache doesn't already exist.
+#' Calling `vg_cache_duckdb()` once downloads the WebAssembly binary into a
+#' local, version-pinned cache (`tools::R_user_dir("vgplotr", "cache")`).
+#' Thereafter, `vg_render()` uses the cached copy instead, with no CDN
+#' involved at all -- including when the rendered page is viewed completely
+#' offline -- and without the cached version ever silently changing later.
+#'
+#' This is entirely opt-in: without a cached binary, vgplotr keeps fetching
+#' from a CDN at view time, exactly as before. Set `force = TRUE` to
+#' re-download even if already cached (e.g. after clearing it with
+#' [vg_uncache_duckdb()]).
+#'
+#' [vg_render()] will offer to run this for you interactively (at most once
+#' per session, and never again if you decline permanently -- see
+#' [vg_duckdb_cache_reset_preference()]) when the cache doesn't already
+#' exist.
 #'
 #' @param force Re-download even if already cached.
 #' @return Invisibly, the result of [vg_duckdb_cache_status()] after caching.
+#' @family duckdb caching functions
 #' @export
 vg_cache_duckdb <- function(force = FALSE) {
   status <- vg_duckdb_cache_status()
@@ -123,6 +143,8 @@ vg_cache_duckdb <- function(force = FALSE) {
 #'
 #' See [vg_cache_duckdb()]. This does not affect the "don't ask again"
 #' preference; see [vg_duckdb_cache_reset_preference()] for that.
+#' @return Invisibly, `NULL`.
+#' @family duckdb caching functions
 #' @export
 vg_uncache_duckdb <- function() {
   dir <- vg_duckdb_cache_dir()

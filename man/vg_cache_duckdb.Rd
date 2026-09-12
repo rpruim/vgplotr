@@ -16,18 +16,31 @@ Invisibly, the result of \code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_st
 \code{\link[=vg_render]{vg_render()}} needs a client-side DuckDB to query data in the browser.
 Most of the JS runtime it uses ships with vgplotr, but the database
 engine itself is a compiled WebAssembly binary too large to include in
-the package (about 35 MB) -- by default, \code{vg_render()} fetches it from a
-CDN each time a plot is \emph{viewed}. Calling \code{vg_cache_duckdb()} once
-downloads it into a local, version-pinned cache
-(\code{tools::R_user_dir("vgplotr", "cache")}) instead; every \code{vg_render()}
-after that uses the cached copy, with no CDN involved at all -- including
-when the rendered page is viewed completely offline, and without the
-cached version ever silently changing later.
+the package (about 35 MB). Without this, \code{vg_render()} must fetch it from a
+CDN each time a plot is \emph{viewed}.
 }
 \details{
-This is entirely opt-in: without calling it, vgplotr behaves exactly as
-before (fetching from a CDN at view time). \code{\link[=vg_render]{vg_render()}} will offer to
-run this for you interactively (at most once per session, and never
-again if you decline permanently -- see \code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}})
-when the cache doesn't already exist.
+Calling \code{vg_cache_duckdb()} once downloads the WebAssembly binary into a
+local, version-pinned cache (\code{tools::R_user_dir("vgplotr", "cache")}).
+Thereafter, \code{vg_render()} uses the cached copy instead, with no CDN
+involved at all -- including when the rendered page is viewed completely
+offline -- and without the cached version ever silently changing later.
+
+This is entirely opt-in: without a cached binary, vgplotr keeps fetching
+from a CDN at view time, exactly as before. Set \code{force = TRUE} to
+re-download even if already cached (e.g. after clearing it with
+\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}}).
+
+\code{\link[=vg_render]{vg_render()}} will offer to run this for you interactively (at most once
+per session, and never again if you decline permanently -- see
+\code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}}) when the cache doesn't already
+exist.
 }
+\seealso{
+Other duckdb caching functions:
+\code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}},
+\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}},
+\code{\link[=vg_render]{vg_render()}},
+\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}}
+}
+\concept{duckdb caching functions}

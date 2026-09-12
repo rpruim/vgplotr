@@ -19,8 +19,22 @@
 #' @param spec A `vgspec` with a layout of plots/vconcat()/hconcat().
 #' @param width,height Widget sizing, in CSS units (e.g. `"100%"`) or pixels.
 #' @param elementId Optional DOM element ID for the widget.
+#' @param use_cache Whether this plot should use the local duckdb-wasm engine
+#'   cache (see [vg_cache_duckdb()]) if one exists. Defaults to whatever
+#'   [vg_duckdb_cache_status()] currently reports, so it tracks the cache
+#'   automatically; set to `FALSE` to force this one plot to fetch the engine
+#'   from the CDN even when a cache is present, or `TRUE` to request the
+#'   cache explicitly (harmless, and equivalent to the default, when no cache
+#'   exists -- it just falls back to the CDN).
+#' @family duckdb caching functions
 #' @export
-vg_render <- function(spec, width = NULL, height = NULL, elementId = NULL) {
+vg_render <- function(
+  spec,
+  width = NULL,
+  height = NULL,
+  elementId = NULL,
+  use_cache = vg_duckdb_cache_status()$cached
+) {
   maybe_offer_duckdb_cache()
 
   payload <- as_spec_payload(spec)
@@ -31,7 +45,11 @@ vg_render <- function(spec, width = NULL, height = NULL, elementId = NULL) {
   # which matters for zero-argument transforms like vg_count()/vg_rank().
   attr(x, "TOJSON_ARGS") <- list(dataframe = "rows", null = "null")
 
-  dep <- vg_duckdb_cache_dependency()
+  # `use_cache`'s default is a promise that isn't forced until here, i.e.
+  # *after* maybe_offer_duckdb_cache() above may have just created the
+  # cache -- so a first-ever call that accepts the offer still uses it
+  # immediately, in the same render, rather than only from the next call on.
+  dep <- if (isTRUE(use_cache)) vg_duckdb_cache_dependency() else NULL
 
   htmlwidgets::createWidget(
     name = "vgplotr",

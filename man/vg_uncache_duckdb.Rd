@@ -6,7 +6,18 @@
 \usage{
 vg_uncache_duckdb()
 }
+\value{
+Invisibly, \code{NULL}.
+}
 \description{
 See \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}. This does not affect the "don't ask again"
 preference; see \code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}} for that.
 }
+\seealso{
+Other duckdb caching functions:
+\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}},
+\code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}},
+\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}},
+\code{\link[=vg_render]{vg_render()}}
+}
+\concept{duckdb caching functions}

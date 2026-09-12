@@ -90,3 +90,26 @@ test_that("vg_render() attaches the duckdb-wasm dependency only when the cache e
   expect_length(w2$dependencies, 1)
   expect_equal(w2$dependencies[[1]]$name, "vgplotr-duckdb-wasm")
 })
+
+test_that("vg_render()'s use_cache lets a single plot override the cache default", {
+  spec <- vg_create() |> vg_dot(x = ~a, y = ~b)
+
+  tmp_full <- tempfile("vgplotr-cache-")
+  dir.create(tmp_full)
+  file.create(file.path(tmp_full, "duckdb-eh.wasm"))
+  file.create(file.path(tmp_full, "duckdb-browser-eh.worker.js"))
+  testthat::local_mocked_bindings(vg_duckdb_cache_dir = function() tmp_full)
+
+  # Cached, but this plot opts out -- no dependency attached even though one
+  # is available.
+  w1 <- vg_render(spec, use_cache = FALSE)
+  expect_null(w1$dependencies)
+
+  tmp_empty <- tempfile("vgplotr-cache-")
+  testthat::local_mocked_bindings(vg_duckdb_cache_dir = function() tmp_empty)
+
+  # Not cached, but this plot asks for it anyway -- harmless, falls back to
+  # no dependency (i.e. the CDN) exactly like the default would.
+  w2 <- vg_render(spec, use_cache = TRUE)
+  expect_null(w2$dependencies)
+})

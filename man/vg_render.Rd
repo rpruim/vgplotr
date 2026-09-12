@@ -4,7 +4,13 @@
 \alias{vg_render}
 \title{Render a vgspec as a live mosaic vgplot}
 \usage{
-vg_render(spec, width = NULL, height = NULL, elementId = NULL)
+vg_render(
+  spec,
+  width = NULL,
+  height = NULL,
+  elementId = NULL,
+  use_cache = vg_duckdb_cache_status()$cached
+)
 }
 \arguments{
 \item{spec}{A \code{vgspec} with a layout of plots/vconcat()/hconcat().}
@@ -12,6 +18,14 @@ vg_render(spec, width = NULL, height = NULL, elementId = NULL)
 \item{width, height}{Widget sizing, in CSS units (e.g. \code{"100\%"}) or pixels.}
 
 \item{elementId}{Optional DOM element ID for the widget.}
+
+\item{use_cache}{Whether this plot should use the local duckdb-wasm engine
+cache (see \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}) if one exists. Defaults to whatever
+\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}} currently reports, so it tracks the cache
+automatically; set to \code{FALSE} to force this one plot to fetch the engine
+from the CDN even when a cache is present, or \code{TRUE} to request the
+cache explicitly (harmless, and equivalent to the default, when no cache
+exists -- it just falls back to the CDN).}
 }
 \description{
 Renders the spec in the browser using a client-side DuckDB (via
@@ -31,3 +45,11 @@ The relationship between this function, \code{print()}, and mosaic's own
 \code{publish()} naming (see \code{design/api-brainstorming.qmd}) is still an open
 design question; \code{vg_render()} is a placeholder name.
 }
+\seealso{
+Other duckdb caching functions:
+\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}},
+\code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}},
+\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}},
+\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}}
+}
+\concept{duckdb caching functions}

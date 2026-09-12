@@ -7,7 +7,18 @@ DuckDB WASM engine}
 \usage{
 vg_duckdb_cache_reset_preference()
 }
+\value{
+Invisibly, \code{NULL}.
+}
 \description{
 Reset the "don't ask again" preference set by declining to cache the
 DuckDB WASM engine
 }
+\seealso{
+Other duckdb caching functions:
+\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}},
+\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}},
+\code{\link[=vg_render]{vg_render()}},
+\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}}
+}
+\concept{duckdb caching functions}
