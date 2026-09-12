@@ -1,2 +1,3 @@
 ^design$
 ^\.github$
+^data-raw/js/node_modules$

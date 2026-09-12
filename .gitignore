@@ -11,3 +11,8 @@ vignettes/*.html
 vignettes/*_files/
 vignettes/*_cache/
 vignettes/.quarto/
+
+# JS bundle build tooling (data-raw/js/build.js) -- its *output*,
+# inst/htmlwidgets/lib/mosaic-bundle.min.js, is committed; the node_modules
+# used to produce it are not.
+data-raw/js/node_modules/

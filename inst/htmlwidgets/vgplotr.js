@@ -1,23 +1,61 @@
-// First working version of the vgplotr htmlwidget.
+// The mosaic JS runtime (mosaic-spec + mosaic-core + duckdb-wasm's own JS
+// API) is vendored locally (lib/mosaic-bundle.min.js, built by
+// data-raw/js/build.js) -- no CDN needed for the library code itself.
 //
-// This fetches the mosaic JS runtime and a client-side DuckDB
-// (duckdb-wasm) from a CDN at *view* time, rather than from locally
-// vendored assets -- so viewing a rendered plot requires an internet
-// connection. Vendoring these assets for offline/reproducible use is
-// planned but not implemented yet (see design/api-brainstorming.qmd and
-// the project's architecture notes).
-//
-// duckdb-wasm is pinned explicitly (via esm.sh's `?deps=` param) because
-// the version mosaic-spec/mosaic-core resolve to automatically on jsdelivr
-// was, at the time this was written, a broken dev prerelease that never
-// finished instantiating.
+// duckdb-wasm's actual database engine (a compiled WebAssembly binary,
+// ~35MB) is a different matter: it's too large to ship inside the R
+// package, so by default it's still fetched from jsdelivr on first use,
+// same as before. A user can instead run vg_cache_duckdb() once to cache
+// it locally (see R/duckdb_cache.R); when that cache exists, vg_render()
+// attaches it to the page as an HTML dependency (an `attachment` link,
+// which just holds a URL -- the file itself is copied alongside the
+// rendered output, not embedded in it) and this script uses that instead
+// of touching the network at all.
 (function () {
-  var MOSAIC_VERSION = "0.31.0";
-  var DUCKDB_WASM_VERSION = "1.29.0";
-  var DEPS = "?deps=@duckdb/duckdb-wasm@" + DUCKDB_WASM_VERSION;
+  // The bundle (inst/htmlwidgets/vgplotr.yaml declares it, auto-injected as
+  // <script type="module">) sets window.__vgplotrBundle as a side effect
+  // rather than being import()-ed by this script directly: it and
+  // vgplotr.js are two separately-versioned htmlwidgets dependencies that
+  // land in sibling (not nested) directories once copied into a rendered
+  // document, so this script can't reliably compute a relative path to it
+  // without hardcoding that layout. Waiting on a global sidesteps that --
+  // module scripts execute before HTMLWidgets' own static render pass
+  // calls renderValue(), so in practice the bundle is already there by the
+  // time this runs; the wait is just a safety margin against ordering
+  // differences across renderers/viewers.
+  function waitForBundle() {
+    return new Promise(function (resolve) {
+      (function check() {
+        if (window.__vgplotrBundle) resolve(window.__vgplotrBundle);
+        else setTimeout(check, 10);
+      })();
+    });
+  }
 
-  function cdn(pkg) {
-    return "https://esm.sh/" + pkg + "@" + MOSAIC_VERSION + DEPS;
+  // If vg_cache_duckdb() has populated the cache, vg_render() attaches it
+  // as an HTML dependency named "vgplotr-duckdb-wasm" with `wasm`/`worker`
+  // attachments -- see htmltools::htmlDependency()'s `attachment` docs for
+  // this <link rel="attachment"> + getElementById(...).href convention.
+  function localDuckdbBundle() {
+    var wasmLink = document.getElementById("vgplotr-duckdb-wasm-wasm-attachment");
+    var workerLink = document.getElementById("vgplotr-duckdb-wasm-worker-attachment");
+    if (!wasmLink || !workerLink) return null;
+    return { mainModule: wasmLink.href, mainWorker: workerLink.href, pthreadWorker: null };
+  }
+
+  // Replicates mosaic-core's own DuckDBWASMConnector initialization
+  // (packages/mosaic/core/src/connectors/wasm.ts), but with explicit
+  // local bundle URLs instead of duckdb.getJsDelivrBundles()/
+  // selectBundle(), which only ever point at jsdelivr.
+  async function instantiateLocalDuckDB(duckdbWasm, bundle) {
+    var worker_url = URL.createObjectURL(
+      new Blob(['importScripts("' + bundle.mainWorker + '");'], { type: "text/javascript" })
+    );
+    var worker = new Worker(worker_url);
+    var db = new duckdbWasm.AsyncDuckDB(new duckdbWasm.VoidLogger(), worker);
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    URL.revokeObjectURL(worker_url);
+    return db;
   }
 
   // A page can hold multiple vgplotr widgets; they share one Coordinator
@@ -26,13 +64,17 @@
   // fine as long as different widgets don't reuse the same table name for
   // different data. The singleton is built from a promise, set synchronously
   // on the first call, so concurrent widget renders don't race to create it.
-  function getCoordinator(mosaicCore) {
+  function getCoordinator(mosaicCore, duckdbWasm) {
     if (!window.__vgplotrCoordinatorPromise) {
-      window.__vgplotrCoordinatorPromise = Promise.resolve().then(function () {
+      window.__vgplotrCoordinatorPromise = (async function () {
         var coord = mosaicCore.coordinator();
-        coord.databaseConnector(mosaicCore.wasmConnector());
+        var bundle = localDuckdbBundle();
+        var connector = bundle
+          ? mosaicCore.wasmConnector({ duckdb: await instantiateLocalDuckDB(duckdbWasm, bundle) })
+          : mosaicCore.wasmConnector();
+        coord.databaseConnector(connector);
         return coord;
-      });
+      })();
     }
     return window.__vgplotrCoordinatorPromise;
   }
@@ -93,15 +135,14 @@
   }
 
   async function renderVgplotr(el, x) {
-    var mosaicSpec = await import(cdn("@uwdata/mosaic-spec"));
-    var mosaicCore = await import(cdn("@uwdata/mosaic-core"));
+    var mod = await waitForBundle();
 
-    var coord = await getCoordinator(mosaicCore);
+    var coord = await getCoordinator(mod.mosaicCore, mod.duckdbWasm);
     await loadTables(coord, x.tables);
     await loadFiles(coord, x.files);
 
-    var ast = mosaicSpec.parseSpec(x.spec);
-    var app = await mosaicSpec.astToDOM(ast);
+    var ast = mod.mosaicSpec.parseSpec(x.spec);
+    var app = await mod.mosaicSpec.astToDOM(ast);
     el.appendChild(app.element);
   }
 

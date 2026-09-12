@@ -1,1 +1,7 @@
-dependencies: []
+dependencies:
+  - name: vgplotr-mosaic-bundle
+    version: 1.0.0
+    src: htmlwidgets/lib
+    script:
+      src: mosaic-bundle.min.js
+      type: module

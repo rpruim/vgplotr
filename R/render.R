@@ -1,12 +1,16 @@
 #' Render a vgspec as a live mosaic vgplot
 #'
-#' Loads the mosaic JS runtime and a client-side DuckDB (via duckdb-wasm)
-#' from a CDN, then parses and renders the spec in the browser. This is a
-#' first working version, not the final architecture: it fetches the JS
-#' runtime from esm.sh at view time (see `inst/htmlwidgets/vgplotr.js`)
-#' rather than from locally vendored assets, so viewing the result requires
-#' an internet connection. Vendoring the runtime for offline/reproducible
-#' use is planned but not done yet.
+#' Renders the spec in the browser using a client-side DuckDB (via
+#' duckdb-wasm). Most of the JS runtime this needs (mosaic-spec/mosaic-core)
+#' is vendored with the package (`inst/htmlwidgets/lib/`), so it works
+#' offline out of the box. The one exception is duckdb-wasm's actual
+#' database engine -- a ~35 MB compiled WebAssembly binary, too large to
+#' ship with the package -- which is fetched from a CDN each time a plot is
+#' *viewed*, unless you've called [vg_cache_duckdb()] to cache it locally
+#' (in which case that cached copy is used instead, and no CDN is involved
+#' at all). If the cache doesn't exist, this function will offer to set it
+#' up for you the first time you call it in an interactive session; see
+#' [vg_cache_duckdb()] for details, including how to silence that offer.
 #'
 #' The relationship between this function, `print()`, and mosaic's own
 #' `publish()` naming (see `design/api-brainstorming.qmd`) is still an open
@@ -17,6 +21,8 @@
 #' @param elementId Optional DOM element ID for the widget.
 #' @export
 vg_render <- function(spec, width = NULL, height = NULL, elementId = NULL) {
+  maybe_offer_duckdb_cache()
+
   payload <- as_spec_payload(spec)
   x <- list(spec = payload$spec, tables = payload$tables, files = payload$files)
   # Data frames in `tables` need to become arrays of row objects in JSON
@@ -25,6 +31,8 @@ vg_render <- function(spec, width = NULL, height = NULL, elementId = NULL) {
   # which matters for zero-argument transforms like vg_count()/vg_rank().
   attr(x, "TOJSON_ARGS") <- list(dataframe = "rows", null = "null")
 
+  dep <- vg_duckdb_cache_dependency()
+
   htmlwidgets::createWidget(
     name = "vgplotr",
     x = x,
@@ -32,6 +40,7 @@ vg_render <- function(spec, width = NULL, height = NULL, elementId = NULL) {
     height = height,
     elementId = elementId,
     package = "vgplotr",
+    dependencies = if (!is.null(dep)) list(dep),
     sizingPolicy = htmlwidgets::sizingPolicy(
       viewer.suppress = TRUE,
       browser.fill = FALSE,

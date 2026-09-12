@@ -18,11 +18,15 @@ this vignette builds a couple of specs with the R-side object model --
 their internal structure as a sanity check, and then renders them with
 `vg_render()`.
 
-**Rendering currently requires an internet connection.** `vg_render()`
-fetches the mosaic JS runtime and a client-side DuckDB (duckdb-wasm) from a
-CDN when the plot is *viewed*, rather than from assets bundled with the
-package. Vendoring those assets for offline/reproducible use is planned but
-not done yet.
+**Rendering mostly works offline already.** The mosaic JS runtime itself
+ships with the package, so no CDN is needed for that. The one exception is
+DuckDB's actual database engine (a ~35 MB compiled WebAssembly binary, too
+large to include in the package) -- by default `vg_render()` fetches that
+one piece from a CDN each time a plot is viewed, unless you run
+`vg_cache_duckdb()` once, which downloads it into a local, version-pinned
+cache and removes the CDN dependency entirely (`vg_render()` will offer to
+do this for you interactively the first time, if you don't already have it
+cached).
 
 ## A single mark
 

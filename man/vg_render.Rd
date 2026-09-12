@@ -14,13 +14,17 @@ vg_render(spec, width = NULL, height = NULL, elementId = NULL)
 \item{elementId}{Optional DOM element ID for the widget.}
 }
 \description{
-Loads the mosaic JS runtime and a client-side DuckDB (via duckdb-wasm)
-from a CDN, then parses and renders the spec in the browser. This is a
-first working version, not the final architecture: it fetches the JS
-runtime from esm.sh at view time (see \code{inst/htmlwidgets/vgplotr.js})
-rather than from locally vendored assets, so viewing the result requires
-an internet connection. Vendoring the runtime for offline/reproducible
-use is planned but not done yet.
+Renders the spec in the browser using a client-side DuckDB (via
+duckdb-wasm). Most of the JS runtime this needs (mosaic-spec/mosaic-core)
+is vendored with the package (\verb{inst/htmlwidgets/lib/}), so it works
+offline out of the box. The one exception is duckdb-wasm's actual
+database engine -- a ~35 MB compiled WebAssembly binary, too large to
+ship with the package -- which is fetched from a CDN each time a plot is
+\emph{viewed}, unless you've called \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}} to cache it locally
+(in which case that cached copy is used instead, and no CDN is involved
+at all). If the cache doesn't exist, this function will offer to set it
+up for you the first time you call it in an interactive session; see
+\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}} for details, including how to silence that offer.
 }
 \details{
 The relationship between this function, \code{print()}, and mosaic's own
