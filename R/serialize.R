@@ -161,9 +161,17 @@ serialize_value <- function(x) {
     format(x)
   } else if (is_vg_transform(x)) {
     serialize_transform(x)
+  } else if (is_vg_sql_expr(x)) {
+    serialize_sql_expr(x)
   } else {
     x
   }
+}
+
+serialize_sql_expr <- function(x) {
+  out <- named_list(x$key, x$text)
+  if (!is.null(x$label)) out$label <- x$label
+  out
 }
 
 serialize_formula <- function(f) {
@@ -171,20 +179,27 @@ serialize_formula <- function(f) {
 }
 
 # Recognizes a mapping formula's RHS: a bare column-name symbol, a literal,
-# or a call to one of the vg_transform_specs functions (vg_bin(), vg_count(),
-# ...) -- recognized here purely syntactically, via match.call() against the
-# real function's formals, without ever evaluating the call itself (which
-# would fail, since e.g. `delay` in `~vg_bin(delay)` isn't a bound variable).
+# a call to sql()/agg() (evaluated directly -- safe, since unlike a
+# transform's bare column-reference arguments, sql()/agg()'s own arguments
+# are self-contained string/param() pieces, not free variables that would
+# fail to evaluate), or a call to one of the vg_transform_specs functions
+# (vg_bin(), vg_count(), ...) -- recognized here purely syntactically, via
+# match.call() against the real function's formals, without ever
+# evaluating the call itself (which would fail, since e.g. `delay` in
+# `~vg_bin(delay)` isn't a bound variable).
 serialize_expr <- function(expr, env) {
   if (is.symbol(expr)) {
     as.character(expr)
   } else if (is.call(expr)) {
     fn_name <- as.character(expr[[1]])
+    if (fn_name %in% c("sql", "agg")) {
+      return(serialize_value(eval(expr, envir = env)))
+    }
     spec <- vg_transform_specs[[fn_name]]
     if (is.null(spec)) {
       stop(
-        "Only simple column references (e.g. ~Date) or known transform ",
-        "functions (", paste(names(vg_transform_specs), collapse = "(), "), "()) ",
+        "Only simple column references (e.g. ~Date), sql()/agg(), or known ",
+        "transform functions (", paste(names(vg_transform_specs), collapse = "(), "), "()) ",
         "can be used inside a mapping formula. Got a call to `", fn_name, "()`.",
         call. = FALSE
       )

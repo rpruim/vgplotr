@@ -277,11 +277,28 @@ plot3 <-
 plot3$attrs$width
 ```
 
-## Not yet implemented
+## `sql()`/`agg()`: raw SQL expressions
 
-`sql()`, for encodings that need a raw SQL expression, isn't built yet:
+`sql()` (and `agg()`, for expressions with an aggregate function) wraps a
+raw SQL expression for encodings that transforms and plain column
+references can't express -- mosaic-spec's own `{sql: "..."}`/`{agg: "..."}`.
+This finally realizes the very first example from the original design doc
+(`design/api-brainstorming.qmd`): a slider-controlled "bias" parameter
+added to a plotted value, computed live by DuckDB. A `param()` reference
+can be written directly in the SQL text (`sql("v + $bias")`) or built up
+from pieces, as below -- both are equivalent.
 
 ```{r}
-#| error: true
-sql(v + param(point))
+bias_picker <- vg_slider(label = "Bias", as = param(bias), min = -20, max = 20, step = 1, value = 0)
+
+biased_plot <-
+  vg_area_y(data_from = "walk", x = ~t, y = sql("v + ", param(bias)), fill = "steelblue") |>
+  vg_plot(width = 680, height = 200, yDomain = c(-30, 30))
+
+spec7 <-
+  vg_create() |>
+  vg_data(name = "walk", data = walk) |>
+  vg_vconcat(bias_picker, biased_plot)
+
+vg_render(spec7)
 ```
