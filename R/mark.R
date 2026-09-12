@@ -27,6 +27,20 @@ vg_mark <- function(spec = NULL, mark, ...) {
   update_layout(spec, fragment)
 }
 
+# Shared by every generated vg_<mark>() wrapper (R/marks-generated.R):
+# drops whichever named arguments the caller left at their vg_unset
+# default (i.e. didn't actually supply) before dispatching to vg_mark().
+#
+# The mark type is `.vg_mark` (not `mark`) so it can't collide with a mark
+# property forwarded through `...` by exact-name argument matching -- no
+# current mark has a property literally called "mark" (it's excluded as
+# the schema's own discriminant key), but vg_interactor_()'s analogous
+# parameter name did collide with a real property (Search's own "type"),
+# so this is named defensively too.
+vg_mark_ <- function(spec, .vg_mark, ...) {
+  do.call(vg_mark, c(list(spec = spec, mark = .vg_mark), drop_unset(list(...))))
+}
+
 #' @export
 print.vg_mark <- function(x, ...) {
   cat("<vg_mark:", x$mark, ">\n")

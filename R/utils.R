@@ -57,3 +57,15 @@ named_list <- function(name, value) {
   names(out) <- name
   out
 }
+
+# Sentinel default for the named (but optional) arguments on generated
+# per-mark/per-interactor wrapper functions (R/marks-generated.R,
+# R/interactors-generated.R) -- lets those functions expose a real,
+# documented formal per schema property while still only forwarding the
+# ones the caller actually supplied (as opposed to every property the
+# schema knows about) on to vg_mark()/vg_interactor().
+vg_unset <- structure(list(), class = "vg_unset")
+
+drop_unset <- function(args) {
+  args[!vapply(args, identical, logical(1), vg_unset)]
+}

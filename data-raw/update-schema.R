@@ -9,6 +9,13 @@
 # match what the runtime the browser actually loads supports) or whenever
 # vgplotr seems to be missing a mark/interactor/attribute mosaic supports.
 #
+# Every vg_<mark>()/vg_<type>() wrapper gets a real, named formal argument
+# per property the schema defines for it (rather than just `...`), each
+# documented from the schema's own description -- so tab completion and
+# `?vg_dot` show the actual options, not just "...". The lower-level
+# vg_mark()/vg_interactor() they're built on stay `...`-based on purpose,
+# since they take an arbitrary/dynamic mark or interactor type.
+#
 # What this does NOT cover (hand-written, not schema-driven): transforms
 # (R/transforms.R -- a different schema file, Transform.ts, without a
 # corresponding section in the JSON schema's mark/attribute defs), legends
@@ -30,61 +37,168 @@ camel_to_snake <- function(name) {
 
 ref_name <- function(ref) sub("^#/definitions/", "", ref$`$ref`)
 
-# A mark definition either has `properties.mark.const` directly, or is a
-# union (`anyOf`/`allOf`) whose branches all agree on the same
-# `properties.mark.const` (e.g. densityX/densityY) -- mirrors mosaic's own
-# markInfo() in bin/generate-python-api.js.
-mark_const <- function(def) {
-  direct <- def$properties$mark$const
-  if (!is.null(direct)) return(direct)
-  branches <- if (!is.null(def$anyOf)) def$anyOf else def$allOf
-  consts <- unique(unlist(lapply(branches, function(b) b$properties$mark$const)))
-  if (length(consts) == 1) consts else NULL
+or_else <- function(x, default) if (is.null(x)) default else x
+
+# First sentence of a schema description, markdown links/footnotes
+# stripped, collapsed to one line -- mirrors mosaic's own docline() in
+# bin/generate-python-api.js.
+docline <- function(desc, fallback) {
+  text <- desc
+  if (is.null(text) || !nzchar(trimws(text))) text <- fallback
+  text <- gsub("\\[([^]]+)\\]\\([^)]*\\)", "\\1", text) # [text](url)
+  text <- gsub("\\[([^]]+)\\]\\[[^]]*\\]", "\\1", text) # [text][ref]
+  text <- gsub("\\[(\\d+)\\]", "", text)                # bare footnote [1]
+  text <- gsub("\\[([^]]+)\\]", "\\1", text)            # [text] shortcut
+  text <- gsub("[\r\n]+", " ", text)
+  text <- gsub("\\s+", " ", text)
+  text <- trimws(text)
+  first <- strsplit(text, "(?<=\\.)\\s", perl = TRUE)[[1]][1]
+  if (is.na(first) || !nzchar(first)) first <- fallback
+  first
 }
 
-marks <- sort(unique(unlist(lapply(defs, mark_const))))
+# A mark definition either has `properties` directly, or is a union
+# (`anyOf`/`allOf`) whose branches all agree on the same
+# `properties.mark.const` (e.g. densityX/densityY) -- mirrors mosaic's own
+# markInfo() in bin/generate-python-api.js. Returns NULL for a non-mark def.
+mark_info <- function(def) {
+  if (!is.null(def$properties$mark$const)) {
+    return(list(mark = def$properties$mark$const, description = def$description, properties = def$properties))
+  }
+  branches <- or_else(def$anyOf, def$allOf)
+  consts <- unique(unlist(lapply(branches, function(b) b$properties$mark$const)))
+  if (length(consts) != 1) return(NULL)
+  props <- list()
+  for (b in branches) props <- utils::modifyList(props, or_else(b$properties, list()))
+  list(mark = consts, description = def$description, properties = props)
+}
+
+mark_defs <- Filter(Negate(is.null), lapply(defs, mark_info))
+names(mark_defs) <- vapply(mark_defs, function(m) m$mark, character(1))
+for (nm in names(mark_defs)) {
+  mark_defs[[nm]]$properties <- mark_defs[[nm]]$properties[!names(mark_defs[[nm]]$properties) %in% c("mark", "data")]
+}
 
 interactor_types <- vapply(
   schema$definitions$PlotInteractor$anyOf,
   function(r) defs[[ref_name(r)]]$properties$select$const,
   character(1)
 )
-
 input_types <- vapply(
   c("Menu", "Search", "Slider", "Table"),
   function(nm) defs[[nm]]$properties$input$const,
   character(1)
 )
+interactor_defs <- list()
+for (r in schema$definitions$PlotInteractor$anyOf) {
+  d <- defs[[ref_name(r)]]
+  interactor_defs[[d$properties$select$const]] <- list(
+    description = d$description,
+    properties = d$properties[setdiff(names(d$properties), "select")]
+  )
+}
+for (nm in c("Menu", "Search", "Slider", "Table")) {
+  d <- defs[[nm]]
+  interactor_defs[[d$properties$input$const]] <- list(
+    description = d$description,
+    properties = d$properties[setdiff(names(d$properties), "input")]
+  )
+}
 
 plot_attrs <- sort(names(defs$PlotAttributes$properties))
 
-cat(length(marks), "marks,", length(interactor_types), "interactors,",
+cat(length(mark_defs), "marks,", length(interactor_types), "interactors,",
     length(input_types), "inputs,", length(plot_attrs), "plot attributes\n")
 
-# --- R/marks-generated.R -----------------------------------------------
+# First-seen description for a given property name, reused across every
+# mark/interactor/input that has a property of that name (these mean the
+# same thing everywhere in mosaic's grammar, so one description per name is
+# both accurate and far less repetitive than re-deriving one per type).
+property_docs <- function(type_defs) {
+  docs <- list()
+  for (nm in names(type_defs)) {
+    props <- type_defs[[nm]]$properties
+    for (p in names(props)) {
+      if (is.null(docs[[p]])) docs[[p]] <- docline(props[[p]]$description, p)
+    }
+  }
+  docs
+}
+mark_prop_docs <- property_docs(mark_defs)
+interactor_prop_docs <- property_docs(interactor_defs)
+
+# Builds one vg_<name>() function + its roxygen block. `helper` is the
+# shared runtime function (vg_mark_()/vg_interactor_()) that drops any
+# still-`vg_unset` argument before dispatching to the generic constructor.
+generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, extra_formals = character(),
+                              extra_docs = character(), title, spec_doc, family) {
+  props <- names(properties)
+  has_spec <- !is.null(spec_doc)
+  formals_str <- paste(c(
+    if (has_spec) "spec = NULL",
+    paste0(props, " = vg_unset"),
+    "...",
+    if (length(extra_formals)) paste0(extra_formals, " = vg_unset")
+  ), collapse = ", ")
+  call_args <- paste(c(
+    if (has_spec) "spec" else "NULL",
+    sprintf('"%s"', type_arg),
+    paste0(props, " = ", props),
+    "...",
+    if (length(extra_formals)) paste0(extra_formals, " = ", extra_formals)
+  ), collapse = ", ")
+
+  c(
+    paste0("#' ", title),
+    "#'",
+    if (!is.null(spec_doc)) sprintf("#' @param spec %s", spec_doc),
+    sprintf("#' @param %s %s", props, unlist(prop_docs[props])),
+    "#' @param ... Additional options or plot-level attributes.",
+    extra_docs,
+    sprintf("#' @family %s", family),
+    "#' @export",
+    sprintf("%s <- function(%s) {", fn, formals_str),
+    sprintf("  %s(%s)", helper, call_args),
+    "}",
+    ""
+  )
+}
+
+# --- R/marks-generated.R -------------------------------------------------
 
 mark_lines <- c(
   "# Generated by data-raw/update-schema.R from mosaic's JSON schema.",
   "# DO NOT EDIT BY HAND -- rerun that script instead.",
   "#",
-  "# One vg_<mark>() wrapper per mark type in the mosaic-spec schema -- e.g.",
-  "# vg_dot(spec, x = ~a, y = ~b) is exactly vg_mark(spec, \"dot\", x = ~a, y",
-  "# = ~b). All share vg_mark()'s documentation (R/mark.R) via @rdname.",
+  "# One vg_<mark>() wrapper per mark type in the mosaic-spec schema, each",
+  "# with a real named argument per property that mark accepts (so tab",
+  "# completion and ?vg_dot show the actual options) -- e.g. vg_dot(spec, x",
+  "# = ~a, y = ~b) is vg_mark(spec, \"dot\", x = ~a, y = ~b) with x/y (and",
+  "# every other dot property) as real, documented arguments instead of an",
+  "# opaque `...`.",
   ""
 )
-for (m in marks) {
-  fn <- paste0("vg_", camel_to_snake(m))
-  mark_lines <- c(
-    mark_lines,
-    "#' @rdname vg_mark",
-    "#' @export",
-    sprintf('%s <- function(spec = NULL, ...) vg_mark(spec, "%s", ...)', fn, m),
-    ""
-  )
+for (name in sort(names(mark_defs))) {
+  fn <- paste0("vg_", camel_to_snake(name))
+  mark_lines <- c(mark_lines, generate_wrapper(
+    fn = fn,
+    helper = "vg_mark_",
+    type_arg = name,
+    properties = mark_defs[[name]]$properties,
+    prop_docs = mark_prop_docs,
+    extra_formals = c("data_from", "filter_by"),
+    extra_docs = c(
+      "#' @param data_from The name of the data source this mark reads from (see [vg_data()]).",
+      "#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by."
+    ),
+    title = docline(mark_defs[[name]]$description, paste0("The `", name, "` mark.")),
+    spec_doc = "A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.",
+    family = "vg_marks"
+  ))
 }
 writeLines(mark_lines, "R/marks-generated.R")
 
-# --- R/interactors-generated.R ------------------------------------------
+# --- R/interactors-generated.R --------------------------------------------
 
 inter_lines <- c(
   "# Generated by data-raw/update-schema.R from mosaic's JSON schema.",
@@ -103,26 +217,41 @@ inter_lines <- c(
   "",
   "# One vg_<type>() wrapper per interactor type (embedded in a plot, e.g.",
   "# vg_pan_zoom()) and input type (a standalone layout widget, e.g.",
-  "# vg_menu()) in the mosaic-spec schema -- e.g. vg_toggle(spec, as =",
-  "# param(sel)) is exactly vg_interactor(spec, \"toggle\", as = param(sel)).",
-  "# All share vg_interactor()'s documentation (R/interactor.R) via @rdname.",
+  "# vg_menu()) in the mosaic-spec schema, each with a real named argument",
+  "# per option that type accepts -- e.g. vg_toggle(spec, as = param(sel))",
+  "# is vg_interactor(spec, \"toggle\", as = param(sel)) with `as` (and every",
+  "# other toggle option) as a real, documented argument.",
   ""
 )
-for (type in c(interactor_types, input_types)) {
+for (type in interactor_types) {
   fn <- paste0("vg_", camel_to_snake(type))
-  args <- if (type %in% input_types) "..." else "spec = NULL, ..."
-  call_args <- if (type %in% input_types) "NULL, " else "spec, "
-  inter_lines <- c(
-    inter_lines,
-    "#' @rdname vg_interactor",
-    "#' @export",
-    sprintf('%s <- function(%s) vg_interactor(%s"%s", ...)', fn, args, call_args, type),
-    ""
-  )
+  inter_lines <- c(inter_lines, generate_wrapper(
+    fn = fn,
+    helper = "vg_interactor_",
+    type_arg = type,
+    properties = interactor_defs[[type]]$properties,
+    prop_docs = interactor_prop_docs,
+    title = docline(interactor_defs[[type]]$description, paste0("A `", type, "` interactor.")),
+    spec_doc = "A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.",
+    family = "vg_interactors"
+  ))
+}
+for (type in input_types) {
+  fn <- paste0("vg_", camel_to_snake(type))
+  inter_lines <- c(inter_lines, generate_wrapper(
+    fn = fn,
+    helper = "vg_interactor_",
+    type_arg = type,
+    properties = interactor_defs[[type]]$properties,
+    prop_docs = interactor_prop_docs,
+    title = docline(interactor_defs[[type]]$description, paste0("A `", type, "` input.")),
+    spec_doc = NULL,
+    family = "vg_interactors"
+  ))
 }
 writeLines(inter_lines, "R/interactors-generated.R")
 
-# --- R/attrs-generated.R -------------------------------------------------
+# --- R/attrs-generated.R ---------------------------------------------------
 
 attr_lines <- c(
   "# Generated by data-raw/update-schema.R from mosaic's JSON schema.",

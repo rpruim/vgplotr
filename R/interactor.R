@@ -62,6 +62,19 @@ vg_interactor <- function(spec = NULL, type, ...) {
   }
 }
 
+# Shared by every generated vg_<type>() wrapper (R/interactors-generated.R):
+# drops whichever named arguments the caller left at their vg_unset default
+# (i.e. didn't actually supply) before dispatching to vg_interactor().
+#
+# The interactor/input type is `.vg_type` (not `type`) because a real
+# schema property collides with the obvious name: Search has its own
+# "type" property (contains/prefix/suffix/regexp), which was intercepting
+# this parameter by exact-name argument matching and leaving the actual
+# interactor type ("search") to fall through into `...` instead.
+vg_interactor_ <- function(spec, .vg_type, ...) {
+  do.call(vg_interactor, c(list(spec = spec, type = .vg_type), drop_unset(list(...))))
+}
+
 #' @export
 print.vg_interactor <- function(x, ...) {
   cat("<vg_interactor:", x$type, ">\n")

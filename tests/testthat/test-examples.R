@@ -17,7 +17,11 @@ test_that("simple one-layer plot (design doc example 1) builds the expected stru
   mark <- spec$layout$items[[1]]
   expect_s3_class(mark, "vg_mark")
   expect_equal(mark$mark, "lineY")
-  expect_equal(mark$encodings, list(data_from = "aapl", x = ~Date, y = ~Close))
+  # Argument order isn't semantically meaningful (JSON objects are
+  # unordered), and generated mark wrappers now reorder named args to
+  # match their formals -- compare regardless of order.
+  expect_equal(mark$encodings[c("data_from", "x", "y")], list(data_from = "aapl", x = ~Date, y = ~Close))
+  expect_equal(sort(names(mark$encodings)), c("data_from", "x", "y"))
 
   expect_equal(spec$layout$attrs, list())
   expect_equal(spec$plot_defaults, list(width = 680, height = 200))
