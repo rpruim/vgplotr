@@ -25,9 +25,41 @@ vg_scale_facet(
   ...
 )
 
-vg_scale_fx(spec = NULL, ...)
+vg_scale_fx(
+  spec = NULL,
+  domain = vg_unset,
+  range = vg_unset,
+  reverse = vg_unset,
+  round = vg_unset,
+  padding = vg_unset,
+  padding_inner = vg_unset,
+  padding_outer = vg_unset,
+  align = vg_unset,
+  inset = vg_unset,
+  inset_left = vg_unset,
+  inset_right = vg_unset,
+  inset_top = vg_unset,
+  inset_bottom = vg_unset,
+  ...
+)
 
-vg_scale_fy(spec = NULL, ...)
+vg_scale_fy(
+  spec = NULL,
+  domain = vg_unset,
+  range = vg_unset,
+  reverse = vg_unset,
+  round = vg_unset,
+  padding = vg_unset,
+  padding_inner = vg_unset,
+  padding_outer = vg_unset,
+  align = vg_unset,
+  inset = vg_unset,
+  inset_left = vg_unset,
+  inset_right = vg_unset,
+  inset_top = vg_unset,
+  inset_bottom = vg_unset,
+  ...
+)
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to set this scale on, or \code{NULL} to
@@ -67,8 +99,8 @@ facet range; only meaningful for \code{which = "fx"}
 facet range; only meaningful for \code{which = "fy"}
 (\code{fyInsetTop}/\code{fyInsetBottom}).}
 
-\item{...}{Additional plot-level attributes, by their raw mosaic-spec
-camelCase name (e.g. \verb{xyDomain =}).}
+\item{...}{Additional plot-level attributes not covered above, by their
+raw mosaic-spec camelCase name.}
 }
 \description{
 \code{vg_scale_fx()}/\code{vg_scale_fy()} set the scale properties mosaic-spec

@@ -1,3 +1,6 @@
+#' @include utils.R
+NULL
+
 #' Add a legend
 #'
 #' A legend can be embedded in a plot (added alongside its marks, picking up
@@ -40,15 +43,15 @@ vg_legend <- function(spec = NULL, type, ..., for_plot = NULL) {
 
 #' @rdname vg_legend
 #' @export
-vg_legend_color <- function(spec = NULL, ..., for_plot = NULL) vg_legend(spec, "color", ..., for_plot = for_plot)
+vg_legend_color <- wrapper_function(vg_legend, type = "color")
 
 #' @rdname vg_legend
 #' @export
-vg_legend_opacity <- function(spec = NULL, ..., for_plot = NULL) vg_legend(spec, "opacity", ..., for_plot = for_plot)
+vg_legend_opacity <- wrapper_function(vg_legend, type = "opacity")
 
 #' @rdname vg_legend
 #' @export
-vg_legend_symbol <- function(spec = NULL, ..., for_plot = NULL) vg_legend(spec, "symbol", ..., for_plot = for_plot)
+vg_legend_symbol <- wrapper_function(vg_legend, type = "symbol")
 
 #' @export
 print.vg_legend <- function(x, ...) {

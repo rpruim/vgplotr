@@ -1,3 +1,6 @@
+#' @include utils.R
+NULL
+
 #' Set position scale properties (x or y)
 #'
 #' `vg_scale_x()`/`vg_scale_y()` set the scale properties mosaic-spec exposes
@@ -49,8 +52,8 @@
 #' @param constant Symlog scale constant (`xConstant`/`yConstant`).
 #' @param percent Boolean; format/scale values as percentages
 #'   (`xPercent`/`yPercent`).
-#' @param ... Additional plot-level attributes, by their raw mosaic-spec
-#'   camelCase name (e.g. `xyDomain =`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name (e.g. `xyDomain =`).
 #' @family scale functions
 #' @export
 #' @examples
@@ -106,11 +109,11 @@ vg_scale_position <- function(spec = NULL,
 
 #' @rdname vg_scale_position
 #' @export
-vg_scale_x <- function(spec = NULL, ...) vg_scale_position(spec, which = "x", ...)
+vg_scale_x <- wrapper_function(vg_scale_position, which = "x")
 
 #' @rdname vg_scale_position
 #' @export
-vg_scale_y <- function(spec = NULL, ...) vg_scale_position(spec, which = "y", ...)
+vg_scale_y <- wrapper_function(vg_scale_position, which = "y")
 
 # Facet scales (fx/fy) are a strict subset of the position scale properties
 # above: no `type`/`nice`/`zero`/`clamp` (facet scales are always band
@@ -194,6 +197,8 @@ add_inset_attrs <- function(attrs, which, env, context) {
 #' @param inset_top,inset_bottom Pixel inset at the top/bottom end of the
 #'   facet range; only meaningful for `which = "fy"`
 #'   (`fyInsetTop`/`fyInsetBottom`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
 #' @family scale functions
 #' @export
 #' @examples
@@ -237,8 +242,8 @@ vg_scale_facet <- function(spec = NULL,
 
 #' @rdname vg_scale_facet
 #' @export
-vg_scale_fx <- function(spec = NULL, ...) vg_scale_facet(spec, which = "fx", ...)
+vg_scale_fx <- wrapper_function(vg_scale_facet, which = "fx")
 
 #' @rdname vg_scale_facet
 #' @export
-vg_scale_fy <- function(spec = NULL, ...) vg_scale_facet(spec, which = "fy", ...)
+vg_scale_fy <- wrapper_function(vg_scale_facet, which = "fy")

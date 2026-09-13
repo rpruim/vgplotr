@@ -23,3 +23,24 @@ Suggests:
 Config/testthat/edition: 3
 VignetteBuilder: quarto
 Config/roxygen2/version: 8.0.0
+Collate: 
+    'attrs-generated.R'
+    'concat.R'
+    'create.R'
+    'data.R'
+    'duckdb_cache.R'
+    'export.R'
+    'utils.R'
+    'guide.R'
+    'interactor.R'
+    'interactors-generated.R'
+    'legend.R'
+    'mark.R'
+    'marks-generated.R'
+    'param.R'
+    'plot.R'
+    'render.R'
+    'scale.R'
+    'serialize.R'
+    'sql.R'
+    'transforms.R'

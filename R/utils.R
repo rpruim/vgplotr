@@ -112,3 +112,57 @@ prefixed_attrs <- function(prefix, suffixes, env) {
   if (length(vals)) names(vals) <- paste0(prefix, suffixes[names(vals)])
   vals
 }
+
+#' Create a wrapper that fixes some arguments of another function
+#'
+#' `wrapper_function(..f, name = value, ...)` returns a new function that
+#' calls `..f` with `name = value` (and any other named arguments in `...`)
+#' supplied automatically. Unlike a plain `function(...) ..f(name = value,
+#' ...)` closure, the result's own formal arguments are `..f`'s real
+#' formals (names, defaults, and `...`) minus the ones fixed here -- so
+#' e.g. `wrapper_function(vg_scale_position, which = "x")` has the same
+#' signature as `vg_scale_position()` (type, domain, ..., but no `which`),
+#' which is what lets a generated wrapper like `vg_scale_x()` show its
+#' actual arguments for tab completion and `?vg_scale_x` instead of an
+#' opaque `(spec = NULL, ...)`. Used to build the thin
+#' `vg_scale_x()`/`vg_scale_y()`/`vg_scale_fx()`/`vg_scale_fy()` and
+#' `vg_guide_x()`/`vg_guide_y()`/`vg_guide_fx()`/`vg_guide_fy()` wrappers
+#' (R/scale.R, R/guide.R), plus `vg_legend_color()`/`vg_legend_opacity()`/
+#' `vg_legend_symbol()` (R/legend.R).
+#'
+#' @param ..f The function to wrap.
+#' @param ... Argument name/value pairs to fix; each name must be one of
+#'   `..f`'s own formal arguments, and is removed from the wrapper's
+#'   formals.
+#' @noRd
+wrapper_function <- function(..f, ...) {
+  fixed <- list(...)
+  orig_formals <- formals(..f)
+
+  bad <- setdiff(names(fixed), names(orig_formals))
+  if (length(bad)) {
+    stop(
+      "wrapper_function(): `", paste(bad, collapse = "`, `"), "` ",
+      if (length(bad) == 1) "is not an argument" else "are not arguments",
+      " of the wrapped function.",
+      call. = FALSE
+    )
+  }
+
+  keep <- setdiff(names(orig_formals), names(fixed))
+  has_dots <- "..." %in% keep
+  named_keep <- setdiff(keep, "...")
+
+  forwarded <- lapply(named_keep, as.name)
+  names(forwarded) <- named_keep
+
+  call_args <- c(list(quote(..f)), fixed, forwarded)
+  if (has_dots) call_args <- c(call_args, list(quote(...)))
+
+  wrapper <- function() NULL
+  formals(wrapper) <- orig_formals[keep]
+  body(wrapper) <- as.call(call_args)
+  environment(wrapper) <- list2env(list(..f = ..f), parent = environment(..f))
+
+  wrapper
+}

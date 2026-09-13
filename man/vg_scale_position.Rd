@@ -33,9 +33,57 @@ vg_scale_position(
   ...
 )
 
-vg_scale_x(spec = NULL, ...)
+vg_scale_x(
+  spec = NULL,
+  type = vg_unset,
+  domain = vg_unset,
+  range = vg_unset,
+  nice = vg_unset,
+  zero = vg_unset,
+  reverse = vg_unset,
+  clamp = vg_unset,
+  round = vg_unset,
+  padding = vg_unset,
+  padding_inner = vg_unset,
+  padding_outer = vg_unset,
+  align = vg_unset,
+  inset = vg_unset,
+  inset_left = vg_unset,
+  inset_right = vg_unset,
+  inset_top = vg_unset,
+  inset_bottom = vg_unset,
+  base = vg_unset,
+  exponent = vg_unset,
+  constant = vg_unset,
+  percent = vg_unset,
+  ...
+)
 
-vg_scale_y(spec = NULL, ...)
+vg_scale_y(
+  spec = NULL,
+  type = vg_unset,
+  domain = vg_unset,
+  range = vg_unset,
+  nice = vg_unset,
+  zero = vg_unset,
+  reverse = vg_unset,
+  clamp = vg_unset,
+  round = vg_unset,
+  padding = vg_unset,
+  padding_inner = vg_unset,
+  padding_outer = vg_unset,
+  align = vg_unset,
+  inset = vg_unset,
+  inset_left = vg_unset,
+  inset_right = vg_unset,
+  inset_top = vg_unset,
+  inset_bottom = vg_unset,
+  base = vg_unset,
+  exponent = vg_unset,
+  constant = vg_unset,
+  percent = vg_unset,
+  ...
+)
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to set this scale on, or \code{NULL} to
@@ -94,8 +142,8 @@ range; only meaningful for \code{which = "y"} (\code{yInsetTop}/\code{yInsetBott
 \item{percent}{Boolean; format/scale values as percentages
 (\code{xPercent}/\code{yPercent}).}
 
-\item{...}{Additional plot-level attributes, by their raw mosaic-spec
-camelCase name (e.g. \verb{xyDomain =}).}
+\item{...}{Additional plot-level attributes not covered above, by their
+raw mosaic-spec camelCase name (e.g. \verb{xyDomain =}).}
 }
 \description{
 \code{vg_scale_x()}/\code{vg_scale_y()} set the scale properties mosaic-spec exposes

@@ -1,3 +1,6 @@
+#' @include utils.R
+NULL
+
 #' Set axis-guide properties for a position scale (x or y)
 #'
 #' `vg_guide_x()`/`vg_guide_y()` set the axis-guide properties mosaic-spec
@@ -56,8 +59,8 @@
 #'   (`xAriaLabel`/`yAriaLabel`).
 #' @param aria_description ARIA accessibility description for the axis
 #'   (`xAriaDescription`/`yAriaDescription`).
-#' @param ... Additional plot-level attributes, by their raw mosaic-spec
-#'   camelCase name.
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
 #' @family guide functions
 #' @export
 #' @examples
@@ -108,11 +111,11 @@ vg_guide_position <- function(spec = NULL,
 
 #' @rdname vg_guide_position
 #' @export
-vg_guide_x <- function(spec = NULL, ...) vg_guide_position(spec, which = "x", ...)
+vg_guide_x <- wrapper_function(vg_guide_position, which = "x")
 
 #' @rdname vg_guide_position
 #' @export
-vg_guide_y <- function(spec = NULL, ...) vg_guide_position(spec, which = "y", ...)
+vg_guide_y <- wrapper_function(vg_guide_position, which = "y")
 
 #' Set axis-guide properties for a facet scale (fx or fy)
 #'
@@ -159,6 +162,8 @@ vg_guide_y <- function(spec = NULL, ...) vg_guide_position(spec, which = "y", ..
 #'   (`fxAriaLabel`/`fyAriaLabel`).
 #' @param aria_description ARIA accessibility description for the facet axis
 #'   (`fxAriaDescription`/`fyAriaDescription`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
 #' @family guide functions
 #' @export
 #' @examples
@@ -206,8 +211,8 @@ vg_guide_facet <- function(spec = NULL,
 
 #' @rdname vg_guide_facet
 #' @export
-vg_guide_fx <- function(spec = NULL, ...) vg_guide_facet(spec, which = "fx", ...)
+vg_guide_fx <- wrapper_function(vg_guide_facet, which = "fx")
 
 #' @rdname vg_guide_facet
 #' @export
-vg_guide_fy <- function(spec = NULL, ...) vg_guide_facet(spec, which = "fy", ...)
+vg_guide_fy <- wrapper_function(vg_guide_facet, which = "fy")

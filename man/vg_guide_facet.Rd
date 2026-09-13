@@ -27,9 +27,45 @@ vg_guide_facet(
   ...
 )
 
-vg_guide_fx(spec = NULL, ...)
+vg_guide_fx(
+  spec = NULL,
+  position = vg_unset,
+  ticks = vg_unset,
+  tick_spacing = vg_unset,
+  tick_size = vg_unset,
+  tick_padding = vg_unset,
+  tick_format = vg_unset,
+  tick_rotate = vg_unset,
+  grid = vg_unset,
+  line = vg_unset,
+  label = vg_unset,
+  label_anchor = vg_unset,
+  label_offset = vg_unset,
+  font_variant = vg_unset,
+  aria_label = vg_unset,
+  aria_description = vg_unset,
+  ...
+)
 
-vg_guide_fy(spec = NULL, ...)
+vg_guide_fy(
+  spec = NULL,
+  position = vg_unset,
+  ticks = vg_unset,
+  tick_spacing = vg_unset,
+  tick_size = vg_unset,
+  tick_padding = vg_unset,
+  tick_format = vg_unset,
+  tick_rotate = vg_unset,
+  grid = vg_unset,
+  line = vg_unset,
+  label = vg_unset,
+  label_anchor = vg_unset,
+  label_offset = vg_unset,
+  font_variant = vg_unset,
+  aria_label = vg_unset,
+  aria_description = vg_unset,
+  ...
+)
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to set this guide on, or \code{NULL} to
@@ -82,8 +118,8 @@ pixels (\code{fxLabelOffset}/\code{fyLabelOffset}).}
 \item{aria_description}{ARIA accessibility description for the facet axis
 (\code{fxAriaDescription}/\code{fyAriaDescription}).}
 
-\item{...}{Additional plot-level attributes, by their raw mosaic-spec
-camelCase name.}
+\item{...}{Additional plot-level attributes not covered above, by their
+raw mosaic-spec camelCase name.}
 }
 \description{
 \code{vg_guide_fx()}/\code{vg_guide_fy()} set the axis-guide properties mosaic-spec
