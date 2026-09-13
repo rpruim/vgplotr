@@ -220,3 +220,27 @@ noted below.
 - ✅ `walmart-openings.qmd`
 - ✅ `nyc-taxi-rides.qmd` (surfaced the missing `vg_config()` support --
   see "Bugs found and fixed" above)
+
+### Multi-View Coordination
+
+- ✅ `flights-200k.qmd`
+- ✅ `flights-10m.qmd` (10M-row remote dataset; rendering may be slow)
+- ✅ `gaia.qmd` (confirms the batch-3 plot-attribute serialization fix:
+  `color_scale`/`y_scale` are param references, e.g. `vg_plot(color_scale
+  = scale_type)`)
+- ✅ `observable-latency.qmd` (confirms the mark/plot-attribute collision
+  fix: the `raster` mark's own `width`/`height` differ from the plot's)
+- ✅ `athletes.qmd` (confirms the batch-3 nested-param-reference fix: a
+  Selection's `include` field names another Selection,
+  `list(select = "intersect", include = category)`)
+- ✅ `protein-design.qmd`
+- ✅ `pan-zoom.qmd`
+- ✅ `splom.qmd` (16-plot grid; built with an R loop rather than
+  mosaic's own hand-written repetition, since vgplotr specs are just R
+  values/functions)
+- ✅ `weather.qmd`
+
+No new bugs found in this batch -- every gap this category could have
+exercised (nested param references, plot-attribute param values, the
+mark/plot-attribute collision) had already been fixed while working
+through "Maps & Spatial Data".

@@ -1,0 +1,77 @@
+---
+title: "Cross-Filter Flights (200k)"
+subtitle: "Histograms of arrival delay, departure time, and flight distance, cross-filtered by brushing."
+format: html
+engine: knitr
+---
+
+Recreates [Cross-Filter Flights
+(200k)](https://idl.uw.edu/mosaic/examples/flights-200k.html) from the
+mosaic/vgplot example gallery. Select a histogram region to
+cross-filter the charts. Each plot uses an `intervalX` interactor to
+populate a shared Selection with `crossfilter` resolution.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+brush <- param(brush)
+
+delay_plot <-
+  vg_mark_rect_y(
+    data_from = "flights", filter_by = brush,
+    x = ~ vg_bin(delay), y = ~ vg_count(), fill = "steelblue",
+    inset_left = 0.5, inset_right = 0.5
+  ) |>
+  vg_interval_x(as = brush) |>
+  vg_plot(x_domain = "Fixed", x_label = "Arrival Delay (min)", y_tick_format = "s", width = 600, height = 200)
+
+time_plot <-
+  vg_mark_rect_y(
+    data_from = "flights", filter_by = brush,
+    x = ~ vg_bin(time), y = ~ vg_count(), fill = "steelblue",
+    inset_left = 0.5, inset_right = 0.5
+  ) |>
+  vg_interval_x(as = brush) |>
+  vg_plot(x_domain = "Fixed", x_label = "Departure Time (hour)", y_tick_format = "s", width = 600, height = 200)
+
+distance_plot <-
+  vg_mark_rect_y(
+    data_from = "flights", filter_by = brush,
+    x = ~ vg_bin(distance), y = ~ vg_count(), fill = "steelblue",
+    inset_left = 0.5, inset_right = 0.5
+  ) |>
+  vg_interval_x(as = brush) |>
+  vg_plot(x_domain = "Fixed", x_label = "Flight Distance (miles)", y_tick_format = "s", width = 600, height = 200)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Cross-Filter Flights (200k)",
+    description = paste(
+      "Histograms showing arrival delay, departure time, and distance flown for over",
+      "200,000 flights. Select a histogram region to cross-filter the charts. Each plot",
+      "uses an `intervalX` interactor to populate a shared Selection with `crossfilter`",
+      "resolution."
+    )
+  ) |>
+  vg_data(name = "flights", file = vg_data_url("flights-200k.parquet")) |>
+  vg_params(brush = list(select = "crossfilter")) |>
+  vg_vconcat(delay_plot, time_plot, distance_plot)
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/flights-200k.html) exactly,
+aside from `data.flights.file` (`vg_data_url()` vs. a relative path)
+and object key order.
+:::

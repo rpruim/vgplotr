@@ -1,0 +1,133 @@
+---
+title: "Protein Design Explorer"
+subtitle: "Explore synthesized protein designs generated via RFDiffusion."
+format: html
+engine: knitr
+---
+
+Recreates [Protein Design
+Explorer](https://idl.uw.edu/mosaic/examples/protein-design.html) from
+the mosaic/vgplot example gallery (adapted from a UW CSE 512 project by
+Christina Savvides, Alexander Shida, Riti Biswas, and Nora
+McNamara-Bordewick). Explore synthesized proteins generated via
+RFDiffusion to identify promising designs and assess the effects of
+process parameters.
+
+The color legend itself is a filter control here (`vg_legend_color(as
+= query)`): clicking a legend entry toggles that version in/out of the
+shared `query` crossfilter, same as the menus above it.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+query <- param(query)
+point <- param(point)
+plddt_domain <- param(plddt_domain)
+pae_domain <- param(pae_domain)
+scheme <- param(scheme)
+
+controls <- vg_hconcat(
+  vg_menu(from = "proteins", column = "partial_t", label = "Partial t", as = query),
+  vg_menu(from = "proteins", column = "noise", label = "Noise", as = query),
+  vg_menu(from = "proteins", column = "gradient_decay_function", label = "Gradient Decay", as = query),
+  vg_menu(from = "proteins", column = "gradient_scale", label = "Gradient Scale", as = query)
+)
+
+top_hist <-
+  vg_mark_rect_y(
+    data_from = "proteins", filter_by = query,
+    x = ~ vg_bin(plddt_total, steps = 60), y = ~ vg_count(), z = ~version, fill = ~version,
+    order = "z", reverse = TRUE, inset_left = 0.5, inset_right = 0.5
+  ) |>
+  vg_plot(
+    width = 600, height = 55, x_axis = NULL, y_axis = NULL, x_domain = plddt_domain,
+    color_domain = "Fixed", color_scheme = scheme,
+    margin_left = 40, margin_right = 0, margin_top = 0, margin_bottom = 0
+  )
+
+legend_row <- vg_hconcat(top_hist, vg_hspace(5), vg_legend_color(for_plot = "scatter", columns = 1, as = query))
+
+scatter <-
+  vg_mark_frame(stroke = "#ccc") |>
+  vg_mark_raster(
+    data_from = "proteins", filter_by = query, x = ~plddt_total, y = ~pae_interaction, fill = ~version, pad = 0
+  ) |>
+  vg_interval_xy(as = query, brush = list(stroke = "currentColor", fill = "transparent")) |>
+  vg_mark_dot(
+    data_from = "proteins", filter_by = point, x = ~plddt_total, y = ~pae_interaction,
+    fill = ~version, stroke = "currentColor", stroke_width = 0.5
+  ) |>
+  vg_plot(
+    name = "scatter", opacity_domain = c(0, 2), opacity_clamp = TRUE,
+    color_domain = "Fixed", color_scheme = scheme, x_domain = plddt_domain, y_domain = pae_domain,
+    x_label_anchor = "center", y_label_anchor = "center",
+    margin_top = 0, margin_left = 40, margin_right = 0, width = 600, height = 450
+  )
+
+right_hist <-
+  vg_mark_rect_x(
+    data_from = "proteins", filter_by = query,
+    x = ~ vg_count(), y = ~ vg_bin(pae_interaction, steps = 60), z = ~version, fill = ~version,
+    order = "z", reverse = TRUE, inset_top = 0.5, inset_bottom = 0.5
+  ) |>
+  vg_plot(
+    width = 55, height = 450, x_axis = NULL, y_axis = NULL,
+    margin_top = 0, margin_left = 0, margin_right = 0, y_domain = pae_domain,
+    color_domain = "Fixed", color_scheme = scheme
+  )
+
+tbl <- vg_table(
+  as = point, filter_by = query, from = "proteins",
+  columns = c(
+    "version", "pae_interaction", "plddt_total", "noise",
+    "gradient_decay_function", "gradient_scale", "movement"
+  ),
+  width = 680, height = 215
+)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Protein Design Explorer",
+    description = paste(
+      "Explore synthesized proteins generated via RFDiffusion.",
+      '"Minibinders" are small proteins that bind to a specific protein target.',
+      "When designing a minibinder, a researcher inputs the structure of the target protein",
+      "and other parameters into the AI diffusion model. The dashboard below enables",
+      "exploration of the results to identify promising protein designs and assess the",
+      "effects of process parameters."
+    ),
+    credit = paste(
+      "Adapted from a [UW CSE 512](https://courses.cs.washington.edu/courses/cse512/24sp/)",
+      "project by Christina Savvides, Alexander Shida, Riti Biswas, and Nora",
+      "McNamara-Bordewick. Data from the",
+      "[UW Institute for Protein Design](https://www.ipd.uw.edu/)."
+    )
+  ) |>
+  vg_data(name = "proteins", file = vg_data_url("protein-design.parquet")) |>
+  vg_params(
+    query = list(select = "crossfilter"),
+    point = list(select = "intersect", empty = TRUE),
+    plddt_domain = c(67, 94.5), pae_domain = c(5, 29), scheme = "observable10"
+  ) |>
+  vg_vconcat(controls, vg_vspace("1.5em"), legend_row, vg_hconcat(scatter, right_hist), vg_vspace("1em"), tbl)
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/protein-design.html) exactly
+(the full multi-paragraph description was abbreviated above for
+readability, so `meta.description` text differs, though its structure
+is identical), aside from `data.proteins.file` (`vg_data_url()` vs. a
+relative path) and object key order.
+:::

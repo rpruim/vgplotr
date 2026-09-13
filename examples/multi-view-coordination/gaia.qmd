@@ -1,0 +1,120 @@
+---
+title: "Gaia Star Catalog"
+subtitle: "A 5M row sample of the Gaia star catalog, linking a sky map to a Hertzsprung-Russell diagram."
+format: html
+engine: knitr
+---
+
+Recreates [Gaia Star
+Catalog](https://idl.uw.edu/mosaic/examples/gaia.html) from the
+mosaic/vgplot example gallery. A `raster` sky map reveals our Milky
+Way galaxy. Select high parallax stars in the histogram to reveal a
+Hertzsprung-Russell diagram in the plot of stellar color vs. magnitude
+on the right.
+
+`color_scale`/`y_scale` are set to a **param reference**
+(`scale_type`), not a literal string -- a menu-free way for one
+control point (here just a param, not wired to a visible input in this
+example) to switch every linked plot's scale type at once.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+brush <- param(brush)
+bandwidth <- param(bandwidth)
+pixel_size <- param(pixelSize)
+scale_type <- param(scaleType)
+
+gaia_query <- paste0(
+  "-- compute u and v with natural earth projection\n",
+  "WITH prep AS (\n",
+  "  SELECT\n",
+  "    radians((-l + 540) % 360 - 180) AS lambda,\n",
+  "    radians(b) AS phi,\n",
+  "    asin(sqrt(3)/2 * sin(phi)) AS t,\n",
+  "    t^2 AS t2,\n",
+  "    t2^3 AS t6,\n",
+  "    *\n",
+  "  FROM 'https://pub-1da360b43ceb401c809f68ca37c7f8a4.r2.dev/data/gaia-5m.parquet'\n",
+  "  WHERE parallax BETWEEN -5 AND 20 AND phot_g_mean_mag IS NOT NULL AND bp_rp IS NOT NULL\n",
+  ")\n",
+  "SELECT\n",
+  "  (1.340264 * \"lambda\" * cos(t)) / (sqrt(3)/2 * (1.340264 + (-0.081106 * 3 * t2) + ",
+  "(t6 * (0.000893 * 7 + 0.003796 * 9 * t2)))) AS u,\n",
+  "  t * (1.340264 + (-0.081106 * t2) + (t6 * (0.000893 + 0.003796 * t2))) AS v,\n",
+  "  * EXCLUDE('t', 't2', 't6')\n",
+  "FROM prep\n"
+)
+
+sky_plot <-
+  vg_mark_raster(
+    data_from = "gaia", filter_by = brush, x = ~u, y = ~v, fill = "density",
+    bandwidth = bandwidth, pixel_size = pixel_size
+  ) |>
+  vg_interval_xy(pixel_size = 2, as = brush) |>
+  vg_plot(
+    xy_domain = "Fixed", color_scale = scale_type, color_scheme = "viridis",
+    width = 440, height = 250, margin_left = 25, margin_top = 20, margin_right = 1
+  )
+
+mag_hist <-
+  vg_mark_rect_y(
+    data_from = "gaia", filter_by = brush,
+    x = ~ vg_bin(phot_g_mean_mag), y = ~ vg_count(), fill = "steelblue", inset = 0.5
+  ) |>
+  vg_interval_x(as = brush) |>
+  vg_plot(x_domain = "Fixed", y_scale = scale_type, y_grid = TRUE, width = 220, height = 120, margin_left = 65)
+
+parallax_hist <-
+  vg_mark_rect_y(
+    data_from = "gaia", filter_by = brush,
+    x = ~ vg_bin(parallax), y = ~ vg_count(), fill = "steelblue", inset = 0.5
+  ) |>
+  vg_interval_x(as = brush) |>
+  vg_plot(x_domain = "Fixed", y_scale = scale_type, y_grid = TRUE, width = 220, height = 120, margin_left = 65)
+
+hr_plot <-
+  vg_mark_raster(
+    data_from = "gaia", filter_by = brush, x = ~bp_rp, y = ~phot_g_mean_mag, fill = "density",
+    bandwidth = bandwidth, pixel_size = pixel_size
+  ) |>
+  vg_interval_xy(pixel_size = 2, as = brush) |>
+  vg_plot(
+    xy_domain = "Fixed", color_scale = scale_type, color_scheme = "viridis", y_reverse = TRUE,
+    width = 230, height = 370, margin_left = 25, margin_top = 20, margin_right = 1
+  )
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Gaia Star Catalog",
+    description = paste(
+      "A 5M row sample of the 1.8B element Gaia star catalog.\n",
+      "A `raster` sky map reveals our Milky Way galaxy. Select high parallax stars in the",
+      "histogram to reveal a Hertzsprung-Russel diagram in the plot of stellar color vs.",
+      "magnitude on the right."
+    )
+  ) |>
+  vg_data(name = "gaia", query = gaia_query) |>
+  vg_params(brush = list(select = "crossfilter"), bandwidth = 0, pixelSize = 2, scaleType = "sqrt") |>
+  vg_hconcat(
+    vg_vconcat(sky_plot, vg_hconcat(mag_hist, parallax_hist)),
+    vg_hspace(10),
+    hr_plot
+  )
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON spec](https://idl.uw.edu/mosaic/examples/gaia.html)
+exactly, aside from object key order.
+:::

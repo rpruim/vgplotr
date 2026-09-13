@@ -1,0 +1,84 @@
+---
+title: "Cross-Filter Flights (10M)"
+subtitle: "Histograms over 10 million flights, with automatic pre-aggregation for efficient cross-filtering."
+format: html
+engine: knitr
+---
+
+Recreates [Cross-Filter Flights
+(10M)](https://idl.uw.edu/mosaic/examples/flights-10m.html) from the
+mosaic/vgplot example gallery. Once loaded, automatic pre-aggregation
+optimizations enable efficient cross-filtered selections.
+
+Note: the underlying `flights-10m.parquet` file is ~10 million rows,
+hosted outside mosaic's usual `data/` directory (see "Linear
+Regression 10M" in the Data Transformation batch for the same data
+source). Rendering this one may be slow.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+brush <- param(brush)
+
+flights_url <- "https://pub-1da360b43ceb401c809f68ca37c7f8a4.r2.dev/data/flights-10m.parquet"
+
+delay_plot <-
+  vg_mark_rect_y(
+    data_from = "flights10m", filter_by = brush,
+    x = ~ vg_bin(delay), y = ~ vg_count(), fill = "steelblue",
+    inset_left = 0.5, inset_right = 0.5
+  ) |>
+  vg_interval_x(as = brush) |>
+  vg_plot(x_domain = "Fixed", x_label = "Arrival Delay (min)", y_tick_format = "s", width = 600, height = 200)
+
+time_plot <-
+  vg_mark_rect_y(
+    data_from = "flights10m", filter_by = brush,
+    x = ~ vg_bin(time), y = ~ vg_count(), fill = "steelblue",
+    inset_left = 0.5, inset_right = 0.5
+  ) |>
+  vg_interval_x(as = brush) |>
+  vg_plot(x_domain = "Fixed", x_label = "Departure Time (hour)", y_tick_format = "s", width = 600, height = 200)
+
+distance_plot <-
+  vg_mark_rect_y(
+    data_from = "flights10m", filter_by = brush,
+    x = ~ vg_bin(distance), y = ~ vg_count(), fill = "steelblue",
+    inset_left = 0.5, inset_right = 0.5
+  ) |>
+  vg_interval_x(as = brush) |>
+  vg_plot(x_domain = "Fixed", x_label = "Flight Distance (miles)", y_tick_format = "s", width = 600, height = 200)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Cross-Filter Flights (10M)",
+    description = paste(
+      "Histograms showing arrival delay, departure time, and distance flown for 10 million",
+      "flights.\nOnce loaded, automatic pre-aggregation optimizations enable efficient",
+      "cross-filtered selections."
+    )
+  ) |>
+  vg_data(name = "flights10m", query = sprintf(
+    "SELECT GREATEST(-60, LEAST(ARR_DELAY, 180))::DOUBLE AS delay, DISTANCE AS distance, DEP_TIME AS time FROM %s",
+    shQuote(flights_url, type = "sh")
+  )) |>
+  vg_params(brush = list(select = "crossfilter")) |>
+  vg_vconcat(delay_plot, time_plot, distance_plot)
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/flights-10m.html) exactly,
+aside from object key order.
+:::
