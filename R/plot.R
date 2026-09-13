@@ -93,7 +93,13 @@ vg_plot <- function(spec = NULL, ...) {
 print.vg_plot_fragment <- function(x, ...) {
   cat("<vg_plot_fragment>", length(x$items), "item(s)\n")
   for (item in x$items) {
-    kind <- if (inherits(item, "vg_mark")) "mark" else "interactor"
+    kind <- if (inherits(item, "vg_mark")) {
+      "mark"
+    } else if (inherits(item, "vg_legend")) {
+      "legend"
+    } else {
+      "interactor"
+    }
     type <- if (is.null(item$mark)) item$type else item$mark
     cat("  -", kind, ":", type, "\n")
   }

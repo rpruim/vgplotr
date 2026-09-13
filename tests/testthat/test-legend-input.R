@@ -27,6 +27,14 @@ test_that("vg_legend_color()/vg_legend_opacity()/vg_legend_symbol() set the righ
   expect_equal(vg_legend_symbol(for_plot = "p")$type, "symbol")
 })
 
+test_that("print.vg_plot_fragment() labels an embedded legend item as a legend, not an interactor", {
+  frag <- vg_dot(x = ~a, y = ~b, fill = ~group) |> vg_legend_color(label = "Group")
+  out <- paste(capture.output(print(frag)), collapse = "\n")
+
+  expect_match(out, "legend : color", fixed = TRUE)
+  expect_no_match(out, "interactor : color", fixed = TRUE)
+})
+
 test_that("as_spec_payload() serializes an embedded legend inside a plot's mark list", {
   spec <- vg_create() |>
     vg_data(name = "pts", data = data.frame(x = 1, y = 1, group = "a")) |>
