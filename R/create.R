@@ -125,6 +125,28 @@ auto_data_name <- function(spec) {
   paste0("data", i)
 }
 
+# Resolves an integer data_from (a 1-based index into `names_vec`, the
+# spec's registered data source names in registration order; negative
+# counts from the end, e.g. -1 is the most recently registered one) to
+# the data-source name it refers to. Used by vg_mark() so `data_from = 1L`
+# works the same as naming that source explicitly -- the *integer* type
+# (1L, not 1) is what distinguishes this from mosaic's own literal
+# inline-data convention (data_from = c(0), always a double vector).
+resolve_data_from_index <- function(i, names_vec) {
+  n <- length(names_vec)
+  if (length(i) != 1 || i == 0 || abs(i) > n) {
+    stop(
+      "`data_from = ", i, "L` is not a valid data source index -- this spec has ",
+      n, " registered data source", if (n != 1) "s", " (", paste(names_vec, collapse = ", "),
+      "). Use a whole number from 1 to ", n,
+      if (n > 0) paste0(" (or -1 to -", n, ", counting from the end)"),
+      ".",
+      call. = FALSE
+    )
+  }
+  if (i > 0) names_vec[[i]] else names_vec[[n + i + 1]]
+}
+
 #' Declare Params/Selections on a vgspec
 #' @param spec A `vgspec`.
 #' @param ... Named params, e.g. `point = 0`, or selections, e.g. `query =

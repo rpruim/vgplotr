@@ -14,18 +14,23 @@
 #'   `data_from =` string given explicitly names the registered source
 #'   instead of the [vg_data()] default (handy since it's also what later
 #'   marks in the chain need for their own `data_from =`); giving anything
-#'   else there (a literal vector, a [param()]) doesn't make sense for a
-#'   single data frame and is left alone, meant for a plot fragment/`vgspec`
+#'   else there (an integer index, a literal vector, a [param()]) doesn't
+#'   name a source and is left alone, meant for a plot fragment/`vgspec`
 #'   `spec` instead.
 #'
-#'   Whether `spec` is a data frame or an existing `vgspec`, any mark that
-#'   doesn't get its own `data_from =` (and whose mark type takes data at
-#'   all) defaults to the spec's *first* registered data source -- so a
-#'   whole multi-layer plot can share one data source without repeating
-#'   `data_from =` on every mark, e.g. `some_data |> vg_mark_dot(x = ~a, y =
-#'   ~b) |> vg_mark_line_y(x = ~a, y = ~b)`. This only looks at the data
-#'   registered so far when *this* mark is added; it doesn't reach back to
-#'   fill in earlier marks if a data source is registered later.
+#'   Whether `spec` is a data frame or an existing `vgspec`, `data_from =`
+#'   can also be a length-1 R integer (`1L`, `2L`, ...; note the `L` --
+#'   `data_from = 1` is a double, mosaic's own literal inline-data
+#'   shorthand, see below) giving a 1-based index into the spec's data
+#'   sources in registration order, negative counting from the end (e.g.
+#'   `-1L` for the most recently registered one). Left unset entirely, any
+#'   mark that takes data at all defaults to `data_from = 1L`, the first
+#'   registered source. This is what lets a whole multi-layer plot share
+#'   one data source without repeating `data_from =` on every mark, e.g.
+#'   `some_data |> vg_mark_dot(x = ~a, y = ~b) |> vg_mark_line_y(x = ~a, y =
+#'   ~b)`. Both only look at the data registered so far when *this* mark is
+#'   added; they don't reach back to fill in earlier marks if a data source
+#'   is registered later.
 #' @param mark The mosaic mark type, e.g. `"dot"`, `"lineY"`.
 #' @param ... Encodings (e.g. `x = ~var1`), mark options, and/or plot-level
 #'   attributes (`width =`, `name =`, ...). See [vg_plot()] for how
@@ -38,16 +43,31 @@ vg_mark <- function(spec = NULL, mark, ...) {
     has_given_name <- is.character(given_name) && length(given_name) == 1
     data_name <- if (has_given_name) given_name else auto_data_name(vg_create())
     spec <- vg_data(vg_create(), name = data_name, data = spec)
-    if (!has_given_name) args$data_from <- data_name
+    if (is.null(args$data_from)) args$data_from <- data_name
+  }
+
+  # An *integer* data_from (1L, -1L, ...) is a 1-based index into the
+  # spec's registered data sources -- deliberately gated on is.integer(),
+  # not is.numeric(), so it can't be confused with mosaic's own literal
+  # inline-data convention (data_from = c(0), a double vector).
+  if (is.integer(args$data_from) && length(args$data_from) == 1) {
+    if (!is_vgspec(spec) || length(spec$data) == 0) {
+      stop(
+        "`data_from = ", args$data_from, "L` (a data source index) needs at least one ",
+        "data source already registered on the spec -- add one with vg_data() first.",
+        call. = FALSE
+      )
+    }
+    args$data_from <- resolve_data_from_index(args$data_from, names(spec$data))
   }
 
   # A mark that takes data at all (not e.g. frame/sphere/hexgrid/the axis
   # and grid marks, which compute their own geometry and have no `data`
   # property to begin with -- .vg_mark_has_data, R/attrs-generated.R) and
   # wasn't given its own data_from defaults to the spec's first registered
-  # data source. This is what lets a whole multi-layer plot share one data
-  # source -- piped in directly (see above) or added via vg_data() -- with
-  # no data_from repeated on every mark.
+  # data source (data_from = 1). This is what lets a whole multi-layer plot
+  # share one data source -- piped in directly (see above) or added via
+  # vg_data() -- with no data_from repeated on every mark.
   if (is.null(args$data_from) && is_vgspec(spec) && length(spec$data) &&
         isTRUE(unname(.vg_mark_has_data[mark]))) {
     args$data_from <- names(spec$data)[[1]]

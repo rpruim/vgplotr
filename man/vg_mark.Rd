@@ -16,17 +16,22 @@ starting a brand-new spec with \code{spec} registered as its data source
 \verb{data_from =} string given explicitly names the registered source
 instead of the \code{\link[=vg_data]{vg_data()}} default (handy since it's also what later
 marks in the chain need for their own \verb{data_from =}); giving anything
-else there (a literal vector, a \code{\link[=param]{param()}}) doesn't make sense for a
-single data frame and is left alone, meant for a plot fragment/\code{vgspec}
+else there (an integer index, a literal vector, a \code{\link[=param]{param()}}) doesn't
+name a source and is left alone, meant for a plot fragment/\code{vgspec}
 \code{spec} instead.
 
-Whether \code{spec} is a data frame or an existing \code{vgspec}, any mark that
-doesn't get its own \verb{data_from =} (and whose mark type takes data at
-all) defaults to the spec's \emph{first} registered data source -- so a
-whole multi-layer plot can share one data source without repeating
-\verb{data_from =} on every mark, e.g. \code{some_data |> vg_mark_dot(x = ~a, y = ~b) |> vg_mark_line_y(x = ~a, y = ~b)}. This only looks at the data
-registered so far when \emph{this} mark is added; it doesn't reach back to
-fill in earlier marks if a data source is registered later.}
+Whether \code{spec} is a data frame or an existing \code{vgspec}, \verb{data_from =}
+can also be a length-1 R integer (\code{1L}, \code{2L}, ...; note the \code{L} --
+\code{data_from = 1} is a double, mosaic's own literal inline-data
+shorthand, see below) giving a 1-based index into the spec's data
+sources in registration order, negative counting from the end (e.g.
+\code{-1L} for the most recently registered one). Left unset entirely, any
+mark that takes data at all defaults to \code{data_from = 1L}, the first
+registered source. This is what lets a whole multi-layer plot share
+one data source without repeating \verb{data_from =} on every mark, e.g.
+\code{some_data |> vg_mark_dot(x = ~a, y = ~b) |> vg_mark_line_y(x = ~a, y = ~b)}. Both only look at the data registered so far when \emph{this} mark is
+added; they don't reach back to fill in earlier marks if a data source
+is registered later.}
 
 \item{mark}{The mosaic mark type, e.g. \code{"dot"}, \code{"lineY"}.}
 

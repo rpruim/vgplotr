@@ -161,7 +161,7 @@ vg_mark_dot_x(
 
 \item{...}{Additional options or plot-level attributes.}
 
-\item{data_from}{The name of the data source this mark reads from (see \code{\link[=vg_data]{vg_data()}}), or a literal vector of values to use as inline data directly (mosaic-spec's \verb{"data": [...]} shorthand, e.g. for a single reference line).}
+\item{data_from}{The name of the data source this mark reads from (see \code{\link[=vg_data]{vg_data()}}); a length-1 R integer (\code{1L}, \code{-1L}, ...; note the \code{L}) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. \code{-1L} for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's \verb{"data": [...]} shorthand, e.g. for a single reference line -- a bare, non-integer number like \code{0} or \code{c(0)} means this, not an index). Left unset, defaults to the first registered data source (equivalent to \code{data_from = 1L}) for any mark type that takes data at all.}
 
 \item{filter_by}{A Param/Selection (e.g. from \code{\link[=param]{param()}}) to filter this mark's data by.}
 

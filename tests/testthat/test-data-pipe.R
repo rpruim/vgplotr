@@ -108,3 +108,52 @@ test_that("no default data_from is applied when the spec has no data source yet"
   frag <- vg_mark_dot(x = ~a, y = ~b)
   expect_null(frag$items[[1]]$encodings$data_from)
 })
+
+test_that("data_from accepts a length-1 integer index into the spec's registered data sources", {
+  df <- data.frame(a = 1:3)
+  spec <- vg_create() |>
+    vg_data(name = "first", data = df) |>
+    vg_data(name = "second", data = df) |>
+    vg_data(name = "third", data = df)
+
+  expect_equal((spec |> vg_mark_dot(data_from = 1L, x = ~a))$layout$items[[1]]$encodings$data_from, "first")
+  expect_equal((spec |> vg_mark_dot(data_from = 2L, x = ~a))$layout$items[[1]]$encodings$data_from, "second")
+  expect_equal((spec |> vg_mark_dot(data_from = 3L, x = ~a))$layout$items[[1]]$encodings$data_from, "third")
+  expect_equal((spec |> vg_mark_dot(data_from = -1L, x = ~a))$layout$items[[1]]$encodings$data_from, "third")
+  expect_equal((spec |> vg_mark_dot(data_from = -2L, x = ~a))$layout$items[[1]]$encodings$data_from, "second")
+  expect_equal((spec |> vg_mark_dot(data_from = -3L, x = ~a))$layout$items[[1]]$encodings$data_from, "first")
+})
+
+test_that("an out-of-range or zero integer data_from index errors clearly", {
+  df <- data.frame(a = 1:3)
+  spec <- vg_create() |> vg_data(name = "only", data = df)
+
+  expect_error(spec |> vg_mark_dot(data_from = 2L, x = ~a), "not a valid data source index")
+  expect_error(spec |> vg_mark_dot(data_from = -2L, x = ~a), "not a valid data source index")
+  expect_error(spec |> vg_mark_dot(data_from = 0L, x = ~a), "not a valid data source index")
+})
+
+test_that("an integer data_from index with no data source registered yet errors clearly", {
+  expect_error(vg_mark_dot(data_from = 1L, x = ~a), "needs at least one")
+})
+
+test_that("a bare (double) numeric data_from is still mosaic's literal inline-data shorthand, not an index", {
+  # data_from = 0 (a double, not 0L) must keep meaning "inline data [0]",
+  # e.g. for a single reference line -- only a strict R integer (1L, -1L,
+  # ...) is treated as a data-source index. This is what data_from = c(0)
+  # already relied on before the index feature existed.
+  spec <- vg_mark_rule_y(data_from = c(0))
+  expect_equal(serialize_item(spec$items[[1]])$data, list(0))
+
+  spec2 <- vg_mark_rule_y(data_from = c(0, 10, 20))
+  expect_equal(serialize_item(spec2$items[[1]])$data, list(0, 10, 20))
+})
+
+test_that("the default data_from (unset) is equivalent to data_from = 1L", {
+  df <- data.frame(a = 1:3)
+  spec <- vg_create() |> vg_data(name = "first", data = df) |> vg_data(name = "second", data = df)
+
+  via_default <- spec |> vg_mark_dot(x = ~a)
+  via_explicit <- spec |> vg_mark_dot(data_from = 1L, x = ~a)
+  expect_equal(via_default, via_explicit)
+})
