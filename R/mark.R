@@ -19,18 +19,20 @@
 #'   `spec` instead.
 #'
 #'   Whether `spec` is a data frame or an existing `vgspec`, `data_from =`
-#'   can also be a length-1 R integer (`1L`, `2L`, ...; note the `L` --
-#'   `data_from = 1` is a double, mosaic's own literal inline-data
-#'   shorthand, see below) giving a 1-based index into the spec's data
-#'   sources in registration order, negative counting from the end (e.g.
-#'   `-1L` for the most recently registered one). Left unset entirely, any
-#'   mark that takes data at all defaults to `data_from = 1L`, the first
-#'   registered source. This is what lets a whole multi-layer plot share
-#'   one data source without repeating `data_from =` on every mark, e.g.
-#'   `some_data |> vg_mark_dot(x = ~a, y = ~b) |> vg_mark_line_y(x = ~a, y =
-#'   ~b)`. Both only look at the data registered so far when *this* mark is
-#'   added; they don't reach back to fill in earlier marks if a data source
-#'   is registered later.
+#'   can also be a length-1 *nonzero* R integer (`1L`, `2L`, `-1L`, ...;
+#'   note the `L` -- `data_from = 1` is a double, mosaic's own literal
+#'   inline-data shorthand, see below) giving a 1-based index into the
+#'   spec's data sources in registration order, negative counting from the
+#'   end (e.g. `-1L` for the most recently registered one). Left unset
+#'   entirely, any mark that takes data at all defaults to `data_from =
+#'   1L`, the first registered source. This is what lets a whole
+#'   multi-layer plot share one data source without repeating `data_from
+#'   =` on every mark, e.g. `some_data |> vg_mark_dot(x = ~a, y = ~b) |>
+#'   vg_mark_line_y(x = ~a, y = ~b)`. Both only look at the data registered
+#'   so far when *this* mark is added; they don't reach back to fill in
+#'   earlier marks if a data source is registered later. `data_from = 0L`
+#'   is never a valid index (there's no "0th" source), so it's treated the
+#'   same as `data_from = 0` -- literal inline data, not an index.
 #' @param mark The mosaic mark type, e.g. `"dot"`, `"lineY"`.
 #' @param ... Encodings (e.g. `x = ~var1`), mark options, and/or plot-level
 #'   attributes (`width =`, `name =`, ...). See [vg_plot()] for how
@@ -46,11 +48,15 @@ vg_mark <- function(spec = NULL, mark, ...) {
     if (is.null(args$data_from)) args$data_from <- data_name
   }
 
-  # An *integer* data_from (1L, -1L, ...) is a 1-based index into the
-  # spec's registered data sources -- deliberately gated on is.integer(),
-  # not is.numeric(), so it can't be confused with mosaic's own literal
-  # inline-data convention (data_from = c(0), a double vector).
-  if (is.integer(args$data_from) && length(args$data_from) == 1) {
+  # A *nonzero integer* data_from (1L, -1L, ...) is a 1-based index into
+  # the spec's registered data sources -- deliberately gated on
+  # is.integer(), not is.numeric(), so it can't be confused with mosaic's
+  # own literal inline-data convention (data_from = c(0), a double
+  # vector). data_from = 0L is never a valid index (there's no "0th"
+  # source), so it's deliberately left alone here too, falling through to
+  # that same literal-data handling -- data_from = 0L and data_from = 0
+  # end up identical (mosaic-spec's "data": [0]).
+  if (is.integer(args$data_from) && length(args$data_from) == 1 && args$data_from != 0L) {
     if (!is_vgspec(spec) || length(spec$data) == 0) {
       stop(
         "`data_from = ", args$data_from, "L` (a data source index) needs at least one ",

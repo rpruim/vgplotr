@@ -115,12 +115,13 @@ aapl |>
 
 For more than one data source, name each explicitly with `data_from =`
 as usual -- the default only ever reaches for the *first* one registered.
-`data_from =` also accepts a 1-based integer *index* into the spec's data
-sources instead of a name, negative counting from the end (`data_from =
--1L` for the most recently registered source) -- note the `L`: a plain
-number like `data_from = 0` keeps its existing meaning, mosaic's own
-literal inline-data shorthand (`"data": [0]`, e.g. for a reference line),
-so only a real R integer is read as an index.
+`data_from =` also accepts a nonzero 1-based integer *index* into the
+spec's data sources instead of a name, negative counting from the end
+(`data_from = -1L` for the most recently registered source) -- note the
+`L`: a plain number like `data_from = 0` keeps its existing meaning,
+mosaic's own literal inline-data shorthand (`"data": [0]`, e.g. for a
+reference line), so only a real R integer is read as an index --
+`data_from = 0L` included, since `0` is never a valid index anyway.
 
 ## Loading data from a file
 

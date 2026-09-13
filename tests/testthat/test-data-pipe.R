@@ -124,13 +124,24 @@ test_that("data_from accepts a length-1 integer index into the spec's registered
   expect_equal((spec |> vg_mark_dot(data_from = -3L, x = ~a))$layout$items[[1]]$encodings$data_from, "first")
 })
 
-test_that("an out-of-range or zero integer data_from index errors clearly", {
+test_that("an out-of-range integer data_from index errors clearly", {
   df <- data.frame(a = 1:3)
   spec <- vg_create() |> vg_data(name = "only", data = df)
 
   expect_error(spec |> vg_mark_dot(data_from = 2L, x = ~a), "not a valid data source index")
   expect_error(spec |> vg_mark_dot(data_from = -2L, x = ~a), "not a valid data source index")
-  expect_error(spec |> vg_mark_dot(data_from = 0L, x = ~a), "not a valid data source index")
+})
+
+test_that("data_from = 0L is never an index -- it's literal inline data, like data_from = 0", {
+  # 0 is never a valid 1-based index (there's no "0th" source), so 0L is
+  # deliberately treated the same as the double 0 -- mosaic's own literal
+  # inline-data shorthand -- rather than erroring.
+  spec <- vg_mark_rule_y(data_from = 0L)
+  expect_equal(serialize_item(spec$items[[1]])$data, list(0L))
+
+  df <- data.frame(a = 1:3)
+  spec2 <- vg_create() |> vg_data(name = "only", data = df) |> vg_mark_dot(data_from = 0L, x = ~a)
+  expect_equal(spec2$layout$items[[1]]$encodings$data_from, 0L)
 })
 
 test_that("an integer data_from index with no data source registered yet errors clearly", {
