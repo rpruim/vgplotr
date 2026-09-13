@@ -1,0 +1,64 @@
+---
+title: "Flights Density"
+subtitle: "Density heatmap and contour lines for 200,000+ flights, by departure hour and arrival delay."
+format: html
+engine: knitr
+---
+
+Recreates [Flights Density](https://idl.uw.edu/mosaic/examples/flights-density.html)
+from the mosaic/vgplot example gallery. The sliders adjust the
+smoothing (bandwidth) and number of contour thresholds.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+bandwidth <- param(bandwidth)
+thresholds <- param(thresholds)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Flights Density",
+    description = paste(
+      "Density `heatmap` and `contour` lines for 200,000+ flights by departure hour and",
+      "arrival delay. The sliders adjust the smoothing (bandwidth) and number of contour",
+      "thresholds."
+    )
+  ) |>
+  vg_data(name = "flights", file = vg_data_url("flights-200k.parquet")) |>
+  vg_params(bandwidth = 7, thresholds = 10) |>
+  vg_vconcat(
+    vg_hconcat(
+      vg_slider(label = "Bandwidth (σ)", as = bandwidth, min = 1, max = 100),
+      vg_slider(label = "Thresholds", as = thresholds, min = 2, max = 20)
+    ),
+    vg_mark_heatmap(data_from = "flights", x = ~time, y = ~delay, fill = "density", bandwidth = bandwidth) |>
+      vg_mark_contour(
+        data_from = "flights", x = ~time, y = ~delay, stroke = "white", stroke_opacity = 0.5,
+        bandwidth = bandwidth, thresholds = thresholds
+      ) |>
+      vg_plot(
+        color_scale = "symlog", color_scheme = "ylgnbu",
+        x_axis = "top", x_label_anchor = "center", x_zero = TRUE,
+        y_axis = "right", y_label_anchor = "center",
+        margin_top = 30, margin_left = 5, margin_right = 40, width = 700, height = 500
+      )
+  )
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/flights-density.html)
+exactly, aside from `data.flights.file` (`vg_data_url()` vs. a
+relative path) and object key order.
+:::

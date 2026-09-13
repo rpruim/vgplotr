@@ -115,11 +115,21 @@ All four fixes are covered by new tests (`test-merge.R`, `test-serialize.R`,
    Rides", which needs the `spatial` extension loaded before its
    `ST_Transform()`/`ST_Point()` queries can run.
 
-All three are covered by new tests (`test-serialize.R`, `test-config.R`)
+Bugs 7-9 are covered by new tests (`test-serialize.R`, `test-config.R`)
 and the full suite is green after each.
 
-Both are covered by new tests (`test-schema-generated.R`,
-`test-serialize.R`) and the full suite is green after each.
+10. **`vg_params()`/`vg_meta()`/`vg_config()` silently dropped an explicit
+    `NULL` value** -- the same `utils::modifyList()` pitfall as bug 1
+    (`merge_attrs()`) and bug 2 (`serialize_layout()`), just in three
+    more places: `vg_params(offset = NULL)` (mosaic's own initial value
+    for `densityY`'s `offset`, later set by a menu) silently declared no
+    `offset` param at all, rather than one with value `null`. Fixed by
+    switching all three to the existing NULL-safe `override_attrs()`
+    helper (`R/utils.R`, from bug 2's fix). Found via "Density Groups".
+
+All ten are covered by new tests (`test-merge.R`, `test-plot-defaults.R`,
+`test-serialize.R`, `test-transforms.R`, `test-schema-generated.R`,
+`test-config.R`, `test-params.R`) and the full suite is green after each.
 
 ## Usage tips found along the way (not bugs -- just non-obvious)
 
@@ -244,3 +254,27 @@ No new bugs found in this batch -- every gap this category could have
 exercised (nested param references, plot-attribute param values, the
 mark/plot-attribute collision) had already been fixed while working
 through "Maps & Spatial Data".
+
+### Density Visualizations
+
+- ✅ `contours.qmd`
+- ✅ `density-groups.qmd` (surfaced bug 10 -- see "Bugs found and fixed"
+  above)
+- ✅ `density1d.qmd`
+- ✅ `density2d.qmd` (confirms the mark/plot-attribute collision fix
+  holds when the mark's own `width`/`height` are bound to a param, not
+  just a literal)
+- ✅ `flights-density.qmd`
+- ✅ `flights-hexbin.qmd`
+- ✅ `line-density.qmd`
+
+## Summary
+
+All 47 examples across all 5 gallery categories (Basic Marks & Inputs,
+Data Transformation, Maps & Spatial Data, Multi-View Coordination,
+Density Visualizations) are recreated, and each one's `to_json()`
+output was verified to match mosaic's own reference JSON exactly (aside
+from the intentional `vg_data_url()` vs. relative-path difference and
+cosmetic object-key ordering). Along the way, this exercise found and
+fixed 10 real vgplotr bugs (see above), all covered by new regression
+tests, with the full test suite green throughout.

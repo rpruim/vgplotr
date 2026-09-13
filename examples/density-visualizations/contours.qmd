@@ -1,0 +1,65 @@
+---
+title: "Contour Plot"
+subtitle: "Heatmap and contour marks visualize the density of penguin measurements, split by species."
+format: html
+engine: knitr
+---
+
+Recreates [Contour Plot](https://idl.uw.edu/mosaic/examples/contours.html)
+from the mosaic/vgplot example gallery. Setting the `fill` color to
+`"species"` subdivides the data into three sets of densities.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+bandwidth <- param(bandwidth)
+thresholds <- param(thresholds)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Contour Plot",
+    description = paste(
+      "Here `heatmap` and `contour` marks visualize the density of data points in a scatter",
+      'plot of penguin measurments. Setting the `fill` color to `"species"` subdivides the',
+      "data into three sets of densities."
+    )
+  ) |>
+  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_params(bandwidth = 40, thresholds = 10) |>
+  vg_vconcat(
+    vg_hconcat(
+      vg_slider(label = "Bandwidth (σ)", as = bandwidth, min = 1, max = 100),
+      vg_slider(label = "Thresholds", as = thresholds, min = 2, max = 20)
+    ),
+    vg_mark_heatmap(
+      data_from = "penguins", x = ~bill_length, y = ~bill_depth, fill = ~species, bandwidth = bandwidth
+    ) |>
+      vg_mark_contour(
+        data_from = "penguins", x = ~bill_length, y = ~bill_depth,
+        stroke = ~species, bandwidth = bandwidth, thresholds = thresholds
+      ) |>
+      vg_mark_dot(data_from = "penguins", x = ~bill_length, y = ~bill_depth, fill = "currentColor", r = 1) |>
+      vg_plot(
+        x_axis = "bottom", x_label_anchor = "center", y_axis = "right", y_label_anchor = "center",
+        margins = list(top = 5, bottom = 30, left = 5, right = 50), width = 700, height = 480
+      )
+  )
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/contours.html) exactly, aside
+from `data.penguins.file` (`vg_data_url()` vs. a relative path) and
+object key order.
+:::

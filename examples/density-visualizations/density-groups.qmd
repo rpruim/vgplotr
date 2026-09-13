@@ -1,0 +1,77 @@
+---
+title: "Density Groups"
+subtitle: "Density plots of penguin bill depths, grouped by species, with adjustable normalization and stacking."
+format: html
+engine: knitr
+---
+
+Recreates [Density Groups](https://idl.uw.edu/mosaic/examples/density-groups.html)
+from the mosaic/vgplot example gallery. The `normalize` parameter
+supports different forms of comparison, controlling if an individual
+density estimate is scaled by total point mass or normalized by the
+sum or max of the point mass. The `stack` and `offset` parameters
+control stacking of density areas.
+
+`offset`'s initial value is `NULL` (mosaic-spec's `"offset": null`) --
+declared with `vg_params(offset = NULL)`, which needed a bug fix (see
+`NOTES.md`) since it previously silently dropped the param instead of
+declaring it with a `null` value.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+bandwidth <- param(bandwidth)
+normalize <- param(normalize)
+stack <- param(stack)
+offset <- param(offset)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Density Groups",
+    description = paste(
+      "Density plots of penguin bill depths, grouped by species. The normalize parameter",
+      "supports different forms of comparison, controlling if an individual density estimate",
+      "is scaled by total point mass or normalized by the sum or max of the point mass. The",
+      "stack and offset parameters control stacking of density areas."
+    )
+  ) |>
+  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_params(bandwidth = 20, normalize = "none", stack = FALSE, offset = NULL) |>
+  vg_vconcat(
+    vg_hconcat(
+      vg_menu(label = "Normalize", as = normalize, options = c("none", "sum", "max")),
+      vg_menu(label = "Stack", as = stack, options = c(FALSE, TRUE)),
+      vg_menu(
+        label = "Offset", as = offset,
+        options = list(
+          list(label = "none", value = NULL),
+          list(label = "normalize", value = "normalize"),
+          list(label = "center", value = "center")
+        )
+      )
+    ),
+    vg_mark_density_y(
+      data_from = "penguins", x = ~bill_depth, fill = ~species, fill_opacity = 0.4,
+      bandwidth = bandwidth, normalize = normalize, stack = stack, offset = offset
+    ) |>
+      vg_plot(margin_left = 50, height = 200)
+  )
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/density-groups.html) exactly,
+aside from `data.penguins.file` (`vg_data_url()` vs. a relative path)
+and object key order.
+:::

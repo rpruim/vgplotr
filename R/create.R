@@ -70,7 +70,7 @@ route_spec_args <- function(args) {
 #' @export
 vg_meta <- function(spec, ...) {
   stopifnot(is_vgspec(spec))
-  spec$meta <- utils::modifyList(spec$meta, list(...))
+  spec$meta <- override_attrs(spec$meta, list(...))
   spec
 }
 
@@ -88,7 +88,7 @@ vg_meta <- function(spec, ...) {
 #' @export
 vg_config <- function(spec, ...) {
   stopifnot(is_vgspec(spec))
-  spec$config <- utils::modifyList(spec$config, list(...))
+  spec$config <- override_attrs(spec$config, list(...))
   spec
 }
 
@@ -118,7 +118,7 @@ vg_data <- function(spec, name, data = NULL, ...) {
 #' @export
 vg_params <- function(spec, ...) {
   stopifnot(is_vgspec(spec))
-  spec$params <- utils::modifyList(spec$params, list(...))
+  spec$params <- override_attrs(spec$params, list(...))
   spec
 }
 
