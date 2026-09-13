@@ -1,0 +1,106 @@
+---
+title: "Two Globes"
+subtitle: "Two rotatable globes overlaid"
+format: html
+engine: knitr
+---
+
+Based on [Earthquakes
+Globe](https://idl.uw.edu/mosaic/examples/earthquakes-globe.html) from
+the mosaic/vgplot example gallery (adapted from an [Observable Plot
+example](https://observablehq.com/@observablehq/plot-earthquake-globe)).
+To show land masses, this example loads and parses TopoJSON data in
+the database. Requires the DuckDB `spatial` extension.
+
+The `rotate` param combines two other params (`longitude`/`latitude`,
+each driven by its own slider) into one value -- mosaic's own
+`rotate: [$longitude, $latitude]` pattern -- passed straight through as
+`vg_params(rotate = list(lon, lat))`.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+lon1 <- param(longitude1)
+lat1 <- param(latitude1)
+lon2 <- param(longitude2)
+lat2 <- param(latitude2)
+rotate_p <- param(rotate1)
+rotate_q <- param(rotate2)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Two Globes",
+    description = paste(
+      "A rotatable globe of earthquake activity. To show land masses, this example loads",
+      "and parses TopoJSON data in the database. Requires the DuckDB `spatial` extension."
+    ),
+    credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-earthquake-globe)."
+  ) |>
+  vg_data(
+    name = "land",
+    type = "spatial",
+    file = vg_data_url("countries-110m.json"),
+    layer = "land"
+  ) |>
+  vg_params(longitude = -180, latitude = -30, rotate1 = list(lon1, lat1)) |>
+  vg_params(longitude = -180, latitude = -30, rotate2 = list(lon2, lat2)) |>
+  vg_vconcat(
+    vg_hconcat(
+      vg_slider(
+        label = "Longitude",
+        as = lon1,
+        min = -180,
+        max = 180,
+        step = 1
+      ),
+      vg_slider(label = "Latitude", as = lat1, min = -90, max = 90, step = 1)
+    ),
+    vg_hconcat(
+      vg_slider(
+        label = "Longitude",
+        as = lon2,
+        min = -180,
+        max = 180,
+        step = 1
+      ),
+      vg_slider(label = "Latitude", as = lat2, min = -90, max = 90, step = 1)
+    ),
+    vg_mark_geo(
+      data_from = "land",
+      geometry = ~ vg_geojson(geom),
+      fill = "red",
+      fill_opacity = 0.2
+    ) |>
+      vg_mark_sphere(
+        projection_rotate = rotate_p,
+      ) |>
+      vg_mark_geo(
+        data_from = "land",
+        geometry = ~ vg_geojson(geom),
+        fill = "steelblue",
+        fill_opacity = 0.2
+      ) |>
+      vg_mark_sphere(
+        projection_rotate = rotate_q
+      ) |>
+      vg_plot(
+        margin = 10,
+        style = "overflow: visible;",
+        projection_type = "orthographic"
+      )
+  )
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## JSON 
+
+```{r}
+cat(to_json(spec))
+```
+
+:::
