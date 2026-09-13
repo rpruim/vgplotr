@@ -145,16 +145,28 @@ apply_plot_attrs <- function(spec, attrs, extra, context) {
 #' (R/scale.R, R/guide.R), plus `vg_legend_color()`/`vg_legend_opacity()`/
 #' `vg_legend_symbol()` (R/legend.R).
 #'
+#' `drop` removes formals that don't apply to this particular wrapper
+#' without fixing them to a value -- e.g. `vg_scale_x()` drops
+#' `inset_top`/`inset_bottom` (only `inset_left`/`inset_right` apply to
+#' `x`), so its signature doesn't advertise arguments that are accepted
+#' syntactically but silently do nothing (`..f` still has `...`, so a
+#' caller who passes a dropped name anyway still reaches `..f`'s own
+#' formal of that name and gets its normal handling -- dropping only
+#' changes what the wrapper's own signature *shows*).
+#'
 #' @param ..f The function to wrap.
 #' @param ... Argument name/value pairs to fix; each name must be one of
 #'   `..f`'s own formal arguments, and is removed from the wrapper's
 #'   formals.
+#' @param drop Names of additional `..f` formals to remove from the
+#'   wrapper's formals, without fixing them to a value. `..f` must have
+#'   `...` for a dropped argument to remain reachable at all.
 #' @noRd
-wrapper_function <- function(..f, ...) {
+wrapper_function <- function(..f, ..., drop = character()) {
   fixed <- list(...)
   orig_formals <- formals(..f)
 
-  bad <- setdiff(names(fixed), names(orig_formals))
+  bad <- setdiff(c(names(fixed), drop), names(orig_formals))
   if (length(bad)) {
     stop(
       "wrapper_function(): `", paste(bad, collapse = "`, `"), "` ",
@@ -164,7 +176,7 @@ wrapper_function <- function(..f, ...) {
     )
   }
 
-  keep <- setdiff(names(orig_formals), names(fixed))
+  keep <- setdiff(names(orig_formals), c(names(fixed), drop))
   has_dots <- "..." %in% keep
   named_keep <- setdiff(keep, "...")
 

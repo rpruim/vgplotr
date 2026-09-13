@@ -103,11 +103,11 @@ vg_scale_position <- function(spec = NULL,
 
 #' @rdname vg_scale_position
 #' @export
-vg_scale_x <- wrapper_function(vg_scale_position, which = "x")
+vg_scale_x <- wrapper_function(vg_scale_position, which = "x", drop = c("inset_top", "inset_bottom"))
 
 #' @rdname vg_scale_position
 #' @export
-vg_scale_y <- wrapper_function(vg_scale_position, which = "y")
+vg_scale_y <- wrapper_function(vg_scale_position, which = "y", drop = c("inset_left", "inset_right"))
 
 # Facet scales (fx/fy) are a strict subset of the position scale properties
 # above: no `type`/`nice`/`zero`/`clamp` (facet scales are always band
@@ -230,11 +230,11 @@ vg_scale_facet <- function(spec = NULL,
 
 #' @rdname vg_scale_facet
 #' @export
-vg_scale_fx <- wrapper_function(vg_scale_facet, which = "fx")
+vg_scale_fx <- wrapper_function(vg_scale_facet, which = "fx", drop = c("inset_top", "inset_bottom"))
 
 #' @rdname vg_scale_facet
 #' @export
-vg_scale_fy <- wrapper_function(vg_scale_facet, which = "fy")
+vg_scale_fy <- wrapper_function(vg_scale_facet, which = "fy", drop = c("inset_left", "inset_right"))
 
 #' Set the color scale's properties
 #'

@@ -38,8 +38,6 @@ vg_scale_fx(
   inset = vg_unset,
   inset_left = vg_unset,
   inset_right = vg_unset,
-  inset_top = vg_unset,
-  inset_bottom = vg_unset,
   ...
 )
 
@@ -54,8 +52,6 @@ vg_scale_fy(
   padding_outer = vg_unset,
   align = vg_unset,
   inset = vg_unset,
-  inset_left = vg_unset,
-  inset_right = vg_unset,
   inset_top = vg_unset,
   inset_bottom = vg_unset,
   ...

@@ -71,3 +71,31 @@ test_that("a mark/interactor's own property can be set under its exact schema na
   expect_equal(input2$type, "search")
   expect_equal(input2$options$type, "prefix")
 })
+
+test_that("generated mark wrappers make a genuinely schema-required property a real R argument, not vg_unset", {
+  # ErrorBarX/ErrorBarY require x/y respectively (beyond the mark/data the
+  # generator always strips) -- these should fail fast in R rather than
+  # silently produce a spec with no x/y encoding.
+  expect_true("x" %in% names(formals(vg_mark_errorbar_x)))
+  expect_false(identical(formals(vg_mark_errorbar_x)$x, quote(vg_unset)))
+  expect_error(vg_mark_errorbar_x(), "argument \"x\" is missing")
+
+  expect_true("y" %in% names(formals(vg_mark_errorbar_y)))
+  expect_error(vg_mark_errorbar_y(), "argument \"y\" is missing")
+
+  frag <- vg_mark_errorbar_x(x = ~a)
+  expect_equal(frag$items[[1]]$mark, "errorbarX")
+  expect_equal(frag$items[[1]]$encodings$x, ~a)
+})
+
+test_that("a required property that's really a branch discriminant with its own mosaic default stays optional", {
+  # densityX/densityY's `type` is required in every anyOf branch, but with
+  # a *different* const per branch (areaX/lineX/dotX/textX) -- mosaic
+  # documents this as defaulting to areaX, so it should stay vg_unset
+  # rather than becoming a hard-required argument.
+  expect_identical(formals(vg_mark_density_x)$type, quote(vg_unset))
+  expect_identical(formals(vg_mark_density_y)$type, quote(vg_unset))
+
+  frag <- vg_mark_density_x(x = ~a)
+  expect_equal(frag$items[[1]]$mark, "densityX")
+})

@@ -6,6 +6,7 @@
 \usage{
 vg_mark_errorbar_x(
   spec = NULL,
+  x,
   ariaDescription = vg_unset,
   ariaHidden = vg_unset,
   ariaLabel = vg_unset,
@@ -51,7 +52,6 @@ vg_mark_errorbar_x(
   target = vg_unset,
   tip = vg_unset,
   title = vg_unset,
-  x = vg_unset,
   y = vg_unset,
   z = vg_unset,
   ...,
@@ -61,6 +61,8 @@ vg_mark_errorbar_x(
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this mark to, or \code{NULL} to start a new plot with just this mark.}
+
+\item{x}{The horizontal position (or length) channel, typically bound to the \emph{x} scale.}
 
 \item{ariaDescription}{The aria-description; a constant textual description.}
 
@@ -151,8 +153,6 @@ vg_mark_errorbar_x(
 \item{tip}{Whether to generate a tooltip for this mark, and any tip options.}
 
 \item{title}{The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).}
-
-\item{x}{The horizontal position (or length) channel, typically bound to the \emph{x} scale.}
 
 \item{y}{The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, ….}
 

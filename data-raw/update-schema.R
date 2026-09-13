@@ -80,22 +80,45 @@ docline <- function(desc, fallback) {
 # (`anyOf`/`allOf`) whose branches all agree on the same
 # `properties.mark.const` (e.g. densityX/densityY) -- mirrors mosaic's own
 # markInfo() in bin/generate-python-api.js. Returns NULL for a non-mark def.
+#
+# `required` collects the schema's own required-property lists too (beyond
+# `mark`/`data`, stripped below along with the properties themselves) --
+# these become real, default-less R arguments instead of `= vg_unset`, so
+# e.g. omitting ErrorBarX's `x` fails immediately in R with a clear message
+# instead of silently producing a spec that errors in the browser. A
+# property that's required in every branch but with a *different* `const`
+# per branch (e.g. densityX's `type`: "areaX"/"lineX"/"dotX"/"textX") is a
+# branch discriminant, not a true requirement -- mosaic applies its own
+# default for it (see its description), so it's excluded here and stays
+# `vg_unset` like everything else.
 mark_info <- function(def) {
   if (!is.null(def$properties$mark$const)) {
-    return(list(mark = def$properties$mark$const, description = def$description, properties = def$properties))
+    return(list(
+      mark = def$properties$mark$const, description = def$description,
+      properties = def$properties, required = unlist(or_else(def$required, character()))
+    ))
   }
   branches <- or_else(def$anyOf, def$allOf)
   consts <- unique(unlist(lapply(branches, function(b) b$properties$mark$const)))
   if (length(consts) != 1) return(NULL)
   props <- list()
-  for (b in branches) props <- utils::modifyList(props, or_else(b$properties, list()))
-  list(mark = consts, description = def$description, properties = props)
+  required <- character()
+  for (b in branches) {
+    props <- utils::modifyList(props, or_else(b$properties, list()))
+    required <- union(required, unlist(or_else(b$required, character())))
+  }
+  for (p in required) {
+    consts_p <- unique(unlist(lapply(branches, function(b) b$properties[[p]]$const)))
+    if (length(consts_p) > 1) required <- setdiff(required, p)
+  }
+  list(mark = consts, description = def$description, properties = props, required = required)
 }
 
 mark_defs <- Filter(Negate(is.null), lapply(defs, mark_info))
 names(mark_defs) <- vapply(mark_defs, function(m) m$mark, character(1))
 for (nm in names(mark_defs)) {
   mark_defs[[nm]]$properties <- mark_defs[[nm]]$properties[!names(mark_defs[[nm]]$properties) %in% c("mark", "data")]
+  mark_defs[[nm]]$required <- setdiff(mark_defs[[nm]]$required, c("mark", "data"))
 }
 
 interactor_types <- vapply(
@@ -168,13 +191,18 @@ interactor_prop_docs <- property_docs(interactor_defs)
 # Builds one vg_<name>() function + its roxygen block. `helper` is the
 # shared runtime function (vg_mark_()/vg_interactor_()) that drops any
 # still-`vg_unset` argument before dispatching to the generic constructor.
+# `required` properties (see mark_info()) get no default at all -- a real,
+# required R argument that errors immediately if omitted -- and are moved
+# to the front of the formals (right after `spec`) since they're the ones
+# a caller must supply.
 generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, extra_formals = character(),
-                              extra_docs = character(), title, spec_doc, family) {
+                              extra_docs = character(), title, spec_doc, family, required = character()) {
   props <- names(properties)
+  props <- c(intersect(required, props), setdiff(props, required))
   has_spec <- !is.null(spec_doc)
   formals_str <- paste(c(
     if (has_spec) "spec = NULL",
-    paste0(props, " = vg_unset"),
+    ifelse(props %in% required, props, paste0(props, " = vg_unset")),
     "...",
     if (length(extra_formals)) paste0(extra_formals, " = vg_unset")
   ), collapse = ", ")
@@ -234,7 +262,8 @@ for (name in sort(names(mark_defs))) {
     ),
     title = docline(mark_defs[[name]]$description, paste0("The `", name, "` mark.")),
     spec_doc = "A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.",
-    family = "mark functions"
+    family = "mark functions",
+    required = mark_defs[[name]]$required
   ))
 }
 writeLines(mark_lines, "R/marks-generated.R")

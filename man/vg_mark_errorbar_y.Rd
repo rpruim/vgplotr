@@ -6,6 +6,7 @@
 \usage{
 vg_mark_errorbar_y(
   spec = NULL,
+  y,
   ariaDescription = vg_unset,
   ariaHidden = vg_unset,
   ariaLabel = vg_unset,
@@ -52,7 +53,6 @@ vg_mark_errorbar_y(
   tip = vg_unset,
   title = vg_unset,
   x = vg_unset,
-  y = vg_unset,
   z = vg_unset,
   ...,
   data_from = vg_unset,
@@ -61,6 +61,8 @@ vg_mark_errorbar_y(
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this mark to, or \code{NULL} to start a new plot with just this mark.}
+
+\item{y}{The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, ….}
 
 \item{ariaDescription}{The aria-description; a constant textual description.}
 
@@ -153,8 +155,6 @@ vg_mark_errorbar_y(
 \item{title}{The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).}
 
 \item{x}{The horizontal position (or length) channel, typically bound to the \emph{x} scale.}
-
-\item{y}{The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, ….}
 
 \item{z}{An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to \strong{fill} if a channel, or \strong{stroke} if a channel.}
 

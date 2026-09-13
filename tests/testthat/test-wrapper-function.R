@@ -61,3 +61,46 @@ test_that("vg_guide_x()/vg_guide_y()/vg_guide_fx()/vg_guide_fy() have real forma
   expect_true("label_arrow" %in% names(formals(vg_guide_x)))
   expect_false("label_arrow" %in% names(formals(vg_guide_fx)))
 })
+
+test_that("wrapper_function()'s `drop` removes formals without fixing them", {
+  f <- function(spec = NULL, which = c("x", "y"), a = 1, b = 2, ...) {
+    which <- match.arg(which)
+    list(spec = spec, which = which, a = a, b = b, dots = list(...))
+  }
+  w <- wrapper_function(f, which = "x", drop = "b")
+
+  expect_false("b" %in% names(formals(w)))
+  expect_equal(names(formals(w)), c("spec", "a", "..."))
+
+  # A dropped argument is still reachable through the wrapper's own `...`,
+  # and still reaches the wrapped function's real formal of that name.
+  expect_equal(w(a = 5, b = 9)$b, 9)
+  expect_equal(w()$b, 2)
+})
+
+test_that("wrapper_function()'s `drop` errors on a name that isn't a real argument", {
+  f <- function(spec = NULL, which = c("x", "y"), a = 1) NULL
+  expect_error(wrapper_function(f, which = "x", drop = "bogus"), "`bogus`.*is not an argument")
+})
+
+test_that("vg_scale_x()/vg_scale_y()/vg_scale_fx()/vg_scale_fy() drop the inapplicable inset arguments", {
+  expect_true(all(c("inset_left", "inset_right") %in% names(formals(vg_scale_x))))
+  expect_false(any(c("inset_top", "inset_bottom") %in% names(formals(vg_scale_x))))
+
+  expect_true(all(c("inset_top", "inset_bottom") %in% names(formals(vg_scale_y))))
+  expect_false(any(c("inset_left", "inset_right") %in% names(formals(vg_scale_y))))
+
+  expect_true(all(c("inset_left", "inset_right") %in% names(formals(vg_scale_fx))))
+  expect_false(any(c("inset_top", "inset_bottom") %in% names(formals(vg_scale_fx))))
+
+  expect_true(all(c("inset_top", "inset_bottom") %in% names(formals(vg_scale_fy))))
+  expect_false(any(c("inset_left", "inset_right") %in% names(formals(vg_scale_fy))))
+})
+
+test_that("a dropped inset argument still works (and still warns) via vg_scale_x()'s own ...", {
+  expect_warning(
+    frag <- vg_scale_x(inset_top = 5),
+    "`inset_top`.*only applies to the y scale"
+  )
+  expect_null(frag$attrs$xInsetTop)
+})
