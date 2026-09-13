@@ -4,13 +4,15 @@
 \alias{vg_data}
 \title{Add a data source to a vgspec}
 \usage{
-vg_data(spec, name, data = NULL, ...)
+vg_data(spec, name = NULL, data = NULL, ...)
 }
 \arguments{
 \item{spec}{A \code{vgspec}.}
 
 \item{name}{The name other parts of the spec use to refer to this data
-(via \verb{data_from =}/\verb{filter_by =} on marks and interactors).}
+(via \verb{data_from =}/\verb{filter_by =} on marks and interactors). Optional --
+if omitted, an unused name is generated (\code{"data"}, then \code{"data1"},
+\code{"data2"}, ...), e.g. for the shorthand described in \code{\link[=vg_mark]{vg_mark()}}.}
 
 \item{data}{An optional data frame to use as this data source.}
 

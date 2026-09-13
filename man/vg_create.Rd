@@ -7,9 +7,10 @@
 vg_create(data = NULL, ...)
 }
 \arguments{
-\item{data}{Optional default data source name/data frame for the spec.
-(Full support for passing an in-memory data frame is not yet
-implemented -- see the design notes.)}
+\item{data}{An optional data frame to register as this spec's first data
+source (equivalent to following up with \code{vg_data(data = data)} -- see
+\code{\link[=vg_data]{vg_data()}} for the name this gets, and \code{\link[=vg_mark]{vg_mark()}} for the analogous
+\code{some_data |> vg_mark_dot(...)} shorthand).}
 
 \item{...}{Named values routed automatically to wherever mosaic-spec
 allows them: a known plot-level attribute (e.g. \verb{width =}, \verb{height =})

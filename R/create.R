@@ -8,9 +8,10 @@
 #' with layout-level inputs (e.g. [vg_menu()], [vg_table()]), needs an
 #' explicit layout (see [vg_vconcat()]/[vg_hconcat()]).
 #'
-#' @param data Optional default data source name/data frame for the spec.
-#'   (Full support for passing an in-memory data frame is not yet
-#'   implemented -- see the design notes.)
+#' @param data An optional data frame to register as this spec's first data
+#'   source (equivalent to following up with `vg_data(data = data)` -- see
+#'   [vg_data()] for the name this gets, and [vg_mark()] for the analogous
+#'   `some_data |> vg_mark_dot(...)` shorthand).
 #' @param ... Named values routed automatically to wherever mosaic-spec
 #'   allows them: a known plot-level attribute (e.g. `width =`, `height =`)
 #'   goes to the spec's own top level (as if passed to [vg_attributes()]);
@@ -23,7 +24,7 @@
 #' @export
 vg_create <- function(data = NULL, ...) {
   routed <- route_spec_args(list(...))
-  structure(
+  spec <- structure(
     list(
       meta = routed$meta,
       data = list(),
@@ -35,6 +36,8 @@ vg_create <- function(data = NULL, ...) {
     ),
     class = "vgspec"
   )
+  if (!is.null(data)) spec <- vg_data(spec, data = data)
+  spec
 }
 
 is_vgspec <- function(x) inherits(x, "vgspec")
@@ -99,14 +102,27 @@ vg_config <- function(spec, ...) {
 #' describe a source for mosaic's own data loading instead.
 #' @param spec A `vgspec`.
 #' @param name The name other parts of the spec use to refer to this data
-#'   (via `data_from =`/`filter_by =` on marks and interactors).
+#'   (via `data_from =`/`filter_by =` on marks and interactors). Optional --
+#'   if omitted, an unused name is generated (`"data"`, then `"data1"`,
+#'   `"data2"`, ...), e.g. for the shorthand described in [vg_mark()].
 #' @param data An optional data frame to use as this data source.
 #' @param ... Data source options, e.g. `file =`, `query =`, `where =`.
 #' @export
-vg_data <- function(spec, name, data = NULL, ...) {
+vg_data <- function(spec, name = NULL, data = NULL, ...) {
   stopifnot(is_vgspec(spec))
+  if (is.null(name)) name <- auto_data_name(spec)
   spec$data[[name]] <- if (!is.null(data)) list(data = data) else list(...)
   spec
+}
+
+# The first unused "data"/"data1"/"data2"/... name in `spec$data` -- used
+# when vg_data()'s own `name` is omitted, and by the vg_mark_*() shorthand
+# for piping a data frame directly in as `spec` (see vg_mark()).
+auto_data_name <- function(spec) {
+  if (!("data" %in% names(spec$data))) return("data")
+  i <- 1
+  while (paste0("data", i) %in% names(spec$data)) i <- i + 1
+  paste0("data", i)
 }
 
 #' Declare Params/Selections on a vgspec

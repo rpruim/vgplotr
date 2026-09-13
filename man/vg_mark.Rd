@@ -7,8 +7,20 @@
 vg_mark(spec = NULL, mark, ...)
 }
 \arguments{
-\item{spec}{A plot fragment or \code{vgspec} to add this mark to, or \code{NULL} to
-start a new plot with just this mark.}
+\item{spec}{A plot fragment or \code{vgspec} to add this mark to, \code{NULL} to
+start a new plot with just this mark, or a data frame -- shorthand for
+\verb{vg_create() |> vg_data(data = spec) |> vg_mark_<mark>(...)}, i.e.
+starting a brand-new spec with \code{spec} registered as its data source
+(named per \code{\link[=vg_data]{vg_data()}}) and used automatically as this mark's own
+\code{data_from} -- e.g. \code{some_data |> vg_mark_dot(x = ~a, y = ~b)}. A
+\verb{data_from =} string given explicitly names the registered source
+instead of the \code{\link[=vg_data]{vg_data()}} default (handy since it's also what later
+marks in the chain need for their own \verb{data_from =}); giving anything
+else there (a literal vector, a \code{\link[=param]{param()}}) doesn't make sense for a
+single data frame and is left alone, meant for a plot fragment/\code{vgspec}
+\code{spec} instead. Only useful for the \emph{first} mark in a chain: by the
+time a second mark is piped in, \code{spec} is already a plot fragment, not
+a data frame.}
 
 \item{mark}{The mosaic mark type, e.g. \code{"dot"}, \code{"lineY"}.}
 

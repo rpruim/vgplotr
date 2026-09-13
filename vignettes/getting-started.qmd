@@ -83,6 +83,27 @@ spec$meta
 vg_render(spec)
 ```
 
+### A shortcut: piping a data frame straight into a mark
+
+For a quick plot -- especially at the end of a data-wrangling pipe chain,
+where there's no `vg_create() |> vg_data(...)` step to hang the data off
+of yet -- a data frame can be piped directly into a mark instead of
+`spec`. `some_data |> vg_mark_dot(...)` is shorthand for `vg_create() |>
+vg_data(data = some_data) |> vg_mark_dot(data_from = "data", ...)`: it
+starts a new spec, registers the data frame (named `"data"` by default --
+see [vg_data()] for the naming rule, and pass `data_from =` explicitly to
+choose the name yourself), and wires it up as the mark's own `data_from`
+automatically.
+
+```{r}
+aapl |> vg_mark_line_y(x = ~Date, y = ~Close, width = 680, height = 200)
+```
+
+This only helps for the *first* mark in a chain -- by the time a second
+mark is piped in, `spec` is already a plot fragment, not a data frame, so
+later marks still need their own `data_from = "data"` (or whatever name
+was chosen) to reference the same source.
+
 ## Loading data from a file
 
 `vg_data()` can also point at a file instead of an inline data frame -- the
