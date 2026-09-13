@@ -6,45 +6,45 @@
 \usage{
 vg_mark_geo(
   spec = NULL,
-  ariaDescription = vg_unset,
-  ariaHidden = vg_unset,
-  ariaLabel = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
   channels = vg_unset,
   clip = vg_unset,
   dx = vg_unset,
   dy = vg_unset,
   facet = vg_unset,
-  facetAnchor = vg_unset,
+  facet_anchor = vg_unset,
   fill = vg_unset,
-  fillOpacity = vg_unset,
+  fill_opacity = vg_unset,
   filter = vg_unset,
   fx = vg_unset,
   fy = vg_unset,
   geometry = vg_unset,
   href = vg_unset,
-  imageFilter = vg_unset,
+  image_filter = vg_unset,
   margin = vg_unset,
-  marginBottom = vg_unset,
-  marginLeft = vg_unset,
-  marginRight = vg_unset,
-  marginTop = vg_unset,
-  mixBlendMode = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  mix_blend_mode = vg_unset,
   opacity = vg_unset,
-  paintOrder = vg_unset,
-  pointerEvents = vg_unset,
+  paint_order = vg_unset,
+  pointer_events = vg_unset,
   r = vg_unset,
   reverse = vg_unset,
   select = vg_unset,
-  shapeRendering = vg_unset,
+  shape_rendering = vg_unset,
   sort = vg_unset,
   stroke = vg_unset,
-  strokeDasharray = vg_unset,
-  strokeDashoffset = vg_unset,
-  strokeLinecap = vg_unset,
-  strokeLinejoin = vg_unset,
-  strokeMiterlimit = vg_unset,
-  strokeOpacity = vg_unset,
-  strokeWidth = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
   target = vg_unset,
   tip = vg_unset,
   title = vg_unset,
@@ -56,11 +56,11 @@ vg_mark_geo(
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this mark to, or \code{NULL} to start a new plot with just this mark.}
 
-\item{ariaDescription}{The aria-description; a constant textual description.}
+\item{aria_description}{The aria-description; a constant textual description.}
 
-\item{ariaHidden}{The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.}
+\item{aria_hidden}{The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.}
 
-\item{ariaLabel}{The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.}
+\item{aria_label}{The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.}
 
 \item{channels}{Additional named channels, for example to include in a tooltip.}
 
@@ -72,11 +72,11 @@ vg_mark_geo(
 
 \item{facet}{Whether to enable or disable faceting; one of: - \emph{auto} (default) - automatically determine if this mark should be faceted - \emph{include} (or true) - draw the subset of the mark’s data in the current facet - \emph{exclude} - draw the subset of the mark’s data \emph{not} in the current facet - \emph{super} - draw this mark in a single frame that covers all facets - null (or false) - repeat this mark’s data across all facets (\emph{i.e.}, no faceting) When a mark uses \emph{super} faceting, it is not allowed to use position scales (\emph{x}, \emph{y}, \emph{fx}, or \emph{fy}); \emph{super} faceting is intended for decorations, such as labels and legends.}
 
-\item{facetAnchor}{How to place the mark with respect to facets; one of: - null (default for most marks) - display the mark in each non-empty facet - \emph{top}, \emph{right}, \emph{bottom}, or \emph{left} - display the mark only in facets on the given side - \emph{top-empty}, \emph{right-empty}, \emph{bottom-empty}, or \emph{left-empty} (default for axis marks) - display the mark only in facets that have empty space on the given side: either the margin, or an empty facet - \emph{empty} - display the mark in empty facets only}
+\item{facet_anchor}{How to place the mark with respect to facets; one of: - null (default for most marks) - display the mark in each non-empty facet - \emph{top}, \emph{right}, \emph{bottom}, or \emph{left} - display the mark only in facets on the given side - \emph{top-empty}, \emph{right-empty}, \emph{bottom-empty}, or \emph{left-empty} (default for axis marks) - display the mark only in facets that have empty space on the given side: either the margin, or an empty facet - \emph{empty} - display the mark in empty facets only}
 
 \item{fill}{The fill; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
 
-\item{fillOpacity}{The fill-opacity; a constant number between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{fill_opacity}{The fill-opacity; a constant number between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
 \item{filter}{Applies a transform to filter the mark’s index according to the given channel values; only truthy values are retained.}
 
@@ -88,25 +88,25 @@ vg_mark_geo(
 
 \item{href}{The href; a channel specifying URLs for clickable links.}
 
-\item{imageFilter}{A CSS filter; a constant string used to adjust the rendering of images, such as \emph{blur(5px)}.}
+\item{image_filter}{A CSS filter; a constant string used to adjust the rendering of images, such as \emph{blur(5px)}.}
 
 \item{margin}{Shorthand to set the same default for all four mark margins: \strong{marginTop}, \strong{marginRight}, \strong{marginBottom}, and \strong{marginLeft}; typically defaults to 0, except for axis marks.}
 
-\item{marginBottom}{The mark’s bottom margin; the minimum distance in pixels between the bottom edges of the inner and outer plot area.}
+\item{margin_bottom}{The mark’s bottom margin; the minimum distance in pixels between the bottom edges of the inner and outer plot area.}
 
-\item{marginLeft}{The mark’s left margin; the minimum distance in pixels between the left edges of the inner and outer plot area.}
+\item{margin_left}{The mark’s left margin; the minimum distance in pixels between the left edges of the inner and outer plot area.}
 
-\item{marginRight}{The mark’s right margin; the minimum distance in pixels between the right edges of the mark’s inner and outer plot area.}
+\item{margin_right}{The mark’s right margin; the minimum distance in pixels between the right edges of the mark’s inner and outer plot area.}
 
-\item{marginTop}{The mark’s top margin; the minimum distance in pixels between the top edges of the inner and outer plot area.}
+\item{margin_top}{The mark’s top margin; the minimum distance in pixels between the top edges of the inner and outer plot area.}
 
-\item{mixBlendMode}{The mix-blend-mode; a constant string specifying how to blend content such as \emph{multiply}.}
+\item{mix_blend_mode}{The mix-blend-mode; a constant string specifying how to blend content such as \emph{multiply}.}
 
 \item{opacity}{The opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{paintOrder}{The paint-order; a constant string specifying the order in which the \strong{fill}, \strong{stroke}, and any markers are drawn; defaults to \emph{normal}, which draws the fill, then stroke, then markers; defaults to \emph{stroke} for the text mark to create a “halo” around text to improve legibility.}
+\item{paint_order}{The paint-order; a constant string specifying the order in which the \strong{fill}, \strong{stroke}, and any markers are drawn; defaults to \emph{normal}, which draws the fill, then stroke, then markers; defaults to \emph{stroke} for the text mark to create a “halo” around text to improve legibility.}
 
-\item{pointerEvents}{The pointer-events property; a constant string such as \emph{none}.}
+\item{pointer_events}{The pointer-events property; a constant string such as \emph{none}.}
 
 \item{r}{The radius of dots; either a channel or constant.}
 
@@ -114,25 +114,25 @@ vg_mark_geo(
 
 \item{select}{Applies a filter transform after data is loaded to highlight selected values only.}
 
-\item{shapeRendering}{The shape-rendering; a constant string such as \emph{crispEdges}.}
+\item{shape_rendering}{The shape-rendering; a constant string such as \emph{crispEdges}.}
 
 \item{sort}{Either applies a transform to sort the mark’s index by the specified channel values, or imputes ordinal scale domains from this mark’s channels.}
 
 \item{stroke}{The stroke; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
 
-\item{strokeDasharray}{The stroke-dasharray; a constant number indicating the length in pixels of alternating dashes and gaps, or a constant string of numbers separated by spaces or commas (\emph{e.g.}, \emph{10 2} for dashes of 10 pixels separated by gaps of 2 pixels), or \emph{none} (the default) for no dashing : https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray}
+\item{stroke_dasharray}{The stroke-dasharray; a constant number indicating the length in pixels of alternating dashes and gaps, or a constant string of numbers separated by spaces or commas (\emph{e.g.}, \emph{10 2} for dashes of 10 pixels separated by gaps of 2 pixels), or \emph{none} (the default) for no dashing : https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray}
 
-\item{strokeDashoffset}{The stroke-dashoffset; a constant indicating the offset in pixels of the first dash along the stroke; defaults to zero.}
+\item{stroke_dashoffset}{The stroke-dashoffset; a constant indicating the offset in pixels of the first dash along the stroke; defaults to zero.}
 
-\item{strokeLinecap}{The stroke-linecap; a constant specifying how to cap stroked paths, such as \emph{butt}, \emph{round}, or \emph{square}.}
+\item{stroke_linecap}{The stroke-linecap; a constant specifying how to cap stroked paths, such as \emph{butt}, \emph{round}, or \emph{square}.}
 
-\item{strokeLinejoin}{The stroke-linejoin; a constant specifying how to join stroked paths, such as \emph{bevel}, \emph{miter}, \emph{miter-clip}, or \emph{round}.}
+\item{stroke_linejoin}{The stroke-linejoin; a constant specifying how to join stroked paths, such as \emph{bevel}, \emph{miter}, \emph{miter-clip}, or \emph{round}.}
 
-\item{strokeMiterlimit}{The stroke-miterlimit; a constant number specifying how to limit the length of \emph{miter} joins on stroked paths.}
+\item{stroke_miterlimit}{The stroke-miterlimit; a constant number specifying how to limit the length of \emph{miter} joins on stroked paths.}
 
-\item{strokeOpacity}{The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{stroke_opacity}{The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{strokeWidth}{The stroke-width; a constant number in pixels, or a channel.}
+\item{stroke_width}{The stroke-width; a constant number in pixels, or a channel.}
 
 \item{target}{The target; a constant string specifying the target window (\emph{e.g.}, \emph{_blank}) for clickable links; used in conjunction with the \strong{href} option.}
 

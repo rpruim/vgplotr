@@ -9,7 +9,7 @@ vg_interval_xy(
   as = vg_unset,
   brush = vg_unset,
   peers = vg_unset,
-  pixelSize = vg_unset,
+  pixel_size = vg_unset,
   xfield = vg_unset,
   yfield = vg_unset,
   ...
@@ -24,7 +24,7 @@ vg_interval_xy(
 
 \item{peers}{A flag indicating if peer (sibling) marks are excluded when cross-filtering (default \code{true}).}
 
-\item{pixelSize}{The size of an interactive pixel (default \code{1}).}
+\item{pixel_size}{The size of an interactive pixel (default \code{1}).}
 
 \item{xfield}{The name of the field (database column) over which the \code{x}-component of the interval selection should be defined.}
 

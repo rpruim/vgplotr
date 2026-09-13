@@ -10,7 +10,7 @@ vg_interval_y(
   brush = vg_unset,
   field = vg_unset,
   peers = vg_unset,
-  pixelSize = vg_unset,
+  pixel_size = vg_unset,
   ...
 )
 }
@@ -25,7 +25,7 @@ vg_interval_y(
 
 \item{peers}{A flag indicating if peer (sibling) marks are excluded when cross-filtering (default \code{true}).}
 
-\item{pixelSize}{The size of an interactive pixel (default \code{1}).}
+\item{pixel_size}{The size of an interactive pixel (default \code{1}).}
 
 \item{...}{Additional options or plot-level attributes.}
 }

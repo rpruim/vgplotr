@@ -8,7 +8,7 @@ vg_slider(
   as = vg_unset,
   column = vg_unset,
   field = vg_unset,
-  filterBy = vg_unset,
+  filter_by = vg_unset,
   from = vg_unset,
   label = vg_unset,
   max = vg_unset,
@@ -27,7 +27,7 @@ vg_slider(
 
 \item{field}{The name of the field (database column) over which the interval selection should be defined.}
 
-\item{filterBy}{A selection to filter the database table indicated by the \code{from} property.}
+\item{filter_by}{A selection to filter the database table indicated by the \code{from} property.}
 
 \item{from}{The name of a database table to use as a data source for this widget.}
 

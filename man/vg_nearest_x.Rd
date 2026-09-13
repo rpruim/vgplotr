@@ -9,7 +9,7 @@ vg_nearest_x(
   as = vg_unset,
   channels = vg_unset,
   fields = vg_unset,
-  maxRadius = vg_unset,
+  max_radius = vg_unset,
   ...
 )
 }
@@ -22,7 +22,7 @@ vg_nearest_x(
 
 \item{fields}{The fields (database column names) to use in generated selection clause predicates.}
 
-\item{maxRadius}{The maximum radius of a nearest selection (default 40).}
+\item{max_radius}{The maximum radius of a nearest selection (default 40).}
 
 \item{...}{Additional options or plot-level attributes.}
 }

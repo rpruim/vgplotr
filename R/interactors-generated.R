@@ -43,15 +43,15 @@
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
 #' @param by The input selection.
 #' @param fill The fill color of deemphasized marks.
-#' @param fillOpacity The fill opacity of deemphasized marks.
+#' @param fill_opacity The fill opacity of deemphasized marks.
 #' @param opacity The overall opacity of deemphasized marks.
 #' @param stroke The stroke color of deemphasized marks.
-#' @param strokeOpacity The stroke opacity of deemphasized marks.
+#' @param stroke_opacity The stroke opacity of deemphasized marks.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor function
 #' @export
-vg_highlight <- function(spec = NULL, by = vg_unset, fill = vg_unset, fillOpacity = vg_unset, opacity = vg_unset, stroke = vg_unset, strokeOpacity = vg_unset, ...) {
-  vg_interactor_(spec, "highlight", by = by, fill = fill, fillOpacity = fillOpacity, opacity = opacity, stroke = stroke, strokeOpacity = strokeOpacity, ...)
+vg_highlight <- function(spec = NULL, by = vg_unset, fill = vg_unset, fill_opacity = vg_unset, opacity = vg_unset, stroke = vg_unset, stroke_opacity = vg_unset, ...) {
+  vg_interactor_(spec, "highlight", by = by, fill = fill, fillOpacity = fill_opacity, opacity = opacity, stroke = stroke, strokeOpacity = stroke_opacity, ...)
 }
 
 #' An intervalX interactor.
@@ -61,12 +61,12 @@ vg_highlight <- function(spec = NULL, by = vg_unset, fill = vg_unset, fillOpacit
 #' @param brush CSS styles for the brush (SVG `rect`) element.
 #' @param field The name of the field (database column) over which the interval selection should be defined.
 #' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param pixelSize The size of an interactive pixel (default `1`).
+#' @param pixel_size The size of an interactive pixel (default `1`).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor function
 #' @export
-vg_interval_x <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = vg_unset, peers = vg_unset, pixelSize = vg_unset, ...) {
-  vg_interactor_(spec, "intervalX", as = as, brush = brush, field = field, peers = peers, pixelSize = pixelSize, ...)
+vg_interval_x <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = vg_unset, peers = vg_unset, pixel_size = vg_unset, ...) {
+  vg_interactor_(spec, "intervalX", as = as, brush = brush, field = field, peers = peers, pixelSize = pixel_size, ...)
 }
 
 #' An intervalY interactor.
@@ -76,12 +76,12 @@ vg_interval_x <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = 
 #' @param brush CSS styles for the brush (SVG `rect`) element.
 #' @param field The name of the field (database column) over which the interval selection should be defined.
 #' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param pixelSize The size of an interactive pixel (default `1`).
+#' @param pixel_size The size of an interactive pixel (default `1`).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor function
 #' @export
-vg_interval_y <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = vg_unset, peers = vg_unset, pixelSize = vg_unset, ...) {
-  vg_interactor_(spec, "intervalY", as = as, brush = brush, field = field, peers = peers, pixelSize = pixelSize, ...)
+vg_interval_y <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = vg_unset, peers = vg_unset, pixel_size = vg_unset, ...) {
+  vg_interactor_(spec, "intervalY", as = as, brush = brush, field = field, peers = peers, pixelSize = pixel_size, ...)
 }
 
 #' An intervalXY interactor.
@@ -90,14 +90,14 @@ vg_interval_y <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = 
 #' @param as The output selection.
 #' @param brush CSS styles for the brush (SVG `rect`) element.
 #' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param pixelSize The size of an interactive pixel (default `1`).
+#' @param pixel_size The size of an interactive pixel (default `1`).
 #' @param xfield The name of the field (database column) over which the `x`-component of the interval selection should be defined.
 #' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor function
 #' @export
-vg_interval_xy <- function(spec = NULL, as = vg_unset, brush = vg_unset, peers = vg_unset, pixelSize = vg_unset, xfield = vg_unset, yfield = vg_unset, ...) {
-  vg_interactor_(spec, "intervalXY", as = as, brush = brush, peers = peers, pixelSize = pixelSize, xfield = xfield, yfield = yfield, ...)
+vg_interval_xy <- function(spec = NULL, as = vg_unset, brush = vg_unset, peers = vg_unset, pixel_size = vg_unset, xfield = vg_unset, yfield = vg_unset, ...) {
+  vg_interactor_(spec, "intervalXY", as = as, brush = brush, peers = peers, pixelSize = pixel_size, xfield = xfield, yfield = yfield, ...)
 }
 
 #' A nearestX interactor.
@@ -106,12 +106,12 @@ vg_interval_xy <- function(spec = NULL, as = vg_unset, brush = vg_unset, peers =
 #' @param as The output selection.
 #' @param channels The encoding channels whose domain values should be selected.
 #' @param fields The fields (database column names) to use in generated selection clause predicates.
-#' @param maxRadius The maximum radius of a nearest selection (default 40).
+#' @param max_radius The maximum radius of a nearest selection (default 40).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor function
 #' @export
-vg_nearest_x <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, maxRadius = vg_unset, ...) {
-  vg_interactor_(spec, "nearestX", as = as, channels = channels, fields = fields, maxRadius = maxRadius, ...)
+vg_nearest_x <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, max_radius = vg_unset, ...) {
+  vg_interactor_(spec, "nearestX", as = as, channels = channels, fields = fields, maxRadius = max_radius, ...)
 }
 
 #' A nearestY interactor.
@@ -120,12 +120,12 @@ vg_nearest_x <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields
 #' @param as The output selection.
 #' @param channels The encoding channels whose domain values should be selected.
 #' @param fields The fields (database column names) to use in generated selection clause predicates.
-#' @param maxRadius The maximum radius of a nearest selection (default 40).
+#' @param max_radius The maximum radius of a nearest selection (default 40).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor function
 #' @export
-vg_nearest_y <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, maxRadius = vg_unset, ...) {
-  vg_interactor_(spec, "nearestY", as = as, channels = channels, fields = fields, maxRadius = maxRadius, ...)
+vg_nearest_y <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, max_radius = vg_unset, ...) {
+  vg_interactor_(spec, "nearestY", as = as, channels = channels, fields = fields, maxRadius = max_radius, ...)
 }
 
 #' A pan interactor.
@@ -280,17 +280,17 @@ vg_toggle_color <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 #' @param as The output selection.
 #' @param column The name of a database column from which to pull menu options.
 #' @param field The name of the field (database column) over which the interval selection should be defined.
-#' @param filterBy A selection to filter the database table indicated by the `from` property.
+#' @param filter_by A selection to filter the database table indicated by the `from` property.
 #' @param from The name of a database table to use as a data source for this widget.
 #' @param label A text label for this input.
-#' @param listMatch Required if the database column is an list, this property determines how to match the selected menu option against the list values.
+#' @param list_match Required if the database column is an list, this property determines how to match the selected menu option against the list values.
 #' @param options An array of menu options, as literal values or option objects.
 #' @param value The initial selected menu value.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor function
 #' @export
-vg_menu <- function(as = vg_unset, column = vg_unset, field = vg_unset, filterBy = vg_unset, from = vg_unset, label = vg_unset, listMatch = vg_unset, options = vg_unset, value = vg_unset, ...) {
-  vg_interactor_(NULL, "menu", as = as, column = column, field = field, filterBy = filterBy, from = from, label = label, listMatch = listMatch, options = options, value = value, ...)
+vg_menu <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, list_match = vg_unset, options = vg_unset, value = vg_unset, ...) {
+  vg_interactor_(NULL, "menu", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, listMatch = list_match, options = options, value = value, ...)
 }
 
 #' A search input component.
@@ -298,15 +298,15 @@ vg_menu <- function(as = vg_unset, column = vg_unset, field = vg_unset, filterBy
 #' @param as The output selection.
 #' @param column The name of a database column from which to pull menu options.
 #' @param field The name of the field (database column) over which the interval selection should be defined.
-#' @param filterBy A selection to filter the database table indicated by the `from` property.
+#' @param filter_by A selection to filter the database table indicated by the `from` property.
 #' @param from The name of a database table to use as a data source for this widget.
 #' @param label A text label for this input.
 #' @param type The type of text search query to perform.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor function
 #' @export
-vg_search <- function(as = vg_unset, column = vg_unset, field = vg_unset, filterBy = vg_unset, from = vg_unset, label = vg_unset, type = vg_unset, ...) {
-  vg_interactor_(NULL, "search", as = as, column = column, field = field, filterBy = filterBy, from = from, label = label, type = type, ...)
+vg_search <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, type = vg_unset, ...) {
+  vg_interactor_(NULL, "search", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, type = type, ...)
 }
 
 #' A slider input component.
@@ -314,7 +314,7 @@ vg_search <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter
 #' @param as The output selection.
 #' @param column The name of a database column from which to pull menu options.
 #' @param field The name of the field (database column) over which the interval selection should be defined.
-#' @param filterBy A selection to filter the database table indicated by the `from` property.
+#' @param filter_by A selection to filter the database table indicated by the `from` property.
 #' @param from The name of a database table to use as a data source for this widget.
 #' @param label A text label for this input.
 #' @param max The maximum slider value.
@@ -326,8 +326,8 @@ vg_search <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor function
 #' @export
-vg_slider <- function(as = vg_unset, column = vg_unset, field = vg_unset, filterBy = vg_unset, from = vg_unset, label = vg_unset, max = vg_unset, min = vg_unset, select = vg_unset, step = vg_unset, value = vg_unset, width = vg_unset, ...) {
-  vg_interactor_(NULL, "slider", as = as, column = column, field = field, filterBy = filterBy, from = from, label = label, max = max, min = min, select = select, step = step, value = value, width = width, ...)
+vg_slider <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, max = vg_unset, min = vg_unset, select = vg_unset, step = vg_unset, value = vg_unset, width = vg_unset, ...) {
+  vg_interactor_(NULL, "slider", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, max = max, min = min, select = select, step = step, value = value, width = width, ...)
 }
 
 #' A table grid view component.
@@ -335,16 +335,16 @@ vg_slider <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter
 #' @param align An object of per-column alignment values.
 #' @param as The output selection.
 #' @param columns A list of column names to include in the table grid.
-#' @param filterBy A selection to filter the database table indicated by the `from` property.
+#' @param filter_by A selection to filter the database table indicated by the `from` property.
 #' @param from The name of a database table to use as a data source for this widget.
 #' @param height The height of the table widget, in pixels.
-#' @param maxWidth The maximum width of the table widget, in pixels.
-#' @param rowBatch The number of rows load in a new batch upon table scroll.
+#' @param max_width The maximum width of the table widget, in pixels.
+#' @param row_batch The number of rows load in a new batch upon table scroll.
 #' @param width The width of the slider in screen pixels.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor function
 #' @export
-vg_table <- function(align = vg_unset, as = vg_unset, columns = vg_unset, filterBy = vg_unset, from = vg_unset, height = vg_unset, maxWidth = vg_unset, rowBatch = vg_unset, width = vg_unset, ...) {
-  vg_interactor_(NULL, "table", align = align, as = as, columns = columns, filterBy = filterBy, from = from, height = height, maxWidth = maxWidth, rowBatch = rowBatch, width = width, ...)
+vg_table <- function(align = vg_unset, as = vg_unset, columns = vg_unset, filter_by = vg_unset, from = vg_unset, height = vg_unset, max_width = vg_unset, row_batch = vg_unset, width = vg_unset, ...) {
+  vg_interactor_(NULL, "table", align = align, as = as, columns = columns, filterBy = filter_by, from = from, height = height, maxWidth = max_width, rowBatch = row_batch, width = width, ...)
 }
 

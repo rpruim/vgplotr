@@ -66,3 +66,21 @@ test_that("vg_guide_color()/vg_guide_opacity()/vg_guide_r() warn about unrecogni
   expect_warning(vg_guide_opacity(bogus = 1), "`bogus`.*is not a recognized mosaic-spec plot attribute")
   expect_warning(vg_guide_r(bogus = 1), "`bogus`.*is not a recognized mosaic-spec plot attribute")
 })
+
+test_that("vg_scale_length() sets the length channel's scale properties (no guide/legend counterpart exists)", {
+  frag <- vg_mark_vector(x = ~a, y = ~b, length = ~g) |>
+    vg_scale_length(range = c(0, 20), zero = TRUE)
+
+  expect_equal(frag$attrs$lengthRange, c(0, 20))
+  expect_true(frag$attrs$lengthZero)
+  expect_false(exists("vg_guide_length"))
+  expect_false(exists("vg_legend_length"))
+})
+
+test_that("vg_scale_symbol() only has type/domain/range (no nice/zero/reverse/etc.)", {
+  frag <- vg_mark_dot(x = ~a, y = ~b, symbol = ~g) |>
+    vg_scale_symbol(range = c("circle", "square"))
+
+  expect_equal(frag$attrs$symbolRange, c("circle", "square"))
+  expect_setequal(setdiff(names(formals(vg_scale_symbol)), c("spec", "...")), c("type", "domain", "range"))
+})

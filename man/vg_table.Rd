@@ -8,11 +8,11 @@ vg_table(
   align = vg_unset,
   as = vg_unset,
   columns = vg_unset,
-  filterBy = vg_unset,
+  filter_by = vg_unset,
   from = vg_unset,
   height = vg_unset,
-  maxWidth = vg_unset,
-  rowBatch = vg_unset,
+  max_width = vg_unset,
+  row_batch = vg_unset,
   width = vg_unset,
   ...
 )
@@ -24,15 +24,15 @@ vg_table(
 
 \item{columns}{A list of column names to include in the table grid.}
 
-\item{filterBy}{A selection to filter the database table indicated by the \code{from} property.}
+\item{filter_by}{A selection to filter the database table indicated by the \code{from} property.}
 
 \item{from}{The name of a database table to use as a data source for this widget.}
 
 \item{height}{The height of the table widget, in pixels.}
 
-\item{maxWidth}{The maximum width of the table widget, in pixels.}
+\item{max_width}{The maximum width of the table widget, in pixels.}
 
-\item{rowBatch}{The number of rows load in a new batch upon table scroll.}
+\item{row_batch}{The number of rows load in a new batch upon table scroll.}
 
 \item{width}{The width of the slider in screen pixels.}
 

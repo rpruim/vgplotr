@@ -88,6 +88,19 @@ test_that("generated mark wrappers make a genuinely schema-required property a r
   expect_equal(frag$items[[1]]$encodings$x, ~a)
 })
 
+test_that("generated mark/interactor wrappers have snake_case formals forwarded under the exact schema key", {
+  expect_true("stroke_width" %in% names(formals(vg_mark_dot)))
+  expect_false("strokeWidth" %in% names(formals(vg_mark_dot)))
+
+  frag <- vg_mark_rule_x(x = 0, stroke_width = 2)
+  expect_equal(frag$items[[1]]$encodings$strokeWidth, 2)
+  expect_null(frag$items[[1]]$encodings$stroke_width)
+
+  expect_true("filter_by" %in% names(formals(vg_search)))
+  input <- vg_search(column = "name", filter_by = param(brush))
+  expect_true(is_vg_param(input$options$filterBy))
+})
+
 test_that("a required property that's really a branch discriminant with its own mosaic default stays optional", {
   # densityX/densityY's `type` is required in every anyOf branch, but with
   # a *different* const per branch (areaX/lineX/dotX/textX) -- mosaic

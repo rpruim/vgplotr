@@ -16,6 +16,14 @@
 # lower-level vg_mark()/vg_interactor() they're built on stay `...`-based
 # on purpose, since they take an arbitrary/dynamic mark or interactor type.
 #
+# Each formal's R-facing name is snake_case (mosaic's `strokeWidth` becomes
+# `stroke_width`), matching the rest of the package (vg_scale_*()/
+# vg_guide_*() are snake_case too) -- but it's forwarded to vg_mark()/
+# vg_interactor() under its exact original schema name, since that's the
+# key mosaic's JSON spec actually needs. This is a clean-break rename with
+# no camelCase compatibility alias: existing code calling e.g.
+# `vg_mark_dot(strokeWidth = 2)` needs updating to `stroke_width = 2`.
+#
 # Mark wrappers are prefixed vg_mark_ (not just vg_<mark>()) so every mark
 # constructor can be found by listing functions starting "vg_mark_", and so
 # a mark name never collides with an unrelated vg_<name>() function
@@ -171,6 +179,29 @@ stopifnot(
     !any(vapply(interactor_defs, function(m) "interactor" %in% names(m$properties), logical(1)))
 )
 
+# camel_to_snake() is not invertible (fooBAR and fooBar both become
+# foo_bar), so a future schema version could in principle introduce two
+# differently-camelCased properties on the *same* mark/interactor that
+# collide once translated. Fail loudly here instead of silently merging
+# two properties into one R argument -- checked empirically against
+# v0.31.0 with zero collisions (design/design-reflections.qmd question 2c).
+check_snake_collisions <- function(type_defs, kind) {
+  for (nm in names(type_defs)) {
+    props <- names(type_defs[[nm]]$properties)
+    dupes <- unique(props[duplicated(camel_to_snake(props))])
+    if (length(dupes)) {
+      stop(
+        "camel_to_snake() collision on ", kind, " `", nm, "`: ",
+        paste(dupes, collapse = ", "),
+        " -- add a manual rename before regenerating.",
+        call. = FALSE
+      )
+    }
+  }
+}
+check_snake_collisions(mark_defs, "mark")
+check_snake_collisions(interactor_defs, "interactor/input")
+
 # First-seen description for a given property name, reused across every
 # mark/interactor/input that has a property of that name (these mean the
 # same thing everywhere in mosaic's grammar, so one description per name is
@@ -195,21 +226,32 @@ interactor_prop_docs <- property_docs(interactor_defs)
 # required R argument that errors immediately if omitted -- and are moved
 # to the front of the formals (right after `spec`) since they're the ones
 # a caller must supply.
+#
+# Each property's R-facing formal name is its snake_case translation
+# (`strokeWidth` -> `stroke_width`), but it's still forwarded to `helper`
+# under its *exact* schema name (`strokeWidth = stroke_width`) -- that's
+# the key mosaic's JSON spec actually needs, and the only thing
+# `vg_mark()`/`vg_interactor()` (and ultimately `as_spec_payload()`) ever
+# see. `camel_to_snake()` is confirmed collision-free across every
+# property name in the schema (see design/design-reflections.qmd question
+# 2c) -- if a future schema version ever introduces a colliding pair, the
+# `stopifnot()` below catches it.
 generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, extra_formals = character(),
                               extra_docs = character(), title, spec_doc, family, required = character()) {
   props <- names(properties)
   props <- c(intersect(required, props), setdiff(props, required))
+  snake_props <- camel_to_snake(props)
   has_spec <- !is.null(spec_doc)
   formals_str <- paste(c(
     if (has_spec) "spec = NULL",
-    ifelse(props %in% required, props, paste0(props, " = vg_unset")),
+    ifelse(props %in% required, snake_props, paste0(snake_props, " = vg_unset")),
     "...",
     if (length(extra_formals)) paste0(extra_formals, " = vg_unset")
   ), collapse = ", ")
   call_args <- paste(c(
     if (has_spec) "spec" else "NULL",
     sprintf('"%s"', type_arg),
-    paste0(props, " = ", props),
+    paste0(props, " = ", snake_props),
     "...",
     if (length(extra_formals)) paste0(extra_formals, " = ", extra_formals)
   ), collapse = ", ")
@@ -218,7 +260,7 @@ generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, extra_
     paste0("#' ", title),
     "#'",
     if (!is.null(spec_doc)) sprintf("#' @param spec %s", spec_doc),
-    sprintf("#' @param %s %s", props, unlist(prop_docs[props])),
+    sprintf("#' @param %s %s", snake_props, unlist(prop_docs[props])),
     "#' @param ... Additional options or plot-level attributes.",
     extra_docs,
     sprintf("#' @family %s", family),
@@ -337,4 +379,606 @@ attr_lines <- c(
 )
 writeLines(attr_lines, "R/attrs-generated.R")
 
-cat("Wrote R/marks-generated.R, R/interactors-generated.R, R/attrs-generated.R\n")
+# --- R/scale-generated.R & R/guide-generated.R ----------------------------
+#
+# mosaic's PlotAttributes (`.vg_plot_attrs` above) has no schema-level
+# structure separating scale properties from guide (axis) properties, or
+# grouping them by channel (x/y/fx/fy/color/opacity/r/length/symbol) -- it's
+# one flat 215-property object. This classifies purely by name: every
+# property is <prefix><Suffix> (or, for the handful of global defaults,
+# just <suffix> with an empty prefix), and each Suffix is looked up in
+# exactly one of the two canonical tables below to decide (a) whether it's
+# a scale or guide property and (b) its snake_case argument name. These
+# tables are the single source of truth for every vg_scale_*()/
+# vg_guide_*() constructor -- add a new suffix here (never in a
+# per-channel copy) if a future mosaic version adds one.
+#
+# `projection*` and `facet{Grid,Label,Margin*}` don't fit this per-channel
+# pattern and are left as raw vg_plot()/vg_attributes() calls, same as
+# always (see design/completing-the-package.qmd's "Projection and
+# Geographic Scales" section, not yet implemented).
+
+plot_attr_props <- defs$PlotAttributes$properties
+plot_attr_docs <- vapply(
+  names(plot_attr_props),
+  function(nm) docline(plot_attr_props[[nm]]$description, nm),
+  character(1)
+)
+names(plot_attr_docs) <- names(plot_attr_props)
+
+# Deliberate semantic renames where a literal snake_case translation of the
+# suffix would be confusing: `Scale` -> `type` (not `scale`, an argument to
+# a function already named vg_scale_*()) and `Axis` -> `position` (not
+# `axis`, when "which axis" is the whole point of vg_guide_*()). See
+# design/design-reflections.qmd question 2b.
+suffix_arg_overrides <- c(Scale = "type", Axis = "position")
+suffix_arg_name <- function(suffix) {
+  override <- unname(suffix_arg_overrides[suffix])
+  ifelse(is.na(override), camel_to_snake(suffix), override)
+}
+
+# Canonical suffix order -- also the order arguments appear in every
+# generated vg_scale_*()/vg_guide_*() signature (only the suffixes a given
+# channel actually has are included).
+scale_suffixes <- c(
+  "Scale", "Domain", "Range", "Scheme", "Interpolate", "Pivot", "Symmetric",
+  "Nice", "Zero", "Reverse", "Clamp", "Round",
+  "Padding", "PaddingInner", "PaddingOuter", "Align",
+  "Inset", "InsetLeft", "InsetRight", "InsetTop", "InsetBottom",
+  "Base", "Exponent", "Constant", "Percent", "N"
+)
+guide_suffixes <- c(
+  "Axis", "Ticks", "TickSpacing", "TickSize", "TickPadding", "TickFormat",
+  "TickRotate", "Grid", "Line", "Label", "LabelAnchor", "LabelOffset",
+  "LabelArrow", "FontVariant", "AriaLabel", "AriaDescription"
+)
+inset_suffixes <- c("InsetLeft", "InsetRight", "InsetTop", "InsetBottom")
+
+# `prefix` is "" for the bare global-default channel (e.g. "align", not
+# "xAlign").
+plot_attr_name <- function(prefix, suffix) {
+  if (nchar(prefix) == 0) paste0(tolower(substr(suffix, 1, 1)), substring(suffix, 2)) else paste0(prefix, suffix)
+}
+has_plot_attr <- function(prefix, suffix) plot_attr_name(prefix, suffix) %in% names(plot_attr_props)
+
+# The suffixes (in canonical order) that actually exist for `prefix`,
+# restricted to `suffixes` (scale_suffixes or guide_suffixes).
+channel_suffixes <- function(prefix, suffixes) Filter(function(s) has_plot_attr(prefix, s), suffixes)
+
+attr_names_doc <- function(which_values, suffix) {
+  paste(sprintf("`%s`", vapply(which_values, plot_attr_name, character(1), suffix = suffix)), collapse = "/")
+}
+
+# Builds one generated vg_scale_*()/vg_guide_*() function (plus its roxygen
+# block and, for a multi-prefix `which_values`, its wrapper_function()-built
+# aliases -- e.g. vg_scale_x()/vg_scale_y() for vg_scale_position()).
+# `which_values` is a single prefix (e.g. "color", or "" for the bare
+# global-default channel) for a standalone function with no `which`
+# argument, or two prefixes sharing one generic function (e.g. c("x", "y"))
+# with `which` selecting between them. `has_inset` enables the
+# position/facet-scale-only left/right-vs-top/bottom inset handling (see
+# add_inset_attrs(), R/utils.R) -- never needed for guide functions, or for
+# the color/opacity/r/length/symbol channels (none of which have any Inset
+# property).
+generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, family_prefix,
+                                  which_noun = NULL, spec_noun, title, description, examples,
+                                  alias = NULL) {
+  has_which <- length(which_values) > 1
+  common <- setdiff(channel_suffixes(which_values[1], suffixes), if (has_inset) inset_suffixes else character())
+  args <- vapply(common, suffix_arg_name, character(1))
+
+  spec_doc <- c(
+    sprintf(
+      "#' @param spec A plot fragment or `vgspec` to set this%s on, or `NULL` to",
+      if (nzchar(spec_noun)) paste0(" ", spec_noun) else ""
+    ),
+    "#'   start a new plot fragment with just these attributes."
+  )
+
+  which_doc <- if (has_which) {
+    sprintf(
+      "#' @param which Which %s this sets: %s.", which_noun,
+      paste(sprintf('`"%s"`', which_values), collapse = " or ")
+    )
+  } else {
+    character()
+  }
+
+  arg_docs <- if (length(common)) {
+    sprintf(
+      "#' @param %s %s (%s).", args,
+      plot_attr_docs[plot_attr_name(which_values[1], common)],
+      vapply(common, function(s) attr_names_doc(which_values, s), character(1))
+    )
+  } else {
+    character()
+  }
+
+  inset_formals <- character()
+  inset_docs <- character()
+  if (has_inset) {
+    lr_which <- which_values[vapply(which_values, has_plot_attr, logical(1), suffix = "InsetLeft")]
+    tb_which <- which_values[vapply(which_values, has_plot_attr, logical(1), suffix = "InsetTop")]
+    inset_formals <- c("inset_left = vg_unset", "inset_right = vg_unset", "inset_top = vg_unset", "inset_bottom = vg_unset")
+    inset_docs <- c(
+      sprintf(
+        "#' @param inset_left,inset_right Pixel inset at the left/right end of the range; only meaningful for `which = \"%s\"` (`%s`/`%s`).",
+        lr_which, plot_attr_name(lr_which, "InsetLeft"), plot_attr_name(lr_which, "InsetRight")
+      ),
+      sprintf(
+        "#' @param inset_top,inset_bottom Pixel inset at the top/bottom end of the range; only meaningful for `which = \"%s\"` (`%s`/`%s`).",
+        tb_which, plot_attr_name(tb_which, "InsetTop"), plot_attr_name(tb_which, "InsetBottom")
+      )
+    )
+  }
+
+  formals_str <- paste(c(
+    "spec = NULL",
+    if (has_which) sprintf("which = c(%s)", paste(sprintf('"%s"', which_values), collapse = ", ")),
+    paste0(args, " = vg_unset"),
+    inset_formals,
+    "..."
+  ), collapse = ", ")
+
+  # prefixed_attrs() builds the real attr name via plain paste0(prefix,
+  # table_value) -- for a real prefix that's the capitalized suffix
+  # ("x" + "Align" = "xAlign"), but for the bare global channel (prefix
+  # ""), the table value itself must already be lowercase-initial
+  # ("" + "align" = "align", not "" + "Align" = "Align").
+  table_values <- if (nchar(which_values[1]) == 0) {
+    vapply(common, function(s) paste0(tolower(substr(s, 1, 1)), substring(s, 2)), character(1))
+  } else {
+    common
+  }
+  suffix_table <- paste0("c(", paste(sprintf('%s = "%s"', args, table_values), collapse = ", "), ")")
+  attrs_prefix <- if (has_which) "which" else sprintf('"%s"', which_values[1])
+  context_expr <- if (has_which) sprintf('paste0("%s", which, "()")', family_prefix) else sprintf('"%s()"', fn)
+
+  body <- c(
+    if (has_which) "  which <- match.arg(which)",
+    sprintf("  context <- %s", context_expr),
+    sprintf("  suffixes <- %s", suffix_table),
+    sprintf("  attrs <- prefixed_attrs(%s, suffixes, environment())", attrs_prefix),
+    if (has_inset) "  attrs <- add_inset_attrs(attrs, which, environment(), context)",
+    "  apply_plot_attrs(spec, attrs, list(...), context)"
+  )
+
+  main <- c(
+    paste0("#' ", title),
+    "#'",
+    description,
+    "#'",
+    spec_doc,
+    which_doc,
+    arg_docs,
+    inset_docs,
+    "#' @param ... Additional plot-level attributes not covered above, by their",
+    "#'   raw mosaic-spec camelCase name.",
+    sprintf("#' @family %s", family),
+    "#' @export",
+    examples,
+    sprintf("%s <- function(%s) {", fn, formals_str),
+    body,
+    "}",
+    ""
+  )
+
+  aliases <- character()
+  if (has_which) {
+    for (w in which_values) {
+      other_side <- character()
+      for (o in setdiff(which_values, w)) {
+        if (has_plot_attr(o, "InsetLeft")) other_side <- c(other_side, "inset_left", "inset_right")
+        if (has_plot_attr(o, "InsetTop")) other_side <- c(other_side, "inset_top", "inset_bottom")
+      }
+      drop_arg <- if (has_inset && length(other_side)) {
+        sprintf(", drop = c(%s)", paste(sprintf('"%s"', other_side), collapse = ", "))
+      } else {
+        ""
+      }
+      aliases <- c(
+        aliases,
+        sprintf("#' @rdname %s", fn),
+        "#' @export",
+        sprintf('%s <- wrapper_function(%s, which = "%s"%s)', paste0(family_prefix, w), fn, w, drop_arg),
+        ""
+      )
+    }
+  }
+  if (!is.null(alias)) {
+    aliases <- c(aliases, sprintf("#' @rdname %s", fn), "#' @export", sprintf("%s <- %s", alias, fn), "")
+  }
+
+  c(main, aliases)
+}
+
+# `vg_inset_side_suffixes`/`vg_position_counterpart` (referenced by
+# add_inset_attrs(), R/utils.R) -- which InsetLeft/Right vs InsetTop/Bottom
+# pair applies to which `which` value, derived the same way as everything
+# else here rather than hand-maintained.
+inset_side_data <- local({
+  sides <- list()
+  counterpart <- c()
+  for (grp in list(c("x", "y"), c("fx", "fy"))) {
+    a <- grp[1]
+    b <- grp[2]
+    if (has_plot_attr(a, "InsetLeft")) {
+      sides[[a]] <- c(inset_left = "InsetLeft", inset_right = "InsetRight")
+      sides[[b]] <- c(inset_top = "InsetTop", inset_bottom = "InsetBottom")
+    } else {
+      sides[[a]] <- c(inset_top = "InsetTop", inset_bottom = "InsetBottom")
+      sides[[b]] <- c(inset_left = "InsetLeft", inset_right = "InsetRight")
+    }
+    counterpart[a] <- b
+    counterpart[b] <- a
+  }
+  list(sides = sides, counterpart = counterpart)
+})
+
+side_list_literal <- function(side) paste0("c(", paste(sprintf('%s = "%s"', names(side), side), collapse = ", "), ")")
+
+scale_lines <- c(
+  "# Generated by data-raw/update-schema.R from mosaic's JSON schema.",
+  "# DO NOT EDIT BY HAND -- rerun that script instead.",
+  "#",
+  "# One vg_scale_*() constructor per scale channel/family in mosaic-spec's",
+  "# PlotAttributes -- see data-raw/update-schema.R's own comments for how",
+  "# properties are classified into these.",
+  "",
+  "#' @include utils.R",
+  "NULL",
+  "",
+  "# Which InsetLeft/InsetRight vs InsetTop/InsetBottom pair applies to which",
+  "# `which` value -- used by add_inset_attrs() (R/utils.R).",
+  "vg_inset_side_suffixes <- list(",
+  paste0("  ", paste(sprintf("%s = %s", names(inset_side_data$sides), vapply(inset_side_data$sides, side_list_literal, character(1))), collapse = ",\n  ")),
+  ")",
+  "",
+  sprintf(
+    "vg_position_counterpart <- c(%s)",
+    paste(sprintf('%s = "%s"', names(inset_side_data$counterpart), inset_side_data$counterpart), collapse = ", ")
+  ),
+  ""
+)
+
+guide_lines <- c(
+  "# Generated by data-raw/update-schema.R from mosaic's JSON schema.",
+  "# DO NOT EDIT BY HAND -- rerun that script instead.",
+  "#",
+  "# One vg_guide_*() constructor per axis-guide channel/family in",
+  "# mosaic-spec's PlotAttributes -- see data-raw/update-schema.R's own",
+  "# comments for how properties are classified into these.",
+  "",
+  "#' @include utils.R",
+  "NULL",
+  ""
+)
+
+scale_group <- function(fn, which_values, has_inset, which_noun = NULL, title, description, examples, alias = NULL) {
+  generate_scale_guide(
+    fn, which_values, scale_suffixes, has_inset = has_inset, family = "scale functions",
+    family_prefix = "vg_scale_", which_noun = which_noun, spec_noun = "scale",
+    title = title, description = description, examples = examples, alias = alias
+  )
+}
+guide_group <- function(fn, which_values, which_noun = NULL, title, description, examples, alias = NULL) {
+  generate_scale_guide(
+    fn, which_values, guide_suffixes, has_inset = FALSE, family = "guide functions",
+    family_prefix = "vg_guide_", which_noun = which_noun, spec_noun = "guide",
+    title = title, description = description, examples = examples, alias = alias
+  )
+}
+
+scale_lines <- c(scale_lines, scale_group(
+  "vg_scale_position", c("x", "y"), has_inset = TRUE, which_noun = "position scale",
+  title = "Set position scale properties (x or y)",
+  description = c(
+    "#' `vg_scale_x()`/`vg_scale_y()` set the scale properties mosaic-spec",
+    "#' exposes per positional axis (`xScale`, `xDomain`, ... -- substitute",
+    "#' `y` for the vertical axis). These are already plot-level attributes",
+    "#' that [vg_plot()]/[vg_attributes()] accept directly by their raw",
+    "#' camelCase names; this is a discoverable, snake_case-argument",
+    "#' convenience layer on top of that. `vg_scale_x()` and `vg_scale_y()`",
+    "#' are thin wrappers around the generic `vg_scale_position()`.",
+    "#'",
+    "#' Like [vg_plot()], this can be piped in alongside marks/interactors --",
+    "#' it only ever sets attributes on the current plot fragment, so it",
+    "#' never needs to come last in a chain. For the analogous facet scales",
+    "#' (`fx`/`fy`), see [vg_scale_facet()]."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b) |>",
+    "#'   vg_scale_x(type = \"log\") |>",
+    "#'   vg_scale_y(zero = TRUE, nice = TRUE)"
+  )
+))
+
+scale_lines <- c(scale_lines, scale_group(
+  "vg_scale_facet", c("fx", "fy"), has_inset = TRUE, which_noun = "facet scale",
+  title = "Set facet scale properties (fx or fy)",
+  description = c(
+    "#' `vg_scale_fx()`/`vg_scale_fy()` set the scale properties mosaic-spec",
+    "#' exposes per facet axis (`fxDomain`, `fxPadding`, ... -- substitute",
+    "#' `fy` for the row facet axis). Facet scales are always band scales,",
+    "#' so this covers fewer properties than [vg_scale_position()] (no",
+    "#' `type`, `nice`, `zero`, `clamp`, or the log/pow/symlog-only",
+    "#' properties) -- exactly which ones is derived from the schema, not",
+    "#' hand-picked. `vg_scale_fx()` and `vg_scale_fy()` are thin wrappers",
+    "#' around the generic `vg_scale_facet()`."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>",
+    "#'   vg_scale_fx(padding = 0.1)"
+  )
+))
+
+scale_lines <- c(scale_lines, scale_group(
+  "vg_scale_color", "color", has_inset = FALSE,
+  title = "Set the color scale's properties",
+  description = c(
+    "#' `vg_scale_color()` sets the scale properties mosaic-spec exposes for",
+    "#' the `color` channel (`colorScale`, `colorDomain`, ... -- the scale",
+    "#' that `fill`/`stroke` encodings are bound to unless they're a literal",
+    "#' constant). Unlike `vg_scale_x()`/`vg_scale_y()`, there's only one",
+    "#' color channel, so `vg_scale_color()` isn't built from a `which =`",
+    "#' generic -- it's the whole implementation. For the axis-guide",
+    "#' properties (`colorLabel`/`colorTickFormat`), see [vg_guide_color()];",
+    "#' for an actual rendered color legend, see [vg_legend_color()] -- a",
+    "#' different (if related) thing, a standalone/embedded legend mark",
+    "#' rather than a plot attribute."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>",
+    "#'   vg_scale_color(scheme = \"Viridis\", type = \"linear\")"
+  )
+))
+
+scale_lines <- c(scale_lines, scale_group(
+  "vg_scale_opacity", "opacity", has_inset = FALSE,
+  title = "Set the opacity scale's properties",
+  description = c(
+    "#' `vg_scale_opacity()` sets the scale properties mosaic-spec exposes",
+    "#' for the `opacity` channel (`opacityScale`, `opacityDomain`, ... --",
+    "#' the scale that `opacity`/`fillOpacity`/`strokeOpacity` encodings are",
+    "#' bound to unless they're a literal constant). For the axis-guide",
+    "#' properties, see [vg_guide_opacity()]; for an actual rendered opacity",
+    "#' legend, see [vg_legend_opacity()]."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>",
+    "#'   vg_scale_opacity(range = c(0.2, 1))"
+  )
+))
+
+scale_lines <- c(scale_lines, scale_group(
+  "vg_scale_r", "r", has_inset = FALSE, alias = "vg_scale_radius",
+  title = "Set the radius scale's properties",
+  description = c(
+    "#' `vg_scale_r()` (aliased as `vg_scale_radius()`) sets the scale",
+    "#' properties mosaic-spec exposes for the `r` channel (`rScale`,",
+    "#' `rDomain`, ... -- the scale that a `dot`/`circle` mark's `r`",
+    "#' encoding is bound to unless it's a literal constant). Which",
+    "#' properties exist here (e.g. no `reverse` -- mosaic doesn't define",
+    "#' `rReverse`) is derived from the schema, not hand-picked. For the",
+    "#' axis-guide property, see [vg_guide_r()]/[vg_guide_radius()]; for an",
+    "#' actual rendered radius/size legend, see [vg_legend_symbol()]",
+    "#' (mosaic doesn't have a dedicated `r`-typed legend)."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b, r = ~g) |>",
+    "#'   vg_scale_r(range = c(0, 20), zero = TRUE)"
+  )
+))
+
+scale_lines <- c(scale_lines, scale_group(
+  "vg_scale_length", "length", has_inset = FALSE,
+  title = "Set the length scale's properties",
+  description = c(
+    "#' `vg_scale_length()` sets the scale properties mosaic-spec exposes",
+    "#' for the `length` channel (`lengthScale`, `lengthDomain`, ... -- the",
+    "#' scale that a `vector`/`spike` mark's `length` encoding is bound to",
+    "#' unless it's a literal constant). Mosaic doesn't define a length",
+    "#' axis-guide or legend, so there's no `vg_guide_length()`/",
+    "#' `vg_legend_length()` to pair with this."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_vector(x = ~a, y = ~b, length = ~g) |>",
+    "#'   vg_scale_length(range = c(0, 20))"
+  )
+))
+
+scale_lines <- c(scale_lines, scale_group(
+  "vg_scale_symbol", "symbol", has_inset = FALSE,
+  title = "Set the symbol scale's properties",
+  description = c(
+    "#' `vg_scale_symbol()` sets the scale properties mosaic-spec exposes",
+    "#' for the `symbol` channel (`symbolScale`, `symbolDomain`,",
+    "#' `symbolRange` -- the scale that a `dot`'s `symbol` encoding is bound",
+    "#' to unless it's a literal constant). Mosaic doesn't define a symbol",
+    "#' axis-guide, but does have a dedicated legend type -- see",
+    "#' [vg_legend_symbol()]."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b, symbol = ~g) |>",
+    "#'   vg_scale_symbol(range = c(\"circle\", \"square\", \"triangle\"))"
+  )
+))
+
+scale_lines <- c(scale_lines, scale_group(
+  "vg_scale_all", "", has_inset = FALSE,
+  title = "Set global default scale properties (all ordinal position scales)",
+  description = c(
+    "#' `vg_scale_all()` sets mosaic-spec's plot-wide fallback defaults --",
+    "#' unlike `xAlign`/`xPadding`/etc. (set via [vg_scale_position()]) or",
+    "#' `fxAlign`/etc. (via [vg_scale_facet()]), which only affect one scale,",
+    "#' these bare attributes are mosaic's own defaults applied to *every*",
+    "#' ordinal position scale (`x`, `y`, `fx`, `fy`) that doesn't set its",
+    "#' own value. For the analogous axis-guide defaults, see",
+    "#' [vg_guide_all()]."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b) |>",
+    "#'   vg_scale_all(padding = 0.2)"
+  )
+))
+
+writeLines(scale_lines, "R/scale-generated.R")
+
+guide_lines <- c(guide_lines, guide_group(
+  "vg_guide_position", c("x", "y"), which_noun = "axis",
+  title = "Set axis-guide properties for a position scale (x or y)",
+  description = c(
+    "#' `vg_guide_x()`/`vg_guide_y()` set the axis-guide properties",
+    "#' mosaic-spec exposes per positional axis (`xAxis`, `xTicks`, ... --",
+    "#' substitute `y` for the vertical axis). Like the `xScale`/`yScale`",
+    "#' properties handled by [vg_scale_position()], these are already",
+    "#' plot-level attributes that [vg_plot()]/[vg_attributes()] accept",
+    "#' directly by their raw camelCase names.",
+    "#'",
+    "#' These are named `vg_guide_*()` rather than `vg_axis_*()` for",
+    "#' historical reasons: mosaic-spec's `axisX`/`axisY` *mark* (a",
+    "#' drawable, independently-styled axis) used to be generated as",
+    "#' `vg_axis_x()`/`vg_axis_y()`, colliding with the plot-attribute guide",
+    "#' setters here. Every mark constructor is now prefixed `vg_mark_`",
+    "#' instead (see `R/marks-generated.R`), specifically to avoid this kind",
+    "#' of collision, so `vg_axis_x()`/`vg_axis_y()` are free again -- but",
+    "#' `vg_guide_x()`/`vg_guide_y()` haven't been renamed back to them, to",
+    "#' avoid further API churn. `vg_guide_*()` sets the plain `xAxis`/",
+    "#' `yAxis` guide attributes that appear automatically alongside a",
+    "#' plot's marks, which is a different (if related) thing from mosaic's",
+    "#' `axisX`/`axisY` mark (now `vg_mark_axis_x()`/`vg_mark_axis_y()`).",
+    "#' Same story for the analogous facet guides, [vg_guide_facet()] (vs.",
+    "#' `vg_mark_axis_fx()`/`vg_mark_axis_fy()`, mosaic's `axisFx`/`axisFy`",
+    "#' marks)."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b) |>",
+    "#'   vg_guide_x(label = \"A\", grid = TRUE) |>",
+    "#'   vg_guide_y(label = \"B\", tick_format = \".0f\")"
+  )
+))
+
+guide_lines <- c(guide_lines, guide_group(
+  "vg_guide_facet", c("fx", "fy"), which_noun = "facet axis",
+  title = "Set axis-guide properties for a facet scale (fx or fy)",
+  description = c(
+    "#' `vg_guide_fx()`/`vg_guide_fy()` set the axis-guide properties",
+    "#' mosaic-spec exposes per facet axis (`fxAxis`, `fxTicks`, ... --",
+    "#' substitute `fy` for the row facet axis). This is the facet",
+    "#' counterpart of [vg_guide_position()]; the property set (which lacks",
+    "#' `label_arrow`, among others) is derived from the schema, not",
+    "#' hand-picked.",
+    "#'",
+    "#' See [vg_guide_position()] for why these are `vg_guide_*()` rather",
+    "#' than `vg_axis_*()` (a historical collision with mosaic's `axisFx`/",
+    "#' `axisFy` marks -- no longer live now that mark constructors are",
+    "#' `vg_mark_` prefixed, but the guide functions haven't been renamed",
+    "#' back)."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>",
+    "#'   vg_guide_fx(label = \"Group\")"
+  )
+))
+
+guide_lines <- c(guide_lines, guide_group(
+  "vg_guide_color", "color",
+  title = "Set axis-guide properties for the color scale",
+  description = c(
+    "#' `vg_guide_color()` sets the axis-guide properties mosaic-spec",
+    "#' exposes for the `color` channel (`colorLabel`, `colorTickFormat`) --",
+    "#' the counterpart of [vg_scale_color()] for the color channel's",
+    "#' label/tick formatting rather than its domain/range/palette.",
+    "#'",
+    "#' This is named `vg_guide_color()` rather than `vg_legend_color()`",
+    "#' because `vg_legend_color()` already exists and means something",
+    "#' different: it adds an actual rendered color legend (a",
+    "#' standalone/embedded legend mark, [vg_legend()]) to the spec.",
+    "#' `vg_guide_color()` only sets these plot attributes -- it neither",
+    "#' shows nor requires a legend to be present."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>",
+    "#'   vg_guide_color(label = \"Group\")"
+  )
+))
+
+guide_lines <- c(guide_lines, guide_group(
+  "vg_guide_opacity", "opacity",
+  title = "Set axis-guide properties for the opacity scale",
+  description = c(
+    "#' `vg_guide_opacity()` sets the axis-guide properties mosaic-spec",
+    "#' exposes for the `opacity` channel -- the counterpart of",
+    "#' [vg_scale_opacity()] for the opacity channel's label/tick",
+    "#' formatting rather than its domain/range.",
+    "#'",
+    "#' See [vg_guide_color()] for why this is `vg_guide_opacity()` rather",
+    "#' than `vg_legend_opacity()` (already taken by [vg_legend()]'s actual",
+    "#' rendered legend)."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>",
+    "#'   vg_guide_opacity(label = \"Group\")"
+  )
+))
+
+guide_lines <- c(guide_lines, guide_group(
+  "vg_guide_r", "r", alias = "vg_guide_radius",
+  title = "Set the axis-guide property for the radius scale",
+  description = c(
+    "#' `vg_guide_r()` (aliased as `vg_guide_radius()`) sets the axis-guide",
+    "#' propert(y/ies) mosaic-spec exposes for the `r` channel -- the",
+    "#' counterpart of [vg_scale_r()]/[vg_scale_radius()] for the radius",
+    "#' channel's label rather than its domain/range. Which properties",
+    "#' exist here (just a label, no tick-format) is derived from the",
+    "#' schema, not hand-picked.",
+    "#'",
+    "#' See [vg_guide_color()] for why this is `vg_guide_r()`/",
+    "#' `vg_guide_radius()` rather than `vg_legend_r()`/`vg_legend_radius()`",
+    "#' -- mosaic doesn't have a dedicated `r`-typed legend mark to collide",
+    "#' with here (radius/size is usually shown via [vg_legend_symbol()]",
+    "#' instead), but the naming stays consistent with [vg_guide_color()]/",
+    "#' [vg_guide_opacity()]."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b, r = ~g) |>",
+    "#'   vg_guide_r(label = \"Size\")"
+  )
+))
+
+guide_lines <- c(guide_lines, guide_group(
+  "vg_guide_all", "",
+  title = "Set global default axis-guide properties (all position axes)",
+  description = c(
+    "#' `vg_guide_all()` sets mosaic-spec's plot-wide fallback defaults for",
+    "#' the axis-guide properties -- unlike `xAxis`/`xGrid`/etc. (set via",
+    "#' [vg_guide_position()]) or `fxAxis`/etc. (via [vg_guide_facet()]),",
+    "#' which only affect one axis, these bare attributes are mosaic's own",
+    "#' defaults applied to *every* position axis (`x`, `y`, `fx`, `fy`)",
+    "#' that doesn't set its own value. For the analogous scale defaults,",
+    "#' see [vg_scale_all()]."
+  ),
+  examples = c(
+    "#' @examples",
+    "#' vg_mark_dot(x = ~a, y = ~b) |>",
+    "#'   vg_guide_all(grid = TRUE)"
+  )
+))
+
+writeLines(guide_lines, "R/guide-generated.R")
+
+cat("Wrote R/marks-generated.R, R/interactors-generated.R, R/attrs-generated.R,\n")
+cat("      R/scale-generated.R, R/guide-generated.R\n")

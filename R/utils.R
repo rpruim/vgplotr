@@ -128,6 +128,42 @@ apply_plot_attrs <- function(spec, attrs, extra, context) {
   update_layout(spec, fragment)
 }
 
+# Adds `xInsetLeft`/`xInsetRight` (or `yInsetTop`/`yInsetBottom`, or the
+# `fx`/`fy` equivalents) to `attrs`, and warns if the caller supplied the
+# other, inapplicable pair instead -- mosaic only defines left/right insets
+# for `x`/`fx` and top/bottom insets for `y`/`fy`. `vg_inset_side_suffixes`/
+# `vg_position_counterpart` (R/scale-generated.R) are generated from the
+# schema, not hand-maintained -- see data-raw/update-schema.R.
+add_inset_attrs <- function(attrs, which, env, context) {
+  own_side <- vg_inset_side_suffixes[[which]]
+  other_which <- vg_position_counterpart[[which]]
+  other_side <- vg_inset_side_suffixes[[other_which]]
+
+  own_vals <- drop_unset(mget(names(own_side), envir = env))
+  if (length(own_vals)) {
+    names(own_vals) <- paste0(which, own_side[names(own_vals)])
+    attrs <- c(attrs, own_vals)
+  }
+
+  other_vals <- drop_unset(mget(names(other_side), envir = env))
+  if (length(other_vals)) {
+    warning(
+      sprintf(
+        "In %s: %s only appl%s to the %s scale; use %s for the %s scale.",
+        context,
+        paste(sprintf("`%s`", names(other_vals)), collapse = ", "),
+        if (length(other_vals) == 1) "ies" else "y",
+        other_which,
+        paste(sprintf("`%s`", names(own_side)), collapse = "/"),
+        which
+      ),
+      call. = FALSE
+    )
+  }
+
+  attrs
+}
+
 #' Create a wrapper that fixes some arguments of another function
 #'
 #' `wrapper_function(..f, name = value, ...)` returns a new function that

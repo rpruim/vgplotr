@@ -8,10 +8,10 @@ vg_highlight(
   spec = NULL,
   by = vg_unset,
   fill = vg_unset,
-  fillOpacity = vg_unset,
+  fill_opacity = vg_unset,
   opacity = vg_unset,
   stroke = vg_unset,
-  strokeOpacity = vg_unset,
+  stroke_opacity = vg_unset,
   ...
 )
 }
@@ -22,13 +22,13 @@ vg_highlight(
 
 \item{fill}{The fill color of deemphasized marks.}
 
-\item{fillOpacity}{The fill opacity of deemphasized marks.}
+\item{fill_opacity}{The fill opacity of deemphasized marks.}
 
 \item{opacity}{The overall opacity of deemphasized marks.}
 
 \item{stroke}{The stroke color of deemphasized marks.}
 
-\item{strokeOpacity}{The stroke opacity of deemphasized marks.}
+\item{stroke_opacity}{The stroke opacity of deemphasized marks.}
 
 \item{...}{Additional options or plot-level attributes.}
 }

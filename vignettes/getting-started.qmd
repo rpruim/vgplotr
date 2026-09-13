@@ -231,6 +231,15 @@ to only be checked for under invented names (`margin_left`, `aspect_ratio`)
 that were never mosaic-spec's actual attribute names, so setting them
 silently did nothing.
 
+Every mark/interactor argument is snake_case too (`stroke_width =`, not
+`strokeWidth =`, above) -- generated straight from mosaic's schema, and
+forwarded under the exact camelCase key mosaic's JSON spec needs
+(`strokeWidth`) under the hood, so this is purely a naming convention on
+the R side. Plot-level attributes passed directly to `vg_plot()`/
+`vg_attributes()` (`marginLeft`, `aspectRatio` above) are a separate
+thing and stay their raw camelCase names, same as always -- see
+[vg_attributes()] for why.
+
 ```{r}
 spec4b <-
   vg_create() |>
@@ -242,7 +251,7 @@ spec4b <-
     fill = "steelblue",
     inset = 0.5
   ) |>
-  vg_mark_rule_x(x = 0, stroke = "firebrick", strokeWidth = 2) |>
+  vg_mark_rule_x(x = 0, stroke = "firebrick", stroke_width = 2) |>
   vg_plot(width = 680, height = 200, marginLeft = 60, aspectRatio = 1)
 
 vg_render(spec4b)
