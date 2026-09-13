@@ -81,6 +81,43 @@ All four fixes are covered by new tests (`test-merge.R`, `test-serialize.R`,
    (`R/serialize.R`) to fold it into the `data` object. Found via "Line
    Multi-Series" (`vg.from("bls_unemp", {optimize: false})`).
 
+7. **A param's value couldn't combine other param references** --
+   mosaic's own `rotate: [$longitude, $latitude]` pattern (one param
+   built from two others, e.g. to combine two sliders into a single
+   globe-rotation value) crashed `to_json()`/`vg_render()` outright
+   (`No method asJSON S3 class: vg_param`), since `spec$params` was
+   spliced into the output completely raw, with no serialization at
+   all. Fixed by recursing into a param's declared value
+   (`serialize_param_value()`/`serialize_params()`, `R/serialize.R`) so
+   any `vg_param` found anywhere inside it -- not just at the top level
+   -- becomes its `"$name"` string. Found via "Earthquakes Globe"
+   (`vg_params(rotate = list(param(longitude), param(latitude)))`).
+
+8. **Plot-level attribute values were never serialized at all** -- a
+   more general version of bug 7: `vg_plot()`/`vg_attributes()`/
+   `vg_plot_defaults()` attrs were spliced into the output completely
+   raw (no `serialize_value()` call anywhere on the plot-attrs path),
+   so a plot-level attribute whose *value* is itself a `param()`
+   reference (e.g. `vg_plot(projection_rotate = param(rotate))`, for a
+   slider-controlled globe rotation) crashed the same way. Fixed by
+   running every attrs value through `serialize_value()` before
+   emitting it, in `serialize_layout()` and both `spec$attrs` merge
+   sites (`R/serialize.R`). Found alongside bug 7, same example.
+
+9. **mosaic-spec's top-level `config` (e.g. `{"extensions": "spatial"}`,
+   the DuckDB extensions to load before the spec runs) was completely
+   unreachable** -- `vgspec` already had a `config` slot
+   (`vg_create()`, `R/create.R`), but nothing ever set or serialized
+   it: no `vg_config()` function existed, and `to_json()`/`to_yaml()`/
+   `vg_render()` never emitted `spec$config` even if it had been set by
+   hand. Added `vg_config()` (mirrors `vg_meta()`) and wired
+   `spec$config` into both serialization paths. Found via "NYC Taxi
+   Rides", which needs the `spatial` extension loaded before its
+   `ST_Transform()`/`ST_Point()` queries can run.
+
+All three are covered by new tests (`test-serialize.R`, `test-config.R`)
+and the full suite is green after each.
+
 Both are covered by new tests (`test-schema-generated.R`,
 `test-serialize.R`) and the full suite is green after each.
 
@@ -171,3 +208,15 @@ noted below.
 - ✅ `overview-detail.qmd`
 - ✅ `wind-map.qmd`
 - ✅ `wnba-shots.qmd`
+
+### Maps & Spatial Data
+
+- ✅ `earthquakes-feed.qmd`
+- ✅ `earthquakes-globe.qmd` (surfaced bugs 7 and 8 -- see "Bugs found
+  and fixed" above)
+- ✅ `us-state-map.qmd`
+- ✅ `us-county-map.qmd`
+- ✅ `unemployment.qmd`
+- ✅ `walmart-openings.qmd`
+- ✅ `nyc-taxi-rides.qmd` (surfaced the missing `vg_config()` support --
+  see "Bugs found and fixed" above)

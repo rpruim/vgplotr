@@ -74,6 +74,24 @@ vg_meta <- function(spec, ...) {
   spec
 }
 
+#' Set mosaic-spec `config` options on a vgspec
+#'
+#' Sets mosaic-spec's top-level `config` object: runtime configuration for
+#' the database connection itself (currently just `extensions`, DuckDB
+#' extensions to load before the spec runs, e.g. `"spatial"` for
+#' geospatial data/marks) -- as opposed to `meta` (inert descriptive
+#' metadata) or any of the spec's actual data/params/plot content.
+#'
+#' @param spec A `vgspec`.
+#' @param ... Named config options, e.g. `extensions = "spatial"` (or a
+#'   character vector for more than one extension).
+#' @export
+vg_config <- function(spec, ...) {
+  stopifnot(is_vgspec(spec))
+  spec$config <- utils::modifyList(spec$config, list(...))
+  spec
+}
+
 #' Add a data source to a vgspec
 #'
 #' A data frame passed as `data` is loaded into DuckDB directly (see

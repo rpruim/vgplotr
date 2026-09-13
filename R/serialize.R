@@ -46,14 +46,15 @@ as_spec_payload <- function(spec) {
 
   out <- list()
   if (length(spec$meta)) out$meta <- spec$meta
+  if (length(spec$config)) out$config <- spec$config
   if (length(data_entries)) out$data <- data_entries
-  if (length(spec$params)) out$params <- spec$params
+  if (length(spec$params)) out$params <- serialize_params(spec$params)
   out <- c(out, serialize_layout(spec$layout, spec$plot_defaults))
   # spec$attrs (from vg_attributes()) are the spec's own top-level
   # attributes -- merged once here, at the very top, as opposed to
   # spec$plot_defaults just above, which serialize_layout() already
   # threaded into *every* plot in the tree.
-  if (length(spec$attrs)) out <- merge_attrs(out, spec$attrs, context = "vg_attributes()")
+  if (length(spec$attrs)) out <- merge_attrs(out, lapply(spec$attrs, serialize_value), context = "vg_attributes()")
 
   list(spec = out, tables = tables, files = files)
 }
@@ -98,7 +99,7 @@ read_local_data_file <- function(path) {
 serialize_layout <- function(layout, plot_defaults = list()) {
   if (is_vg_plot_fragment(layout)) {
     attrs <- override_attrs(plot_defaults, layout$attrs)
-    c(list(plot = lapply(layout$items, serialize_item)), attrs)
+    c(list(plot = lapply(layout$items, serialize_item)), lapply(attrs, serialize_value))
   } else if (is_vg_concat(layout)) {
     children <- lapply(layout$children, serialize_layout, plot_defaults = plot_defaults)
     named_list(layout$direction, children)
@@ -182,6 +183,29 @@ serialize_encodings <- function(enc) {
     out <- c(list(data = data_obj), out)
   }
   out
+}
+
+# A param's own declared value (spec$params, from vg_params()) isn't just
+# a plain scalar or Selection/ParamDate-shaped list ({select: ...}, {date:
+# ...}) -- mosaic also allows one param to be built from *other* param
+# references, e.g. `rotate = list(param(longitude), param(latitude))`
+# (mosaic's own `rotate: [$longitude, $latitude]` pattern, combining two
+# sliders into one projectionRotate value). Recurses into any nested list
+# so a vg_param anywhere inside turns into its "$name" string; everything
+# else (plain scalars, an ordinary Selection/ParamDate list) passes
+# through unchanged.
+serialize_param_value <- function(x) {
+  if (is_vg_param(x)) {
+    format(x)
+  } else if (is.list(x)) {
+    lapply(x, serialize_param_value)
+  } else {
+    x
+  }
+}
+
+serialize_params <- function(params) {
+  lapply(params, serialize_param_value)
 }
 
 serialize_value <- function(x) {
@@ -284,11 +308,12 @@ spec_to_list <- function(spec) {
     }
     out <- list()
     if (length(spec$meta)) out$meta <- spec$meta
+    if (length(spec$config)) out$config <- spec$config
     if (length(spec$data)) out$data <- lapply(spec$data, serialize_data_source)
-    if (length(spec$params)) out$params <- spec$params
-    if (length(spec$plot_defaults)) out$plotDefaults <- spec$plot_defaults
+    if (length(spec$params)) out$params <- serialize_params(spec$params)
+    if (length(spec$plot_defaults)) out$plotDefaults <- lapply(spec$plot_defaults, serialize_value)
     out <- c(out, serialize_layout(spec$layout))
-    if (length(spec$attrs)) out <- merge_attrs(out, spec$attrs, context = "vg_attributes()")
+    if (length(spec$attrs)) out <- merge_attrs(out, lapply(spec$attrs, serialize_value), context = "vg_attributes()")
     out
   } else {
     serialize_layout(spec)

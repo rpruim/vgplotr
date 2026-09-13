@@ -126,6 +126,39 @@ test_that("vg_params() already supports Selections, not just plain Params", {
   expect_equal(payload$spec$params$query, list(select = "intersect"))
 })
 
+test_that("a plot-level attribute value that's a param() reference serializes as \"$name\", not the raw object", {
+  # e.g. vg_plot(projection_rotate = param(rotate)), for a slider-driven
+  # globe rotation -- attrs (vg_plot()/vg_attributes()/vg_plot_defaults())
+  # weren't run through serialize_value() at all before, so a vg_param
+  # value reached jsonlite as a raw, unserializable object.
+  rotate_p <- param(rotate)
+  spec <- vg_create() |> vg_mark_dot(x = ~a) |> vg_plot(projection_rotate = rotate_p)
+
+  json <- to_json(spec)
+  expect_match(as.character(json), '"projectionRotate":\\s*"\\$rotate"', perl = TRUE)
+
+  payload <- as_spec_payload(spec)
+  expect_equal(payload$spec$projectionRotate, "$rotate")
+
+  spec2 <- vg_create() |> vg_mark_dot(x = ~a) |> vg_plot_defaults(projection_rotate = rotate_p)
+  expect_true(grepl("\\$rotate", to_yaml(spec2)))
+
+  spec3 <- vg_create() |> vg_mark_dot(x = ~a) |> vg_attributes(projection_rotate = rotate_p)
+  expect_equal(as_spec_payload(spec3)$spec$projectionRotate, "$rotate")
+})
+
+test_that("a param's value can combine other param references (e.g. mosaic's rotate: [$x, $y] pattern)", {
+  lon <- param(longitude)
+  lat <- param(latitude)
+  spec <- vg_create() |> vg_params(longitude = -180, latitude = -30, rotate = list(lon, lat)) |> vg_mark_dot(x = ~a)
+
+  json <- to_json(spec)
+  expect_match(as.character(json), '"rotate":\\s*\\[\\s*"\\$longitude",\\s*"\\$latitude"', perl = TRUE)
+
+  payload <- as_spec_payload(spec)
+  expect_equal(payload$spec$params$rotate, list("$longitude", "$latitude"))
+})
+
 test_that("data_optimize sets the data object's optimize flag", {
   # mosaic-spec's data: {from:, optimize:} -- disables mark-specific query
   # optimizations (e.g. M4/LTTB line simplification) for this mark's data.

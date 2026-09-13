@@ -1,0 +1,61 @@
+---
+title: "U.S. States"
+subtitle: "A map of U.S. states overlaid with computed centroids."
+format: html
+engine: knitr
+---
+
+Recreates [U.S. States](https://idl.uw.edu/mosaic/examples/us-state-map.html)
+from the mosaic/vgplot example gallery (adapted from an [Observable
+Plot example](https://observablehq.com/@observablehq/plot-state-centroids)).
+Requires the DuckDB `spatial` extension.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "U.S. States",
+    description = "A map of U.S. states overlaid with computed centroids. Requires the DuckDB `spatial` extension.",
+    credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-state-centroids)."
+  ) |>
+  vg_data(
+    name = "states",
+    type = "spatial",
+    file = vg_data_url("us-counties-10m.json"),
+    layer = "states"
+  ) |>
+  vg_mark_geo(
+    data_from = "states",
+    stroke = "currentColor",
+    stroke_width = 1
+  ) |>
+  vg_mark_dot(
+    data_from = "states",
+    x = ~ vg_centroid_x(geom),
+    y = ~ vg_centroid_y(geom),
+    r = 2,
+    fill = "steelblue",
+    tip = TRUE,
+    title = ~name
+  ) |>
+  vg_plot(margin = 0, projection_type = "albers")
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/us-state-map.html) exactly,
+aside from `data.states.file` (`vg_data_url()` vs. a relative path) and
+object key order.
+:::
