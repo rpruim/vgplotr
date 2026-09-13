@@ -110,11 +110,16 @@ wrappers around the generic \code{vg_scale_position()}.
 \details{
 Like \code{\link[=vg_plot]{vg_plot()}}, this can be piped in alongside marks/interactors -- it
 only ever sets attributes on the current plot fragment, so it never needs
-to come last in a chain.
+to come last in a chain. For the analogous facet scales (\code{fx}/\code{fy}), see
+\code{\link[=vg_scale_facet]{vg_scale_facet()}}.
 }
 \examples{
 vg_dot(x = ~a, y = ~b) |>
   vg_scale_x(type = "log") |>
   vg_scale_y(zero = TRUE, nice = TRUE)
+}
+\seealso{
+Other scale functions:
+\code{\link[=vg_scale_facet]{vg_scale_facet()}}
 }
 \concept{scale functions}

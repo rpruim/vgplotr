@@ -100,3 +100,15 @@ vg_unset <- structure(list(), class = "vg_unset")
 drop_unset <- function(args) {
   args[!vapply(args, identical, logical(1), vg_unset)]
 }
+
+# Shared by the vg_scale_*()/vg_guide_*() constructors (R/scale.R, R/guide.R):
+# builds a named list of mosaic attrs from a snake_case-argument-name ->
+# camelCase-suffix lookup table (e.g. c(type = "Scale") for `xScale`),
+# reading each argument's current value out of the caller's own environment
+# and dropping the ones left at their vg_unset default. `prefix` is the
+# scale/axis this call is for (e.g. "x", "fy").
+prefixed_attrs <- function(prefix, suffixes, env) {
+  vals <- drop_unset(mget(names(suffixes), envir = env))
+  if (length(vals)) names(vals) <- paste0(prefix, suffixes[names(vals)])
+  vals
+}

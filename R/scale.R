@@ -11,7 +11,8 @@
 #'
 #' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
 #' only ever sets attributes on the current plot fragment, so it never needs
-#' to come last in a chain.
+#' to come last in a chain. For the analogous facet scales (`fx`/`fy`), see
+#' [vg_scale_facet()].
 #'
 #' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
@@ -83,7 +84,7 @@ vg_scale_position <- function(spec = NULL,
   which <- match.arg(which)
   context <- paste0("vg_scale_", which, "()")
 
-  common_suffixes <- c(
+  suffixes <- c(
     type = "Scale", domain = "Domain", range = "Range", nice = "Nice",
     zero = "Zero", reverse = "Reverse", clamp = "Clamp", round = "Round",
     padding = "Padding", padding_inner = "PaddingInner",
@@ -91,39 +92,8 @@ vg_scale_position <- function(spec = NULL,
     base = "Base", exponent = "Exponent", constant = "Constant",
     percent = "Percent"
   )
-  attrs <- drop_unset(mget(names(common_suffixes), environment()))
-  if (length(attrs)) names(attrs) <- paste0(which, common_suffixes[names(attrs)])
-
-  # xInsetLeft/xInsetRight and yInsetTop/yInsetBottom aren't symmetric --
-  # mosaic only defines left/right insets for x and top/bottom for y.
-  side_suffixes <- list(
-    x = c(inset_left = "InsetLeft", inset_right = "InsetRight"),
-    y = c(inset_top = "InsetTop", inset_bottom = "InsetBottom")
-  )
-  own_side <- side_suffixes[[which]]
-  other_side <- side_suffixes[[setdiff(c("x", "y"), which)]]
-
-  own_vals <- drop_unset(mget(names(own_side), environment()))
-  if (length(own_vals)) {
-    names(own_vals) <- paste0(which, own_side[names(own_vals)])
-    attrs <- c(attrs, own_vals)
-  }
-
-  other_vals <- drop_unset(mget(names(other_side), environment()))
-  if (length(other_vals)) {
-    warning(
-      sprintf(
-        "In %s: %s only appl%s to the %s scale; use %s for the %s scale.",
-        context,
-        paste0("`", names(other_vals), "`", collapse = ", "),
-        if (length(other_vals) == 1) "ies" else "y",
-        setdiff(c("x", "y"), which),
-        paste(sprintf("`%s`", names(own_side)), collapse = "/"),
-        which
-      ),
-      call. = FALSE
-    )
-  }
+  attrs <- prefixed_attrs(which, suffixes, environment())
+  attrs <- add_inset_attrs(attrs, which, environment(), context)
 
   extra <- list(...)
   warn_unknown_attrs(names(extra), context)
@@ -141,3 +111,134 @@ vg_scale_x <- function(spec = NULL, ...) vg_scale_position(spec, which = "x", ..
 #' @rdname vg_scale_position
 #' @export
 vg_scale_y <- function(spec = NULL, ...) vg_scale_position(spec, which = "y", ...)
+
+# Facet scales (fx/fy) are a strict subset of the position scale properties
+# above: no `type`/`nice`/`zero`/`clamp` (facet scales are always band
+# scales) and none of the log/pow/symlog-only properties (`base`,
+# `exponent`, `constant`, `percent`).
+vg_position_counterpart <- c(x = "y", y = "x", fx = "fy", fy = "fx")
+
+vg_inset_side_suffixes <- list(
+  x  = c(inset_left = "InsetLeft",  inset_right  = "InsetRight"),
+  fx = c(inset_left = "InsetLeft",  inset_right  = "InsetRight"),
+  y  = c(inset_top  = "InsetTop",   inset_bottom = "InsetBottom"),
+  fy = c(inset_top  = "InsetTop",   inset_bottom = "InsetBottom")
+)
+
+#' Add `xInsetLeft`/`xInsetRight` (or `yInsetTop`/`yInsetBottom`, or the
+#' `fx`/`fy` equivalents) to `attrs`, and warn if the caller supplied the
+#' other, inapplicable pair instead -- mosaic only defines left/right insets
+#' for `x`/`fx` and top/bottom insets for `y`/`fy`.
+#' @noRd
+add_inset_attrs <- function(attrs, which, env, context) {
+  own_side <- vg_inset_side_suffixes[[which]]
+  other_which <- vg_position_counterpart[[which]]
+  other_side <- vg_inset_side_suffixes[[other_which]]
+
+  own_vals <- drop_unset(mget(names(own_side), envir = env))
+  if (length(own_vals)) {
+    names(own_vals) <- paste0(which, own_side[names(own_vals)])
+    attrs <- c(attrs, own_vals)
+  }
+
+  other_vals <- drop_unset(mget(names(other_side), envir = env))
+  if (length(other_vals)) {
+    warning(
+      sprintf(
+        "In %s: %s only appl%s to the %s scale; use %s for the %s scale.",
+        context,
+        paste(sprintf("`%s`", names(other_vals)), collapse = ", "),
+        if (length(other_vals) == 1) "ies" else "y",
+        other_which,
+        paste(sprintf("`%s`", names(own_side)), collapse = "/"),
+        which
+      ),
+      call. = FALSE
+    )
+  }
+
+  attrs
+}
+
+#' Set facet scale properties (fx or fy)
+#'
+#' `vg_scale_fx()`/`vg_scale_fy()` set the scale properties mosaic-spec
+#' exposes per facet axis (`fxDomain`, `fxPadding`, ... -- substitute `fy`
+#' for the row facet axis). Facet scales are always band scales, so this is
+#' a strict subset of [vg_scale_position()]'s properties: no `type`, and
+#' none of the properties specific to continuous/log/pow scales (`nice`,
+#' `zero`, `clamp`, `base`, `exponent`, `constant`, `percent`).
+#' `vg_scale_fx()` and `vg_scale_fy()` are thin wrappers around the generic
+#' `vg_scale_facet()`.
+#'
+#' @inheritParams vg_scale_position
+#' @param which Which facet scale this sets: `"fx"` or `"fy"`.
+#' @param domain Array of facet group categories (`fxDomain`/`fyDomain`).
+#' @param range Pixel range for the overall faceting space
+#'   (`fxRange`/`fyRange`).
+#' @param reverse Boolean; reverse the facet order (`fxReverse`/`fyReverse`).
+#' @param round Boolean; round output values to the nearest pixel
+#'   (`fxRound`/`fyRound`).
+#' @param padding Outer padding between facet subplots, 0 to 1
+#'   (`fxPadding`/`fyPadding`).
+#' @param padding_inner Inner padding between facet subplots, 0 to 1
+#'   (`fxPaddingInner`/`fyPaddingInner`).
+#' @param padding_outer Outer padding at the facet space's edges, 0 to 1
+#'   (`fxPaddingOuter`/`fyPaddingOuter`).
+#' @param align Alignment of facet bands, 0 to 1 (`fxAlign`/`fyAlign`).
+#' @param inset Pixel inset applied to both ends of the facet range
+#'   (`fxInset`/`fyInset`).
+#' @param inset_left,inset_right Pixel inset at the left/right end of the
+#'   facet range; only meaningful for `which = "fx"`
+#'   (`fxInsetLeft`/`fxInsetRight`).
+#' @param inset_top,inset_bottom Pixel inset at the top/bottom end of the
+#'   facet range; only meaningful for `which = "fy"`
+#'   (`fyInsetTop`/`fyInsetBottom`).
+#' @family scale functions
+#' @export
+#' @examples
+#' vg_dot(x = ~a, y = ~b, fx = ~g) |>
+#'   vg_scale_fx(padding = 0.1)
+vg_scale_facet <- function(spec = NULL,
+                            which = c("fx", "fy"),
+                            domain = vg_unset,
+                            range = vg_unset,
+                            reverse = vg_unset,
+                            round = vg_unset,
+                            padding = vg_unset,
+                            padding_inner = vg_unset,
+                            padding_outer = vg_unset,
+                            align = vg_unset,
+                            inset = vg_unset,
+                            inset_left = vg_unset,
+                            inset_right = vg_unset,
+                            inset_top = vg_unset,
+                            inset_bottom = vg_unset,
+                            ...) {
+  which <- match.arg(which)
+  context <- paste0("vg_scale_", which, "()")
+
+  suffixes <- c(
+    domain = "Domain", range = "Range", reverse = "Reverse", round = "Round",
+    padding = "Padding", padding_inner = "PaddingInner",
+    padding_outer = "PaddingOuter", align = "Align", inset = "Inset"
+  )
+  attrs <- prefixed_attrs(which, suffixes, environment())
+  attrs <- add_inset_attrs(attrs, which, environment(), context)
+
+  extra <- list(...)
+  warn_unknown_attrs(names(extra), context)
+  attrs <- merge_attrs(attrs, extra, context = context)
+
+  fragment <- as_vg_plot_fragment(spec)
+  fragment$attrs <- merge_attrs(fragment$attrs, attrs, context = context)
+  update_layout(spec, fragment)
+}
+
+#' @rdname vg_scale_facet
+#' @export
+vg_scale_fx <- function(spec = NULL, ...) vg_scale_facet(spec, which = "fx", ...)
+
+#' @rdname vg_scale_facet
+#' @export
+vg_scale_fy <- function(spec = NULL, ...) vg_scale_facet(spec, which = "fy", ...)

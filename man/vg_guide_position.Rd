@@ -104,7 +104,9 @@ These are named \verb{vg_guide_*()} rather than \verb{vg_axis_*()} because
 \code{axisX}/\code{axisY} \emph{mark} (a drawable, independently-styled axis), generated
 as those names in \code{R/marks-generated.R}. \verb{vg_guide_*()} sets the plain
 \code{xAxis}/\code{yAxis} guide attributes that appear automatically alongside a
-plot's marks, which is a different (if related) thing.
+plot's marks, which is a different (if related) thing. Same story for the
+analogous facet guides, \code{\link[=vg_guide_facet]{vg_guide_facet()}} (vs. \code{vg_axis_fx()}/
+\code{vg_axis_fy()}, mosaic's \code{axisFx}/\code{axisFy} marks).
 
 Like \code{\link[=vg_plot]{vg_plot()}}, this can be piped in alongside marks/interactors -- it
 only ever sets attributes on the current plot fragment, so it never needs
@@ -114,5 +116,9 @@ to come last in a chain.
 vg_dot(x = ~a, y = ~b) |>
   vg_guide_x(label = "A", grid = TRUE) |>
   vg_guide_y(label = "B", tick_format = ".0f")
+}
+\seealso{
+Other guide functions:
+\code{\link[=vg_guide_facet]{vg_guide_facet()}}
 }
 \concept{guide functions}

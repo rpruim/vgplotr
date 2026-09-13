@@ -271,6 +271,31 @@ spec4c <-
 vg_render(spec4c)
 ```
 
+`vg_scale_fx()`/`vg_scale_fy()` and `vg_guide_fx()`/`vg_guide_fy()` do the
+same for the facet axes (`fxDomain`, `fxAxis`, ...) -- one plot faceted
+into subplots by a grouping column, encoded via `fx =`/`fy =` on a mark.
+Facet scales are always band scales, so `vg_scale_fx()`/`vg_scale_fy()`
+expose a smaller set of properties than `vg_scale_x()`/`vg_scale_y()` (no
+`type`, `nice`, `zero`, or `clamp`).
+
+```{r}
+pts2 <- data.frame(
+  x = rnorm(120),
+  y = rnorm(120),
+  group = sample(c("a", "b", "c"), 120, replace = TRUE)
+)
+
+spec4d <-
+  vg_create() |>
+  vg_data(name = "pts2", data = pts2) |>
+  vg_dot(data_from = "pts2", x = ~x, y = ~y, fx = ~group) |>
+  vg_scale_fx(padding = 0.1) |>
+  vg_guide_fx(label = "Group") |>
+  vg_plot(width = 680, height = 200)
+
+vg_render(spec4d)
+```
+
 ## Legends
 
 A legend embedded in a plot (piped in alongside its marks, with no

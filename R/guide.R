@@ -14,7 +14,9 @@
 #' `axisX`/`axisY` *mark* (a drawable, independently-styled axis), generated
 #' as those names in `R/marks-generated.R`. `vg_guide_*()` sets the plain
 #' `xAxis`/`yAxis` guide attributes that appear automatically alongside a
-#' plot's marks, which is a different (if related) thing.
+#' plot's marks, which is a different (if related) thing. Same story for the
+#' analogous facet guides, [vg_guide_facet()] (vs. `vg_axis_fx()`/
+#' `vg_axis_fy()`, mosaic's `axisFx`/`axisFy` marks).
 #'
 #' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
 #' only ever sets attributes on the current plot fragment, so it never needs
@@ -93,8 +95,7 @@ vg_guide_position <- function(spec = NULL,
     font_variant = "FontVariant", aria_label = "AriaLabel",
     aria_description = "AriaDescription"
   )
-  attrs <- drop_unset(mget(names(suffixes), environment()))
-  if (length(attrs)) names(attrs) <- paste0(which, suffixes[names(attrs)])
+  attrs <- prefixed_attrs(which, suffixes, environment())
 
   extra <- list(...)
   warn_unknown_attrs(names(extra), context)
@@ -112,3 +113,101 @@ vg_guide_x <- function(spec = NULL, ...) vg_guide_position(spec, which = "x", ..
 #' @rdname vg_guide_position
 #' @export
 vg_guide_y <- function(spec = NULL, ...) vg_guide_position(spec, which = "y", ...)
+
+#' Set axis-guide properties for a facet scale (fx or fy)
+#'
+#' `vg_guide_fx()`/`vg_guide_fy()` set the axis-guide properties mosaic-spec
+#' exposes per facet axis (`fxAxis`, `fxTicks`, ... -- substitute `fy` for
+#' the row facet axis). This is the facet counterpart of
+#' [vg_guide_position()]; it accepts the same properties minus
+#' `label_arrow`, which mosaic doesn't define for facet guides.
+#' `vg_guide_fx()` and `vg_guide_fy()` are thin wrappers around the generic
+#' `vg_guide_facet()`.
+#'
+#' See [vg_guide_position()] for why these are `vg_guide_*()` rather than
+#' `vg_axis_*()` (already taken by mosaic's `axisFx`/`axisFy` marks).
+#'
+#' @inheritParams vg_guide_position
+#' @param which Which facet axis this sets: `"fx"` or `"fy"`.
+#' @param position Facet header position: `"top"`/`"bottom"` for `fx`,
+#'   `"left"`/`"right"` for `fy`, or `NULL`/`FALSE` to hide it
+#'   (`fxAxis`/`fyAxis`).
+#' @param ticks Number of ticks, or an array of explicit tick values
+#'   (`fxTicks`/`fyTicks`).
+#' @param tick_spacing Target distance between ticks in pixels
+#'   (`fxTickSpacing`/`fyTickSpacing`).
+#' @param tick_size Length of tick marks in pixels
+#'   (`fxTickSize`/`fyTickSize`).
+#' @param tick_padding Distance between a tick mark and its label in pixels
+#'   (`fxTickPadding`/`fyTickPadding`).
+#' @param tick_format Format specifier string or function for tick labels
+#'   (`fxTickFormat`/`fyTickFormat`).
+#' @param tick_rotate Rotation angle of tick labels in degrees
+#'   (`fxTickRotate`/`fyTickRotate`).
+#' @param grid Boolean, or a line stroke count, to render grid lines along
+#'   this facet axis (`fxGrid`/`fyGrid`).
+#' @param line Boolean; whether to draw the facet axis line itself
+#'   (`fxLine`/`fyLine`).
+#' @param label Facet axis title string (`fxLabel`/`fyLabel`).
+#' @param label_anchor Position anchor for the label text: `"left"`,
+#'   `"center"`, or `"right"` (`fxLabelAnchor`/`fyLabelAnchor`).
+#' @param label_offset Distance between the facet axis and its label in
+#'   pixels (`fxLabelOffset`/`fyLabelOffset`).
+#' @param font_variant CSS font-variant for tick labels
+#'   (`fxFontVariant`/`fyFontVariant`).
+#' @param aria_label ARIA accessibility label for the facet axis
+#'   (`fxAriaLabel`/`fyAriaLabel`).
+#' @param aria_description ARIA accessibility description for the facet axis
+#'   (`fxAriaDescription`/`fyAriaDescription`).
+#' @family guide functions
+#' @export
+#' @examples
+#' vg_dot(x = ~a, y = ~b, fx = ~g) |>
+#'   vg_guide_fx(label = "Group")
+vg_guide_facet <- function(spec = NULL,
+                            which = c("fx", "fy"),
+                            position = vg_unset,
+                            ticks = vg_unset,
+                            tick_spacing = vg_unset,
+                            tick_size = vg_unset,
+                            tick_padding = vg_unset,
+                            tick_format = vg_unset,
+                            tick_rotate = vg_unset,
+                            grid = vg_unset,
+                            line = vg_unset,
+                            label = vg_unset,
+                            label_anchor = vg_unset,
+                            label_offset = vg_unset,
+                            font_variant = vg_unset,
+                            aria_label = vg_unset,
+                            aria_description = vg_unset,
+                            ...) {
+  which <- match.arg(which)
+  context <- paste0("vg_guide_", which, "()")
+
+  suffixes <- c(
+    position = "Axis", ticks = "Ticks", tick_spacing = "TickSpacing",
+    tick_size = "TickSize", tick_padding = "TickPadding",
+    tick_format = "TickFormat", tick_rotate = "TickRotate", grid = "Grid",
+    line = "Line", label = "Label", label_anchor = "LabelAnchor",
+    label_offset = "LabelOffset", font_variant = "FontVariant",
+    aria_label = "AriaLabel", aria_description = "AriaDescription"
+  )
+  attrs <- prefixed_attrs(which, suffixes, environment())
+
+  extra <- list(...)
+  warn_unknown_attrs(names(extra), context)
+  attrs <- merge_attrs(attrs, extra, context = context)
+
+  fragment <- as_vg_plot_fragment(spec)
+  fragment$attrs <- merge_attrs(fragment$attrs, attrs, context = context)
+  update_layout(spec, fragment)
+}
+
+#' @rdname vg_guide_facet
+#' @export
+vg_guide_fx <- function(spec = NULL, ...) vg_guide_facet(spec, which = "fx", ...)
+
+#' @rdname vg_guide_facet
+#' @export
+vg_guide_fy <- function(spec = NULL, ...) vg_guide_facet(spec, which = "fy", ...)
