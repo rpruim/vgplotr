@@ -168,6 +168,7 @@ vg_mark_dot(x = ~a, y = ~b) |>
 }
 \seealso{
 Other scale functions:
+\code{\link[=vg_scale_all]{vg_scale_all()}},
 \code{\link[=vg_scale_color]{vg_scale_color()}},
 \code{\link[=vg_scale_facet]{vg_scale_facet()}},
 \code{\link[=vg_scale_opacity]{vg_scale_opacity()}},

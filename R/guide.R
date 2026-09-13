@@ -338,3 +338,56 @@ vg_guide_r <- function(spec = NULL, label = vg_unset, ...) {
 #' @rdname vg_guide_r
 #' @export
 vg_guide_radius <- vg_guide_r
+
+#' Set global default axis-guide properties (all position axes)
+#'
+#' `vg_guide_all()` sets mosaic-spec's plot-wide fallback defaults for
+#' `axis`/`grid`/`ariaLabel`/`ariaDescription` -- unlike `xAxis`/`xGrid`/
+#' etc. (set via [vg_guide_position()]) or `fxAxis`/`fxGrid`/etc. (via
+#' [vg_guide_facet()]), which only affect one axis, these bare attributes
+#' are mosaic's own defaults applied to *every* position axis (`x`, `y`,
+#' `fx`, `fy`) that doesn't set its own value. They're already plot-level
+#' attributes that [vg_plot()]/[vg_attributes()] accept directly by their
+#' raw camelCase names; this gives them the same discoverable,
+#' snake_case-argument treatment as the other guide functions.
+#'
+#' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
+#' only ever sets attributes on the current plot fragment, so it never
+#' needs to come last in a chain. For the analogous scale defaults
+#' (`align`, `inset`, `padding`), see [vg_scale_all()].
+#'
+#' @param spec A plot fragment or `vgspec` to set these on, or `NULL` to
+#'   start a new plot fragment with just these attributes.
+#' @param position Default axis side -- `"top"`/`"bottom"` for `x`/`fx`,
+#'   `"left"`/`"right"` for `y`/`fy`, `"both"` for both sides, or `NULL` to
+#'   suppress the axis -- for any position axis that doesn't set its own
+#'   `xAxis`/`yAxis`/etc. (`axis`).
+#' @param grid Default grid setting (boolean, a stroke color string, or a
+#'   tick count/values), for any position axis that doesn't set its own
+#'   `xGrid`/`yGrid`/etc. (`grid`).
+#' @param aria_label Default ARIA accessibility label for the plot's SVG
+#'   root (`ariaLabel`).
+#' @param aria_description Default ARIA accessibility description for the
+#'   plot's SVG root (`ariaDescription`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
+#' @family guide functions
+#' @export
+#' @examples
+#' vg_mark_dot(x = ~a, y = ~b) |>
+#'   vg_guide_all(grid = TRUE)
+vg_guide_all <- function(spec = NULL,
+                          position = vg_unset,
+                          grid = vg_unset,
+                          aria_label = vg_unset,
+                          aria_description = vg_unset,
+                          ...) {
+  context <- "vg_guide_all()"
+
+  attrs <- drop_unset(list(
+    axis = position, grid = grid, ariaLabel = aria_label,
+    ariaDescription = aria_description
+  ))
+
+  apply_plot_attrs(spec, attrs, list(...), context)
+}

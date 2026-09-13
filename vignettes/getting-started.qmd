@@ -352,6 +352,23 @@ spec. `vg_guide_color()`/`vg_guide_opacity()`/`vg_guide_r()` only set the
 `opacityTickFormat`) plot attributes; they neither add nor require a
 legend.
 
+`vg_scale_all()`/`vg_guide_all()` set mosaic's plot-wide *default* scale/
+guide properties -- `align`/`inset`/`padding` and `axis`/`grid`/
+`ariaLabel`/`ariaDescription` respectively -- which apply to every
+position scale/axis (`x`, `y`, `fx`, `fy`) that doesn't set its own value.
+Unlike `vg_scale_x(grid = TRUE)`/`vg_guide_y(grid = TRUE)`/..., which only
+affect one axis, `vg_guide_all(grid = TRUE)` turns grid lines on for both
+axes at once, without repeating the call per axis (a later
+`vg_guide_x(grid = FALSE)` would still override it just for `x`, since the
+per-axis attribute always wins over the default).
+
+```{r}
+vg_mark_dot(x = ~a, y = ~b) |>
+  vg_scale_all(padding = 0.1) |>
+  vg_guide_all(grid = TRUE) |>
+  vg_plot(width = 400, height = 300)
+```
+
 ## Legends
 
 A legend embedded in a plot (piped in alongside its marks, with no

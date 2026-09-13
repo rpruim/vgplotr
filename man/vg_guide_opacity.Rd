@@ -43,6 +43,7 @@ vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
 }
 \seealso{
 Other guide functions:
+\code{\link[=vg_guide_all]{vg_guide_all()}},
 \code{\link[=vg_guide_color]{vg_guide_color()}},
 \code{\link[=vg_guide_facet]{vg_guide_facet()}},
 \code{\link[=vg_guide_position]{vg_guide_position()}},

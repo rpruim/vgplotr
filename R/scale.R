@@ -459,3 +459,48 @@ vg_scale_r <- function(spec = NULL,
 #' @rdname vg_scale_r
 #' @export
 vg_scale_radius <- vg_scale_r
+
+#' Set global default scale properties (all ordinal position scales)
+#'
+#' `vg_scale_all()` sets mosaic-spec's plot-wide fallback defaults for
+#' `align`/`inset`/`padding` -- unlike `xAlign`/`xPadding`/etc. (set via
+#' [vg_scale_position()]) or `fxAlign`/`fxPadding`/etc. (via
+#' [vg_scale_facet()]), which only affect one scale, these bare attributes
+#' (`align`, `inset`, `padding`) are mosaic's own defaults applied to
+#' *every* ordinal position scale (`x`, `y`, `fx`, `fy`) that doesn't set
+#' its own value. They're already plot-level attributes that
+#' [vg_plot()]/[vg_attributes()] accept directly by their raw camelCase
+#' names; this is just a discoverable, named-argument alias for them (no
+#' snake_case translation needed here, since these names have no camelCase
+#' compound to convert).
+#'
+#' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
+#' only ever sets attributes on the current plot fragment, so it never
+#' needs to come last in a chain. For the analogous axis-guide defaults
+#' (`axis`, `grid`, `ariaLabel`, `ariaDescription`), see [vg_guide_all()].
+#'
+#' @param spec A plot fragment or `vgspec` to set these on, or `NULL` to
+#'   start a new plot fragment with just these attributes.
+#' @param align Default alignment of ordinal bands, 0 to 1, for any
+#'   position scale that doesn't set its own `xAlign`/`yAlign`/etc.
+#'   (`align`).
+#' @param inset Default pixel inset applied to both ends of the range, for
+#'   any position scale that doesn't set its own `xInset`/`yInset`/etc.
+#'   (`inset`).
+#' @param padding Default inner/outer padding fraction for band/point
+#'   scales, for any position scale that doesn't set its own
+#'   `xPadding`/`yPadding`/etc. (`padding`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
+#' @family scale functions
+#' @export
+#' @examples
+#' vg_mark_dot(x = ~a, y = ~b) |>
+#'   vg_scale_all(padding = 0.2)
+vg_scale_all <- function(spec = NULL, align = vg_unset, inset = vg_unset, padding = vg_unset, ...) {
+  context <- "vg_scale_all()"
+
+  attrs <- drop_unset(list(align = align, inset = inset, padding = padding))
+
+  apply_plot_attrs(spec, attrs, list(...), context)
+}
