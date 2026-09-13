@@ -237,6 +237,40 @@ spec4b <-
 vg_render(spec4b)
 ```
 
+## Scales and axis guides
+
+`vg_scale_x()`/`vg_scale_y()` and `vg_guide_x()`/`vg_guide_y()` are
+discoverable, snake_case-argument wrappers around the same plot-level
+attributes already set above by their raw camelCase names (`xDomain`,
+`marginLeft`, ...) -- e.g. `vg_scale_y(type = "sqrt")` is
+`vg_plot(yScale = "sqrt")`. Like `vg_plot()`, they can be piped in anywhere
+alongside marks and interactors, since they only ever set attributes on the
+current plot.
+
+(Note the names: `vg_axis_x()`/`vg_axis_y()` are already taken by mosaic's
+`axisX`/`axisY` *mark* -- a separately drawn, independently-styled axis --
+so the guide attributes that appear automatically alongside a plot's own
+marks live under `vg_guide_x()`/`vg_guide_y()` instead.)
+
+```{r}
+spec4c <-
+  vg_create() |>
+  vg_data(name = "delays", data = delays) |>
+  vg_rect_y(
+    data_from = "delays",
+    x = ~ vg_bin(delay, step = 2),
+    y = ~ vg_count(),
+    fill = "steelblue",
+    inset = 0.5
+  ) |>
+  vg_scale_y(type = "sqrt") |>
+  vg_guide_x(label = "Delay (minutes)", grid = TRUE) |>
+  vg_guide_y(label = "Count") |>
+  vg_plot(width = 680, height = 200)
+
+vg_render(spec4c)
+```
+
 ## Legends
 
 A legend embedded in a plot (piped in alongside its marks, with no
