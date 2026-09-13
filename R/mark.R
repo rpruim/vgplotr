@@ -13,7 +13,7 @@
 #'   plot-level attributes from multiple marks are combined.
 #' @export
 vg_mark <- function(spec = NULL, mark, ...) {
-  split <- split_plot_args(list(...))
+  split <- split_plot_args(list(...), protect = .vg_mark_own_props[[mark]])
 
   mark_obj <- structure(
     list(mark = mark, encodings = split$local_args),

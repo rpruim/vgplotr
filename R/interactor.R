@@ -46,7 +46,7 @@ vg_interactor <- function(spec = NULL, interactor, ...) {
   placement <- vg_interactor_placement(interactor)
 
   if (placement == "plot") {
-    split <- split_plot_args(list(...))
+    split <- split_plot_args(list(...), protect = .vg_interactor_own_props[[interactor]])
     interactor_obj <- structure(
       list(type = interactor, options = split$local_args),
       class = "vg_interactor"

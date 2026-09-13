@@ -143,9 +143,10 @@ serialize_legend <- function(x) {
   out
 }
 
-# Pulls data_from/filter_by out of a mark's encodings into the nested
-# `data: {from:, filterBy:}` object mosaic-spec expects, and translates each
-# remaining value (formulas, param() references) to plain JSON-able values.
+# Pulls data_from/filter_by/data_optimize out of a mark's encodings into
+# the nested `data: {from:, filterBy:, optimize:}` object mosaic-spec
+# expects, and translates each remaining value (formulas, param()
+# references) to plain JSON-able values.
 #
 # `data_from` doubles as a way to supply a literal inline data array (e.g.
 # `data_from = c(0)` for a single reference line, mosaic-spec's `"data":
@@ -158,17 +159,26 @@ serialize_legend <- function(x) {
 serialize_encodings <- function(enc) {
   data_from <- enc$data_from
   filter_by <- enc$filter_by
+  data_optimize <- enc$data_optimize
   enc$data_from <- NULL
   enc$filter_by <- NULL
+  enc$data_optimize <- NULL
 
   out <- lapply(enc, serialize_value)
 
-  if (!is.null(data_from) && !(is.character(data_from) && length(data_from) == 1)) {
+  # A table reference is either a table-name string or a Param/Selection
+  # (e.g. `data_from = param(data)`, for a menu-driven dynamic data source)
+  # -- anything else (a literal vector) is mosaic-spec's inline-data
+  # shorthand instead.
+  is_table_ref <- (is.character(data_from) && length(data_from) == 1) || is_vg_param(data_from)
+
+  if (!is.null(data_from) && !is_table_ref) {
     out <- c(list(data = as.list(data_from)), out)
-  } else if (!is.null(data_from) || !is.null(filter_by)) {
+  } else if (!is.null(data_from) || !is.null(filter_by) || !is.null(data_optimize)) {
     data_obj <- list()
-    if (!is.null(data_from)) data_obj$from <- data_from
+    if (!is.null(data_from)) data_obj$from <- serialize_value(data_from)
     if (!is.null(filter_by)) data_obj$filterBy <- serialize_value(filter_by)
+    if (!is.null(data_optimize)) data_obj$optimize <- data_optimize
     out <- c(list(data = data_obj), out)
   }
   out

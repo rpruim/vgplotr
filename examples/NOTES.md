@@ -52,6 +52,38 @@ than a local copy.
 All four fixes are covered by new tests (`test-merge.R`, `test-serialize.R`,
 `test-transforms.R`) and the full suite is green after each.
 
+5. **A mark's own property could be silently stolen by a same-named
+   PlotAttributes property** (`R/mark.R`/`R/interactor.R`/`R/utils.R`).
+   mosaic-spec disambiguates `inset` (and `clip`, `margin*`, `aria*`) by
+   *where* the key appears -- a mark's own `inset` (e.g. shrinking just
+   that mark's rects) is a different property from the plot-wide `inset`
+   default that a `vg_scale_all(inset = ...)`-style attribute sets, even
+   though they share a name and description pattern ("shorthand to set
+   the same default for..."). `split_plot_args()` routed *any* argument
+   whose name matched `vg_plot_level_args()` up to the plot, with no way
+   to tell "this mark's own declared property" apart from "an arbitrary
+   plot attribute riding along on this mark call" (a real, useful,
+   pre-existing feature -- e.g. `vg_mark_dot(x = ~a, width = 680)`).
+   Fixed by generating, per mark/interactor type, its own property-name
+   set (`.vg_mark_own_props`/`.vg_interactor_own_props`,
+   `R/attrs-generated.R`) and excluding those names from the bubble-up
+   check (`split_plot_args(args, protect = ...)`). Found via "Moving
+   Average", where `vg_mark_rect_y(inset = 1, ...)` was landing on the
+   *plot* instead of staying on the `rectY` mark.
+
+6. **No way to set a mark's data-object `optimize` flag at all** --
+   mosaic-spec's mark data source (`{"from": ..., "filterBy": ...,
+   "optimize": ...}`) has a third option, `optimize` (disables
+   mark-specific query optimizations like M4/LTTB line simplification),
+   that `data_from`/`filter_by` had no counterpart for. Added a matching
+   `data_optimize` argument to every generated mark wrapper (same
+   pattern as `data_from`/`filter_by`) and taught `serialize_encodings()`
+   (`R/serialize.R`) to fold it into the `data` object. Found via "Line
+   Multi-Series" (`vg.from("bls_unemp", {optimize: false})`).
+
+Both are covered by new tests (`test-schema-generated.R`,
+`test-serialize.R`) and the full suite is green after each.
+
 ## Usage tips found along the way (not bugs -- just non-obvious)
 
 - Mosaic's `["2019"]` convention (wrap a mark-encoding value in an array
@@ -121,3 +153,21 @@ noted below.
   "Bugs found and fixed" above)
 - ✅ `table.qmd` (aside from the vconcat-collapse cosmetic difference noted
   above)
+
+### Data Transformation
+
+- ✅ `athlete-height.qmd`
+- ✅ `bias.qmd`
+- ✅ `linear-regression.qmd`
+- ✅ `linear-regression-10m.qmd` (10M-row remote dataset; rendering may be
+  slow -- see the note in the file)
+- ✅ `moving-average.qmd` (surfaced the `inset`/plot-attribute collision
+  bug -- see "Bugs found and fixed" above)
+- ✅ `line-multi-series.qmd` (surfaced the missing `data_optimize` support
+  -- see "Bugs found and fixed" above)
+- ✅ `normalize.qmd`
+- ✅ `seattle-weather-pivot.qmd` (aside from the vconcat-collapse cosmetic
+  difference)
+- ✅ `overview-detail.qmd`
+- ✅ `wind-map.qmd`
+- ✅ `wnba-shots.qmd`

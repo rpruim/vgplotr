@@ -125,3 +125,22 @@ test_that("vg_params() already supports Selections, not just plain Params", {
   payload <- as_spec_payload(spec)
   expect_equal(payload$spec$params$query, list(select = "intersect"))
 })
+
+test_that("data_optimize sets the data object's optimize flag", {
+  # mosaic-spec's data: {from:, optimize:} -- disables mark-specific query
+  # optimizations (e.g. M4/LTTB line simplification) for this mark's data.
+  spec <- vg_mark_line_y(data_from = "bls_unemp", data_optimize = FALSE, x = ~date, y = ~unemployment)
+  payload <- serialize_item(spec$items[[1]])
+  expect_equal(payload$data, list(from = "bls_unemp", optimize = FALSE))
+})
+
+test_that("data_from accepts a Param/Selection for a menu-driven dynamic data source", {
+  # e.g. `data_from = param(data)`, for a menu that switches between
+  # differently-sampled tables -- this is a table reference ("$data"),
+  # not mosaic-spec's inline-data shorthand (which only applies to a
+  # literal vector).
+  data_p <- param(data)
+  spec <- vg_mark_raster(data_from = data_p, x = ~time, y = ~delay)
+  payload <- serialize_item(spec$items[[1]])
+  expect_equal(payload$data, list(from = "$data"))
+})

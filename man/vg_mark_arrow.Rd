@@ -61,7 +61,8 @@ vg_mark_arrow(
   y2 = vg_unset,
   ...,
   data_from = vg_unset,
-  filter_by = vg_unset
+  filter_by = vg_unset,
+  data_optimize = vg_unset
 )
 }
 \arguments{
@@ -178,6 +179,8 @@ vg_mark_arrow(
 \item{data_from}{The name of the data source this mark reads from (see \code{\link[=vg_data]{vg_data()}}), or a literal vector of values to use as inline data directly (mosaic-spec's \verb{"data": [...]} shorthand, e.g. for a single reference line).}
 
 \item{filter_by}{A Param/Selection (e.g. from \code{\link[=param]{param()}}) to filter this mark's data by.}
+
+\item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
 }
 \description{
 The arrow mark.

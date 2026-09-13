@@ -47,13 +47,29 @@ test_that("split_plot_args() no longer recognizes the old (incorrect) snake_case
 })
 
 test_that("as_spec_payload() correctly places a previously-unsupported plot attribute at the plot level", {
-  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b, xDomain = c(0, 100), marginLeft = 40)
+  # xDomain/colorScheme aren't dot's own properties, so they bubble up to
+  # the plot the same way width/name always have.
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b, xDomain = c(0, 100), colorScheme = "blues")
   payload <- as_spec_payload(spec)
 
   expect_equal(payload$spec$xDomain, c(0, 100))
-  expect_equal(payload$spec$marginLeft, 40)
+  expect_equal(payload$spec$colorScheme, "blues")
   expect_null(payload$spec$plot[[1]]$xDomain)
-  expect_null(payload$spec$plot[[1]]$marginLeft)
+  expect_null(payload$spec$plot[[1]]$colorScheme)
+})
+
+test_that("a mark's own property stays on the mark instead of bubbling up, even when a same-named PlotAttributes property exists", {
+  # marginLeft/inset/clip/aria* are real per-mark properties *and* separate
+  # plot-wide defaults of the same name (mosaic-spec disambiguates by
+  # where the key appears, not by name) -- split_plot_args() has to keep
+  # an explicit `marginLeft =`/`inset =` on the mark that declared it.
+  spec <- vg_create() |> vg_mark_rect_y(x = ~a, y1 = ~b, y2 = ~c, inset = 1, marginLeft = 40)
+  payload <- as_spec_payload(spec)
+
+  expect_equal(payload$spec$plot[[1]]$inset, 1)
+  expect_equal(payload$spec$plot[[1]]$marginLeft, 40)
+  expect_null(payload$spec$inset)
+  expect_null(payload$spec$marginLeft)
 })
 
 test_that("a mark/interactor's own property can be set under its exact schema name, even when that name would otherwise collide with vg_mark()/vg_interactor()'s own discriminant parameter", {

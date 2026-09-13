@@ -14,9 +14,16 @@ vg_plot_level_args <- function() {
 
 #' Split `...` arguments into plot-level attributes and local (mark/interactor)
 #' arguments, based on `vg_plot_level_args()`.
+#'
+#' `protect` names (typically from `.vg_mark_own_props`/
+#' `.vg_interactor_own_props`, R/attrs-generated.R) are always kept local
+#' even if they also appear in `vg_plot_level_args()` -- e.g. RectY's own
+#' `inset` property collides by name with PlotAttributes' plot-wide `inset`
+#' default, but an explicit `inset =` on a `vg_mark_rect_y()` call means
+#' the mark's own property, not "bubble this up to the plot."
 #' @noRd
-split_plot_args <- function(args) {
-  plot_names <- intersect(names(args), vg_plot_level_args())
+split_plot_args <- function(args, protect = character()) {
+  plot_names <- setdiff(intersect(names(args), vg_plot_level_args()), protect)
   list(
     plot_attrs = args[plot_names],
     local_args = args[setdiff(names(args), plot_names)]

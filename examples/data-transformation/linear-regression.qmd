@@ -1,0 +1,58 @@
+---
+title: "Linear Regression"
+subtitle: "A linear regression plot predicting athletes' heights based on their weights."
+format: html
+engine: knitr
+---
+
+Recreates [Linear
+Regression](https://idl.uw.edu/mosaic/examples/linear-regression.html)
+from the mosaic/vgplot example gallery. Regression computation is
+performed in the database. The area around a regression line shows a
+95% confidence interval. Select a region to view regression results for
+a data subset.
+
+The brushed selection (`$query`, created via `intervalXY(as = query)`)
+is used only within this one plot, so -- unlike "Sorted Bars" -- it
+doesn't need an explicit `vg_params()` declaration; the selection is
+created the moment it's targeted by an `as =`.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+query <- param(query)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Linear Regression",
+    description = paste(
+      "A linear regression plot predicting athletes' heights based on their weights.",
+      "Regression computation is performed in the database. The area around a regression",
+      "line shows a 95% confidence interval. Select a region to view regression results",
+      "for a data subset."
+    )
+  ) |>
+  vg_data(name = "athletes", file = vg_data_url("athletes.parquet")) |>
+  vg_mark_dot(data_from = "athletes", x = ~weight, y = ~height, fill = ~sex, r = 2, opacity = 0.05) |>
+  vg_mark_regression_y(data_from = "athletes", filter_by = query, x = ~weight, y = ~height, stroke = ~sex) |>
+  vg_interval_xy(as = query, brush = list(fillOpacity = 0, stroke = "currentColor")) |>
+  vg_plot(xyDomain = "Fixed", colorDomain = "Fixed")
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/linear-regression.html)
+exactly, aside from `data.athletes.file` (`vg_data_url()` vs. a relative
+path) and object key order.
+:::
