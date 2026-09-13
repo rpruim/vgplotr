@@ -2,7 +2,7 @@ test_that("to_json()/to_yaml() serialize a full vgspec, inlining a data frame as
   df <- data.frame(Date = c("2020-01-01", "2020-02-01"), Close = c(296.24, 313.05))
   spec <- vg_create() |>
     vg_data(name = "aapl", data = df) |>
-    vg_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
+    vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
     vg_attributes(width = 680, height = 200)
 
   parsed_json <- jsonlite::fromJSON(to_json(spec), simplifyVector = FALSE)
@@ -25,7 +25,7 @@ test_that("to_json()/to_yaml() serialize a full vgspec, inlining a data frame as
 
 test_that("to_json() puts vg_attributes() at the top level, but vg_plot_defaults() in plotDefaults", {
   spec <- vg_create() |>
-    vg_dot(x = ~a, y = ~b) |>
+    vg_mark_dot(x = ~a, y = ~b) |>
     vg_attributes(width = 680) |>
     vg_plot_defaults(height = 200)
 
@@ -39,7 +39,7 @@ test_that("to_json() puts vg_attributes() at the top level, but vg_plot_defaults
 test_that("to_json()/to_yaml() leave a file/query data source as a plain reference", {
   spec <- vg_create() |>
     vg_data(name = "aapl", file = "data/stocks.csv", where = "Symbol = 'AAPL'") |>
-    vg_line_y(data_from = "aapl", x = ~Date, y = ~Close)
+    vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close)
 
   parsed <- jsonlite::fromJSON(to_json(spec), simplifyVector = FALSE)
   expect_equal(parsed$data$aapl, list(file = "data/stocks.csv", where = "Symbol = 'AAPL'"))
@@ -53,7 +53,7 @@ test_that("to_json()/to_yaml() leave a file/query data source as a plain referen
 test_that("to_yaml() renders logicals as unquoted true/false, not YAML 1.1's yes/no", {
   spec <- vg_create() |>
     vg_data(name = "aapl", file = "data/stocks.csv", replace = FALSE, temp = TRUE) |>
-    vg_line_y(data_from = "aapl", x = ~Date, y = ~Close)
+    vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close)
 
   text <- as.character(to_yaml(spec))
   expect_match(text, "replace: false", fixed = TRUE)
@@ -62,7 +62,7 @@ test_that("to_yaml() renders logicals as unquoted true/false, not YAML 1.1's yes
 })
 
 test_that("to_json()/to_yaml() work on a bare fragment that was never wrapped in vg_create()", {
-  frag <- vg_dot(x = ~a, y = ~b, fill = "steelblue") |> vg_interval_x(as = param(brush))
+  frag <- vg_mark_dot(x = ~a, y = ~b, fill = "steelblue") |> vg_interval_x(as = param(brush))
 
   parsed <- jsonlite::fromJSON(to_json(frag), simplifyVector = FALSE)
   expect_equal(parsed$plot[[1]], list(mark = "dot", fill = "steelblue", x = "a", y = "b"))
@@ -81,7 +81,7 @@ test_that("to_json()/to_yaml() work on a standalone input, not just plots", {
 test_that("to_json()/to_yaml() preserve a zero-argument transform as JSON/YAML null", {
   spec <- vg_create() |>
     vg_data(name = "delays", data = data.frame(delay = 1:5)) |>
-    vg_rect_y(data_from = "delays", x = ~ vg_bin(delay, step = 2), y = ~ vg_count())
+    vg_mark_rect_y(data_from = "delays", x = ~ vg_bin(delay, step = 2), y = ~ vg_count())
 
   parsed <- jsonlite::fromJSON(to_json(spec), simplifyVector = FALSE)
   expect_null(parsed$plot[[1]]$y$count)
@@ -94,7 +94,7 @@ test_that("to_json()/to_yaml() reject a vgspec with no plots yet", {
 })
 
 test_that("to_json()'s and to_yaml()'s ... let a caller override a default without erroring", {
-  spec <- vg_create() |> vg_dot(x = ~a, y = ~b)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
 
   expect_no_error(to_json(spec, auto_unbox = FALSE))
   expect_no_error(to_yaml(spec, column.major = TRUE))

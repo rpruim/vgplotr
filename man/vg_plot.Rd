@@ -17,14 +17,14 @@ named plot-level attributes (\verb{width =}, \verb{height =}, \verb{name =}, ...
 Plot-level attributes such as \code{width}, \code{height}, \code{name}, and \code{margins}
 belong to the plot as a whole, not to any individual mark. \code{vg_plot()} can
 either wrap marks/interactors explicitly, or be piped onto a chain of
-marks built with functions like \code{\link[=vg_mark]{vg_mark()}} / \code{vg_dot()} / \code{vg_line_y()}.
+marks built with functions like \code{\link[=vg_mark]{vg_mark()}} / \code{vg_mark_dot()} / \code{vg_mark_line_y()}.
 The two styles are equivalent:
 }
 \details{
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{vg_plot(vg_dot(x = ~a, y = ~b), vg_line_y(x = ~a, y = ~c), width = 680)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{vg_plot(vg_mark_dot(x = ~a, y = ~b), vg_mark_line_y(x = ~a, y = ~c), width = 680)
 
-vg_dot(x = ~a, y = ~b) |>
-  vg_line_y(x = ~a, y = ~c) |>
+vg_mark_dot(x = ~a, y = ~b) |>
+  vg_mark_line_y(x = ~a, y = ~c) |>
   vg_plot(width = 680)
 }\if{html}{\out{</div>}}
 

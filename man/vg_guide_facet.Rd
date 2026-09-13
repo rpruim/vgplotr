@@ -132,10 +132,12 @@ the row facet axis). This is the facet counterpart of
 }
 \details{
 See \code{\link[=vg_guide_position]{vg_guide_position()}} for why these are \verb{vg_guide_*()} rather than
-\verb{vg_axis_*()} (already taken by mosaic's \code{axisFx}/\code{axisFy} marks).
+\verb{vg_axis_*()} (a historical collision with mosaic's \code{axisFx}/\code{axisFy}
+marks -- no longer live now that mark constructors are \code{vg_mark_}
+prefixed, but the guide functions haven't been renamed back).
 }
 \examples{
-vg_dot(x = ~a, y = ~b, fx = ~g) |>
+vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>
   vg_guide_fx(label = "Group")
 }
 \seealso{

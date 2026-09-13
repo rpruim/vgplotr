@@ -57,7 +57,7 @@ NULL
 #' @family scale functions
 #' @export
 #' @examples
-#' vg_dot(x = ~a, y = ~b) |>
+#' vg_mark_dot(x = ~a, y = ~b) |>
 #'   vg_scale_x(type = "log") |>
 #'   vg_scale_y(zero = TRUE, nice = TRUE)
 vg_scale_position <- function(spec = NULL,
@@ -196,7 +196,7 @@ add_inset_attrs <- function(attrs, which, env, context) {
 #' @family scale functions
 #' @export
 #' @examples
-#' vg_dot(x = ~a, y = ~b, fx = ~g) |>
+#' vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>
 #'   vg_scale_fx(padding = 0.1)
 vg_scale_facet <- function(spec = NULL,
                             which = c("fx", "fy"),
@@ -291,7 +291,7 @@ vg_scale_fy <- wrapper_function(vg_scale_facet, which = "fy")
 #' @family scale functions
 #' @export
 #' @examples
-#' vg_dot(x = ~a, y = ~b, fill = ~g) |>
+#' vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>
 #'   vg_scale_color(scheme = "Viridis", type = "linear")
 vg_scale_color <- function(spec = NULL,
                             type = vg_unset,
@@ -363,7 +363,7 @@ vg_scale_color <- function(spec = NULL,
 #' @family scale functions
 #' @export
 #' @examples
-#' vg_dot(x = ~a, y = ~b, opacity = ~g) |>
+#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
 #'   vg_scale_opacity(range = c(0.2, 1))
 vg_scale_opacity <- function(spec = NULL,
                               type = vg_unset,
@@ -430,7 +430,7 @@ vg_scale_opacity <- function(spec = NULL,
 #' @family scale functions
 #' @export
 #' @examples
-#' vg_dot(x = ~a, y = ~b, r = ~g) |>
+#' vg_mark_dot(x = ~a, y = ~b, r = ~g) |>
 #'   vg_scale_r(range = c(0, 20), zero = TRUE)
 vg_scale_r <- function(spec = NULL,
                        type = vg_unset,

@@ -25,7 +25,7 @@ there is also valid at the top level, which is preferred.}
 \code{vg_create()} starts a new \code{vgspec}, the top-level object that other
 \verb{vg_*()} functions are piped through to add data sources, params, marks,
 interactors, and layout. Marks and interactors can be piped directly onto
-a freshly created spec (e.g. \code{vg_create() |> vg_dot(x = ~a, y = ~b)}) as
+a freshly created spec (e.g. \code{vg_create() |> vg_mark_dot(x = ~a, y = ~b)}) as
 long as the spec only needs a single plot; a spec with multiple plots
 needs an explicit layout (\code{vg_vconcat()}/\code{vg_hconcat()}, not yet
 implemented).

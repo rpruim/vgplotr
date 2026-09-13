@@ -5,7 +5,7 @@
 test_that("simple one-layer plot (design doc example 1) builds the expected structure", {
   spec <- vg_create() |>
     vg_data(name = "aapl", file = "data/stocks.parquet", where = "Symbol = 'AAPL'") |>
-    vg_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
+    vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
     vg_attributes(width = 680, height = 200)
 
   expect_true(is_vgspec(spec))
@@ -30,7 +30,7 @@ test_that("simple one-layer plot (design doc example 1) builds the expected stru
 test_that("a plot with a mark and a plot-embedded interactor (cf. overview-detail.yaml)", {
   spec <- vg_create() |>
     vg_data(name = "walk", file = "data/random-walk.parquet") |>
-    vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
+    vg_mark_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
     vg_interval_x(as = param(brush)) |>
     vg_attributes(width = 680, height = 200)
 

@@ -38,7 +38,7 @@ only ever sets attributes on the current plot fragment, so it never
 needs to come last in a chain.
 }
 \examples{
-vg_dot(x = ~a, y = ~b, opacity = ~g) |>
+vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
   vg_guide_opacity(label = "Group")
 }
 \seealso{

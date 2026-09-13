@@ -12,14 +12,20 @@ NULL
 #' top of that. `vg_guide_x()` and `vg_guide_y()` are thin wrappers around
 #' the generic `vg_guide_position()`.
 #'
-#' These are named `vg_guide_*()` rather than `vg_axis_*()` because
-#' `vg_axis_x()`/`vg_axis_y()` are already taken -- mosaic-spec has a real
-#' `axisX`/`axisY` *mark* (a drawable, independently-styled axis), generated
-#' as those names in `R/marks-generated.R`. `vg_guide_*()` sets the plain
-#' `xAxis`/`yAxis` guide attributes that appear automatically alongside a
-#' plot's marks, which is a different (if related) thing. Same story for the
-#' analogous facet guides, [vg_guide_facet()] (vs. `vg_axis_fx()`/
-#' `vg_axis_fy()`, mosaic's `axisFx`/`axisFy` marks).
+#' These are named `vg_guide_*()` rather than `vg_axis_*()` for historical
+#' reasons: mosaic-spec's `axisX`/`axisY` *mark* (a drawable,
+#' independently-styled axis) used to be generated as `vg_axis_x()`/
+#' `vg_axis_y()`, colliding with the plot-attribute guide setters here.
+#' Every mark constructor is now prefixed `vg_mark_` instead (see
+#' `R/marks-generated.R`), specifically to avoid this kind of collision, so
+#' `vg_axis_x()`/`vg_axis_y()` are free again -- but `vg_guide_x()`/
+#' `vg_guide_y()` haven't been renamed back to them, to avoid further API
+#' churn. `vg_guide_*()` sets the plain `xAxis`/`yAxis` guide attributes
+#' that appear automatically alongside a plot's marks, which is a
+#' different (if related) thing from mosaic's `axisX`/`axisY` mark (now
+#' `vg_mark_axis_x()`/`vg_mark_axis_y()`). Same story for the analogous
+#' facet guides, [vg_guide_facet()] (vs. `vg_mark_axis_fx()`/
+#' `vg_mark_axis_fy()`, mosaic's `axisFx`/`axisFy` marks).
 #'
 #' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
 #' only ever sets attributes on the current plot fragment, so it never needs
@@ -64,7 +70,7 @@ NULL
 #' @family guide functions
 #' @export
 #' @examples
-#' vg_dot(x = ~a, y = ~b) |>
+#' vg_mark_dot(x = ~a, y = ~b) |>
 #'   vg_guide_x(label = "A", grid = TRUE) |>
 #'   vg_guide_y(label = "B", tick_format = ".0f")
 vg_guide_position <- function(spec = NULL,
@@ -122,7 +128,9 @@ vg_guide_y <- wrapper_function(vg_guide_position, which = "y")
 #' `vg_guide_facet()`.
 #'
 #' See [vg_guide_position()] for why these are `vg_guide_*()` rather than
-#' `vg_axis_*()` (already taken by mosaic's `axisFx`/`axisFy` marks).
+#' `vg_axis_*()` (a historical collision with mosaic's `axisFx`/`axisFy`
+#' marks -- no longer live now that mark constructors are `vg_mark_`
+#' prefixed, but the guide functions haven't been renamed back).
 #'
 #' @inheritParams vg_guide_position
 #' @param which Which facet axis this sets: `"fx"` or `"fy"`.
@@ -161,7 +169,7 @@ vg_guide_y <- wrapper_function(vg_guide_position, which = "y")
 #' @family guide functions
 #' @export
 #' @examples
-#' vg_dot(x = ~a, y = ~b, fx = ~g) |>
+#' vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>
 #'   vg_guide_fx(label = "Group")
 vg_guide_facet <- function(spec = NULL,
                             which = c("fx", "fy"),
@@ -236,7 +244,7 @@ vg_guide_fy <- wrapper_function(vg_guide_facet, which = "fy")
 #' @family guide functions
 #' @export
 #' @examples
-#' vg_dot(x = ~a, y = ~b, fill = ~g) |>
+#' vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>
 #'   vg_guide_color(label = "Group")
 vg_guide_color <- function(spec = NULL, label = vg_unset, tick_format = vg_unset, ...) {
   context <- "vg_guide_color()"
@@ -276,7 +284,7 @@ vg_guide_color <- function(spec = NULL, label = vg_unset, tick_format = vg_unset
 #' @family guide functions
 #' @export
 #' @examples
-#' vg_dot(x = ~a, y = ~b, opacity = ~g) |>
+#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
 #'   vg_guide_opacity(label = "Group")
 vg_guide_opacity <- function(spec = NULL, label = vg_unset, tick_format = vg_unset, ...) {
   context <- "vg_guide_opacity()"
@@ -316,7 +324,7 @@ vg_guide_opacity <- function(spec = NULL, label = vg_unset, tick_format = vg_uns
 #' @family guide functions
 #' @export
 #' @examples
-#' vg_dot(x = ~a, y = ~b, r = ~g) |>
+#' vg_mark_dot(x = ~a, y = ~b, r = ~g) |>
 #'   vg_guide_r(label = "Group")
 vg_guide_r <- function(spec = NULL, label = vg_unset, ...) {
   context <- "vg_guide_r()"

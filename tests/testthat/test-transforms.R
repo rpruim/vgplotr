@@ -47,7 +47,7 @@ test_that("as_spec_payload() serializes a histogram mark using vg_bin()/vg_count
   df <- data.frame(delay = c(1, 2, 2, 3, 3, 3))
   spec <- vg_create() |>
     vg_data(name = "flights", data = df) |>
-    vg_rect_y(data_from = "flights", x = ~ vg_bin(delay, step = 1), y = ~ vg_count())
+    vg_mark_rect_y(data_from = "flights", x = ~ vg_bin(delay, step = 1), y = ~ vg_count())
 
   payload <- as_spec_payload(spec)
   mark <- payload$spec$plot[[1]]

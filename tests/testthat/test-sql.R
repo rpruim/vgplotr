@@ -24,19 +24,19 @@ test_that("sql()/agg() serialize to {sql: ...}/{agg: ...}, with label when given
 })
 
 test_that("sql()/agg() work as a direct mark encoding value (no formula needed)", {
-  spec <- vg_create() |> vg_dot(x = ~a, y = sql("v + ", param(point)))
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = sql("v + ", param(point)))
   payload <- as_spec_payload(spec)
   expect_equal(payload$spec$plot[[1]]$y, list(sql = "v + $point"))
 })
 
 test_that("sql()/agg() also work inside a mapping formula", {
-  spec <- vg_create() |> vg_dot(x = ~a, y = ~ sql("v + $point"))
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~ sql("v + $point"))
   payload <- as_spec_payload(spec)
   expect_equal(payload$spec$plot[[1]]$y, list(sql = "v + $point"))
 })
 
 test_that("as_spec_payload() output is identical whether sql() is used directly or inside a formula", {
-  direct <- as_spec_payload(vg_create() |> vg_dot(x = ~a, y = sql("v + $point")))
-  via_formula <- as_spec_payload(vg_create() |> vg_dot(x = ~a, y = ~ sql("v + $point")))
+  direct <- as_spec_payload(vg_create() |> vg_mark_dot(x = ~a, y = sql("v + $point")))
+  via_formula <- as_spec_payload(vg_create() |> vg_mark_dot(x = ~a, y = ~ sql("v + $point")))
   expect_equal(direct$spec$plot[[1]]$y, via_formula$spec$plot[[1]]$y)
 })

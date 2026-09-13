@@ -1,17 +1,17 @@
 test_that("generated mark wrappers exist for marks beyond the original hand-written set", {
-  # vg_dot/vg_line_y/vg_area_y/vg_rect_y already existed by hand; these did
+  # vg_mark_dot/vg_mark_line_y/vg_mark_area_y/vg_mark_rect_y already existed by hand; these did
   # not, and should now come from R/marks-generated.R.
-  expect_true(exists("vg_hexbin"))
-  expect_true(exists("vg_hexgrid"))
-  expect_true(exists("vg_text"))
+  expect_true(exists("vg_mark_hexbin"))
+  expect_true(exists("vg_mark_hexgrid"))
+  expect_true(exists("vg_mark_text"))
 
-  frag <- vg_hexbin(data_from = "flights", x = ~a, y = ~b, binWidth = 10)
+  frag <- vg_mark_hexbin(data_from = "flights", x = ~a, y = ~b, binWidth = 10)
   expect_equal(frag$items[[1]]$mark, "hexbin")
 })
 
 test_that("generated mark wrappers use the exact schema mark name, not the R function name", {
-  expect_equal(vg_delaunay_link(x = ~a, y = ~b)$items[[1]]$mark, "delaunayLink")
-  expect_equal(vg_rule_x(x = ~a)$items[[1]]$mark, "ruleX")
+  expect_equal(vg_mark_delaunay_link(x = ~a, y = ~b)$items[[1]]$mark, "delaunayLink")
+  expect_equal(vg_mark_rule_x(x = ~a)$items[[1]]$mark, "ruleX")
 })
 
 test_that("generated interactor/input wrappers exist for types beyond the original hand-written set", {
@@ -47,7 +47,7 @@ test_that("split_plot_args() no longer recognizes the old (incorrect) snake_case
 })
 
 test_that("as_spec_payload() correctly places a previously-unsupported plot attribute at the plot level", {
-  spec <- vg_create() |> vg_dot(x = ~a, y = ~b, xDomain = c(0, 100), marginLeft = 40)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b, xDomain = c(0, 100), marginLeft = 40)
   payload <- as_spec_payload(spec)
 
   expect_equal(payload$spec$xDomain, c(0, 100))

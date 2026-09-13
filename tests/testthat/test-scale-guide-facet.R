@@ -1,5 +1,5 @@
 test_that("vg_scale_fx()/vg_scale_fy() translate snake_case args to the raw mosaic attrs", {
-  frag <- vg_dot(x = ~a, y = ~b, fx = ~g) |>
+  frag <- vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>
     vg_scale_fx(padding = 0.1, inset_left = 4) |>
     vg_scale_fy(reverse = TRUE, padding_inner = 0.2)
 
@@ -28,7 +28,7 @@ test_that("vg_scale_facet() warns when the wrong axis's inset argument is used",
 })
 
 test_that("vg_guide_fx()/vg_guide_fy() translate snake_case args to the raw mosaic attrs", {
-  frag <- vg_dot(x = ~a, y = ~b, fx = ~g) |>
+  frag <- vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>
     vg_guide_fx(label = "Group", grid = TRUE, tick_format = "d") |>
     vg_guide_fy(label = "Row", position = "right")
 
@@ -50,8 +50,8 @@ test_that("vg_guide_fx()/vg_guide_fy() warn about an unrecognized attribute name
   )
 })
 
-test_that("vg_axis_fx()/vg_axis_fy() still refer to the axisFx/axisFy marks, unaffected by vg_guide_facet()", {
-  frag <- vg_axis_fx(stroke = "red")
+test_that("vg_mark_axis_fx()/vg_mark_axis_fy() still refer to the axisFx/axisFy marks, unaffected by vg_guide_facet()", {
+  frag <- vg_mark_axis_fx(stroke = "red")
   expect_equal(frag$items[[1]]$mark, "axisFx")
   expect_equal(frag$items[[1]]$encodings$stroke, "red")
 })

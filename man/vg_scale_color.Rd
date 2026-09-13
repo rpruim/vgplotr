@@ -97,7 +97,7 @@ only ever sets attributes on the current plot fragment, so it never
 needs to come last in a chain.
 }
 \examples{
-vg_dot(x = ~a, y = ~b, fill = ~g) |>
+vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>
   vg_scale_color(scheme = "Viridis", type = "linear")
 }
 \seealso{

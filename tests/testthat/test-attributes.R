@@ -1,6 +1,6 @@
 test_that("vg_attributes() sets the spec's own top-level attrs, not plot_defaults", {
   spec <- vg_create() |>
-    vg_dot(x = ~a, y = ~b, width = 400) |>
+    vg_mark_dot(x = ~a, y = ~b, width = 400) |>
     vg_attributes(height = 200)
 
   expect_equal(spec$layout$attrs, list(width = 400))
@@ -9,7 +9,7 @@ test_that("vg_attributes() sets the spec's own top-level attrs, not plot_default
 })
 
 test_that("vg_attributes() conflicts are warned about like other attribute merges", {
-  spec <- vg_create() |> vg_dot(x = ~a, y = ~b) |> vg_attributes(width = 400)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b) |> vg_attributes(width = 400)
   expect_warning(
     spec <- vg_attributes(spec, width = 680),
     "Conflicting value for `width`"
@@ -34,7 +34,7 @@ test_that("vg_create(...) and vg_attributes()/vg_meta() write to the same places
 })
 
 test_that("vg_attributes() warns about a name that isn't a real plot attribute", {
-  spec <- vg_create() |> vg_dot(x = ~a, y = ~b)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
   expect_warning(
     vg_attributes(spec, title = "x"),
     "`title`.*is not a recognized mosaic-spec plot attribute"
@@ -46,6 +46,6 @@ test_that("vg_attributes() warns about a name that isn't a real plot attribute",
 })
 
 test_that("vg_attributes() doesn't warn for real plot attributes", {
-  spec <- vg_create() |> vg_dot(x = ~a, y = ~b)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
   expect_no_warning(vg_attributes(spec, width = 680, height = 200))
 })

@@ -1,5 +1,5 @@
 test_that("vg_scale_color() translates snake_case args to the raw mosaic attrs", {
-  frag <- vg_dot(x = ~a, y = ~b, fill = ~g) |>
+  frag <- vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>
     vg_scale_color(type = "linear", scheme = "Viridis", pivot = 0, symmetric = TRUE, n = 5)
 
   expect_equal(frag$attrs$colorScale, "linear")
@@ -33,7 +33,7 @@ test_that("vg_scale_color()/vg_scale_opacity()/vg_scale_r() warn about unrecogni
 })
 
 test_that("vg_guide_color()/vg_guide_opacity() set label/tick_format", {
-  frag <- vg_dot(x = ~a, y = ~b, fill = ~g, opacity = ~o) |>
+  frag <- vg_mark_dot(x = ~a, y = ~b, fill = ~g, opacity = ~o) |>
     vg_guide_color(label = "Group", tick_format = "d") |>
     vg_guide_opacity(label = "Weight", tick_format = ".0%")
 

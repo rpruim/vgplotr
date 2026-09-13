@@ -70,7 +70,7 @@ only ever sets attributes on the current plot fragment, so it never
 needs to come last in a chain.
 }
 \examples{
-vg_dot(x = ~a, y = ~b, opacity = ~g) |>
+vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
   vg_scale_opacity(range = c(0.2, 1))
 }
 \seealso{

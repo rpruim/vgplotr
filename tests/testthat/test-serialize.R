@@ -3,7 +3,7 @@ test_that("as_spec_payload() serializes a single mark with inline data", {
 
   spec <- vg_create() |>
     vg_data(name = "aapl", data = df) |>
-    vg_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
+    vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
     vg_attributes(width = 680, height = 200)
 
   payload <- as_spec_payload(spec)
@@ -25,7 +25,7 @@ test_that("as_spec_payload() serializes an interactor with a param() reference",
 
   spec <- vg_create() |>
     vg_data(name = "walk", data = df) |>
-    vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
+    vg_mark_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
     vg_interval_x(as = param(brush))
 
   payload <- as_spec_payload(spec)
@@ -35,7 +35,7 @@ test_that("as_spec_payload() serializes an interactor with a param() reference",
 })
 
 test_that("as_spec_payload() rejects formulas with more than a bare column name", {
-  spec <- vg_create() |> vg_dot(x = ~ log(a), y = ~b)
+  spec <- vg_create() |> vg_mark_dot(x = ~ log(a), y = ~b)
   expect_error(as_spec_payload(spec), "transform functions")
 })
 

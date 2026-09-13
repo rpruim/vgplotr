@@ -1,5 +1,5 @@
 test_that("vg_scale_x()/vg_scale_y() translate snake_case args to the raw mosaic attrs", {
-  frag <- vg_dot(x = ~a, y = ~b) |>
+  frag <- vg_mark_dot(x = ~a, y = ~b) |>
     vg_scale_x(type = "log", domain = c(1, 100), nice = TRUE, inset_left = 5) |>
     vg_scale_y(zero = TRUE, padding_inner = 0.2)
 
@@ -37,7 +37,7 @@ test_that("vg_scale_x()/vg_scale_y() warn about an unrecognized attribute name",
 test_that("vg_scale_x()/vg_scale_y() can be piped in any order relative to marks and vg_plot()", {
   spec <- vg_create() |>
     vg_scale_x(type = "log") |>
-    vg_dot(x = ~a, y = ~b) |>
+    vg_mark_dot(x = ~a, y = ~b) |>
     vg_plot(width = 680)
 
   expect_equal(spec$layout$attrs$xScale, "log")
@@ -45,7 +45,7 @@ test_that("vg_scale_x()/vg_scale_y() can be piped in any order relative to marks
 })
 
 test_that("vg_guide_x()/vg_guide_y() translate snake_case args to the raw mosaic attrs", {
-  frag <- vg_dot(x = ~a, y = ~b) |>
+  frag <- vg_mark_dot(x = ~a, y = ~b) |>
     vg_guide_x(label = "A", grid = TRUE, tick_format = "d") |>
     vg_guide_y(label = "B", position = "right")
 
@@ -63,8 +63,8 @@ test_that("vg_guide_x()/vg_guide_y() warn about an unrecognized attribute name",
   )
 })
 
-test_that("vg_axis_x()/vg_axis_y() still refer to the axisX/axisY marks, unaffected by vg_guide_*()", {
-  frag <- vg_axis_x(stroke = "red")
+test_that("vg_mark_axis_x()/vg_mark_axis_y() still refer to the axisX/axisY marks, unaffected by vg_guide_*()", {
+  frag <- vg_mark_axis_x(stroke = "red")
   expect_equal(frag$items[[1]]$mark, "axisX")
   expect_equal(frag$items[[1]]$encodings$stroke, "red")
 })

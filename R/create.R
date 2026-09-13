@@ -3,7 +3,7 @@
 #' `vg_create()` starts a new `vgspec`, the top-level object that other
 #' `vg_*()` functions are piped through to add data sources, params, marks,
 #' interactors, and layout. Marks and interactors can be piped directly onto
-#' a freshly created spec (e.g. `vg_create() |> vg_dot(x = ~a, y = ~b)`) as
+#' a freshly created spec (e.g. `vg_create() |> vg_mark_dot(x = ~a, y = ~b)`) as
 #' long as the spec only needs a single plot; a spec with multiple plots
 #' needs an explicit layout (`vg_vconcat()`/`vg_hconcat()`, not yet
 #' implemented).

@@ -20,7 +20,7 @@ test_that("vg_data() with query stores the options as given", {
 test_that("as_spec_payload() leaves a genuine http(s) URL in the spec's data block", {
   spec <- vg_create() |>
     vg_data(name = "aapl", file = "https://example.com/stocks.csv", where = "Symbol = 'AAPL'") |>
-    vg_line_y(data_from = "aapl", x = ~Date, y = ~Close)
+    vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close)
 
   payload <- as_spec_payload(spec)
   expect_equal(payload$spec$data$aapl, list(file = "https://example.com/stocks.csv", where = "Symbol = 'AAPL'"))
@@ -34,7 +34,7 @@ test_that("as_spec_payload() embeds a local file's content instead of leaving a 
   # R/serialize.R's read_local_data_file().
   spec <- vg_create() |>
     vg_data(name = "aapl", file = stocks_csv, where = "Symbol = 'AAPL'") |>
-    vg_line_y(data_from = "aapl", x = ~Date, y = ~Close)
+    vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close)
 
   payload <- as_spec_payload(spec)
   expect_null(payload$spec$data)
@@ -49,7 +49,7 @@ test_that("as_spec_payload() keeps data-frame, local-file, and remote-URL source
     vg_data(name = "aapl", file = stocks_csv) |>
     vg_data(name = "remote", file = "https://example.com/x.csv") |>
     vg_data(name = "walk", data = data.frame(t = 1:3, v = 1:3)) |>
-    vg_dot(data_from = "walk", x = ~t, y = ~v)
+    vg_mark_dot(data_from = "walk", x = ~t, y = ~v)
 
   payload <- as_spec_payload(spec)
   expect_equal(names(payload$files), "aapl")
@@ -58,7 +58,7 @@ test_that("as_spec_payload() keeps data-frame, local-file, and remote-URL source
 })
 
 test_that("as_spec_payload() errors clearly on a missing local file", {
-  spec <- vg_create() |> vg_data(name = "x", file = "no/such/file.csv") |> vg_dot(x = ~a, y = ~b)
+  spec <- vg_create() |> vg_data(name = "x", file = "no/such/file.csv") |> vg_mark_dot(x = ~a, y = ~b)
   expect_error(as_spec_payload(spec), "not found")
 })
 
@@ -67,6 +67,6 @@ test_that("as_spec_payload() errors clearly on an unsupported local file extensi
   writeLines("a\tb\n1\t2", path)
   on.exit(unlink(path))
 
-  spec <- vg_create() |> vg_data(name = "x", file = path) |> vg_dot(x = ~a, y = ~b)
+  spec <- vg_create() |> vg_data(name = "x", file = path) |> vg_mark_dot(x = ~a, y = ~b)
   expect_error(as_spec_payload(spec), "\\.tsv")
 })

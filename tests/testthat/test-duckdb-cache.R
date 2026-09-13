@@ -74,7 +74,7 @@ test_that("maybe_offer_duckdb_cache() never prompts outside an interactive sessi
 })
 
 test_that("vg_render() attaches the duckdb-wasm dependency only when the cache exists", {
-  spec <- vg_create() |> vg_dot(x = ~a, y = ~b)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
 
   tmp_empty <- tempfile("vgplotr-cache-")
   testthat::local_mocked_bindings(vg_duckdb_cache_dir = function() tmp_empty)
@@ -92,7 +92,7 @@ test_that("vg_render() attaches the duckdb-wasm dependency only when the cache e
 })
 
 test_that("vg_render()'s use_cache lets a single plot override the cache default", {
-  spec <- vg_create() |> vg_dot(x = ~a, y = ~b)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
 
   tmp_full <- tempfile("vgplotr-cache-")
   dir.create(tmp_full)

@@ -39,14 +39,21 @@ closer to the original example.
 
 ```{r}
 aapl <- data.frame(
-  Date = c("2020-01-01", "2020-02-01", "2020-03-01", "2020-04-01", "2020-05-01", "2020-06-01"),
+  Date = c(
+    "2020-01-01",
+    "2020-02-01",
+    "2020-03-01",
+    "2020-04-01",
+    "2020-05-01",
+    "2020-06-01"
+  ),
   Close = c(296.24, 313.05, 254.29, 293.80, 317.94, 364.80)
 )
 
 spec <-
   vg_create(title = "AAPL closing price") |>
   vg_data(name = "aapl", data = aapl) |>
-  vg_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
+  vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
   vg_attributes(width = 680, height = 200)
 
 spec
@@ -54,7 +61,7 @@ spec
 
 `vg_attributes()` sets attributes directly on the spec's own top level --
 distinct from this plot's own attributes (`spec$layout$attrs`, accumulated
-from marks/interactors, e.g. via `width =` on `vg_dot()`) and from
+from marks/interactors, e.g. via `width =` on `vg_mark_dot()`) and from
 mosaic-spec's `plotDefaults` (set via `vg_plot_defaults()`, applied to
 *every* plot in the spec -- see the two-plot example below):
 
@@ -91,8 +98,12 @@ loading different data under the same name would collide.)
 ```{r}
 spec1b <-
   vg_create() |>
-  vg_data(name = "aapl_file", file = "data/stocks.csv", where = "Symbol = 'AAPL'") |>
-  vg_line_y(data_from = "aapl_file", x = ~Date, y = ~Close) |>
+  vg_data(
+    name = "aapl_file",
+    file = "data/stocks.csv",
+    where = "Symbol = 'AAPL'"
+  ) |>
+  vg_mark_line_y(data_from = "aapl_file", x = ~Date, y = ~Close) |>
   vg_attributes(width = 680, height = 200)
 
 vg_render(spec1b)
@@ -110,7 +121,7 @@ walk <- data.frame(t = 1:100, v = cumsum(rnorm(100)))
 spec2 <-
   vg_create() |>
   vg_data(name = "walk", data = walk) |>
-  vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
+  vg_mark_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
   vg_interval_x(as = param(brush)) |>
   vg_plot(width = 680, height = 200, name = "focus")
 
@@ -143,12 +154,12 @@ get `width`/`height` without repeating them on each `vg_plot()` call:
 
 ```{r}
 overview <-
-  vg_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
+  vg_mark_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
   vg_interval_x(as = param(brush)) |>
   vg_plot()
 
 detail <-
-  vg_area_y(
+  vg_mark_area_y(
     data_from = "walk",
     filter_by = param(brush),
     x = ~t,
@@ -185,7 +196,7 @@ delays <- data.frame(delay = rgamma(2000, shape = 2, rate = 0.3) - 5)
 spec4 <-
   vg_create() |>
   vg_data(name = "delays", data = delays) |>
-  vg_rect_y(
+  vg_mark_rect_y(
     data_from = "delays",
     x = ~ vg_bin(delay, step = 2),
     y = ~ vg_count(),
@@ -212,7 +223,7 @@ vg_render(spec4)
 
 vgplotr now has a wrapper for every mark type mosaic supports (65, generated
 from mosaic's own JSON schema by `data-raw/update-schema.R` -- see
-`vg_hexbin()`, `vg_text()`, `vg_rule_x()`, ... alongside the marks used
+`vg_mark_hexbin()`, `vg_mark_text()`, `vg_mark_rule_x()`, ... alongside the marks used
 above), and correctly recognizes every plot-level attribute (215) as
 belonging to the plot, not the mark. That fixed a real bug along the way:
 `marginLeft`/`marginRight`/`marginTop`/`marginBottom` and `aspectRatio` used
@@ -224,14 +235,14 @@ silently did nothing.
 spec4b <-
   vg_create() |>
   vg_data(name = "delays", data = delays) |>
-  vg_rect_y(
+  vg_mark_rect_y(
     data_from = "delays",
     x = ~ vg_bin(delay, step = 2),
     y = ~ vg_count(),
     fill = "steelblue",
     inset = 0.5
   ) |>
-  vg_rule_x(x = 0, stroke = "firebrick", strokeWidth = 2) |>
+  vg_mark_rule_x(x = 0, stroke = "firebrick", strokeWidth = 2) |>
   vg_plot(width = 680, height = 200, marginLeft = 60, aspectRatio = 1)
 
 vg_render(spec4b)
@@ -247,16 +258,20 @@ attributes already set above by their raw camelCase names (`xDomain`,
 alongside marks and interactors, since they only ever set attributes on the
 current plot.
 
-(Note the names: `vg_axis_x()`/`vg_axis_y()` are already taken by mosaic's
-`axisX`/`axisY` *mark* -- a separately drawn, independently-styled axis --
-so the guide attributes that appear automatically alongside a plot's own
-marks live under `vg_guide_x()`/`vg_guide_y()` instead.)
+(Note the names: `vg_guide_x()`/`vg_guide_y()`, not `vg_axis_x()`/
+`vg_axis_y()` -- mosaic's `axisX`/`axisY` *mark* (a separately drawn,
+independently-styled axis) used to be generated as `vg_axis_x()`/
+`vg_axis_y()`, colliding with these guide setters. Every mark constructor
+is now prefixed `vg_mark_` instead (e.g. `vg_mark_axis_x()`,
+`vg_mark_dot()`, ...) specifically to avoid this kind of collision, so the
+guide functions could move back to `vg_axis_x()`/`vg_axis_y()` too, but
+haven't been (yet), to avoid further churn.)
 
 ```{r}
 spec4c <-
   vg_create() |>
   vg_data(name = "delays", data = delays) |>
-  vg_rect_y(
+  vg_mark_rect_y(
     data_from = "delays",
     x = ~ vg_bin(delay, step = 2),
     y = ~ vg_count(),
@@ -288,7 +303,7 @@ pts2 <- data.frame(
 spec4d <-
   vg_create() |>
   vg_data(name = "pts2", data = pts2) |>
-  vg_dot(data_from = "pts2", x = ~x, y = ~y, fx = ~group) |>
+  vg_mark_dot(data_from = "pts2", x = ~x, y = ~y, fx = ~group) |>
   vg_scale_fx(padding = 0.1) |>
   vg_guide_fx(label = "Group") |>
   vg_plot(width = 680, height = 200)
@@ -319,7 +334,7 @@ pts3 <- data.frame(
 spec4e <-
   vg_create() |>
   vg_data(name = "pts3", data = pts3) |>
-  vg_dot(data_from = "pts3", x = ~x, y = ~y, fill = ~group, r = ~size) |>
+  vg_mark_dot(data_from = "pts3", x = ~x, y = ~y, fill = ~group, r = ~size) |>
   vg_scale_color(scheme = "Viridis") |>
   vg_scale_r(range = c(2, 12)) |>
   vg_guide_color(label = "Group") |>
@@ -353,7 +368,7 @@ pts <- data.frame(
 spec5 <-
   vg_create() |>
   vg_data(name = "pts", data = pts) |>
-  vg_dot(data_from = "pts", x = ~x, y = ~y, fill = ~group) |>
+  vg_mark_dot(data_from = "pts", x = ~x, y = ~y, fill = ~group) |>
   vg_legend(type = "color") |>
   vg_plot(width = 400, height = 300)
 
@@ -369,10 +384,14 @@ mark's `fill` (no formula needed, since it isn't a column mapping) -- pick a
 different color and the plot updates.
 
 ```{r}
-color_picker <- vg_menu(label = "Color", as = param(dotcolor), options = c("steelblue", "orange", "firebrick"))
+color_picker <- vg_menu(
+  label = "Color",
+  as = param(dotcolor),
+  options = c("steelblue", "orange", "firebrick")
+)
 
 colored_plot <-
-  vg_dot(data_from = "pts", x = ~x, y = ~y, fill = param(dotcolor)) |>
+  vg_mark_dot(data_from = "pts", x = ~x, y = ~y, fill = param(dotcolor)) |>
   vg_plot(width = 400, height = 300)
 
 spec6 <-
@@ -391,8 +410,8 @@ value wins, and you get a warning so it doesn't happen by surprise.
 
 ```{r}
 plot3 <-
-  vg_dot(x = ~a, y = ~b, width = 400) |>
-  vg_line_y(x = ~a, y = ~c, width = 680)
+  vg_mark_dot(x = ~a, y = ~b, width = 400) |>
+  vg_mark_line_y(x = ~a, y = ~c, width = 680)
 
 plot3$attrs$width
 ```
@@ -409,10 +428,22 @@ can be written directly in the SQL text (`sql("v + $bias")`) or built up
 from pieces, as below -- both are equivalent.
 
 ```{r}
-bias_picker <- vg_slider(label = "Bias", as = param(bias), min = -20, max = 20, step = 1, value = 0)
+bias_picker <- vg_slider(
+  label = "Bias",
+  as = param(bias),
+  min = -20,
+  max = 20,
+  step = 1,
+  value = 0
+)
 
 biased_plot <-
-  vg_area_y(data_from = "walk", x = ~t, y = sql("v + ", param(bias)), fill = "steelblue") |>
+  vg_mark_area_y(
+    data_from = "walk",
+    x = ~t,
+    y = sql("v + ", param(bias)),
+    fill = "steelblue"
+  ) |>
   vg_plot(width = 680, height = 200, yDomain = c(-30, 30))
 
 spec7 <-
@@ -435,7 +466,8 @@ alongside other mosaic examples). `to_json()`/`to_yaml()` work on a full
 string:
 
 ```{r}
-frag <- vg_dot(x = ~x, y = ~y, fill = "steelblue") |> vg_interval_x(as = param(brush))
+frag <- vg_mark_dot(x = ~x, y = ~y, fill = "steelblue") |>
+  vg_interval_x(as = param(brush))
 to_json(frag)
 ```
 
@@ -448,5 +480,9 @@ objects (mosaic-spec's own `{data: [...]}` form), matching how mosaic's
 own example specs represent small inline datasets:
 
 ```{r}
-to_yaml(vg_create() |> vg_data(name = "aapl", data = aapl) |> vg_line_y(data_from = "aapl", x = ~Date, y = ~Close))
+to_yaml(
+  vg_create() |>
+    vg_data(name = "aapl", data = aapl) |>
+    vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close)
+)
 ```

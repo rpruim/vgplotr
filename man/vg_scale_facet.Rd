@@ -113,7 +113,7 @@ none of the properties specific to continuous/log/pow scales (\code{nice},
 \code{vg_scale_facet()}.
 }
 \examples{
-vg_dot(x = ~a, y = ~b, fx = ~g) |>
+vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>
   vg_scale_fx(padding = 0.1)
 }
 \seealso{

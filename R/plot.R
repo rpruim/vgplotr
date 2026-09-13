@@ -52,14 +52,14 @@ update_layout <- function(spec, fragment) {
 #' Plot-level attributes such as `width`, `height`, `name`, and `margins`
 #' belong to the plot as a whole, not to any individual mark. `vg_plot()` can
 #' either wrap marks/interactors explicitly, or be piped onto a chain of
-#' marks built with functions like [vg_mark()] / `vg_dot()` / `vg_line_y()`.
+#' marks built with functions like [vg_mark()] / `vg_mark_dot()` / `vg_mark_line_y()`.
 #' The two styles are equivalent:
 #'
 #' ```r
-#' vg_plot(vg_dot(x = ~a, y = ~b), vg_line_y(x = ~a, y = ~c), width = 680)
+#' vg_plot(vg_mark_dot(x = ~a, y = ~b), vg_mark_line_y(x = ~a, y = ~c), width = 680)
 #'
-#' vg_dot(x = ~a, y = ~b) |>
-#'   vg_line_y(x = ~a, y = ~c) |>
+#' vg_mark_dot(x = ~a, y = ~b) |>
+#'   vg_mark_line_y(x = ~a, y = ~c) |>
 #'   vg_plot(width = 680)
 #' ```
 #'
