@@ -98,13 +98,7 @@ vg_scale_position <- function(spec = NULL,
   attrs <- prefixed_attrs(which, suffixes, environment())
   attrs <- add_inset_attrs(attrs, which, environment(), context)
 
-  extra <- list(...)
-  warn_unknown_attrs(names(extra), context)
-  attrs <- merge_attrs(attrs, extra, context = context)
-
-  fragment <- as_vg_plot_fragment(spec)
-  fragment$attrs <- merge_attrs(fragment$attrs, attrs, context = context)
-  update_layout(spec, fragment)
+  apply_plot_attrs(spec, attrs, list(...), context)
 }
 
 #' @rdname vg_scale_position
@@ -231,13 +225,7 @@ vg_scale_facet <- function(spec = NULL,
   attrs <- prefixed_attrs(which, suffixes, environment())
   attrs <- add_inset_attrs(attrs, which, environment(), context)
 
-  extra <- list(...)
-  warn_unknown_attrs(names(extra), context)
-  attrs <- merge_attrs(attrs, extra, context = context)
-
-  fragment <- as_vg_plot_fragment(spec)
-  fragment$attrs <- merge_attrs(fragment$attrs, attrs, context = context)
-  update_layout(spec, fragment)
+  apply_plot_attrs(spec, attrs, list(...), context)
 }
 
 #' @rdname vg_scale_facet
@@ -247,3 +235,227 @@ vg_scale_fx <- wrapper_function(vg_scale_facet, which = "fx")
 #' @rdname vg_scale_facet
 #' @export
 vg_scale_fy <- wrapper_function(vg_scale_facet, which = "fy")
+
+#' Set the color scale's properties
+#'
+#' `vg_scale_color()` sets the scale properties mosaic-spec exposes for the
+#' `color` channel (`colorScale`, `colorDomain`, ... -- the scale that
+#' `fill =`/`stroke =` encodings are bound to unless they're a literal
+#' constant). These are already plot-level attributes that
+#' [vg_plot()]/[vg_attributes()] accept directly by their raw camelCase
+#' names; this is a discoverable, snake_case-argument convenience layer on
+#' top of that. Unlike `vg_scale_x()`/`vg_scale_y()`, there's only one
+#' color channel, so `vg_scale_color()` isn't built from a `which =`
+#' generic -- it's the whole implementation. For the axis-guide properties
+#' (`colorLabel`/`colorTickFormat`), see [vg_guide_color()]; for an actual
+#' rendered color legend, see [vg_legend_color()] -- a different (if
+#' related) thing, a standalone/embedded legend mark rather than a plot
+#' attribute.
+#'
+#' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
+#' only ever sets attributes on the current plot fragment, so it never
+#' needs to come last in a chain.
+#'
+#' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL`
+#'   to start a new plot fragment with just these attributes.
+#' @param type Scale type, e.g. `"linear"`, `"log"`, `"pow"`, `"sqrt"`,
+#'   `"symlog"`, `"ordinal"`, `"categorical"`, `"threshold"`, `"quantile"`,
+#'   `"quantize"` (`colorScale`).
+#' @param domain Data domain extent `c(min, max)`, or an array of
+#'   categories for an ordinal/categorical scale (`colorDomain`).
+#' @param range Explicit array of output colors (`colorRange`).
+#' @param scheme Named color palette, e.g. `"Viridis"`, `"Blues"`,
+#'   `"YlOrRd"`, `"Tableau10"` (`colorScheme`).
+#' @param interpolate Custom interpolation function/method for a continuous
+#'   scale (`colorInterpolate`).
+#' @param pivot Midpoint value for a diverging color scheme
+#'   (`colorPivot`).
+#' @param symmetric Boolean; force a continuous domain to be symmetric
+#'   around `pivot` (`colorSymmetric`).
+#' @param nice Boolean; round the scale domain to human-friendly values
+#'   (`colorNice`).
+#' @param zero Boolean; force the domain to include zero (`colorZero`).
+#' @param reverse Boolean; reverse the scale/palette order
+#'   (`colorReverse`).
+#' @param clamp Boolean; clamp out-of-domain values to the range
+#'   (`colorClamp`).
+#' @param base Log/pow scale base (`colorBase`).
+#' @param exponent Pow/symlog scale exponent (`colorExponent`).
+#' @param constant Symlog scale constant (`colorConstant`).
+#' @param percent Boolean; format/scale values as percentages
+#'   (`colorPercent`).
+#' @param n Number of quantiles/buckets for a `"quantile"`/`"quantize"`
+#'   scale (`colorN`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
+#' @family scale functions
+#' @export
+#' @examples
+#' vg_dot(x = ~a, y = ~b, fill = ~g) |>
+#'   vg_scale_color(scheme = "Viridis", type = "linear")
+vg_scale_color <- function(spec = NULL,
+                            type = vg_unset,
+                            domain = vg_unset,
+                            range = vg_unset,
+                            scheme = vg_unset,
+                            interpolate = vg_unset,
+                            pivot = vg_unset,
+                            symmetric = vg_unset,
+                            nice = vg_unset,
+                            zero = vg_unset,
+                            reverse = vg_unset,
+                            clamp = vg_unset,
+                            base = vg_unset,
+                            exponent = vg_unset,
+                            constant = vg_unset,
+                            percent = vg_unset,
+                            n = vg_unset,
+                            ...) {
+  context <- "vg_scale_color()"
+
+  suffixes <- c(
+    type = "Scale", domain = "Domain", range = "Range", scheme = "Scheme",
+    interpolate = "Interpolate", pivot = "Pivot", symmetric = "Symmetric",
+    nice = "Nice", zero = "Zero", reverse = "Reverse", clamp = "Clamp",
+    base = "Base", exponent = "Exponent", constant = "Constant",
+    percent = "Percent", n = "N"
+  )
+  attrs <- prefixed_attrs("color", suffixes, environment())
+
+  apply_plot_attrs(spec, attrs, list(...), context)
+}
+
+#' Set the opacity scale's properties
+#'
+#' `vg_scale_opacity()` sets the scale properties mosaic-spec exposes for
+#' the `opacity` channel (`opacityScale`, `opacityDomain`, ... -- the scale
+#' that `opacity =`/`fillOpacity =`/`strokeOpacity =` encodings are bound
+#' to unless they're a literal constant). These are already plot-level
+#' attributes that [vg_plot()]/[vg_attributes()] accept directly by their
+#' raw camelCase names; this is a discoverable, snake_case-argument
+#' convenience layer on top of that. For the axis-guide properties
+#' (`opacityLabel`/`opacityTickFormat`), see [vg_guide_opacity()]; for an
+#' actual rendered opacity legend, see [vg_legend_opacity()].
+#'
+#' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
+#' only ever sets attributes on the current plot fragment, so it never
+#' needs to come last in a chain.
+#'
+#' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL`
+#'   to start a new plot fragment with just these attributes.
+#' @param type Scale type, e.g. `"linear"`, `"sqrt"`, `"pow"`, `"log"`
+#'   (`opacityScale`).
+#' @param domain Data domain extent `c(min, max)` (`opacityDomain`).
+#' @param range Output opacity range, e.g. `c(0, 1)` (`opacityRange`).
+#' @param nice Boolean; round the scale domain to human-friendly values
+#'   (`opacityNice`).
+#' @param zero Boolean; force the domain to include zero (`opacityZero`).
+#' @param reverse Boolean; reverse the scale direction (`opacityReverse`).
+#' @param clamp Boolean; clamp out-of-domain values to the range
+#'   (`opacityClamp`).
+#' @param base Log/pow scale base (`opacityBase`).
+#' @param exponent Pow/symlog scale exponent (`opacityExponent`).
+#' @param constant Symlog scale constant (`opacityConstant`).
+#' @param percent Boolean; format/scale values as percentages
+#'   (`opacityPercent`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
+#' @family scale functions
+#' @export
+#' @examples
+#' vg_dot(x = ~a, y = ~b, opacity = ~g) |>
+#'   vg_scale_opacity(range = c(0.2, 1))
+vg_scale_opacity <- function(spec = NULL,
+                              type = vg_unset,
+                              domain = vg_unset,
+                              range = vg_unset,
+                              nice = vg_unset,
+                              zero = vg_unset,
+                              reverse = vg_unset,
+                              clamp = vg_unset,
+                              base = vg_unset,
+                              exponent = vg_unset,
+                              constant = vg_unset,
+                              percent = vg_unset,
+                              ...) {
+  context <- "vg_scale_opacity()"
+
+  suffixes <- c(
+    type = "Scale", domain = "Domain", range = "Range", nice = "Nice",
+    zero = "Zero", reverse = "Reverse", clamp = "Clamp", base = "Base",
+    exponent = "Exponent", constant = "Constant", percent = "Percent"
+  )
+  attrs <- prefixed_attrs("opacity", suffixes, environment())
+
+  apply_plot_attrs(spec, attrs, list(...), context)
+}
+
+#' Set the radius scale's properties
+#'
+#' `vg_scale_r()` (aliased as `vg_scale_radius()`) sets the scale
+#' properties mosaic-spec exposes for the `r` channel (`rScale`,
+#' `rDomain`, ... -- the scale that a `dot`/`circle` mark's `r` encoding is
+#' bound to unless it's a literal constant). These are already
+#' plot-level attributes that [vg_plot()]/[vg_attributes()] accept
+#' directly by their raw camelCase names; this is a discoverable,
+#' snake_case-argument convenience layer on top of that. Unlike the color
+#' and opacity scales, mosaic doesn't define an `rReverse` property, so
+#' there's no `reverse` argument here. For the axis-guide property
+#' (`rLabel`; there's no `rTickFormat`), see [vg_guide_r()]/
+#' [vg_guide_radius()]; for an actual rendered radius/size legend, see
+#' [vg_legend_symbol()] (mosaic doesn't have a dedicated `r`-typed legend).
+#'
+#' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
+#' only ever sets attributes on the current plot fragment, so it never
+#' needs to come last in a chain.
+#'
+#' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL`
+#'   to start a new plot fragment with just these attributes.
+#' @param type Scale type, e.g. `"sqrt"`, `"linear"`, `"pow"`, `"log"`
+#'   (`rScale`).
+#' @param domain Data domain extent `c(min, max)` (`rDomain`).
+#' @param range Output radius range in pixels, e.g. `c(0, 20)` (`rRange`).
+#' @param nice Boolean; round the scale domain to human-friendly values
+#'   (`rNice`).
+#' @param zero Boolean; force the domain to start at 0 (`rZero`).
+#' @param clamp Boolean; clamp out-of-domain values to the range
+#'   (`rClamp`).
+#' @param base Log/pow scale base (`rBase`).
+#' @param exponent Pow/symlog scale exponent (`rExponent`).
+#' @param constant Symlog scale constant (`rConstant`).
+#' @param percent Boolean; format/scale values as percentages
+#'   (`rPercent`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
+#' @family scale functions
+#' @export
+#' @examples
+#' vg_dot(x = ~a, y = ~b, r = ~g) |>
+#'   vg_scale_r(range = c(0, 20), zero = TRUE)
+vg_scale_r <- function(spec = NULL,
+                       type = vg_unset,
+                       domain = vg_unset,
+                       range = vg_unset,
+                       nice = vg_unset,
+                       zero = vg_unset,
+                       clamp = vg_unset,
+                       base = vg_unset,
+                       exponent = vg_unset,
+                       constant = vg_unset,
+                       percent = vg_unset,
+                       ...) {
+  context <- "vg_scale_r()"
+
+  suffixes <- c(
+    type = "Scale", domain = "Domain", range = "Range", nice = "Nice",
+    zero = "Zero", clamp = "Clamp", base = "Base", exponent = "Exponent",
+    constant = "Constant", percent = "Percent"
+  )
+  attrs <- prefixed_attrs("r", suffixes, environment())
+
+  apply_plot_attrs(spec, attrs, list(...), context)
+}
+
+#' @rdname vg_scale_r
+#' @export
+vg_scale_radius <- vg_scale_r

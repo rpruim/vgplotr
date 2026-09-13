@@ -113,6 +113,21 @@ prefixed_attrs <- function(prefix, suffixes, env) {
   vals
 }
 
+# Shared tail of every vg_scale_*()/vg_guide_*() constructor: validates any
+# extra (non-formal) named arguments as raw mosaic attrs, merges everything
+# into the current plot fragment's attrs, and returns the updated spec (or
+# fragment, if `spec` wasn't a vgspec). `attrs` are the ones already built
+# from the function's own named arguments (e.g. via prefixed_attrs());
+# `extra` is whatever arrived through `...`.
+apply_plot_attrs <- function(spec, attrs, extra, context) {
+  warn_unknown_attrs(names(extra), context)
+  attrs <- merge_attrs(attrs, extra, context = context)
+
+  fragment <- as_vg_plot_fragment(spec)
+  fragment$attrs <- merge_attrs(fragment$attrs, attrs, context = context)
+  update_layout(spec, fragment)
+}
+
 #' Create a wrapper that fixes some arguments of another function
 #'
 #' `wrapper_function(..f, name = value, ...)` returns a new function that

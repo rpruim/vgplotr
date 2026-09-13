@@ -100,13 +100,7 @@ vg_guide_position <- function(spec = NULL,
   )
   attrs <- prefixed_attrs(which, suffixes, environment())
 
-  extra <- list(...)
-  warn_unknown_attrs(names(extra), context)
-  attrs <- merge_attrs(attrs, extra, context = context)
-
-  fragment <- as_vg_plot_fragment(spec)
-  fragment$attrs <- merge_attrs(fragment$attrs, attrs, context = context)
-  update_layout(spec, fragment)
+  apply_plot_attrs(spec, attrs, list(...), context)
 }
 
 #' @rdname vg_guide_position
@@ -200,13 +194,7 @@ vg_guide_facet <- function(spec = NULL,
   )
   attrs <- prefixed_attrs(which, suffixes, environment())
 
-  extra <- list(...)
-  warn_unknown_attrs(names(extra), context)
-  attrs <- merge_attrs(attrs, extra, context = context)
-
-  fragment <- as_vg_plot_fragment(spec)
-  fragment$attrs <- merge_attrs(fragment$attrs, attrs, context = context)
-  update_layout(spec, fragment)
+  apply_plot_attrs(spec, attrs, list(...), context)
 }
 
 #' @rdname vg_guide_facet
@@ -216,3 +204,129 @@ vg_guide_fx <- wrapper_function(vg_guide_facet, which = "fx")
 #' @rdname vg_guide_facet
 #' @export
 vg_guide_fy <- wrapper_function(vg_guide_facet, which = "fy")
+
+#' Set axis-guide properties for the color scale
+#'
+#' `vg_guide_color()` sets the axis-guide properties mosaic-spec exposes
+#' for the `color` channel (`colorLabel`, `colorTickFormat`). These are
+#' already plot-level attributes that [vg_plot()]/[vg_attributes()] accept
+#' directly by their raw camelCase names; this is a discoverable,
+#' snake_case-argument convenience layer on top of that -- the counterpart
+#' of [vg_scale_color()] for the color channel's label/tick formatting
+#' rather than its domain/range/palette.
+#'
+#' This is named `vg_guide_color()` rather than `vg_legend_color()` because
+#' `vg_legend_color()` already exists and means something different: it
+#' adds an actual rendered color legend (a standalone/embedded legend
+#' mark, [vg_legend()]) to the spec. `vg_guide_color()` only sets these two
+#' plot attributes -- it neither shows nor requires a legend to be present.
+#'
+#' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
+#' only ever sets attributes on the current plot fragment, so it never
+#' needs to come last in a chain.
+#'
+#' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL`
+#'   to start a new plot fragment with just these attributes.
+#' @param label Color scale title string, e.g. for a legend header
+#'   (`colorLabel`).
+#' @param tick_format Format specifier string or function for color legend
+#'   ticks (`colorTickFormat`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
+#' @family guide functions
+#' @export
+#' @examples
+#' vg_dot(x = ~a, y = ~b, fill = ~g) |>
+#'   vg_guide_color(label = "Group")
+vg_guide_color <- function(spec = NULL, label = vg_unset, tick_format = vg_unset, ...) {
+  context <- "vg_guide_color()"
+
+  suffixes <- c(label = "Label", tick_format = "TickFormat")
+  attrs <- prefixed_attrs("color", suffixes, environment())
+
+  apply_plot_attrs(spec, attrs, list(...), context)
+}
+
+#' Set axis-guide properties for the opacity scale
+#'
+#' `vg_guide_opacity()` sets the axis-guide properties mosaic-spec exposes
+#' for the `opacity` channel (`opacityLabel`, `opacityTickFormat`). These
+#' are already plot-level attributes that [vg_plot()]/[vg_attributes()]
+#' accept directly by their raw camelCase names; this is a discoverable,
+#' snake_case-argument convenience layer on top of that -- the counterpart
+#' of [vg_scale_opacity()] for the opacity channel's label/tick formatting
+#' rather than its domain/range.
+#'
+#' See [vg_guide_color()] for why this is `vg_guide_opacity()` rather than
+#' `vg_legend_opacity()` (already taken by [vg_legend()]'s actual rendered
+#' legend).
+#'
+#' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
+#' only ever sets attributes on the current plot fragment, so it never
+#' needs to come last in a chain.
+#'
+#' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL`
+#'   to start a new plot fragment with just these attributes.
+#' @param label Opacity scale title string, e.g. for a legend header
+#'   (`opacityLabel`).
+#' @param tick_format Format specifier string or function for opacity
+#'   legend ticks (`opacityTickFormat`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
+#' @family guide functions
+#' @export
+#' @examples
+#' vg_dot(x = ~a, y = ~b, opacity = ~g) |>
+#'   vg_guide_opacity(label = "Group")
+vg_guide_opacity <- function(spec = NULL, label = vg_unset, tick_format = vg_unset, ...) {
+  context <- "vg_guide_opacity()"
+
+  suffixes <- c(label = "Label", tick_format = "TickFormat")
+  attrs <- prefixed_attrs("opacity", suffixes, environment())
+
+  apply_plot_attrs(spec, attrs, list(...), context)
+}
+
+#' Set the axis-guide property for the radius scale
+#'
+#' `vg_guide_r()` (aliased as `vg_guide_radius()`) sets the axis-guide
+#' property mosaic-spec exposes for the `r` channel (`rLabel` -- mosaic
+#' doesn't define an `rTickFormat`). This is already a plot-level attribute
+#' that [vg_plot()]/[vg_attributes()] accepts directly by its raw camelCase
+#' name; this is a discoverable, snake_case-argument convenience layer on
+#' top of that -- the counterpart of [vg_scale_r()]/[vg_scale_radius()] for
+#' the radius channel's label rather than its domain/range.
+#'
+#' See [vg_guide_color()] for why this is `vg_guide_r()`/`vg_guide_radius()`
+#' rather than a `vg_legend_r()`/`vg_legend_radius()` -- mosaic doesn't
+#' have a dedicated `r`-typed legend mark to collide with here (radius/size
+#' is usually shown via [vg_legend_symbol()] instead), but the naming stays
+#' consistent with [vg_guide_color()]/[vg_guide_opacity()].
+#'
+#' Like [vg_plot()], this can be piped in alongside marks/interactors -- it
+#' only ever sets attributes on the current plot fragment, so it never
+#' needs to come last in a chain.
+#'
+#' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL`
+#'   to start a new plot fragment with just these attributes.
+#' @param label Radius scale title string, e.g. for a legend header
+#'   (`rLabel`).
+#' @param ... Additional plot-level attributes not covered above, by their
+#'   raw mosaic-spec camelCase name.
+#' @family guide functions
+#' @export
+#' @examples
+#' vg_dot(x = ~a, y = ~b, r = ~g) |>
+#'   vg_guide_r(label = "Group")
+vg_guide_r <- function(spec = NULL, label = vg_unset, ...) {
+  context <- "vg_guide_r()"
+
+  suffixes <- c(label = "Label")
+  attrs <- prefixed_attrs("r", suffixes, environment())
+
+  apply_plot_attrs(spec, attrs, list(...), context)
+}
+
+#' @rdname vg_guide_r
+#' @export
+vg_guide_radius <- vg_guide_r

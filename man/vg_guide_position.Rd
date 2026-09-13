@@ -157,6 +157,9 @@ vg_dot(x = ~a, y = ~b) |>
 }
 \seealso{
 Other guide functions:
-\code{\link[=vg_guide_facet]{vg_guide_facet()}}
+\code{\link[=vg_guide_color]{vg_guide_color()}},
+\code{\link[=vg_guide_facet]{vg_guide_facet()}},
+\code{\link[=vg_guide_opacity]{vg_guide_opacity()}},
+\code{\link[=vg_guide_r]{vg_guide_r()}}
 }
 \concept{guide functions}

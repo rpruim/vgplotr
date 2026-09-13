@@ -296,6 +296,47 @@ spec4d <-
 vg_render(spec4d)
 ```
 
+`vg_scale_color()`/`vg_scale_opacity()`/`vg_scale_r()` (aliased
+`vg_scale_radius()`) and `vg_guide_color()`/`vg_guide_opacity()`/
+`vg_guide_r()` (aliased `vg_guide_radius()`) do the same for the `color`,
+`opacity`, and `r` (radius) channels -- the scales that `fill`/`stroke`,
+`opacity`, and `r` encodings are bound to. These three
+channels aren't a symmetric family the way `x`/`y` are, so each gets its
+own dedicated argument list rather than a shared `which =` generic --
+e.g. `vg_scale_color()` has palette-specific arguments
+(`scheme =`, `interpolate =`, `pivot =`, `symmetric =`) that
+`vg_scale_opacity()`/`vg_scale_r()` don't, and `vg_scale_r()` has no
+`reverse =` (mosaic doesn't define `rReverse`).
+
+```{r}
+pts3 <- data.frame(
+  x = rnorm(90),
+  y = rnorm(90),
+  group = rnorm(90),
+  size = runif(90, 1, 10)
+)
+
+spec4e <-
+  vg_create() |>
+  vg_data(name = "pts3", data = pts3) |>
+  vg_dot(data_from = "pts3", x = ~x, y = ~y, fill = ~group, r = ~size) |>
+  vg_scale_color(scheme = "Viridis") |>
+  vg_scale_r(range = c(2, 12)) |>
+  vg_guide_color(label = "Group") |>
+  vg_guide_r(label = "Size") |>
+  vg_plot(width = 400, height = 300)
+
+vg_render(spec4e)
+```
+
+These are deliberately named `vg_guide_*()` rather than `vg_legend_*()`:
+`vg_legend_color()`/`vg_legend_opacity()` already exist (next section) and
+mean something different -- adding an actual rendered legend mark to the
+spec. `vg_guide_color()`/`vg_guide_opacity()`/`vg_guide_r()` only set the
+`colorLabel`/`opacityLabel`/`rLabel` (and `colorTickFormat`/
+`opacityTickFormat`) plot attributes; they neither add nor require a
+legend.
+
 ## Legends
 
 A legend embedded in a plot (piped in alongside its marks, with no
