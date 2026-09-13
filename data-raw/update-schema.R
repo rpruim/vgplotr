@@ -124,6 +124,15 @@ mark_info <- function(def) {
 
 mark_defs <- Filter(Negate(is.null), lapply(defs, mark_info))
 names(mark_defs) <- vapply(mark_defs, function(m) m$mark, character(1))
+
+# Captured before "data" is stripped below: a handful of purely-decorative
+# marks (frame, sphere, hexgrid, graticule, the axis/grid marks) have no
+# `data` property in the schema at all -- they compute their own geometry
+# and never take a backing table. vg_mark()'s "default data_from to the
+# spec's first data source" convenience (R/mark.R) must never apply to
+# these, or it would add an invalid `data` key these marks don't declare.
+mark_has_data <- vapply(mark_defs, function(m) "data" %in% names(m$properties), logical(1))
+
 for (nm in names(mark_defs)) {
   mark_defs[[nm]]$properties <- mark_defs[[nm]]$properties[!names(mark_defs[[nm]]$properties) %in% c("mark", "data")]
   mark_defs[[nm]]$required <- setdiff(mark_defs[[nm]]$required, c("mark", "data"))
@@ -443,6 +452,16 @@ attr_lines <- c(
   "# through untouched (canonicalize_plot_attr_names(), R/utils.R).",
   ".vg_plot_attrs_snake <- c(",
   paste0('  ', camel_to_snake(plot_attrs), ' = "', plot_attrs, '"', collapse = ",\n"),
+  ")",
+  "",
+  "# Which mark types have a `data` property at all -- a handful of purely",
+  "# decorative marks (frame, sphere, hexgrid, graticule, the axis/grid",
+  "# marks) compute their own geometry and never take a backing table.",
+  "# vg_mark() (R/mark.R) uses this to know which marks it's safe to",
+  "# default `data_from` on (to the spec's first registered data source)",
+  "# when the caller didn't supply one.",
+  ".vg_mark_has_data <- c(",
+  paste0('  ', names(mark_has_data), ' = ', ifelse(mark_has_data, "TRUE", "FALSE"), collapse = ",\n"),
   ")"
 )
 writeLines(attr_lines, "R/attrs-generated.R")

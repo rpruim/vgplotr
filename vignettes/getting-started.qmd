@@ -99,10 +99,22 @@ automatically.
 aapl |> vg_mark_line_y(x = ~Date, y = ~Close, width = 680, height = 200)
 ```
 
-This only helps for the *first* mark in a chain -- by the time a second
-mark is piped in, `spec` is already a plot fragment, not a data frame, so
-later marks still need their own `data_from = "data"` (or whatever name
-was chosen) to reference the same source.
+Later marks in the same chain don't need to repeat `data_from =` either:
+any mark that doesn't set its own `data_from` (and whose mark type takes
+data at all -- a handful, like `vg_mark_frame()`/`vg_mark_sphere()`,
+compute their own geometry and never take one) defaults to the spec's
+*first* registered data source. That makes simple multi-layer plots from
+one data source easy to build straight out of a pipe chain:
+
+```{r}
+aapl |>
+  vg_mark_line_y(x = ~Date, y = ~Close) |>
+  vg_mark_dot(x = ~Date, y = ~Close, fill = "steelblue") |>
+  vg_plot(width = 680, height = 200)
+```
+
+For more than one data source, name each explicitly with `data_from =`
+as usual -- the default only ever reaches for the *first* one registered.
 
 ## Loading data from a file
 
