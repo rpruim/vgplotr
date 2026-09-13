@@ -40,7 +40,7 @@ as_spec_payload <- function(spec) {
       file_info$options <- src[setdiff(names(src), c("file", "type"))]
       files[[nm]] <- file_info
     } else {
-      data_entries[[nm]] <- src
+      data_entries[[nm]] <- serialize_data_source(src)
     }
   }
 
@@ -97,7 +97,7 @@ read_local_data_file <- function(path) {
 # top, rather than threading down into every plot.
 serialize_layout <- function(layout, plot_defaults = list()) {
   if (is_vg_plot_fragment(layout)) {
-    attrs <- utils::modifyList(plot_defaults, layout$attrs)
+    attrs <- override_attrs(plot_defaults, layout$attrs)
     c(list(plot = lapply(layout$items, serialize_item)), attrs)
   } else if (is_vg_concat(layout)) {
     children <- lapply(layout$children, serialize_layout, plot_defaults = plot_defaults)
@@ -146,6 +146,15 @@ serialize_legend <- function(x) {
 # Pulls data_from/filter_by out of a mark's encodings into the nested
 # `data: {from:, filterBy:}` object mosaic-spec expects, and translates each
 # remaining value (formulas, param() references) to plain JSON-able values.
+#
+# `data_from` doubles as a way to supply a literal inline data array (e.g.
+# `data_from = c(0)` for a single reference line, mosaic-spec's `"data":
+# [0]` shorthand -- distinct from the `{"data": {"from": name}}` form used
+# for a named data source): if it isn't a single string, it's treated as
+# literal values rather than a table name. `as.list()` (not the bare
+# vector) guarantees this serializes as a JSON array even when it has only
+# one element -- jsonlite's `auto_unbox` would otherwise turn a length-1
+# atomic vector into a bare scalar.
 serialize_encodings <- function(enc) {
   data_from <- enc$data_from
   filter_by <- enc$filter_by
@@ -154,7 +163,9 @@ serialize_encodings <- function(enc) {
 
   out <- lapply(enc, serialize_value)
 
-  if (!is.null(data_from) || !is.null(filter_by)) {
+  if (!is.null(data_from) && !(is.character(data_from) && length(data_from) == 1)) {
+    out <- c(list(data = as.list(data_from)), out)
+  } else if (!is.null(data_from) || !is.null(filter_by)) {
     data_obj <- list()
     if (!is.null(data_from)) data_obj$from <- data_from
     if (!is.null(filter_by)) data_obj$filterBy <- serialize_value(filter_by)
@@ -188,20 +199,28 @@ serialize_formula <- function(f) {
 }
 
 # Recognizes a mapping formula's RHS: a bare column-name symbol, a literal,
-# a call to sql()/agg() (evaluated directly -- safe, since unlike a
+# a call to sql()/agg()/param() (evaluated directly -- safe, since unlike a
 # transform's bare column-reference arguments, sql()/agg()'s own arguments
 # are self-contained string/param() pieces, not free variables that would
-# fail to evaluate), or a call to one of the vg_transform_specs functions
-# (vg_bin(), vg_count(), ...) -- recognized here purely syntactically, via
-# match.call() against the real function's formals, without ever
-# evaluating the call itself (which would fail, since e.g. `delay` in
-# `~vg_bin(delay)` isn't a bound variable).
+# fail to evaluate, and param()'s own argument is just a bare name captured
+# via rlang::ensym(), never looked up), or a call to one of the
+# vg_transform_specs functions (vg_bin(), vg_count(), ...) -- recognized
+# here purely syntactically, via match.call() against the real function's
+# formals, without ever evaluating the call itself (which would fail, since
+# e.g. `delay` in `~vg_bin(delay)` isn't a bound variable).
 serialize_expr <- function(expr, env) {
   if (is.symbol(expr)) {
+    # Usually a bare column-name reference that isn't a bound R variable at
+    # all (e.g. `delay` in `~vg_bin(delay)`) -- but it can also be a
+    # variable holding a param()/selection object (e.g. `xp <- param(x);
+    # ~vg_column(xp)`), so try evaluating it first and use that value if
+    # it resolves to one; otherwise fall back to the symbol's own name.
+    val <- tryCatch(eval(expr, envir = env), error = function(e) NULL)
+    if (is_vg_param(val)) return(serialize_value(val))
     as.character(expr)
   } else if (is.call(expr)) {
     fn_name <- as.character(expr[[1]])
-    if (fn_name %in% c("sql", "agg")) {
+    if (fn_name %in% c("sql", "agg", "param")) {
       return(serialize_value(eval(expr, envir = env)))
     }
     spec <- vg_transform_specs[[fn_name]]
@@ -269,6 +288,12 @@ spec_to_list <- function(spec) {
 serialize_data_source <- function(src) {
   if (!is.null(src$data) && is.data.frame(src$data)) {
     utils::modifyList(src, list(data = df_to_rows(src$data)))
+  } else if (!is.null(src$query) && length(src) == 1) {
+    # mosaic-spec's DataQuery is a bare SQL string ("name": "SELECT ..."),
+    # not an object -- unlike DataFile/DataTable/etc., which really are
+    # objects ({file: ..., where: ...}). vg_data(name, query = "...") is
+    # the only vg_data() form this applies to (a lone `query` option).
+    src$query
   } else {
     src
   }

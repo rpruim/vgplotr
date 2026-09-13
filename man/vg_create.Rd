@@ -26,7 +26,7 @@ there is also valid at the top level, which is preferred.}
 \verb{vg_*()} functions are piped through to add data sources, params, marks,
 interactors, and layout. Marks and interactors can be piped directly onto
 a freshly created spec (e.g. \code{vg_create() |> vg_mark_dot(x = ~a, y = ~b)}) as
-long as the spec only needs a single plot; a spec with multiple plots
-needs an explicit layout (\code{vg_vconcat()}/\code{vg_hconcat()}, not yet
-implemented).
+long as the spec only needs a single plot; a spec with multiple plots, or
+with layout-level inputs (e.g. \code{\link[=vg_menu]{vg_menu()}}, \code{\link[=vg_table]{vg_table()}}), needs an
+explicit layout (see \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}).
 }

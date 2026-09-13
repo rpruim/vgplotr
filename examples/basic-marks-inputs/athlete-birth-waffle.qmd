@@ -1,0 +1,74 @@
+---
+title: "Athlete Birth Waffle"
+subtitle: "Waffle chart counting Olympic athletes based on which half-decade they were born."
+format: html
+engine: knitr
+---
+
+Recreates [Athlete Birth
+Waffle](https://idl.uw.edu/mosaic/examples/athlete-birth-waffle.html) from
+the mosaic/vgplot example gallery (adapted from an [Observable Plot
+example](https://observablehq.com/@observablehq/plot-waffle-unit)).
+
+The inputs enable adjustment of waffle mark design options (`unit =`,
+`round =`, `gap =`, `rx =`), each bound directly to a `param()`, and the
+x-axis grouping uses a raw `sql()` expression (`year()` isn't one of
+vgplotr's own transform functions).
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+unit <- param(unit)
+round <- param(round)
+gap <- param(gap)
+radius <- param(radius)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Athlete Birth Waffle",
+    description = paste(
+      "Waffle chart counting Olympic athletes based on which half-decade",
+      "they were born. The inputs enable adjustment of waffle mark design options."
+    ),
+    credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-waffle-unit)."
+  ) |>
+  vg_data(name = "athletes", file = vg_data_url("athletes.parquet")) |>
+  vg_params(unit = 10, round = FALSE, gap = 1, radius = 0) |>
+  vg_vconcat(
+    vg_hconcat(
+      vg_menu(label = "Unit", options = c(1, 2, 5, 10, 25, 50, 100), as = unit),
+      vg_menu(label = "Round", options = c(TRUE, FALSE), as = round),
+      vg_menu(label = "Gap", options = c(0, 1, 2, 3, 4, 5), as = gap),
+      vg_slider(label = "Radius", min = 0, max = 10, step = 0.1, as = radius)
+    ),
+    vg_vspace(10),
+    vg_mark_waffle_y(
+      data_from = "athletes",
+      unit = unit,
+      round = round,
+      gap = gap,
+      rx = radius,
+      x = ~ sql(r"(5 * floor(year("date_of_birth") / 5))"),
+      y = ~ vg_count()
+    ) |>
+      vg_plot(xLabel = NULL, xTickSize = 0, xTickFormat = "d")
+  )
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/athlete-birth-waffle.html)
+exactly, aside from `data.athletes.file` (`vg_data_url()` vs. a relative
+path) and object key order.
+:::

@@ -299,7 +299,7 @@ for (name in sort(names(mark_defs))) {
     prop_docs = mark_prop_docs,
     extra_formals = c("data_from", "filter_by"),
     extra_docs = c(
-      "#' @param data_from The name of the data source this mark reads from (see [vg_data()]).",
+      "#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `\"data\": [...]` shorthand, e.g. for a single reference line).",
       "#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by."
     ),
     title = docline(mark_defs[[name]]$description, paste0("The `", name, "` mark.")),

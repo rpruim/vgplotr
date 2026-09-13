@@ -1,4 +1,5 @@
 ^design$
+^examples$
 ^\.github$
 ^data-raw/js/node_modules$
 ^data-raw$

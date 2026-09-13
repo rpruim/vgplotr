@@ -4,9 +4,9 @@
 #' `vg_*()` functions are piped through to add data sources, params, marks,
 #' interactors, and layout. Marks and interactors can be piped directly onto
 #' a freshly created spec (e.g. `vg_create() |> vg_mark_dot(x = ~a, y = ~b)`) as
-#' long as the spec only needs a single plot; a spec with multiple plots
-#' needs an explicit layout (`vg_vconcat()`/`vg_hconcat()`, not yet
-#' implemented).
+#' long as the spec only needs a single plot; a spec with multiple plots, or
+#' with layout-level inputs (e.g. [vg_menu()], [vg_table()]), needs an
+#' explicit layout (see [vg_vconcat()]/[vg_hconcat()]).
 #'
 #' @param data Optional default data source name/data frame for the spec.
 #'   (Full support for passing an in-memory data frame is not yet
@@ -91,9 +91,10 @@ vg_data <- function(spec, name, data = NULL, ...) {
 
 #' Declare Params/Selections on a vgspec
 #' @param spec A `vgspec`.
-#' @param ... Named params, e.g. `point = 0`, or selections, e.g.
-#'   `brush = vg_selection("crossfilter")` (selection support not yet
-#'   implemented).
+#' @param ... Named params, e.g. `point = 0`, or selections, e.g. `query =
+#'   list(select = "intersect")` (mosaic-spec's `Selection` shape --
+#'   `select` is one of `"crossfilter"`/`"intersect"`/`"single"`/`"union"`,
+#'   with optional `cross`/`empty`/`include` fields).
 #' @export
 vg_params <- function(spec, ...) {
   stopifnot(is_vgspec(spec))

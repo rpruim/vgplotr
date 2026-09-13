@@ -29,6 +29,12 @@ split_plot_args <- function(args) {
 #' with an identical value is a silent no-op. A key that is set again with a
 #' *different* value keeps the new value but emits a warning, since the two
 #' specifications are incompatible.
+#'
+#' Uses single-bracket assignment (`old[nm] <- new[nm]`), not `old[[nm]] <-
+#' new[[nm]]`, so that an explicit `NULL` value (e.g. `xAxis = NULL`, mosaic's
+#' way of hiding an axis) is stored as-is instead of deleting the attribute --
+#' `old[[nm]] <- NULL` always removes the element, even when the caller meant
+#' to *set* it to `NULL` rather than unset it.
 #' @noRd
 merge_attrs <- function(old, new, context = NULL) {
   for (nm in names(new)) {
@@ -42,7 +48,7 @@ merge_attrs <- function(old, new, context = NULL) {
         call. = FALSE
       )
     }
-    old[[nm]] <- new[[nm]]
+    old[nm] <- new[nm]
   }
   old
 }
@@ -76,6 +82,19 @@ warn_unknown_attrs <- function(names, context) {
     ),
     call. = FALSE
   )
+}
+
+# Like utils::modifyList(), but preserves an explicit NULL in `overrides`
+# (mosaic's way of unsetting/hiding something, e.g. `xAxis = NULL` to hide
+# an axis) instead of treating it as "remove this key" -- modifyList()'s
+# NULL-removes-the-element behavior is right for building up an options
+# list incrementally, but wrong for spec attributes, where NULL is a real,
+# meaningful value to send to mosaic, not "absent." No conflict warning
+# (unlike merge_attrs()): overriding a default is the whole point here, not
+# an error.
+override_attrs <- function(defaults, overrides) {
+  for (nm in names(overrides)) defaults[nm] <- overrides[nm]
+  defaults
 }
 
 deparse_short <- function(x) {

@@ -33,6 +33,30 @@ test_that("param() works as a transform option value", {
   expect_equal(serialize_transform(t), list(count = NULL, orderby = "$brush"))
 })
 
+test_that("param() works as a transform's field, e.g. dynamic column selection via a menu", {
+  # vg_column(param(x)) is mosaic's `vg.column($x)` pattern -- letting a
+  # menu/selection pick which data column an encoding uses at runtime.
+  expect_equal(serialize_formula(~ vg_column(param(x))), list(column = "$x"))
+
+  # Also works when the param is stored in a variable first, rather than
+  # constructed inline -- a bare symbol whose *value* (not its name) is a
+  # vg_param must still resolve to the param, not be treated as a literal
+  # column name called "xp".
+  xp <- param(x)
+  expect_equal(serialize_formula(~ vg_column(xp)), list(column = "$x"))
+})
+
+test_that("a bare symbol that isn't a param still serializes as a literal column name", {
+  # Most formula fields are like this: `delay` in ~vg_bin(delay) is never a
+  # bound R variable, just the data column's name.
+  expect_equal(serialize_formula(~ vg_bin(delay, step = 5))$bin, "delay")
+
+  # And an ordinary bound variable that happens to not be a vg_param still
+  # falls back to being read as the column name, not its R value.
+  delay <- "not a param"
+  expect_equal(serialize_formula(~ vg_bin(delay, step = 5))$bin, "delay")
+})
+
 test_that("the same transform works identically inside a formula and called directly", {
   via_formula <- serialize_formula(~ vg_bin(delay, step = 5))
   via_direct <- serialize_transform(vg_bin(delay, step = 5))

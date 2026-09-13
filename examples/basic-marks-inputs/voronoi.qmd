@@ -1,0 +1,110 @@
+---
+title: "Voronoi Diagram"
+subtitle: "The voronoi mark shows the regions closest to each point."
+format: html
+engine: knitr
+---
+
+Recreates [Voronoi Diagram](https://idl.uw.edu/mosaic/examples/voronoi.html)
+from the mosaic/vgplot example gallery (adapted from an [Observable Plot
+example](https://observablehq.com/@observablehq/plot-voronoi-scatterplot)).
+
+The `voronoi` mark shows the regions closest to each point. It is
+[constructed from its
+dual](https://observablehq.com/@mbostock/the-delaunays-dual), a Delaunay
+triangle mesh. Reveal triangulations or convex hulls using the dropdowns.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+mesh <- param(mesh)
+hull <- param(hull)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Voronoi Diagram",
+    description = paste(
+      "The `voronoi` mark shows the regions closest to each point. It is",
+      "[constructed from its dual](https://observablehq.com/@mbostock/the-delaunays-dual),",
+      "a Delaunay triangle mesh. Reveal triangulations or convex hulls using the dropdowns."
+    ),
+    credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-voronoi-scatterplot)."
+  ) |>
+  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_params(mesh = 0, hull = 0) |>
+  vg_vconcat(
+    vg_mark_voronoi(
+      data_from = "penguins",
+      x = ~bill_length,
+      y = ~bill_depth,
+      stroke = "white",
+      stroke_width = 1,
+      stroke_opacity = 0.5,
+      fill = ~species,
+      fill_opacity = 0.2
+    ) |>
+      vg_mark_hull(
+        data_from = "penguins",
+        x = ~bill_length,
+        y = ~bill_depth,
+        stroke = ~species,
+        stroke_opacity = hull,
+        stroke_width = 1.5
+      ) |>
+      vg_mark_delaunay_mesh(
+        data_from = "penguins",
+        x = ~bill_length,
+        y = ~bill_depth,
+        z = ~species,
+        stroke = ~species,
+        stroke_opacity = mesh,
+        stroke_width = 1
+      ) |>
+      vg_mark_dot(
+        data_from = "penguins",
+        x = ~bill_length,
+        y = ~bill_depth,
+        fill = ~species,
+        r = 2
+      ) |>
+      vg_mark_frame() |>
+      vg_plot(inset = 10, width = 680),
+    vg_hconcat(
+      vg_menu(
+        label = "Delaunay Mesh",
+        options = list(
+          list(value = 0, label = "Hide"),
+          list(value = 0.5, label = "Show")
+        ),
+        as = mesh
+      ),
+      vg_hspace(5),
+      vg_menu(
+        label = "Convex Hull",
+        options = list(
+          list(value = 0, label = "Hide"),
+          list(value = 1, label = "Show")
+        ),
+        as = hull
+      )
+    )
+  )
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/voronoi.html) exactly, aside
+from `data.penguins.file` (`vg_data_url()` vs. a relative path) and
+object key order.
+:::

@@ -1,0 +1,78 @@
+---
+title: "Airline Travelers"
+subtitle: "A labeled line chart comparing airport travelers in 2019 and 2020."
+format: html
+engine: knitr
+---
+
+Recreates [Airline
+Travelers](https://idl.uw.edu/mosaic/examples/airline-travelers.html) from
+the mosaic/vgplot example gallery (adapted from an [Observable Plot
+example](https://observablehq.com/@observablehq/plot-labeled-line-chart)).
+
+Demonstrates a `query`-only data source (a derived temporary table
+computed with a raw SQL query, no file behind it) and a literal,
+per-mark constant text label -- `text = list("2019")`, not a formula --
+which is mosaic's `["2019"]` array-literal-channel convention (an array
+forces a literal value; a bare string would be interpreted as a column
+name instead).
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Airline Travelers",
+    description = "A labeled line chart comparing airport travelers in 2019 and 2020.",
+    credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-labeled-line-chart)."
+  ) |>
+  vg_data(name = "travelers", file = vg_data_url("travelers.parquet")) |>
+  vg_data(
+    name = "endpoint",
+    query = "SELECT * FROM travelers ORDER BY date DESC LIMIT 1\n"
+  ) |>
+  vg_mark_rule_y(data_from = c(0)) |>
+  vg_mark_line_y(
+    data_from = "travelers",
+    x = ~date,
+    y = ~previous,
+    stroke_opacity = 0.35
+  ) |>
+  vg_mark_line_y(data_from = "travelers", x = ~date, y = ~current) |>
+  vg_mark_text(
+    data_from = "endpoint",
+    x = ~date,
+    y = ~previous,
+    text = list("2019"),
+    fill_opacity = 0.5,
+    line_anchor = "bottom",
+    dy = -6
+  ) |>
+  vg_mark_text(
+    data_from = "endpoint",
+    x = ~date,
+    y = ~current,
+    text = list("2020"),
+    line_anchor = "top",
+    dy = 6
+  ) |>
+  vg_guide_y(grid = TRUE, label = "↑ Travelers per day", tick_format = "s")
+
+vg_render(spec)
+```
+
+::: {.callout-note collapse="true"}
+## Comparing to mosaic's own JSON spec
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/airline-travelers.html) exactly,
+aside from `data.travelers.file` (a full URL from `vg_data_url()` vs.
+mosaic's relative `data/travelers.parquet`) and object key order.
+:::

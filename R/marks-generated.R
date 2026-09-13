@@ -64,7 +64,7 @@
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -125,7 +125,7 @@ vg_mark_area <- function(spec = NULL, aria_description = vg_unset, aria_hidden =
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -186,7 +186,7 @@ vg_mark_area_x <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -251,7 +251,7 @@ vg_mark_area_y <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -343,7 +343,7 @@ vg_mark_arrow <- function(spec = NULL, aria_description = vg_unset, aria_hidden 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -435,7 +435,7 @@ vg_mark_axis_fx <- function(spec = NULL, anchor = vg_unset, aria_description = v
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -527,7 +527,7 @@ vg_mark_axis_fy <- function(spec = NULL, anchor = vg_unset, aria_description = v
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -619,7 +619,7 @@ vg_mark_axis_x <- function(spec = NULL, anchor = vg_unset, aria_description = vg
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -686,7 +686,7 @@ vg_mark_axis_y <- function(spec = NULL, anchor = vg_unset, aria_description = vg
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -753,7 +753,7 @@ vg_mark_bar_x <- function(spec = NULL, aria_description = vg_unset, aria_hidden 
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -814,7 +814,7 @@ vg_mark_bar_y <- function(spec = NULL, aria_description = vg_unset, aria_hidden 
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -875,7 +875,7 @@ vg_mark_cell <- function(spec = NULL, aria_description = vg_unset, aria_hidden =
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -936,7 +936,7 @@ vg_mark_cell_x <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -995,7 +995,7 @@ vg_mark_cell_y <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1056,7 +1056,7 @@ vg_mark_circle <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1117,7 +1117,7 @@ vg_mark_contour <- function(spec = NULL, aria_description = vg_unset, aria_hidde
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1178,7 +1178,7 @@ vg_mark_delaunay_link <- function(spec = NULL, aria_description = vg_unset, aria
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1241,7 +1241,7 @@ vg_mark_delaunay_mesh <- function(spec = NULL, aria_description = vg_unset, aria
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1317,7 +1317,7 @@ vg_mark_dense_line <- function(spec = NULL, aria_description = vg_unset, aria_hi
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1400,7 +1400,7 @@ vg_mark_density <- function(spec = NULL, aria_description = vg_unset, aria_hidde
 #' @param text_anchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param text_overflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1483,7 +1483,7 @@ vg_mark_density_x <- function(spec = NULL, aria_description = vg_unset, aria_hid
 #' @param text_anchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param text_overflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1542,7 +1542,7 @@ vg_mark_density_y <- function(spec = NULL, aria_description = vg_unset, aria_hid
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1602,7 +1602,7 @@ vg_mark_dot <- function(spec = NULL, aria_description = vg_unset, aria_hidden = 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1662,7 +1662,7 @@ vg_mark_dot_x <- function(spec = NULL, aria_description = vg_unset, aria_hidden 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1722,7 +1722,7 @@ vg_mark_dot_y <- function(spec = NULL, aria_description = vg_unset, aria_hidden 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1782,7 +1782,7 @@ vg_mark_errorbar_x <- function(spec = NULL, x, aria_description = vg_unset, aria
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1842,7 +1842,7 @@ vg_mark_errorbar_y <- function(spec = NULL, y, aria_description = vg_unset, aria
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
 #' @param title The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1896,7 +1896,7 @@ vg_mark_frame <- function(spec = NULL, anchor = vg_unset, aria_description = vg_
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
 #' @param title The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -1948,7 +1948,7 @@ vg_mark_geo <- function(spec = NULL, aria_description = vg_unset, aria_hidden = 
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
 #' @param title The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2016,7 +2016,7 @@ vg_mark_graticule <- function(spec = NULL, aria_description = vg_unset, aria_hid
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2084,7 +2084,7 @@ vg_mark_grid_fx <- function(spec = NULL, anchor = vg_unset, aria_description = v
 #' @param x2 The optional secondary (ending, often right) horizontal position channel, representing the area’s topline, typically bound to the *x* scale; if not specified, **x1** is used.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2152,7 +2152,7 @@ vg_mark_grid_fy <- function(spec = NULL, anchor = vg_unset, aria_description = v
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2220,7 +2220,7 @@ vg_mark_grid_x <- function(spec = NULL, anchor = vg_unset, aria_description = vg
 #' @param x2 The optional secondary (ending, often right) horizontal position channel, representing the area’s topline, typically bound to the *x* scale; if not specified, **x1** is used.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2281,7 +2281,7 @@ vg_mark_grid_y <- function(spec = NULL, anchor = vg_unset, aria_description = vg
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2340,7 +2340,7 @@ vg_mark_heatmap <- function(spec = NULL, aria_description = vg_unset, aria_hidde
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2411,7 +2411,7 @@ vg_mark_hexagon <- function(spec = NULL, aria_description = vg_unset, aria_hidde
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2464,7 +2464,7 @@ vg_mark_hexbin <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
 #' @param title The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2525,7 +2525,7 @@ vg_mark_hexgrid <- function(spec = NULL, aria_description = vg_unset, aria_hidde
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2588,7 +2588,7 @@ vg_mark_hull <- function(spec = NULL, aria_description = vg_unset, aria_hidden =
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2649,7 +2649,7 @@ vg_mark_image <- function(spec = NULL, aria_description = vg_unset, aria_hidden 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2710,7 +2710,7 @@ vg_mark_line <- function(spec = NULL, aria_description = vg_unset, aria_hidden =
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2771,7 +2771,7 @@ vg_mark_line_x <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2835,7 +2835,7 @@ vg_mark_line_y <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2896,7 +2896,7 @@ vg_mark_link <- function(spec = NULL, aria_description = vg_unset, aria_hidden =
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -2958,7 +2958,7 @@ vg_mark_raster <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3027,7 +3027,7 @@ vg_mark_raster_tile <- function(spec = NULL, aria_description = vg_unset, aria_h
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3096,7 +3096,7 @@ vg_mark_rect <- function(spec = NULL, aria_description = vg_unset, aria_hidden =
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3165,7 +3165,7 @@ vg_mark_rect_x <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3222,7 +3222,7 @@ vg_mark_rect_y <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3286,7 +3286,7 @@ vg_mark_regression_y <- function(spec = NULL, aria_description = vg_unset, aria_
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3350,7 +3350,7 @@ vg_mark_rule_x <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3402,7 +3402,7 @@ vg_mark_rule_y <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
 #' @param title The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3462,7 +3462,7 @@ vg_mark_sphere <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3531,7 +3531,7 @@ vg_mark_spike <- function(spec = NULL, anchor = vg_unset, aria_description = vg_
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3601,7 +3601,7 @@ vg_mark_text <- function(spec = NULL, aria_description = vg_unset, aria_hidden =
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3671,7 +3671,7 @@ vg_mark_text_x <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3732,7 +3732,7 @@ vg_mark_text_y <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3793,7 +3793,7 @@ vg_mark_tick_x <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3853,7 +3853,7 @@ vg_mark_tick_y <- function(spec = NULL, aria_description = vg_unset, aria_hidden
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3913,7 +3913,7 @@ vg_mark_vector <- function(spec = NULL, anchor = vg_unset, aria_description = vg
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -3973,7 +3973,7 @@ vg_mark_vector_x <- function(spec = NULL, anchor = vg_unset, aria_description = 
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -4034,7 +4034,7 @@ vg_mark_vector_y <- function(spec = NULL, anchor = vg_unset, aria_description = 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -4095,7 +4095,7 @@ vg_mark_voronoi <- function(spec = NULL, aria_description = vg_unset, aria_hidde
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -4166,7 +4166,7 @@ vg_mark_voronoi_mesh <- function(spec = NULL, aria_description = vg_unset, aria_
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export
@@ -4237,7 +4237,7 @@ vg_mark_waffle_x <- function(spec = NULL, aria_description = vg_unset, aria_hidd
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]).
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]), or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line).
 #' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
 #' @family mark functions
 #' @export

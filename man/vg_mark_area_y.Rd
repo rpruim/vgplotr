@@ -163,7 +163,7 @@ vg_mark_area_y(
 
 \item{...}{Additional options or plot-level attributes.}
 
-\item{data_from}{The name of the data source this mark reads from (see \code{\link[=vg_data]{vg_data()}}).}
+\item{data_from}{The name of the data source this mark reads from (see \code{\link[=vg_data]{vg_data()}}), or a literal vector of values to use as inline data directly (mosaic-spec's \verb{"data": [...]} shorthand, e.g. for a single reference line).}
 
 \item{filter_by}{A Param/Selection (e.g. from \code{\link[=param]{param()}}) to filter this mark's data by.}
 }
