@@ -55,8 +55,8 @@ spec <-
   ) |>
   vg_nearest_x(as = point) |>
   vg_plot(
-    yScale = "log", yDomain = c(0.2, 6), yGrid = TRUE, xLabel = NULL, yLabel = NULL,
-    yTickFormat = "%", width = 680, height = 400, marginRight = 35
+    y_scale = "log", y_domain = c(0.2, 6), y_grid = TRUE, x_label = NULL, y_label = NULL,
+    y_tick_format = "%", width = 680, height = 400, margin_right = 35
   )
 
 vg_render(spec)

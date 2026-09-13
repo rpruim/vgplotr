@@ -47,10 +47,10 @@ spec <-
       sort = list(y = "-x", limit = 10)
     ) |>
       vg_plot(
-        xLabel = "Gold Medals",
-        yLabel = "Nationality",
-        yLabelAnchor = "top",
-        marginTop = 15
+        x_label = "Gold Medals",
+        y_label = "Nationality",
+        y_label_anchor = "top",
+        margin_top = 15
       )
   )
 

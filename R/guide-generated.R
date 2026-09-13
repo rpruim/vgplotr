@@ -15,7 +15,7 @@ NULL
 #' substitute `y` for the vertical axis). Like the `xScale`/`yScale`
 #' properties handled by [vg_scale_position()], these are already
 #' plot-level attributes that [vg_plot()]/[vg_attributes()] accept
-#' directly by their raw camelCase names.
+#' directly, snake_case (e.g. `x_ticks =`).
 #'
 #' These are named `vg_guide_*()` rather than `vg_axis_*()` for
 #' historical reasons: mosaic-spec's `axisX`/`axisY` *mark* (a
@@ -52,8 +52,8 @@ NULL
 #' @param font_variant The font-variant attribute for axis ticks; defaults to *tabular-nums* for quantitative axes. (`xFontVariant`/`yFontVariant`).
 #' @param aria_label A short label representing the axis in the accessibility tree. (`xAriaLabel`/`yAriaLabel`).
 #' @param aria_description A textual description for the axis in the accessibility tree. (`xAriaDescription`/`yAriaDescription`).
-#' @param ... Additional plot-level attributes not covered above, by their
-#'   raw mosaic-spec camelCase name.
+#' @param ... Additional plot-level attributes not covered above, snake_case
+#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
 #' @export
 #' @examples
@@ -109,8 +109,8 @@ vg_guide_y <- wrapper_function(vg_guide_position, which = "y")
 #' @param font_variant The font-variant attribute for axis ticks; defaults to *tabular-nums* for quantitative axes. (`fxFontVariant`/`fyFontVariant`).
 #' @param aria_label A short label representing the axis in the accessibility tree. (`fxAriaLabel`/`fyAriaLabel`).
 #' @param aria_description A textual description for the axis in the accessibility tree. (`fxAriaDescription`/`fyAriaDescription`).
-#' @param ... Additional plot-level attributes not covered above, by their
-#'   raw mosaic-spec camelCase name.
+#' @param ... Additional plot-level attributes not covered above, snake_case
+#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
 #' @export
 #' @examples
@@ -150,8 +150,8 @@ vg_guide_fy <- wrapper_function(vg_guide_facet, which = "fy")
 #'   start a new plot fragment with just these attributes.
 #' @param tick_format How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`colorTickFormat`).
 #' @param label A textual label to show on the axis or legend; if null, show no label. (`colorLabel`).
-#' @param ... Additional plot-level attributes not covered above, by their
-#'   raw mosaic-spec camelCase name.
+#' @param ... Additional plot-level attributes not covered above, snake_case
+#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
 #' @export
 #' @examples
@@ -179,8 +179,8 @@ vg_guide_color <- function(spec = NULL, tick_format = vg_unset, label = vg_unset
 #'   start a new plot fragment with just these attributes.
 #' @param tick_format How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`opacityTickFormat`).
 #' @param label A textual label to show on the axis or legend; if null, show no label. (`opacityLabel`).
-#' @param ... Additional plot-level attributes not covered above, by their
-#'   raw mosaic-spec camelCase name.
+#' @param ... Additional plot-level attributes not covered above, snake_case
+#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
 #' @export
 #' @examples
@@ -212,8 +212,8 @@ vg_guide_opacity <- function(spec = NULL, tick_format = vg_unset, label = vg_uns
 #' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
 #' @param label A textual label to show on the axis or legend; if null, show no label. (`rLabel`).
-#' @param ... Additional plot-level attributes not covered above, by their
-#'   raw mosaic-spec camelCase name.
+#' @param ... Additional plot-level attributes not covered above, snake_case
+#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
 #' @export
 #' @examples
@@ -246,8 +246,8 @@ vg_guide_radius <- vg_guide_r
 #' @param grid Whether to show a grid aligned with the scale’s ticks. (`grid`).
 #' @param aria_label The aria-label attribute on the SVG root. (`ariaLabel`).
 #' @param aria_description The aria-description attribute on the SVG root. (`ariaDescription`).
-#' @param ... Additional plot-level attributes not covered above, by their
-#'   raw mosaic-spec camelCase name.
+#' @param ... Additional plot-level attributes not covered above, snake_case
+#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
 #' @export
 #' @examples

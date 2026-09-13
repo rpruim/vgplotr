@@ -103,8 +103,8 @@ start a new plot fragment with just these attributes.}
 
 \item{aria_description}{A textual description for the axis in the accessibility tree. (\code{fxAriaDescription}/\code{fyAriaDescription}).}
 
-\item{...}{Additional plot-level attributes not covered above, by their
-raw mosaic-spec camelCase name.}
+\item{...}{Additional plot-level attributes not covered above, snake_case
+(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_guide_fx()}/\code{vg_guide_fy()} set the axis-guide properties

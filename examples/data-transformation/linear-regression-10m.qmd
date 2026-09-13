@@ -68,8 +68,8 @@ spec <-
       vg_mark_regression_y(data_from = data_p, filter_by = query, x = ~time, y = ~delay, stroke = "firebrick") |>
       vg_interval_xy(as = query, brush = list(fillOpacity = 0, stroke = "currentColor")) |>
       vg_plot(
-        xDomain = c(0, 24), yDomain = c(-60, 180),
-        colorScale = "symlog", colorScheme = "blues", colorDomain = "Fixed"
+        x_domain = c(0, 24), y_domain = c(-60, 180),
+        color_scale = "symlog", color_scheme = "blues", color_domain = "Fixed"
       )
   )
 

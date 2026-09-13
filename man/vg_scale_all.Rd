@@ -22,8 +22,8 @@ start a new plot fragment with just these attributes.}
 
 \item{inset}{Shorthand to set the same default for all four insets: \strong{insetTop}, \strong{insetRight}, \strong{insetBottom}, and \strong{insetLeft}. (\code{inset}).}
 
-\item{...}{Additional plot-level attributes not covered above, by their
-raw mosaic-spec camelCase name.}
+\item{...}{Additional plot-level attributes not covered above, snake_case
+(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_scale_all()} sets mosaic-spec's plot-wide fallback defaults --

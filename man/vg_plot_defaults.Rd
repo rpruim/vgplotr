@@ -9,7 +9,9 @@ vg_plot_defaults(spec, ...)
 \arguments{
 \item{spec}{A \code{vgspec}.}
 
-\item{...}{Named plot-default attributes, e.g. \verb{width =}, \verb{height =}.}
+\item{...}{Named plot-default attributes, e.g. \verb{width =}, \verb{height =},
+\verb{x_domain =} (snake_case -- translated to mosaic's own camelCase key,
+e.g. \code{xDomain}).}
 }
 \description{
 Sets mosaic-spec's top-level \code{plotDefaults}: attributes applied to \emph{every}

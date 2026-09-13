@@ -59,8 +59,8 @@ start a new plot fragment with just these attributes.}
 
 \item{percent}{If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{rPercent}).}
 
-\item{...}{Additional plot-level attributes not covered above, by their
-raw mosaic-spec camelCase name.}
+\item{...}{Additional plot-level attributes not covered above, snake_case
+(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_scale_r()} (aliased as \code{vg_scale_radius()}) sets the scale

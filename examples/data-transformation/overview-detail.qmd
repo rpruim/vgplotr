@@ -38,7 +38,7 @@ spec <-
       vg_interval_x(as = brush) |>
       vg_plot(width = 680, height = 200),
     vg_mark_area_y(data_from = "walk", filter_by = brush, x = ~t, y = ~v, fill = "steelblue") |>
-      vg_plot(yDomain = "Fixed", width = 680, height = 200)
+      vg_plot(y_domain = "Fixed", width = 680, height = 200)
   )
 
 vg_render(spec)

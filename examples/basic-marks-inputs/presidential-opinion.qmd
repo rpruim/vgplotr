@@ -53,12 +53,12 @@ spec <-
         title = ~Name
       ) |>
       vg_plot(
-        xInset = 20,
-        xLabel = "First inauguration date →",
-        yInsetTop = 4,
-        yGrid = TRUE,
-        yLabel = "↑ Opinion (%)",
-        yTickFormat = "+f"
+        x_inset = 20,
+        x_label = "First inauguration date →",
+        y_inset_top = 4,
+        y_grid = TRUE,
+        y_label = "↑ Opinion (%)",
+        y_tick_format = "+f"
       ),
     vg_menu(
       label = "Opinion Metric",

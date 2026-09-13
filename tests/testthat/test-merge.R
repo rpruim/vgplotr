@@ -47,6 +47,18 @@ test_that("vg_plot() doesn't warn about attrs inherited from a child mark/intera
   expect_no_warning(vg_plot(vg_mark_dot(x = ~a, y = ~b, width = 680)))
 })
 
+test_that("vg_plot() accepts snake_case attribute names, stored under mosaic's camelCase key", {
+  frag <- vg_plot(vg_mark_dot(x = ~a, y = ~b), x_domain = c(0, 100), color_scheme = "blues")
+  expect_equal(frag$attrs, list(xDomain = c(0, 100), colorScheme = "blues"))
+  expect_no_warning(vg_plot(vg_mark_dot(x = ~a, y = ~b), x_domain = c(0, 100)))
+})
+
+test_that("a snake_case plot attribute riding along on a mark call bubbles up like its camelCase form does", {
+  frag <- vg_mark_dot(x = ~a, y = ~b, x_domain = c(0, 100))
+  expect_equal(frag$items[[1]]$encodings, list(x = ~a, y = ~b))
+  expect_equal(frag$attrs, list(xDomain = c(0, 100)))
+})
+
 test_that("merge_attrs() preserves an explicit NULL value instead of dropping it", {
   # xAxis = NULL is mosaic's own way of hiding an axis -- a real, meaningful
   # value, not "unset." merge_attrs() must not treat it as "remove this key."

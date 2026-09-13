@@ -42,13 +42,15 @@ is_vgspec <- function(x) inherits(x, "vgspec")
 # Routes named arguments (from vg_create()'s `...`) to the top-level `attrs`
 # bucket when the name is a known plot-level attribute (vg_plot_level_args()
 # -- mosaic-spec's PlotAttributes, the same type Plot's own fields and
-# plotDefaults both use), or to `meta` otherwise (mosaic-spec's Meta type
-# accepts arbitrary keys, so it's a safe catch-all for anything else, e.g.
-# `title`). plotDefaults is deliberately not a third destination here: since
-# it accepts exactly the same names as the top level, top level always wins
-# under a "first match" priority -- plotDefaults is only reachable via an
-# explicit call to vg_plot_defaults().
+# plotDefaults both use; snake_case is accepted here too, translated via
+# canonicalize_plot_attr_names()), or to `meta` otherwise (mosaic-spec's
+# Meta type accepts arbitrary keys, so it's a safe catch-all for anything
+# else, e.g. `title`). plotDefaults is deliberately not a third destination
+# here: since it accepts exactly the same names as the top level, top level
+# always wins under a "first match" priority -- plotDefaults is only
+# reachable via an explicit call to vg_plot_defaults().
 route_spec_args <- function(args) {
+  args <- canonicalize_plot_attr_names(args)
   is_attr <- names(args) %in% vg_plot_level_args()
   list(attrs = args[is_attr], meta = args[!is_attr])
 }
@@ -120,11 +122,13 @@ vg_params <- function(spec, ...) {
 #' instead.
 #'
 #' @param spec A `vgspec`.
-#' @param ... Named top-level attributes, e.g. `width =`, `height =`.
+#' @param ... Named top-level attributes, e.g. `width =`, `height =`,
+#'   `x_domain =` (snake_case -- translated to mosaic's own camelCase key,
+#'   e.g. `xDomain`).
 #' @export
 vg_attributes <- function(spec, ...) {
   stopifnot(is_vgspec(spec))
-  new <- list(...)
+  new <- canonicalize_plot_attr_names(list(...))
   warn_unknown_attrs(names(new), "vg_attributes()")
   spec$attrs <- merge_attrs(spec$attrs, new, context = "vg_attributes()")
   spec
@@ -146,11 +150,13 @@ vg_attributes <- function(spec, ...) {
 #' since it won't do anything to the rendered plot -- see [vg_attributes()].
 #'
 #' @param spec A `vgspec`.
-#' @param ... Named plot-default attributes, e.g. `width =`, `height =`.
+#' @param ... Named plot-default attributes, e.g. `width =`, `height =`,
+#'   `x_domain =` (snake_case -- translated to mosaic's own camelCase key,
+#'   e.g. `xDomain`).
 #' @export
 vg_plot_defaults <- function(spec, ...) {
   stopifnot(is_vgspec(spec))
-  new <- list(...)
+  new <- canonicalize_plot_attr_names(list(...))
   warn_unknown_attrs(names(new), "vg_plot_defaults()")
   spec$plot_defaults <- merge_attrs(spec$plot_defaults, new, context = "vg_plot_defaults()")
   spec

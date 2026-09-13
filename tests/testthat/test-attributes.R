@@ -49,3 +49,12 @@ test_that("vg_attributes() doesn't warn for real plot attributes", {
   spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
   expect_no_warning(vg_attributes(spec, width = 680, height = 200))
 })
+
+test_that("vg_attributes()/vg_create() accept snake_case attribute names, stored under mosaic's camelCase key", {
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b) |> vg_attributes(x_domain = c(0, 100), color_scheme = "blues")
+  expect_equal(spec$attrs, list(xDomain = c(0, 100), colorScheme = "blues"))
+  expect_no_warning(vg_attributes(vg_create() |> vg_mark_dot(x = ~a, y = ~b), x_domain = c(0, 100)))
+
+  via_create <- vg_create(x_domain = c(0, 100), y_label = "count")
+  expect_equal(via_create$attrs, list(xDomain = c(0, 100), yLabel = "count"))
+})

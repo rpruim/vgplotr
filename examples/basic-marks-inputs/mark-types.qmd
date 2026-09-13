@@ -51,10 +51,10 @@ row2 <- vg_hconcat(
       y = ~v,
       stroke = "steelblue"
     ) |>
-    vg_plot(xDomain = c(-0.5, 7.5)),
+    vg_plot(x_domain = c(-0.5, 7.5)),
   vg_mark_hexgrid(stroke = "#aaa", stroke_opacity = 0.5) |>
     vg_mark_hexbin(data_from = "md", x = ~i, y = ~v, fill = ~ vg_count()) |>
-    vg_plot(colorScheme = "blues", xDomain = c(-1, 8)),
+    vg_plot(color_scheme = "blues", x_domain = c(-1, 8)),
   vg_mark_contour(
     data_from = "md",
     x = ~i,
@@ -62,7 +62,7 @@ row2 <- vg_hconcat(
     stroke = "steelblue",
     bandwidth = 15
   ) |>
-    vg_plot(xDomain = c(-1, 8)),
+    vg_plot(x_domain = c(-1, 8)),
   vg_mark_heatmap(
     data_from = "md",
     x = ~i,
@@ -70,7 +70,7 @@ row2 <- vg_hconcat(
     fill = "density",
     bandwidth = 15
   ) |>
-    vg_plot(colorScheme = "blues", xDomain = c(-1, 8)),
+    vg_plot(color_scheme = "blues", x_domain = c(-1, 8)),
   vg_mark_dense_line(
     data_from = "md",
     x = ~i,
@@ -79,7 +79,7 @@ row2 <- vg_hconcat(
     bandwidth = 2,
     pixel_size = 1
   ) |>
-    vg_plot(colorScheme = "blues", xDomain = c(-1, 8))
+    vg_plot(color_scheme = "blues", x_domain = c(-1, 8))
 )
 
 spec <-
@@ -91,12 +91,12 @@ spec <-
   vg_data(name = "md", data = md) |>
   vg_vconcat(row1, row2) |>
   vg_plot_defaults(
-    xAxis = NULL,
-    yAxis = NULL,
+    x_axis = NULL,
+    y_axis = NULL,
     margins = list(left = 5, top = 5, right = 5, bottom = 5),
     width = 160,
     height = 100,
-    yDomain = c(0, 9)
+    y_domain = c(0, 9)
   )
 
 vg_render(spec)

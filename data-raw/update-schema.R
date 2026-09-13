@@ -215,6 +215,23 @@ check_snake_collisions <- function(type_defs, kind) {
 check_snake_collisions(mark_defs, "mark")
 check_snake_collisions(interactor_defs, "interactor/input")
 
+# Same check for PlotAttributes itself -- vg_plot()/vg_plot_defaults()/
+# vg_attributes()/vg_create() accept these under a snake_case translation
+# too (.vg_plot_attrs_snake below), which depends on camel_to_snake()
+# being collision-free across all 215 names. Checked empirically against
+# v0.31.0 with zero collisions.
+{
+  plot_attr_dupes <- unique(plot_attrs[duplicated(camel_to_snake(plot_attrs))])
+  if (length(plot_attr_dupes)) {
+    stop(
+      "camel_to_snake() collision among PlotAttributes properties: ",
+      paste(plot_attr_dupes, collapse = ", "),
+      " -- add a manual rename before regenerating.",
+      call. = FALSE
+    )
+  }
+}
+
 # First-seen description for a given property name, reused across every
 # mark/interactor/input that has a property of that name (these mean the
 # same thing everywhere in mosaic's grammar, so one description per name is
@@ -414,6 +431,18 @@ attr_lines <- c(
   "",
   ".vg_interactor_own_props <- list(",
   format_named_char_list(interactor_own_props),
+  ")",
+  "",
+  "# snake_case -> exact camelCase mosaic-spec key for every plot attribute,",
+  "# e.g. x_domain -> xDomain. vg_plot()/vg_plot_defaults()/vg_attributes()/",
+  "# vg_create() (and the mark/interactor \"attribute riding along\" path in",
+  "# split_plot_args()) accept the snake_case form -- matching the rest of",
+  "# the package -- and translate it to this exact key before storing or",
+  "# checking it against vg_plot_level_args(); an already-camelCase or",
+  "# unrecognized name simply doesn't match any entry here and passes",
+  "# through untouched (canonicalize_plot_attr_names(), R/utils.R).",
+  ".vg_plot_attrs_snake <- c(",
+  paste0('  ', camel_to_snake(plot_attrs), ' = "', plot_attrs, '"', collapse = ",\n"),
   ")"
 )
 writeLines(attr_lines, "R/attrs-generated.R")
@@ -591,8 +620,8 @@ generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, 
     which_doc,
     arg_docs,
     inset_docs,
-    "#' @param ... Additional plot-level attributes not covered above, by their",
-    "#'   raw mosaic-spec camelCase name.",
+    "#' @param ... Additional plot-level attributes not covered above, snake_case",
+    "#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.",
     sprintf("#' @family %s", family),
     "#' @export",
     examples,
@@ -715,10 +744,10 @@ scale_lines <- c(scale_lines, scale_group(
     "#' `vg_scale_x()`/`vg_scale_y()` set the scale properties mosaic-spec",
     "#' exposes per positional axis (`xScale`, `xDomain`, ... -- substitute",
     "#' `y` for the vertical axis). These are already plot-level attributes",
-    "#' that [vg_plot()]/[vg_attributes()] accept directly by their raw",
-    "#' camelCase names; this is a discoverable, snake_case-argument",
-    "#' convenience layer on top of that. `vg_scale_x()` and `vg_scale_y()`",
-    "#' are thin wrappers around the generic `vg_scale_position()`.",
+    "#' that [vg_plot()]/[vg_attributes()] accept directly, snake_case; this",
+    "#' is a discoverable, per-channel convenience layer on top of that.",
+    "#' `vg_scale_x()` and `vg_scale_y()` are thin wrappers around the",
+    "#' generic `vg_scale_position()`.",
     "#'",
     "#' Like [vg_plot()], this can be piped in alongside marks/interactors --",
     "#' it only ever sets attributes on the current plot fragment, so it",
@@ -880,7 +909,7 @@ guide_lines <- c(guide_lines, guide_group(
     "#' substitute `y` for the vertical axis). Like the `xScale`/`yScale`",
     "#' properties handled by [vg_scale_position()], these are already",
     "#' plot-level attributes that [vg_plot()]/[vg_attributes()] accept",
-    "#' directly by their raw camelCase names.",
+    "#' directly, snake_case (e.g. `x_ticks =`).",
     "#'",
     "#' These are named `vg_guide_*()` rather than `vg_axis_*()` for",
     "#' historical reasons: mosaic-spec's `axisX`/`axisY` *mark* (a",

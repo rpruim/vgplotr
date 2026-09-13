@@ -22,8 +22,8 @@ start a new plot fragment with just these attributes.}
 
 \item{range}{The extent of the scale’s outputs (visual values). (\code{symbolRange}).}
 
-\item{...}{Additional plot-level attributes not covered above, by their
-raw mosaic-spec camelCase name.}
+\item{...}{Additional plot-level attributes not covered above, snake_case
+(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_scale_symbol()} sets the scale properties mosaic-spec exposes

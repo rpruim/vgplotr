@@ -42,11 +42,11 @@ spec <-
   vg_mark_grid_x() |>
   vg_mark_rule_y(data_from = c(0)) |>
   vg_plot(
-    xDomain = c(0, 100),
-    yDomain = c(0, 100),
-    xInsetLeft = 36,
-    marginLeft = 0,
-    marginRight = 35,
+    x_domain = c(0, 100),
+    y_domain = c(0, 100),
+    x_inset_left = 36,
+    margin_left = 0,
+    margin_right = 35,
     width = 680
   )
 

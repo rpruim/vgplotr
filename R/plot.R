@@ -71,10 +71,11 @@ update_layout <- function(spec, fragment) {
 #'
 #' @param spec A plot fragment or `vgspec` to extend, or `NULL` to start a new plot.
 #' @param ... Additional plot fragments (marks/interactors) to include, and/or
-#'   named plot-level attributes (`width =`, `height =`, `name =`, ...).
+#'   named plot-level attributes (`width =`, `height =`, `name =`, `x_domain =`,
+#'   ..., snake_case -- translated to mosaic's own camelCase key, e.g. `xDomain`).
 #' @export
 vg_plot <- function(spec = NULL, ...) {
-  args <- list(...)
+  args <- canonicalize_plot_attr_names(list(...))
   children <- Filter(is_vg_plot_fragment, args)
   attrs <- args[!vapply(args, is_vg_plot_fragment, logical(1))]
   warn_unknown_attrs(names(attrs), "vg_plot()")

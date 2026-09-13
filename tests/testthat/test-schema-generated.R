@@ -38,12 +38,22 @@ test_that("split_plot_args() recognizes real (camelCase) plot attributes missing
   expect_equal(names(split$local_args), "x")
 })
 
-test_that("split_plot_args() no longer recognizes the old (incorrect) snake_case attribute names", {
-  # margin_left/aspect_ratio were never real mosaic-spec keys -- they're
-  # mark-local (unrecognized) args now, same as any other typo would be.
-  split <- split_plot_args(list(margin_left = 20, aspect_ratio = 1))
+test_that("split_plot_args() accepts snake_case plot attribute names and translates them to mosaic's camelCase key", {
+  # x_domain/margin_left/aspect_ratio/color_scheme are real mosaic-spec
+  # attributes (xDomain/marginLeft/aspectRatio/colorScheme) -- the
+  # snake_case form matches every other argument name in the package
+  # (marks, interactors, scales, guides).
+  split <- split_plot_args(list(
+    x = ~a, x_domain = c(0, 10), margin_left = 20, aspect_ratio = 1, color_scheme = "blues"
+  ))
+  expect_equal(sort(names(split$plot_attrs)), sort(c("xDomain", "marginLeft", "aspectRatio", "colorScheme")))
+  expect_equal(names(split$local_args), "x")
+})
+
+test_that("split_plot_args() doesn't recognize a genuine typo/unknown name under either spelling", {
+  split <- split_plot_args(list(bogus_attr = 1, alsoNotReal = 2))
   expect_length(split$plot_attrs, 0)
-  expect_equal(names(split$local_args), c("margin_left", "aspect_ratio"))
+  expect_equal(names(split$local_args), c("bogus_attr", "alsoNotReal"))
 })
 
 test_that("as_spec_payload() correctly places a previously-unsupported plot attribute at the plot level", {

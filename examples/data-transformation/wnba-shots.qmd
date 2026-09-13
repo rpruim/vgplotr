@@ -63,10 +63,10 @@ spec <-
       ) |>
       vg_mark_line(data_from = "court", stroke_linecap = "butt", stroke_opacity = 0.5, x = ~x, y = ~y, z = ~z) |>
       vg_plot(
-        name = "shot-chart", xAxis = NULL, yAxis = NULL, margin = 5,
-        xDomain = c(0, 50), yDomain = c(0, 40), colorDomain = "Fixed", colorScheme = "YlOrRd",
-        colorScale = "linear", colorLabel = "Avg. Shot Value", rScale = "log", rRange = c(3, 9),
-        rLabel = "Shot Count", aspectRatio = 1, width = 510
+        name = "shot-chart", x_axis = NULL, y_axis = NULL, margin = 5,
+        x_domain = c(0, 50), y_domain = c(0, 40), color_domain = "Fixed", color_scheme = "YlOrRd",
+        color_scale = "linear", color_label = "Avg. Shot Value", r_scale = "log", r_range = c(3, 9),
+        r_label = "Shot Count", aspect_ratio = 1, width = 510
       ),
     vg_legend_color(for_plot = "shot-chart")
   )

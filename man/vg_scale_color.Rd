@@ -61,8 +61,8 @@ start a new plot fragment with just these attributes.}
 
 \item{n}{For a \emph{quantile} scale, the number of quantiles (creates \emph{n} - 1 thresholds); for a \emph{quantize} scale, the approximate number of thresholds; defaults to 5. (\code{colorN}).}
 
-\item{...}{Additional plot-level attributes not covered above, by their
-raw mosaic-spec camelCase name.}
+\item{...}{Additional plot-level attributes not covered above, snake_case
+(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_scale_color()} sets the scale properties mosaic-spec exposes for

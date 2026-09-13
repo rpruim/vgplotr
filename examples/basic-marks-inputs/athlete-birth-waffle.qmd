@@ -54,7 +54,7 @@ spec <-
       x = ~ sql(r"(5 * floor(year("date_of_birth") / 5))"),
       y = ~ vg_count()
     ) |>
-      vg_plot(xLabel = NULL, xTickSize = 0, xTickFormat = "d")
+      vg_plot(x_label = NULL, x_tick_size = 0, x_tick_format = "d")
   )
 
 vg_render(spec)

@@ -108,8 +108,8 @@ start a new plot fragment with just these attributes.}
 
 \item{aria_description}{A textual description for the axis in the accessibility tree. (\code{xAriaDescription}/\code{yAriaDescription}).}
 
-\item{...}{Additional plot-level attributes not covered above, by their
-raw mosaic-spec camelCase name.}
+\item{...}{Additional plot-level attributes not covered above, snake_case
+(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_guide_x()}/\code{vg_guide_y()} set the axis-guide properties
@@ -117,7 +117,7 @@ mosaic-spec exposes per positional axis (\code{xAxis}, \code{xTicks}, ... --
 substitute \code{y} for the vertical axis). Like the \code{xScale}/\code{yScale}
 properties handled by \code{\link[=vg_scale_position]{vg_scale_position()}}, these are already
 plot-level attributes that \code{\link[=vg_plot]{vg_plot()}}/\code{\link[=vg_attributes]{vg_attributes()}} accept
-directly by their raw camelCase names.
+directly, snake_case (e.g. \verb{x_ticks =}).
 }
 \details{
 These are named \verb{vg_guide_*()} rather than \verb{vg_axis_*()} for

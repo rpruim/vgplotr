@@ -125,17 +125,17 @@ start a new plot fragment with just these attributes.}
 
 \item{inset_top, inset_bottom}{Pixel inset at the top/bottom end of the range; only meaningful for \code{which = "y"} (\code{yInsetTop}/\code{yInsetBottom}).}
 
-\item{...}{Additional plot-level attributes not covered above, by their
-raw mosaic-spec camelCase name.}
+\item{...}{Additional plot-level attributes not covered above, snake_case
+(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_scale_x()}/\code{vg_scale_y()} set the scale properties mosaic-spec
 exposes per positional axis (\code{xScale}, \code{xDomain}, ... -- substitute
 \code{y} for the vertical axis). These are already plot-level attributes
-that \code{\link[=vg_plot]{vg_plot()}}/\code{\link[=vg_attributes]{vg_attributes()}} accept directly by their raw
-camelCase names; this is a discoverable, snake_case-argument
-convenience layer on top of that. \code{vg_scale_x()} and \code{vg_scale_y()}
-are thin wrappers around the generic \code{vg_scale_position()}.
+that \code{\link[=vg_plot]{vg_plot()}}/\code{\link[=vg_attributes]{vg_attributes()}} accept directly, snake_case; this
+is a discoverable, per-channel convenience layer on top of that.
+\code{vg_scale_x()} and \code{vg_scale_y()} are thin wrappers around the
+generic \code{vg_scale_position()}.
 }
 \details{
 Like \code{\link[=vg_plot]{vg_plot()}}, this can be piped in alongside marks/interactors --

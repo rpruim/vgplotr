@@ -40,7 +40,7 @@ spec <-
         y = ~ vg_avg(cases, orderby = "day", rows = frame),
         curve = "monotone-x", stroke = "currentColor"
       ) |>
-      vg_plot(xLabel = "day", width = 680, height = 300),
+      vg_plot(x_label = "day", width = 680, height = 300),
     vg_menu(
       label = "Window Frame", as = frame,
       options = list(

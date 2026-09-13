@@ -225,20 +225,18 @@ vgplotr now has a wrapper for every mark type mosaic supports (65, generated
 from mosaic's own JSON schema by `data-raw/update-schema.R` -- see
 `vg_mark_hexbin()`, `vg_mark_text()`, `vg_mark_rule_x()`, ... alongside the marks used
 above), and correctly recognizes every plot-level attribute (215) as
-belonging to the plot, not the mark. That fixed a real bug along the way:
-`marginLeft`/`marginRight`/`marginTop`/`marginBottom` and `aspectRatio` used
-to only be checked for under invented names (`margin_left`, `aspect_ratio`)
-that were never mosaic-spec's actual attribute names, so setting them
-silently did nothing.
+belonging to the plot, not the mark -- even when a mark has a same-named
+property of its own (e.g. a mark's own `inset` vs. the plot-wide default
+`inset`, told apart by `vg_mark_*()`'s generated list of each mark's real
+properties).
 
-Every mark/interactor argument is snake_case too (`stroke_width =`, not
-`strokeWidth =`, above) -- generated straight from mosaic's schema, and
-forwarded under the exact camelCase key mosaic's JSON spec needs
-(`strokeWidth`) under the hood, so this is purely a naming convention on
-the R side. Plot-level attributes passed directly to `vg_plot()`/
-`vg_attributes()` (`marginLeft`, `aspectRatio` above) are a separate
-thing and stay their raw camelCase names, same as always -- see
-[vg_attributes()] for why.
+Every mark/interactor argument is snake_case (`stroke_width =`, not
+`strokeWidth =`, above), and so is every plot-level attribute passed to
+`vg_plot()`/`vg_attributes()`/`vg_plot_defaults()`/`vg_create()`
+(`margin_left =`, not `marginLeft =`, below) -- all generated straight from
+mosaic's schema and forwarded under the exact camelCase key mosaic's JSON
+spec needs (`strokeWidth`, `marginLeft`) under the hood, so this is purely
+a naming convention on the R side.
 
 ```{r}
 spec4b <-
@@ -252,7 +250,7 @@ spec4b <-
     inset = 0.5
   ) |>
   vg_mark_rule_x(x = 0, stroke = "firebrick", stroke_width = 2) |>
-  vg_plot(width = 680, height = 200, marginLeft = 60, aspectRatio = 1)
+  vg_plot(width = 680, height = 200, margin_left = 60, aspect_ratio = 1)
 
 vg_render(spec4b)
 ```
@@ -260,12 +258,11 @@ vg_render(spec4b)
 ## Scales and axis guides
 
 `vg_scale_x()`/`vg_scale_y()` and `vg_guide_x()`/`vg_guide_y()` are
-discoverable, snake_case-argument wrappers around the same plot-level
-attributes already set above by their raw camelCase names (`xDomain`,
-`marginLeft`, ...) -- e.g. `vg_scale_y(type = "sqrt")` is
-`vg_plot(yScale = "sqrt")`. Like `vg_plot()`, they can be piped in anywhere
-alongside marks and interactors, since they only ever set attributes on the
-current plot.
+discoverable, per-channel wrappers around the same plot-level attributes
+already set above (`x_domain`, `margin_left`, ...) -- e.g.
+`vg_scale_y(type = "sqrt")` is `vg_plot(y_scale = "sqrt")`. Like
+`vg_plot()`, they can be piped in anywhere alongside marks and
+interactors, since they only ever set attributes on the current plot.
 
 (Note the names: `vg_guide_x()`/`vg_guide_y()`, not `vg_axis_x()`/
 `vg_axis_y()` -- mosaic's `axisX`/`axisY` *mark* (a separately drawn,
@@ -470,7 +467,7 @@ biased_plot <-
     y = sql("v + ", param(bias)),
     fill = "steelblue"
   ) |>
-  vg_plot(width = 680, height = 200, yDomain = c(-30, 30))
+  vg_plot(width = 680, height = 200, y_domain = c(-30, 30))
 
 spec7 <-
   vg_create() |>

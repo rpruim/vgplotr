@@ -33,3 +33,9 @@ test_that("vg_plot_defaults() warns about a name that isn't a real plot attribut
     "`bogus`.*is not a recognized mosaic-spec plot attribute"
   )
 })
+
+test_that("vg_plot_defaults() accepts snake_case attribute names, stored under mosaic's camelCase key", {
+  spec <- vg_create() |> vg_plot_defaults(x_domain = c(0, 100))
+  expect_equal(spec$plot_defaults, list(xDomain = c(0, 100)))
+  expect_no_warning(vg_plot_defaults(vg_create(), x_domain = c(0, 100)))
+})

@@ -9,7 +9,9 @@ vg_attributes(spec, ...)
 \arguments{
 \item{spec}{A \code{vgspec}.}
 
-\item{...}{Named top-level attributes, e.g. \verb{width =}, \verb{height =}.}
+\item{...}{Named top-level attributes, e.g. \verb{width =}, \verb{height =},
+\verb{x_domain =} (snake_case -- translated to mosaic's own camelCase key,
+e.g. \code{xDomain}).}
 }
 \description{
 Sets attributes directly on the spec's own top level -- e.g. for a

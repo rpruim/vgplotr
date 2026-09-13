@@ -64,7 +64,7 @@ spec <-
       interpolate = interp,
       bandwidth = blur
     ) |>
-      vg_plot(colorScale = "diverging", colorDomain = "Fixed")
+      vg_plot(color_scale = "diverging", color_domain = "Fixed")
   )
 
 vg_render(spec)

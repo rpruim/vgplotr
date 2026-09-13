@@ -3,17 +3,38 @@
 # encodings/options that belong to a single mark or interactor.
 #
 # .vg_plot_attrs comes from mosaic's own JSON schema (R/attrs-generated.R,
-# produced by data-raw/update-schema.R) -- note these are the *exact*
-# camelCase names mosaic-spec uses (e.g. "marginLeft", "xDomain"), not a
-# snake_case translation: there's no case-conversion layer for plot
-# attributes, they're passed straight through into the JSON spec, so the
-# name used here has to be the name mosaic itself expects.
+# produced by data-raw/update-schema.R) -- these are the *exact* camelCase
+# names mosaic-spec uses (e.g. "marginLeft", "xDomain"), the key that's
+# actually stored/serialized. The R-facing spelling a caller types is
+# snake_case (matching mark/interactor/scale/guide arguments elsewhere in
+# the package) and gets translated to this exact key by
+# canonicalize_plot_attr_names() below before anything here ever sees it.
 vg_plot_level_args <- function() {
   .vg_plot_attrs
 }
 
+# Renames any snake_case plot-attribute name in `args` (e.g. `x_domain`) to
+# its real camelCase mosaic-spec key (`xDomain`), via `.vg_plot_attrs_snake`
+# (R/attrs-generated.R) -- the plot-attribute equivalent of what the
+# generated vg_mark_*()/vg_scale_*()/etc. wrappers already do for their own
+# declared formals. A name that isn't a recognized plot attribute under
+# either spelling (a mark's own property, an actual typo, ...) passes
+# through unchanged, so it still surfaces via warn_unknown_attrs() same as
+# before.
+canonicalize_plot_attr_names <- function(args) {
+  nms <- names(args)
+  if (is.null(nms)) return(args)
+  mapped <- .vg_plot_attrs_snake[nms]
+  hit <- !is.na(mapped)
+  names(args)[hit] <- unname(mapped[hit])
+  args
+}
+
 #' Split `...` arguments into plot-level attributes and local (mark/interactor)
 #' arguments, based on `vg_plot_level_args()`.
+#'
+#' Plot-attribute names are accepted snake_case (translated via
+#' `canonicalize_plot_attr_names()`) or already-exact-camelCase.
 #'
 #' `protect` names (typically from `.vg_mark_own_props`/
 #' `.vg_interactor_own_props`, R/attrs-generated.R) are always kept local
@@ -23,6 +44,7 @@ vg_plot_level_args <- function() {
 #' the mark's own property, not "bubble this up to the plot."
 #' @noRd
 split_plot_args <- function(args, protect = character()) {
+  args <- canonicalize_plot_attr_names(args)
   plot_names <- setdiff(intersect(names(args), vg_plot_level_args()), protect)
   list(
     plot_attrs = args[plot_names],
@@ -144,8 +166,10 @@ prefixed_attrs <- function(prefix, suffixes, env) {
 # into the current plot fragment's attrs, and returns the updated spec (or
 # fragment, if `spec` wasn't a vgspec). `attrs` are the ones already built
 # from the function's own named arguments (e.g. via prefixed_attrs());
-# `extra` is whatever arrived through `...`.
+# `extra` is whatever arrived through `...` (accepted snake_case, same as
+# vg_plot()/vg_plot_defaults()/vg_attributes()).
 apply_plot_attrs <- function(spec, attrs, extra, context) {
+  extra <- canonicalize_plot_attr_names(extra)
   warn_unknown_attrs(names(extra), context)
   attrs <- merge_attrs(attrs, extra, context = context)
 
