@@ -116,10 +116,8 @@ hand-picked.
 }
 \details{
 See \code{\link[=vg_guide_position]{vg_guide_position()}} for why these are \verb{vg_guide_*()} rather
-than \verb{vg_axis_*()} (a historical collision with mosaic's \code{axisFx}/
-\code{axisFy} marks -- no longer live now that mark constructors are
-\code{vg_mark_} prefixed, but the guide functions haven't been renamed
-back).
+than \verb{vg_axis_*()} (to avoid colliding with \code{vg_mark_axis_fx()}/
+\code{vg_mark_axis_fy()}, mosaic's \code{axisFx}/\code{axisFy} marks).
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>

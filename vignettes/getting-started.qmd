@@ -32,10 +32,8 @@ plot to use the CDN even if a cache exists.
 
 ## A single mark
 
-This reproduces the "simple one-layer plot" example from
-`design/api-brainstorming.qmd`, using a small inline data frame passed
-directly to `vg_data()` -- see the next section for the file-based version
-closer to the original example.
+This uses a small inline data frame passed directly to `vg_data()` --
+see the next section for the file-based version.
 
 ```{r}
 aapl <- data.frame(
@@ -305,13 +303,10 @@ already set above (`x_domain`, `margin_left`, ...) -- e.g.
 interactors, since they only ever set attributes on the current plot.
 
 (Note the names: `vg_guide_x()`/`vg_guide_y()`, not `vg_axis_x()`/
-`vg_axis_y()` -- mosaic's `axisX`/`axisY` *mark* (a separately drawn,
-independently-styled axis) used to be generated as `vg_axis_x()`/
-`vg_axis_y()`, colliding with these guide setters. Every mark constructor
-is now prefixed `vg_mark_` instead (e.g. `vg_mark_axis_x()`,
-`vg_mark_dot()`, ...) specifically to avoid this kind of collision, so the
-guide functions could move back to `vg_axis_x()`/`vg_axis_y()` too, but
-haven't been (yet), to avoid further churn.)
+`vg_axis_y()` -- those names are used by `vg_mark_axis_x()`/
+`vg_mark_axis_y()`, mosaic's `axisX`/`axisY` *mark* (a separately drawn,
+independently-styled axis), a different thing from the plain axis-guide
+attributes set here.)
 
 ```{r}
 spec4c <-
@@ -484,11 +479,10 @@ plot3$attrs$width
 `sql()` (and `agg()`, for expressions with an aggregate function) wraps a
 raw SQL expression for encodings that transforms and plain column
 references can't express -- mosaic-spec's own `{sql: "..."}`/`{agg: "..."}`.
-This finally realizes the very first example from the original design doc
-(`design/api-brainstorming.qmd`): a slider-controlled "bias" parameter
-added to a plotted value, computed live by DuckDB. A `param()` reference
-can be written directly in the SQL text (`sql("v + $bias")`) or built up
-from pieces, as below -- both are equivalent.
+Below, a slider-controlled "bias" parameter is added to a plotted value,
+computed live by DuckDB. A `param()` reference can be written directly in
+the SQL text (`sql("v + $bias")`) or built up from pieces, as below --
+both are equivalent.
 
 ```{r}
 bias_picker <- vg_slider(

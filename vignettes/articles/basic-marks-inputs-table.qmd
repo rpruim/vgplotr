@@ -47,10 +47,8 @@ Mosaic's own JSON spec puts the `table` input directly at the top level
 (`{"input": "table", "from": "flights", "height": 300}`, no `vconcat`
 wrapper), since it's the only thing in the layout. vgplotr's serializer
 always wraps `vg_vconcat()`'s children in a `"vconcat": [...]` array, even
-for a single child -- the same kind of verbosity difference noted for
-single-mark plots elsewhere in this gallery (see `NOTES.md`), just for a
-layout-level input instead of a mark. Both are valid, semantically
-identical mosaic-spec JSON. Aside from that and `data.flights.file`
+for a single child. Both are valid, semantically identical mosaic-spec
+JSON. Aside from that and `data.flights.file`
 (`vg_data_url()` vs. a relative path), this matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/table.html).
 </details>

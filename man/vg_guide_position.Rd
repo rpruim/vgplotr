@@ -120,19 +120,13 @@ plot-level attributes that \code{\link[=vg_plot]{vg_plot()}}/\code{\link[=vg_att
 directly, snake_case (e.g. \verb{x_ticks =}).
 }
 \details{
-These are named \verb{vg_guide_*()} rather than \verb{vg_axis_*()} for
-historical reasons: mosaic-spec's \code{axisX}/\code{axisY} \emph{mark} (a
-drawable, independently-styled axis) used to be generated as
-\code{vg_axis_x()}/\code{vg_axis_y()}, colliding with the plot-attribute guide
-setters here. Every mark constructor is now prefixed \code{vg_mark_}
-instead (see \code{R/marks-generated.R}), specifically to avoid this kind
-of collision, so \code{vg_axis_x()}/\code{vg_axis_y()} are free again -- but
-\code{vg_guide_x()}/\code{vg_guide_y()} haven't been renamed back to them, to
-avoid further API churn. \verb{vg_guide_*()} sets the plain \code{xAxis}/
-\code{yAxis} guide attributes that appear automatically alongside a
-plot's marks, which is a different (if related) thing from mosaic's
-\code{axisX}/\code{axisY} mark (now \code{vg_mark_axis_x()}/\code{vg_mark_axis_y()}).
-Same story for the analogous facet guides, \code{\link[=vg_guide_facet]{vg_guide_facet()}} (vs.
+These are named \verb{vg_guide_*()} rather than \verb{vg_axis_*()} to avoid
+colliding with \code{vg_mark_axis_x()}/\code{vg_mark_axis_y()}
+(mosaic-spec's \code{axisX}/\code{axisY} \emph{mark}, a drawable,
+independently-styled axis) -- a different (if related) thing from
+the plain \code{xAxis}/\code{yAxis} guide attributes set here, which appear
+automatically alongside a plot's marks. Same story for the
+analogous facet guides, \code{\link[=vg_guide_facet]{vg_guide_facet()}} (vs.
 \code{vg_mark_axis_fx()}/\code{vg_mark_axis_fy()}, mosaic's \code{axisFx}/\code{axisFy}
 marks).
 }

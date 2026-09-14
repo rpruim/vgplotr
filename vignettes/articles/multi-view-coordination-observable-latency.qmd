@@ -17,9 +17,8 @@ most-requested routes.
 
 The `raster` mark's own `width`/`height` (2016x500, its internal pixel
 grid resolution) are distinct from the *plot's* `width`/`height`
-(680x300, its rendered size) -- another instance of the mark-vs-plot
-property collision noted in `NOTES.md`, and confirmation the fix holds
-for `width`/`height` too, not just `inset`.
+(680x300, its rendered size) -- these are per-mark properties, kept
+separate from the plot-level attributes of the same name.
 
 ```{r setup}
 library(vgplotr)

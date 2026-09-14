@@ -12,10 +12,6 @@
 #' up for you the first time you call it in an interactive session; see
 #' [vg_cache_duckdb()] for details, including how to silence that offer.
 #'
-#' The relationship between this function, `print()`, and mosaic's own
-#' `publish()` naming (see `design/api-brainstorming.qmd`) is still an open
-#' design question; `vg_render()` is a placeholder name.
-#'
 #' Mosaic-spec's own `meta` (title/description/credit -- see [vg_meta()])
 #' isn't rendered by mosaic's JS runtime at all; it's inert, spec-level
 #' metadata (confirmed directly in `@uwdata/mosaic-spec`'s own

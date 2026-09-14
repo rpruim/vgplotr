@@ -17,19 +17,13 @@ NULL
 #' plot-level attributes that [vg_plot()]/[vg_attributes()] accept
 #' directly, snake_case (e.g. `x_ticks =`).
 #'
-#' These are named `vg_guide_*()` rather than `vg_axis_*()` for
-#' historical reasons: mosaic-spec's `axisX`/`axisY` *mark* (a
-#' drawable, independently-styled axis) used to be generated as
-#' `vg_axis_x()`/`vg_axis_y()`, colliding with the plot-attribute guide
-#' setters here. Every mark constructor is now prefixed `vg_mark_`
-#' instead (see `R/marks-generated.R`), specifically to avoid this kind
-#' of collision, so `vg_axis_x()`/`vg_axis_y()` are free again -- but
-#' `vg_guide_x()`/`vg_guide_y()` haven't been renamed back to them, to
-#' avoid further API churn. `vg_guide_*()` sets the plain `xAxis`/
-#' `yAxis` guide attributes that appear automatically alongside a
-#' plot's marks, which is a different (if related) thing from mosaic's
-#' `axisX`/`axisY` mark (now `vg_mark_axis_x()`/`vg_mark_axis_y()`).
-#' Same story for the analogous facet guides, [vg_guide_facet()] (vs.
+#' These are named `vg_guide_*()` rather than `vg_axis_*()` to avoid
+#' colliding with `vg_mark_axis_x()`/`vg_mark_axis_y()`
+#' (mosaic-spec's `axisX`/`axisY` *mark*, a drawable,
+#' independently-styled axis) -- a different (if related) thing from
+#' the plain `xAxis`/`yAxis` guide attributes set here, which appear
+#' automatically alongside a plot's marks. Same story for the
+#' analogous facet guides, [vg_guide_facet()] (vs.
 #' `vg_mark_axis_fx()`/`vg_mark_axis_fy()`, mosaic's `axisFx`/`axisFy`
 #' marks).
 #'
@@ -86,10 +80,8 @@ vg_guide_y <- wrapper_function(vg_guide_position, which = "y")
 #' hand-picked.
 #'
 #' See [vg_guide_position()] for why these are `vg_guide_*()` rather
-#' than `vg_axis_*()` (a historical collision with mosaic's `axisFx`/
-#' `axisFy` marks -- no longer live now that mark constructors are
-#' `vg_mark_` prefixed, but the guide functions haven't been renamed
-#' back).
+#' than `vg_axis_*()` (to avoid colliding with `vg_mark_axis_fx()`/
+#' `vg_mark_axis_fy()`, mosaic's `axisFx`/`axisFy` marks).
 #'
 #' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
 #'   start a new plot fragment with just these attributes.

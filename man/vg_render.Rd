@@ -41,10 +41,6 @@ up for you the first time you call it in an interactive session; see
 \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}} for details, including how to silence that offer.
 }
 \details{
-The relationship between this function, \code{print()}, and mosaic's own
-\code{publish()} naming (see \code{design/api-brainstorming.qmd}) is still an open
-design question; \code{vg_render()} is a placeholder name.
-
 Mosaic-spec's own \code{meta} (title/description/credit -- see \code{\link[=vg_meta]{vg_meta()}})
 isn't rendered by mosaic's JS runtime at all; it's inert, spec-level
 metadata (confirmed directly in \verb{@uwdata/mosaic-spec}'s own

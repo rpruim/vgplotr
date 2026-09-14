@@ -13,9 +13,7 @@ sum or max of the point mass. The `stack` and `offset` parameters
 control stacking of density areas.
 
 `offset`'s initial value is `NULL` (mosaic-spec's `"offset": null`) --
-declared with `vg_params(offset = NULL)`, which needed a bug fix (see
-`NOTES.md`) since it previously silently dropped the param instead of
-declaring it with a `null` value.
+declared with `vg_params(offset = NULL)`.
 
 ```{r setup}
 library(vgplotr)

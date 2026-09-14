@@ -12,9 +12,9 @@ use the slider to set the kernel bandwidth.
 
 The `density` mark's own `width`/`height` (its internal bin grid
 resolution, bound to the `bins` slider) are distinct from the *plot's*
-`width`/`height` (its rendered size) -- confirms the mark/plot
-attribute collision fix (see `NOTES.md`) also works when the mark's
-own property is bound to a param, not just a literal value.
+`width`/`height` (its rendered size) -- these are per-mark properties,
+kept separate from the plot-level attributes of the same name, even
+when bound to a param rather than a literal value.
 
 ```{r setup}
 library(vgplotr)
