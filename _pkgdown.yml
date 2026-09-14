@@ -16,7 +16,7 @@ navbar:
       href: articles/design-principles.html
     examples:
       text: Examples
-      href: articles/index.html
+      href: articles/examples.html
 
 articles:
 - title: Get Started
@@ -26,6 +26,10 @@ articles:
 - title: Design Principles
   contents:
   - design-principles
+
+- title: Examples
+  contents:
+  - articles/examples
 
 - title: Basic Marks & Inputs
   desc: >

@@ -1,0 +1,77 @@
+---
+title: "{vgplotr} Examples"
+---
+
+Worked examples recreating pages from mosaic/vgplot's own [example gallery](https://idl.uw.edu/mosaic/examples/), organized by topic.
+
+## Basic Marks & Inputs
+
+Core mark types, encodings, and layout-level input widgets (menus, sliders, tables).
+
+- [Mark Types](basic-marks-inputs-mark-types.html)
+- [Symbol Plots](basic-marks-inputs-symbol-plots.html)
+- [Axes & Gridlines](basic-marks-inputs-axes-gridlines.html)
+- [Airline Travelers](basic-marks-inputs-airline-travelers.html)
+- [Aeromagnetic Survey](basic-marks-inputs-aeromagnetic-survey.html)
+- [Athlete Birth Waffle](basic-marks-inputs-athlete-birth-waffle.html)
+- [Driving Shifts into Reverse](basic-marks-inputs-driving-shifts.html)
+- [Population Change Arrows](basic-marks-inputs-population-arrows.html)
+- [Presidential Opinion](basic-marks-inputs-presidential-opinion.html)
+- [Voronoi Diagram](basic-marks-inputs-voronoi.html)
+- [Seattle Temperatures](basic-marks-inputs-seattle-temperatures.html)
+- [Sorted Bars](basic-marks-inputs-sorted-bars.html)
+- [Sortable Table](basic-marks-inputs-table.html)
+
+## Data Transformation
+
+Binning, aggregation, window functions, and SQL expressions computed live in the database.
+
+- [Athlete Height Intervals](data-transformation-athlete-height.html)
+- [Bias Parameter](data-transformation-bias.html)
+- [Linear Regression](data-transformation-linear-regression.html)
+- [Linear Regression 10M](data-transformation-linear-regression-10m.html)
+- [Moving Average](data-transformation-moving-average.html)
+- [Line Multi-Series](data-transformation-line-multi-series.html)
+- [Normalized Stock Prices](data-transformation-normalize.html)
+- [Seattle Weather Pivot](data-transformation-seattle-weather-pivot.html)
+- [Overview + Detail](data-transformation-overview-detail.html)
+- [Wind Map](data-transformation-wind-map.html)
+- [WNBA Shot Chart](data-transformation-wnba-shots.html)
+
+## Maps & Spatial Data
+
+Geographic marks, projections, and spatial data sources (GeoJSON, TopoJSON, DuckDB's spatial extension).
+
+- [Earthquakes Feed](maps-spatial-data-earthquakes-feed.html)
+- [Earthquakes Globe](maps-spatial-data-earthquakes-globe.html)
+- [U.S. States](maps-spatial-data-us-state-map.html)
+- [U.S. Counties](maps-spatial-data-us-county-map.html)
+- [U.S. Unemployment](maps-spatial-data-unemployment.html)
+- [Walmart Openings](maps-spatial-data-walmart-openings.html)
+- [NYC Taxi Rides](maps-spatial-data-nyc-taxi-rides.html)
+
+## Multi-View Coordination
+
+Linked selections, crossfilters, and coordinated views across multiple plots.
+
+- [Cross-Filter Flights (200k)](multi-view-coordination-flights-200k.html)
+- [Cross-Filter Flights (10M)](multi-view-coordination-flights-10m.html)
+- [Gaia Star Catalog](multi-view-coordination-gaia.html)
+- [Observable Latency](multi-view-coordination-observable-latency.html)
+- [Olympic Athletes](multi-view-coordination-athletes.html)
+- [Protein Design Explorer](multi-view-coordination-protein-design.html)
+- [Pan & Zoom](multi-view-coordination-pan-zoom.html)
+- [Scatter Plot Matrix (SPLOM)](multi-view-coordination-splom.html)
+- [Seattle Weather](multi-view-coordination-weather.html)
+
+## Density Visualizations
+
+Contours, 1D/2D density estimation, heatmaps, and hexbins.
+
+- [Contour Plot](density-visualizations-contours.html)
+- [Density Groups](density-visualizations-density-groups.html)
+- [Density 1D](density-visualizations-density1d.html)
+- [Density 2D](density-visualizations-density2d.html)
+- [Flights Density](density-visualizations-flights-density.html)
+- [Flights Hexbin](density-visualizations-flights-hexbin.html)
+- [Line Density](density-visualizations-line-density.html)
