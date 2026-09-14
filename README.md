@@ -1,2 +1,2 @@
-# vgplotr: R intreface to mosaic vgplot
+# vgplotr: R interface to Mosaic vgplot
 
