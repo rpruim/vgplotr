@@ -20,10 +20,14 @@ Imports:
     rlang,
     yaml
 Suggests:
+    dplyr,
+    gt,
     knitr,
+    palmerpenguins,
     pkgdown,
     quarto,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tibble
 Config/testthat/edition: 3
 VignetteBuilder: quarto
 Config/roxygen2/version: 8.0.0
