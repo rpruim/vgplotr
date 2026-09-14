@@ -165,7 +165,7 @@ penguins |>
     y = ~bill_length_mm,
     stroke = ~sex
   ) |>
-  vg_guide_color(label = "sex") |>
+  vg_legend_color(label = "sex") |>
   vg_meta(title = "Gentoo penguins") |>
   # vg_render() |>
   to_yaml(suppress_data = TRUE) |>
