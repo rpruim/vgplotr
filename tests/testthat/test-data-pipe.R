@@ -104,6 +104,44 @@ test_that("marks with no `data` property (frame, sphere, hexgrid, axis/grid mark
   expect_null(payload$spec$plot[[4]]$data)
 })
 
+test_that("a mark with `data` support but only literal args doesn't get a default data_from", {
+  # e.g. vg_mark_rule_x(x = 0, ...) as a plain reference line layered on a
+  # data-bound plot -- unlike frame/sphere/etc. (which never have a `data`
+  # property at all), ruleX *can* be data-bound, but nothing here
+  # references a column, so attaching data_from would make mosaic try to
+  # query the table with no selection list (confirmed: this used to
+  # silently blank the whole plot).
+  df <- data.frame(a = 1:3, b = c(4, 5, 6))
+  spec <- df |>
+    vg_mark_dot(x = ~a, y = ~b) |>
+    vg_mark_rule_x(x = 0, stroke = "firebrick")
+
+  expect_null(spec$layout$items[[2]]$encodings$data_from)
+  payload <- as_spec_payload(spec)
+  expect_null(payload$spec$plot[[2]]$data)
+  expect_equal(payload$spec$plot[[2]]$x, 0)
+})
+
+test_that("a mark using sql()/agg() unwrapped still gets a default data_from", {
+  df <- data.frame(a = 1:3, b = c(4, 5, 6))
+  spec <- df |> vg_mark_dot(x = sql("a + 1"), y = ~b)
+  expect_equal(spec$layout$items[[1]]$encodings$data_from, "data")
+})
+
+test_that("a mark using a transform function unwrapped still gets a default data_from", {
+  df <- data.frame(a = 1:3, b = c(4, 5, 6))
+  spec <- df |> vg_mark_rect_y(x = vg_bin(a, step = 1), y = vg_count())
+  expect_equal(spec$layout$items[[1]]$encodings$data_from, "data")
+})
+
+test_that("a mark using only param() references doesn't get a default data_from", {
+  # a param is a reactive scalar, not a per-row data lookup
+  spec <- vg_create() |>
+    vg_data(name = "d1", data = data.frame(a = 1:3)) |>
+    vg_mark_rule_x(x = param(threshold), stroke = "firebrick")
+  expect_null(spec$layout$items[[1]]$encodings$data_from)
+})
+
 test_that("no default data_from is applied when the spec has no data source yet", {
   frag <- vg_mark_dot(x = ~a, y = ~b)
   expect_null(frag$items[[1]]$encodings$data_from)

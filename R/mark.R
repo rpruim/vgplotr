@@ -37,6 +37,20 @@
 #' @param ... Encodings (e.g. `x = ~var1`), mark options, and/or plot-level
 #'   attributes (`width =`, `name =`, ...). See [vg_plot()] for how
 #'   plot-level attributes from multiple marks are combined.
+# Whether any value in a mark's `...` args actually references data -- a
+# formula (`~col`, `~fn(col)`), an unwrapped sql()/agg() (a "vg_sql_expr"),
+# or an unwrapped transform like vg_bin()/vg_count() (a "vg_transform").
+# Plain literals (numbers, strings, TRUE/FALSE) and param() references
+# ("vg_param") don't -- a param is a reactive scalar, not a per-row lookup,
+# so it doesn't need a backing table either.
+args_reference_data <- function(args) {
+  any(vapply(
+    args,
+    function(v) inherits(v, "formula") || inherits(v, "vg_transform") || inherits(v, "vg_sql_expr"),
+    logical(1)
+  ))
+}
+
 #' @export
 vg_mark <- function(spec = NULL, mark, ...) {
   args <- list(...)
@@ -69,13 +83,20 @@ vg_mark <- function(spec = NULL, mark, ...) {
 
   # A mark that takes data at all (not e.g. frame/sphere/hexgrid/the axis
   # and grid marks, which compute their own geometry and have no `data`
-  # property to begin with -- .vg_mark_has_data, R/attrs-generated.R) and
-  # wasn't given its own data_from defaults to the spec's first registered
-  # data source (data_from = 1). This is what lets a whole multi-layer plot
-  # share one data source -- piped in directly (see above) or added via
-  # vg_data() -- with no data_from repeated on every mark.
+  # property to begin with -- .vg_mark_has_data, R/attrs-generated.R),
+  # wasn't given its own data_from, and actually *references* data in at
+  # least one of its own arguments (a formula, sql()/agg(), or a transform
+  # like vg_bin()/vg_count() used unwrapped) defaults to the spec's first
+  # registered data source (data_from = 1). This is what lets a whole
+  # multi-layer plot share one data source -- piped in directly (see above)
+  # or added via vg_data() -- with no data_from repeated on every mark.
+  #
+  # The data-reference check matters: a mark built entirely from literal
+  # values (e.g. vg_mark_rule_x(x = 0), a plain reference line) has nothing
+  # to look up, and mosaic errors on an empty SELECT if data_from is
+  # attached anyway -- confirmed directly, this used to happen.
   if (is.null(args$data_from) && is_vgspec(spec) && length(spec$data) &&
-        isTRUE(unname(.vg_mark_has_data[mark]))) {
+        isTRUE(unname(.vg_mark_has_data[mark])) && args_reference_data(args)) {
     args$data_from <- names(spec$data)[[1]]
   }
 
