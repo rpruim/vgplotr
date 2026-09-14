@@ -9,6 +9,8 @@ Description: Provides a piped, tidyverse-flavored R API for building
     interactive, database-backed graphics in HTML output (e.g. via
     'htmlwidgets' and Quarto/R Markdown documents).
 License: MIT + file LICENSE
+URL: https://rpruim.github.io/vgplotr/, https://github.com/rpruim/vgplotr
+BugReports: https://github.com/rpruim/vgplotr/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports:
