@@ -301,7 +301,7 @@ serialize_transform <- function(x) {
 # spec$attrs (the spec's own top-level attrs, from vg_attributes()) are a
 # separate thing again, merged in once at the very top, exactly like
 # as_spec_payload() does.
-spec_to_list <- function(spec) {
+spec_to_list <- function(spec, suppress_data = FALSE) {
   if (is_vgspec(spec)) {
     if (is.null(spec$layout)) {
       stop("This vgspec doesn't have any plots yet.", call. = FALSE)
@@ -309,7 +309,9 @@ spec_to_list <- function(spec) {
     out <- list()
     if (length(spec$meta)) out$meta <- spec$meta
     if (length(spec$config)) out$config <- spec$config
-    if (length(spec$data)) out$data <- lapply(spec$data, serialize_data_source)
+    data_sources <- spec$data
+    if (suppress_data) data_sources <- Filter(Negate(is_inline_data_source), data_sources)
+    if (length(data_sources)) out$data <- lapply(data_sources, serialize_data_source)
     if (length(spec$params)) out$params <- serialize_params(spec$params)
     if (length(spec$plot_defaults)) out$plotDefaults <- lapply(spec$plot_defaults, serialize_value)
     out <- c(out, serialize_layout(spec$layout))
@@ -332,6 +334,14 @@ serialize_data_source <- function(src) {
   } else {
     src
   }
+}
+
+# A data source defined *with* the spec (an inline data frame, vg_data(name,
+# data = df) -- serialized as mosaic-spec's own {data: [...]} row-object
+# array) as opposed to one specified *by name* elsewhere (file =, query =,
+# type = "spatial", ...). Used by to_json()/to_yaml()'s `suppress_data =`.
+is_inline_data_source <- function(src) {
+  !is.null(src$data) && is.data.frame(src$data)
 }
 
 df_to_rows <- function(df) {

@@ -4,10 +4,19 @@
 \alias{to_yaml}
 \title{Convert a vgspec (or plot fragment) to mosaic-spec YAML}
 \usage{
-to_yaml(spec, ...)
+to_yaml(spec, suppress_data = FALSE, ...)
 }
 \arguments{
 \item{spec}{A \code{vgspec}, or a bare layout fragment.}
+
+\item{suppress_data}{If \code{TRUE}, omit data sources defined \emph{with} the spec
+(an inline data frame, e.g. \code{vg_data(name, data = df)}, serialized as
+mosaic-spec's own \verb{\{data: [...]\}} row-object array) from the output --
+handy for a compact, human-readable spec when the actual data isn't
+the point. Data sources specified \emph{by name} elsewhere (\verb{file =},
+\verb{query =}, \code{type = "spatial"}, ...) are left alone either way, since
+they're already just a reference, not embedded content. Default
+\code{FALSE}.}
 
 \item{...}{Additional arguments passed on to \code{\link[yaml:as.yaml]{yaml::as.yaml()}}.}
 }

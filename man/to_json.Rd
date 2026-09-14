@@ -4,12 +4,21 @@
 \alias{to_json}
 \title{Convert a vgspec (or plot fragment) to mosaic-spec JSON}
 \usage{
-to_json(spec, pretty = TRUE, ...)
+to_json(spec, pretty = TRUE, suppress_data = FALSE, ...)
 }
 \arguments{
 \item{spec}{A \code{vgspec}, or a bare layout fragment.}
 
 \item{pretty}{Whether to indent the JSON for readability (default \code{TRUE}).}
+
+\item{suppress_data}{If \code{TRUE}, omit data sources defined \emph{with} the spec
+(an inline data frame, e.g. \code{vg_data(name, data = df)}, serialized as
+mosaic-spec's own \verb{\{data: [...]\}} row-object array) from the output --
+handy for a compact, human-readable spec when the actual data isn't
+the point. Data sources specified \emph{by name} elsewhere (\verb{file =},
+\verb{query =}, \code{type = "spatial"}, ...) are left alone either way, since
+they're already just a reference, not embedded content. Default
+\code{FALSE}.}
 
 \item{...}{Additional arguments passed on to \code{\link[jsonlite:toJSON]{jsonlite::toJSON()}}.}
 }

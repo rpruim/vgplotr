@@ -99,3 +99,40 @@ test_that("to_json()'s and to_yaml()'s ... let a caller override a default witho
   expect_no_error(to_json(spec, auto_unbox = FALSE))
   expect_no_error(to_yaml(spec, column.major = TRUE))
 })
+
+test_that("suppress_data = TRUE omits an inline data frame but keeps a by-name data source", {
+  df <- data.frame(a = 1:3, b = c(4, 5, 6))
+  spec <- vg_create() |>
+    vg_data(name = "inline", data = df) |>
+    vg_data(name = "byfile", file = "stocks.parquet") |>
+    vg_data(name = "byquery", query = "SELECT 1") |>
+    vg_mark_dot(data_from = "inline", x = ~a, y = ~b)
+
+  parsed <- jsonlite::fromJSON(to_json(spec, suppress_data = TRUE), simplifyVector = FALSE)
+  expect_null(parsed$data$inline)
+  expect_equal(parsed$data$byfile, list(file = "stocks.parquet"))
+  expect_equal(parsed$data$byquery, "SELECT 1")
+  # the mark's own data_from reference is untouched -- suppress_data only
+  # affects what's declared in data:, not what marks say they read from
+  expect_equal(parsed$plot[[1]]$data, list(from = "inline"))
+
+  expect_equal(parsed, yaml::yaml.load(as.character(to_yaml(spec, suppress_data = TRUE))))
+})
+
+test_that("suppress_data = TRUE drops the data: key entirely when every source is inline", {
+  df <- data.frame(a = 1:3)
+  spec <- df |> vg_mark_dot(x = ~a, y = ~a)
+
+  parsed <- jsonlite::fromJSON(to_json(spec, suppress_data = TRUE), simplifyVector = FALSE)
+  expect_null(parsed$data)
+
+  parsed_default <- jsonlite::fromJSON(to_json(spec), simplifyVector = FALSE)
+  expect_true("data" %in% names(parsed_default))
+})
+
+test_that("suppress_data defaults to FALSE (unchanged behavior)", {
+  df <- data.frame(a = 1:3)
+  spec <- vg_create() |> vg_data(name = "d", data = df) |> vg_mark_dot(data_from = "d", x = ~a, y = ~a)
+
+  expect_equal(to_json(spec), to_json(spec, suppress_data = FALSE))
+})
