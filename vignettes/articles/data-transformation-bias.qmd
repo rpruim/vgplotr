@@ -1,0 +1,50 @@
+---
+title: "Bias Parameter"
+subtitle: "Dynamically adjust queried values by adding a Param value."
+format: html
+engine: knitr
+---
+
+Recreates [Bias Parameter](https://idl.uw.edu/mosaic/examples/bias.html)
+from the mosaic/vgplot example gallery. The SQL expression is
+re-computed in the database upon updates.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+point <- param(point)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Bias Parameter",
+    description = paste(
+      "Dynamically adjust queried values by adding a Param value. The SQL expression is",
+      "re-computed in the database upon updates."
+    )
+  ) |>
+  vg_data(name = "walk", file = vg_data_url("random-walk.parquet")) |>
+  vg_params(point = 0) |>
+  vg_vconcat(
+    vg_slider(label = "Bias", as = point, min = 0, max = 1000, step = 1),
+    vg_mark_area_y(data_from = "walk", x = ~t, y = ~ sql("v + ", point), fill = "steelblue") |>
+      vg_plot(width = 680, height = 200)
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/bias.html) exactly, aside from
+`data.walk.file` (`vg_data_url()` vs. a relative path) and object key
+order.
+</details>

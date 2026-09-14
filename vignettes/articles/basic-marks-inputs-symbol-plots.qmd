@@ -1,0 +1,83 @@
+---
+title: "Symbol Plots"
+subtitle: "Two scatter plots with dot marks: one with stroked symbols, the other filled. Drop-down menus control which data table columns are plotted."
+format: html
+engine: knitr
+---
+
+Recreates [Symbol Plots](https://idl.uw.edu/mosaic/examples/symbol-plots.html)
+from the mosaic/vgplot example gallery. Demonstrates dynamic column
+selection: `x =`/`y =` are bound to `vg_column(param(...))`, so the menu
+inputs change which data column each axis encodes at runtime.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+x_param <- param(x)
+y_param <- param(y)
+columns <- c("body_mass", "flipper_length", "bill_depth", "bill_length")
+
+menus <- vg_hconcat(
+  vg_menu(label = "Y", options = columns, as = y_param),
+  vg_menu(label = "X", options = columns, as = x_param)
+)
+
+stroked <-
+  vg_mark_dot(
+    data_from = "penguins",
+    x = ~ vg_column(x_param),
+    y = ~ vg_column(y_param),
+    stroke = "species",
+    symbol = "species"
+  ) |>
+  vg_guide_all(grid = TRUE) |>
+  vg_guide_x(label = "Body mass (g) →") |>
+  vg_guide_y(label = "↑ Flipper length (mm)") |>
+  vg_plot(name = "stroked")
+
+filled <-
+  vg_mark_dot(
+    data_from = "penguins",
+    x = ~ vg_column(x_param),
+    y = ~ vg_column(y_param),
+    fill = "species",
+    symbol = "species"
+  ) |>
+  vg_guide_all(grid = TRUE) |>
+  vg_guide_x(label = "Body mass (g) →") |>
+  vg_guide_y(label = "↑ Flipper length (mm)") |>
+  vg_plot(name = "filled")
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Symbol Plots",
+    description = "Two scatter plots with `dot` marks: one with stroked symbols, the other filled. Drop-down menus control which data table columns are plotted."
+  ) |>
+  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_params(x = "body_mass", y = "flipper_length") |>
+  vg_vconcat(
+    menus,
+    vg_vspace(10),
+    vg_hconcat(stroked, vg_legend_symbol(for_plot = "stroked", columns = 1)),
+    vg_vspace(20),
+    vg_hconcat(filled, vg_legend_symbol(for_plot = "filled", columns = 1))
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/symbol-plots.html) apart from
+`data.penguins.file` (a full URL from `vg_data_url()` here, vs. mosaic's
+own relative `data/penguins.parquet` path) and object key order.
+</details>

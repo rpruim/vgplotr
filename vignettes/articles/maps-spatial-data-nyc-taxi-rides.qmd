@@ -1,0 +1,110 @@
+---
+title: "NYC Taxi Rides"
+subtitle: "Pickup and dropoff points for 1M NYC taxi rides, with linked brushing across all three plots."
+format: html
+engine: knitr
+---
+
+Recreates [NYC Taxi
+Rides](https://idl.uw.edu/mosaic/examples/nyc-taxi-rides.html) from
+the mosaic/vgplot example gallery. This example projects lon/lat
+coordinates in the database upon load. Select a region in one plot to
+filter the other. What spatial patterns can you find? Requires the
+DuckDB `spatial` extension.
+
+`vg_config(extensions = "spatial")` loads the DuckDB extension mosaic's
+`ST_Transform()`/`ST_Point()`/etc. spatial functions need -- mosaic-spec's
+top-level `config` object, distinct from `vg_meta()`'s inert descriptive
+metadata. All three plots (pickups, dropoffs, and the pickup-hour
+histogram) share one `crossfilter` Selection (`filter`), each
+contributing its own `intervalX`/`intervalXY` brush to it.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+filter_p <- param(filter)
+
+rides_url <- "https://pub-1da360b43ceb401c809f68ca37c7f8a4.r2.dev/data/nyc-rides-2010.parquet"
+
+pickup_plot <-
+  vg_mark_raster(data_from = "trips", filter_by = filter_p, x = ~px, y = ~py, bandwidth = 0) |>
+  vg_interval_xy(as = filter_p) |>
+  vg_mark_text(
+    data_from = list(list(label = "Taxi Pickups")),
+    dx = 10, dy = 10, text = ~label, fill = "black", font_size = "1.2em", frame_anchor = "top-left"
+  ) |>
+  vg_plot(
+    width = 335, height = 550, margin = 0, x_axis = NULL, y_axis = NULL,
+    x_domain = c(975000, 1005000), y_domain = c(190000, 240000),
+    color_scale = "symlog", color_scheme = "blues"
+  )
+
+dropoff_plot <-
+  vg_mark_raster(data_from = "trips", filter_by = filter_p, x = ~dx, y = ~dy, bandwidth = 0) |>
+  vg_interval_xy(as = filter_p) |>
+  vg_mark_text(
+    data_from = list(list(label = "Taxi Dropoffs")),
+    dx = 10, dy = 10, text = ~label, fill = "black", font_size = "1.2em", frame_anchor = "top-left"
+  ) |>
+  vg_plot(
+    width = 335, height = 550, margin = 0, x_axis = NULL, y_axis = NULL,
+    x_domain = c(975000, 1005000), y_domain = c(190000, 240000),
+    color_scale = "symlog", color_scheme = "oranges"
+  )
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "NYC Taxi Rides",
+    description = paste(
+      "Pickup and dropoff points for 1M NYC taxi rides on Jan 1-3, 2010.",
+      "This example projects lon/lat coordinates in the database upon load.",
+      "Select a region in one plot to filter the other.",
+      "What spatial patterns can you find?",
+      "Requires the DuckDB `spatial` extension.",
+      sep = "\n"
+    )
+  ) |>
+  vg_config(extensions = "spatial") |>
+  vg_data(
+    name = "rides", file = rides_url,
+    select = c(
+      "pickup_datetime::TIMESTAMP AS datetime",
+      "ST_Transform(ST_Point(pickup_latitude, pickup_longitude), 'EPSG:4326', 'ESRI:102718') AS pick",
+      "ST_Transform(ST_Point(dropoff_latitude, dropoff_longitude), 'EPSG:4326', 'ESRI:102718') AS drop"
+    )
+  ) |>
+  vg_data(
+    name = "trips",
+    query = paste0(
+      "SELECT\n  (HOUR(datetime) + MINUTE(datetime)/60) AS time,\n  ST_X(pick) AS px, ",
+      "ST_Y(pick) AS py,\n  ST_X(drop) AS dx, ST_Y(drop) AS dy\nFROM rides\n"
+    )
+  ) |>
+  vg_params(filter = list(select = "crossfilter")) |>
+  vg_vconcat(
+    vg_hconcat(pickup_plot, vg_hspace(10), dropoff_plot),
+    vg_vspace(10),
+    vg_mark_rect_y(data_from = "trips", x = ~ vg_bin(time), y = ~ vg_count(), fill = "steelblue", inset = 0.5) |>
+      vg_interval_x(as = filter_p) |>
+      vg_plot(y_tick_format = "s", x_label = "Pickup Hour →", width = 680, height = 100)
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/nyc-taxi-rides.html) exactly
+(this example's data is already a fully-qualified external URL, not
+under mosaic's own `data/` directory, so no `vg_data_url()` difference
+here), aside from object key order.
+</details>

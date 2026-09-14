@@ -1,0 +1,120 @@
+---
+title: "Mark Types"
+subtitle: "A subset of supported mark types."
+format: html
+engine: knitr
+---
+
+Recreates [Mark Types](https://idl.uw.edu/mosaic/examples/mark-types.html)
+from the mosaic/vgplot example gallery.
+
+Row 1: `barY`, `lineY`, `text`, `tickY`, `areaY`.
+Row 2: `regressionY`, `hexbin`, `contour`, `heatmap`, `denseLine`.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+md <- data.frame(
+  i = 0:7,
+  u = LETTERS[1:8],
+  v = c(2, 8, 3, 7, 5, 4, 6, 1)
+)
+
+row1 <- vg_hconcat(
+  vg_mark_bar_y(data_from = "md", x = ~u, y = ~v, fill = "steelblue"),
+  vg_mark_line_y(
+    data_from = "md",
+    x = ~u,
+    y = ~v,
+    stroke = "steelblue",
+    curve = "monotone-x",
+    marker = "circle"
+  ),
+  vg_mark_text(data_from = "md", x = ~u, y = ~v, text = ~u, fill = "steelblue"),
+  vg_mark_tick_y(data_from = "md", x = ~u, y = ~v, stroke = "steelblue"),
+  vg_mark_area_y(data_from = "md", x = ~u, y = ~v, fill = "steelblue")
+)
+
+row2 <- vg_hconcat(
+  vg_mark_dot(
+    data_from = "md",
+    x = ~i,
+    y = ~v,
+    fill = "currentColor",
+    r = 1.5
+  ) |>
+    vg_mark_regression_y(
+      data_from = "md",
+      x = ~i,
+      y = ~v,
+      stroke = "steelblue"
+    ) |>
+    vg_plot(x_domain = c(-0.5, 7.5)),
+  vg_mark_hexgrid(stroke = "#aaa", stroke_opacity = 0.5) |>
+    vg_mark_hexbin(data_from = "md", x = ~i, y = ~v, fill = ~ vg_count()) |>
+    vg_plot(color_scheme = "blues", x_domain = c(-1, 8)),
+  vg_mark_contour(
+    data_from = "md",
+    x = ~i,
+    y = ~v,
+    stroke = "steelblue",
+    bandwidth = 15
+  ) |>
+    vg_plot(x_domain = c(-1, 8)),
+  vg_mark_heatmap(
+    data_from = "md",
+    x = ~i,
+    y = ~v,
+    fill = "density",
+    bandwidth = 15
+  ) |>
+    vg_plot(color_scheme = "blues", x_domain = c(-1, 8)),
+  vg_mark_dense_line(
+    data_from = "md",
+    x = ~i,
+    y = ~v,
+    fill = "density",
+    bandwidth = 2,
+    pixel_size = 1
+  ) |>
+    vg_plot(color_scheme = "blues", x_domain = c(-1, 8))
+)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Mark Types",
+    description = "A subset of supported mark types."
+  ) |>
+  vg_data(name = "md", data = md) |>
+  vg_vconcat(row1, row2) |>
+  vg_plot_defaults(
+    x_axis = NULL,
+    y_axis = NULL,
+    margins = list(left = 5, top = 5, right = 5, bottom = 5),
+    width = 160,
+    height = 100,
+    y_domain = c(0, 9)
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+This matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/mark-types.html) for this example,
+aside from two cosmetic (non-functional) differences: mosaic's serializer
+collapses a single-mark, no-extra-attributes plot fragment inside a
+`vconcat`/`hconcat` down to a bare mark object (`{"mark": "barY", ...}`),
+while vgplotr always wraps it in `{"plot": [...]}`; and object key order
+differs (alphabetical vs. call-argument order). Both are valid mosaic-spec
+JSON and should render identically.
+</details>

@@ -1,0 +1,87 @@
+---
+title: "Presidential Opinion"
+subtitle: "Opinion poll data on historical U.S. presidents. Image marks are used to show presidential pictures."
+format: html
+engine: knitr
+---
+
+Recreates [Presidential
+Opinion](https://idl.uw.edu/mosaic/examples/presidential-opinion.html)
+from the mosaic/vgplot example gallery (adapted from an [Observable Plot
+example](https://observablehq.com/@observablehq/plot-image-medals)).
+
+Demonstrates an `image` mark, and a menu whose `options` are
+label/value pairs (`list(label = ..., value = ...)`) rather than a plain
+vector -- the selected value feeds into a `sql()` expression as an
+interpolated `param()`.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+sign <- param(sign)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Presidential Opinion",
+    description = paste(
+      "Opinion poll data on historical U.S. presidents. Image marks are used to show",
+      "presidential pictures. The dropdown menu toggles the opinion metric shown."
+    ),
+    credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-image-medals)."
+  ) |>
+  vg_data(
+    name = "presidents",
+    file = vg_data_url("us-president-favorability.parquet")
+  ) |>
+  vg_params(sign = 1) |>
+  vg_vconcat(
+    vg_mark_rule_y(data_from = c(0)) |>
+      vg_mark_image(
+        data_from = "presidents",
+        x = ~`First Inauguration Date`,
+        y = ~ sql(
+          "\"Very Favorable %\" + \"Somewhat Favorable %\" + ",
+          sign,
+          " * (\"Very Unfavorable %\" + \"Somewhat Unfavorable %\")"
+        ),
+        src = ~`Portrait URL`,
+        r = 20,
+        preserve_aspect_ratio = "xMidYMin slice",
+        title = ~Name
+      ) |>
+      vg_plot(
+        x_inset = 20,
+        x_label = "First inauguration date →",
+        y_inset_top = 4,
+        y_grid = TRUE,
+        y_label = "↑ Opinion (%)",
+        y_tick_format = "+f"
+      ),
+    vg_menu(
+      label = "Opinion Metric",
+      options = list(
+        list(label = "Any Opinion", value = 1),
+        list(label = "Net Favorability", value = -1)
+      ),
+      as = sign
+    )
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/presidential-opinion.html)
+exactly, aside from `data.presidents.file` (`vg_data_url()` vs. a relative
+path) and object key order.
+</details>

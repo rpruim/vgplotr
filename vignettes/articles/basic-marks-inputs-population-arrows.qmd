@@ -1,0 +1,80 @@
+---
+title: "Population Change Arrows"
+subtitle: "An arrow connects the positions in 1980 and 2015 of each city on this population x inequality chart. Color encodes variation."
+format: html
+engine: knitr
+---
+
+Recreates [Population Change
+Arrows](https://idl.uw.edu/mosaic/examples/population-arrows.html) from
+the mosaic/vgplot example gallery (adapted from an [Observable Plot
+example](https://observablehq.com/@observablehq/plot-arrow-variation-chart)).
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+bend <- param(bend)
+
+arrows <-
+  vg_mark_arrow(
+    data_from = "metros",
+    x1 = ~POP_1980,
+    y1 = ~R90_10_1980,
+    x2 = ~POP_2015,
+    y2 = ~R90_10_2015,
+    bend = bend,
+    stroke = ~ sql("R90_10_2015 - R90_10_1980")
+  ) |>
+  vg_mark_text(
+    data_from = "metros",
+    x = ~POP_2015,
+    y = ~R90_10_2015,
+    filter = ~highlight,
+    text = ~nyt_display,
+    fill = "currentColor",
+    dy = -6
+  ) |>
+  vg_guide_all(grid = TRUE) |>
+  vg_scale_all(inset = 10) |>
+  vg_scale_x(type = "log") |>
+  vg_guide_x(label = "Population →") |>
+  vg_guide_y(label = "↑ Inequality", ticks = 4) |>
+  vg_scale_color(scheme = "BuRd") |>
+  vg_guide_color(tick_format = "+f") |>
+  vg_plot(name = "arrows")
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Population Change Arrows",
+    description = "An `arrow` connects the positions in 1980 and 2015 of each city on this population x inequality chart. Color encodes variation.",
+    credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-arrow-variation-chart)."
+  ) |>
+  vg_data(name = "metros", file = vg_data_url("metros.parquet")) |>
+  vg_params(bend = TRUE) |>
+  vg_vconcat(
+    vg_legend_color(
+      for_plot = "arrows",
+      label = "Change in inequality from 1980 to 2015"
+    ),
+    arrows,
+    vg_menu(label = "Bend Arrows?", options = c(TRUE, FALSE), as = bend)
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/population-arrows.html) exactly,
+aside from `data.metros.file` (`vg_data_url()` vs. a relative path) and
+object key order.
+</details>

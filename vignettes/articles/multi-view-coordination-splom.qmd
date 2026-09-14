@@ -1,0 +1,86 @@
+---
+title: "Scatter Plot Matrix (SPLOM)"
+subtitle: "A 4x4 grid of linked scatter plots over four penguin measurements."
+format: html
+engine: knitr
+---
+
+Recreates [Scatter Plot Matrix
+(SPLOM)](https://idl.uw.edu/mosaic/examples/splom.html) from the
+mosaic/vgplot example gallery. Select a region to highlight
+corresponding points across all plots.
+
+Mosaic's own example hand-writes all 16 plots explicitly; here they're
+built with a small loop over the four measurement columns instead
+(`vg_plot_defaults()` supplies the attributes shared by every plot,
+with only the leftmost column and bottommost row needing per-cell
+overrides for axis labels and margins).
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+brush <- param(brush)
+columns <- c("bill_length", "bill_depth", "flipper_length", "body_mass")
+rows <- rev(columns)
+
+cell <- function(x_col, y_col, is_first_col, is_last_row) {
+  p <-
+    vg_mark_frame(stroke = "#ccc") |>
+    vg_mark_dot(
+      data_from = "penguins", x = as.formula(paste0("~", x_col)), y = as.formula(paste0("~", y_col)),
+      fill = ~species, r = 2
+    ) |>
+    vg_interval_xy(as = brush) |>
+    vg_highlight(by = brush, opacity = 0.1)
+
+  attrs <- list()
+  if (is_first_col) attrs <- c(attrs, list(y_axis = "left", margin_left = 45, width = 185))
+  if (is_last_row) attrs <- c(attrs, list(x_axis = "bottom", height = 175, margin_bottom = 35))
+  do.call(vg_plot, c(list(p), attrs))
+}
+
+grid_rows <- lapply(seq_along(rows), function(i) {
+  cells <- lapply(seq_along(columns), function(j) {
+    cell(columns[j], rows[i], is_first_col = (j == 1), is_last_row = (i == length(rows)))
+  })
+  do.call(vg_hconcat, cells)
+})
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Scatter Plot Matrix (SPLOM)",
+    description = paste(
+      "A scatter plot matrix enables inspection of pairwise bivariate distributions. Do",
+      "points cluster or separate in some dimensions but not others? Select a region to",
+      "highlight corresponding points across all plots."
+    )
+  ) |>
+  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_params(brush = list(select = "single")) |>
+  vg_plot_defaults(
+    x_ticks = 3, y_ticks = 4, x_domain = "Fixed", y_domain = "Fixed", color_domain = "Fixed",
+    margin_top = 5, margin_bottom = 10, margin_left = 10, margin_right = 5,
+    x_axis = NULL, y_axis = NULL, x_label_anchor = "center", y_label_anchor = "center",
+    x_tick_format = "s", y_tick_format = "s", width = 150, height = 150
+  )
+spec <- do.call(vg_vconcat, c(list(spec), grid_rows))
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/splom.html) exactly (verified
+cell-by-cell, including the leftmost-column and bottom-row attribute
+overrides), aside from `data.penguins.file` (`vg_data_url()` vs. a
+relative path) and object key order.
+</details>

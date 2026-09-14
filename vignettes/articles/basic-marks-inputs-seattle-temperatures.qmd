@@ -1,0 +1,70 @@
+---
+title: "Seattle Temperatures"
+subtitle: "Historical monthly temperatures in Seattle, WA."
+format: html
+engine: knitr
+---
+
+Recreates [Seattle
+Temperatures](https://idl.uw.edu/mosaic/examples/seattle-temp.html) from
+the mosaic/vgplot example gallery. The gray range shows the minimum and
+maximum recorded temperatures; the blue range shows the average lows and
+highs.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Seattle Temperatures",
+    description = paste(
+      "Historical monthly temperatures in Seattle, WA. The gray range shows the minimum",
+      "and maximum recorded temperatures. The blue range shows the average lows and highs."
+    )
+  ) |>
+  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_mark_area_y(
+    data_from = "weather",
+    x = ~ vg_date_month(date),
+    y1 = ~ vg_max(temp_max),
+    y2 = ~ vg_min(temp_min),
+    fill = "#ccc",
+    fill_opacity = 0.25,
+    curve = "monotone-x"
+  ) |>
+  vg_mark_area_y(
+    data_from = "weather",
+    x = ~ vg_date_month(date),
+    y1 = ~ vg_avg(temp_max),
+    y2 = ~ vg_avg(temp_min),
+    fill = "steelblue",
+    fill_opacity = 0.75,
+    curve = "monotone-x"
+  ) |>
+  vg_mark_rule_y(
+    data_from = c(15),
+    stroke_opacity = 0.5,
+    stroke_dasharray = "5 5"
+  ) |>
+  vg_guide_x(tick_format = "%b") |>
+  vg_guide_y(label = "Temperature Range (°C)") |>
+  vg_plot(width = 680, height = 300)
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/seattle-temp.html) exactly,
+aside from `data.weather.file` (`vg_data_url()` vs. a relative path) and
+object key order.
+</details>

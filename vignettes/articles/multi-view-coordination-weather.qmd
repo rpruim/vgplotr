@@ -1,0 +1,88 @@
+---
+title: "Seattle Weather"
+subtitle: "An interactive view of Seattle's weather, linking a scatter plot to a bar chart of weather types."
+format: html
+engine: knitr
+---
+
+Recreates [Seattle Weather](https://idl.uw.edu/mosaic/examples/weather.html)
+from the mosaic/vgplot example gallery (based on a [Vega-Lite/Altair
+example](https://vega.github.io/vega-lite/examples/interactive_seattle_weather.html)
+by Jake Vanderplas). By dragging on the scatter plot, you can see the
+proportion of days in that range that have sun, fog, drizzle, rain, or
+snow.
+
+The color legend is embedded directly in the scatter plot's own mark
+list (`vg_legend_color(as = click)`, no `for_plot`) rather than
+standing alone -- clicking a legend entry toggles that weather type.
+`domain`/`colors` are plain params (not Selections) holding a shared
+category order and palette, referenced from both plots'
+`color_domain`/`color_range`.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+click <- param(click)
+range_p <- param(range)
+domain <- param(domain)
+colors <- param(colors)
+
+scatter <-
+  vg_mark_dot(
+    data_from = "weather", filter_by = click, x = ~ vg_date_month_day(date), y = ~temp_max,
+    fill = ~weather, r = ~precipitation, fill_opacity = 0.7
+  ) |>
+  vg_interval_x(as = range_p, brush = list(fill = "none", stroke = "#888")) |>
+  vg_highlight(by = range_p, fill = "#ccc", fill_opacity = 0.2) |>
+  vg_legend_color(as = click, columns = 1) |>
+  vg_plot(
+    xy_domain = "Fixed", x_tick_format = "%b", color_domain = domain, color_range = colors,
+    r_domain = "Fixed", r_range = c(2, 10), width = 680, height = 300
+  )
+
+bars <-
+  vg_mark_bar_x(data_from = "weather", x = ~ vg_count(), y = ~weather, fill = "#ccc", fill_opacity = 0.2) |>
+  vg_mark_bar_x(data_from = "weather", filter_by = range_p, x = ~ vg_count(), y = ~weather, fill = ~weather) |>
+  vg_toggle_y(as = click) |>
+  vg_highlight(by = click) |>
+  vg_plot(
+    x_domain = "Fixed", y_domain = domain, y_label = NULL,
+    color_domain = domain, color_range = colors, width = 680
+  )
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Seattle Weather",
+    description = paste(
+      "An interactive view of Seattle's weather, including maximum temperature, amount of",
+      "precipitation, and type of weather. By dragging on the scatter plot, you can see the",
+      "proportion of days in that range that have sun, fog, drizzle, rain, or snow."
+    ),
+    credit = "Based on a [Vega-Lite/Altair example](https://vega.github.io/vega-lite/examples/interactive_seattle_weather.html) by Jake Vanderplas."
+  ) |>
+  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_params(
+    click = list(select = "single"),
+    domain = c("sun", "fog", "drizzle", "rain", "snow"),
+    colors = c("#e7ba52", "#a7a7a7", "#aec7e8", "#1f77b4", "#9467bd")
+  ) |>
+  vg_vconcat(vg_hconcat(scatter), bars)
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/weather.html) exactly, aside
+from `data.weather.file` (`vg_data_url()` vs. a relative path) and
+object key order.
+</details>

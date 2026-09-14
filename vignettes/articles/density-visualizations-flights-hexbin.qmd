@@ -1,0 +1,86 @@
+---
+title: "Flights Hexbin"
+subtitle: "Hexagonal bins show flight density by departure time and arrival delay, with marginal histograms."
+format: html
+engine: knitr
+---
+
+Recreates [Flights Hexbin](https://idl.uw.edu/mosaic/examples/flights-hexbin.html)
+from the mosaic/vgplot example gallery. Select regions in the marginal
+histograms to filter the density display.
+
+`scale`'s initial value is declared as mosaic-spec's explicit
+`ParamValue` object shape (`{"value": "log"}`, i.e. `list(value =
+"log")`) rather than a bare string -- functionally identical to
+`scale = "log"`, just a different way mosaic-spec allows writing the
+same thing.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+scale <- param(scale)
+query <- param(query)
+
+time_hist <-
+  vg_mark_rect_y(data_from = "flights", x = ~ vg_bin(time), y = ~ vg_count(), fill = "steelblue", inset = 0.5) |>
+  vg_interval_x(as = query) |>
+  vg_plot(
+    margins = list(left = 5, right = 5, top = 30, bottom = 0), x_domain = "Fixed",
+    x_axis = "top", y_axis = NULL, x_label_anchor = "center", width = 605, height = 70
+  )
+
+hexbins <-
+  vg_mark_hexbin(data_from = "flights", filter_by = query, x = ~time, y = ~delay, fill = ~ vg_count(), bin_width = 10) |>
+  vg_mark_hexgrid(bin_width = 10) |>
+  vg_plot(
+    name = "hexbins", color_scheme = "ylgnbu", color_scale = scale,
+    margins = list(left = 5, right = 0, top = 0, bottom = 5),
+    x_axis = NULL, y_axis = NULL, xy_domain = "Fixed", width = 600, height = 455
+  )
+
+delay_hist <-
+  vg_mark_rect_x(data_from = "flights", x = ~ vg_count(), y = ~ vg_bin(delay), fill = "steelblue", inset = 0.5) |>
+  vg_interval_y(as = query) |>
+  vg_plot(
+    margins = list(left = 0, right = 50, top = 4, bottom = 5), y_domain = c(-60, 180),
+    x_axis = NULL, y_axis = "right", y_label_anchor = "center", width = 80, height = 455
+  )
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Flights Hexbin",
+    description = paste(
+      "Hexagonal bins show the density of over 200,000 flights by departure time and arrival",
+      "delay. Select regions in the marginal histograms to filter the density display."
+    )
+  ) |>
+  vg_data(name = "flights", file = vg_data_url("flights-200k.parquet")) |>
+  vg_params(scale = list(value = "log"), query = list(select = "intersect")) |>
+  vg_vconcat(
+    vg_hconcat(
+      vg_menu(label = "Color Scale", as = scale, options = c("log", "linear", "sqrt")),
+      vg_hspace(10),
+      vg_legend_color(for_plot = "hexbins")
+    ),
+    vg_hconcat(time_hist, vg_hspace(80)),
+    vg_hconcat(hexbins, delay_hist)
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/flights-hexbin.html) exactly,
+aside from `data.flights.file` (`vg_data_url()` vs. a relative path)
+and object key order.
+</details>

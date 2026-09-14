@@ -1,0 +1,70 @@
+---
+title: "Density 2D"
+subtitle: "A 2D density plot where circle size indicates point density, split by species."
+format: html
+engine: knitr
+---
+
+Recreates [Density 2D](https://idl.uw.edu/mosaic/examples/density2d.html)
+from the mosaic/vgplot example gallery. The data is divided by fill
+color into three sets of densities. To change the amount of smoothing,
+use the slider to set the kernel bandwidth.
+
+The `density` mark's own `width`/`height` (its internal bin grid
+resolution, bound to the `bins` slider) are distinct from the *plot's*
+`width`/`height` (its rendered size) -- confirms the mark/plot
+attribute collision fix (see `NOTES.md`) also works when the mark's
+own property is bound to a param, not just a literal value.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+bandwidth <- param(bandwidth)
+bins <- param(bins)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Density 2D",
+    description = paste(
+      "A 2D `density` plot in which circle size indicates the point density. The data is",
+      "divided by fill color into three sets of densities. To change the amount of",
+      "smoothing, use the slider to set the kernel bandwidth."
+    )
+  ) |>
+  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_params(bandwidth = 20, bins = 20) |>
+  vg_vconcat(
+    vg_hconcat(
+      vg_slider(label = "Bandwidth (σ)", as = bandwidth, min = 1, max = 100),
+      vg_slider(label = "Bins", as = bins, min = 10, max = 60)
+    ),
+    vg_mark_density(
+      data_from = "penguins", x = ~bill_length, y = ~bill_depth, r = ~density, fill = ~species, fill_opacity = 0.5,
+      width = bins, height = bins, bandwidth = bandwidth
+    ) |>
+      vg_mark_dot(data_from = "penguins", x = ~bill_length, y = ~bill_depth, fill = "currentColor", r = 1) |>
+      vg_plot(
+        r_range = c(0, 16), x_axis = "bottom", x_label_anchor = "center",
+        y_axis = "right", y_label_anchor = "center",
+        margins = list(top = 5, bottom = 30, left = 5, right = 50), width = 700, height = 480
+      )
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/density2d.html) exactly,
+aside from `data.penguins.file` (`vg_data_url()` vs. a relative path)
+and object key order.
+</details>

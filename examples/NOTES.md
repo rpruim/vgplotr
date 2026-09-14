@@ -1,12 +1,25 @@
 # Notes: recreating mosaic's example gallery with vgplotr
 
-Each example under `examples/<category>/` recreates a page from
-<https://idl.uw.edu/mosaic/examples/>. Verification method: build the R
-spec, then compare `to_json(spec)` against the "JSON" tab on the
-corresponding mosaic example page (rather than rendering, per instruction
--- rendering/visual verification is done separately). Data comes from
-`vg_data_url("<file>")` (mosaic's own `data/` directory on GitHub) rather
-than a local copy.
+Each example recreates a page from <https://idl.uw.edu/mosaic/examples/>.
+Verification method: build the R spec, then compare `to_json(spec)`
+against the "JSON" tab on the corresponding mosaic example page (rather
+than rendering, per instruction -- rendering/visual verification is done
+separately). Data comes from `vg_data_url("<file>")` (mosaic's own
+`data/` directory on GitHub) rather than a local copy.
+
+The `.qmd` files themselves now live in `vignettes/articles/` (flat,
+`<category>-<name>.qmd`), rendered into the pkgdown site's "Examples"
+gallery (`_pkgdown.yml`) rather than under this `examples/` directory --
+moved there because pkgdown only discovers `.qmd`/`.Rmd` articles inside
+`vignettes/`. They're flat rather than nested one level under
+`vignettes/articles/<category>/<name>.qmd` because pkgdown's quarto
+support (as of pkgdown 2.2.0) fails to find the built output for
+articles nested in a subdirectory ("No built file found") -- confirmed
+directly (a flat file with the same hyphenated name builds fine, an
+otherwise-identical nested one doesn't). `vignettes/articles/` is in
+`.Rbuildignore`, so none of this is part of `R CMD build`/`check`; only
+`pkgdown::build_site()` touches it. This file (`examples/NOTES.md`)
+stays here as a dev-notes hand-off, not part of the gallery itself.
 
 ## Bugs found and fixed while doing this
 

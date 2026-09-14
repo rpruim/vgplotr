@@ -1,0 +1,93 @@
+---
+title: "Line Density"
+subtitle: "Density of stock price line series, normalized and unnormalized, with linked zoom."
+format: html
+engine: knitr
+---
+
+Recreates [Line Density](https://idl.uw.edu/mosaic/examples/line-density.html)
+from the mosaic/vgplot example gallery. The `denseLine` mark shows the
+densities of line series, here for a collection of stock prices. The
+top plot normalizes by arc length to remove the vertical artifacts
+visible in the unnormalized plot below. Select a region in the lower
+plot to zoom the upper plot. The bandwidth slider smooths the data,
+while the pixel size menu adjusts the raster resolution.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+brush <- param(brush)
+bandwidth <- param(bandwidth)
+pixel_size <- param(pixelSize)
+scheme_color <- param(schemeColor)
+scale_color <- param(scaleColor)
+
+top_plot <-
+  vg_mark_dense_line(
+    data_from = "stocks_after_2006", filter_by = brush, x = ~Date, y = ~Close, z = ~Symbol, fill = "density",
+    bandwidth = bandwidth, pixel_size = pixel_size
+  ) |>
+  vg_plot(
+    color_scheme = scheme_color, color_scale = scale_color,
+    y_label = "Close (Normalized) ↑", y_nice = TRUE,
+    margins = list(left = 30, top = 20, right = 0), width = 680, height = 240
+  )
+
+bottom_plot <-
+  vg_mark_dense_line(
+    data_from = "stocks_after_2006", x = ~Date, y = ~Close, z = ~Symbol, fill = "density", normalize = FALSE,
+    bandwidth = bandwidth, pixel_size = pixel_size
+  ) |>
+  vg_interval_xy(as = brush) |>
+  vg_plot(
+    color_scheme = scheme_color, color_scale = scale_color,
+    y_label = "Close (Unnormalized) ↑", y_nice = TRUE,
+    margins = list(left = 30, top = 20, right = 0), width = 680, height = 240
+  )
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Line Density",
+    description = paste(
+      "The `denseLine` mark shows the densities of line series, here for a collection of",
+      "stock prices. The top plot normalizes by arc length to remove the vertical artifacts",
+      "visible in the unnormalized plot below. Select a region in the lower plot to zoom the",
+      "upper plot. The bandwidth slider smooths the data, while the pixel size menu adjusts",
+      "the raster resolution."
+    )
+  ) |>
+  vg_data(
+    name = "stocks_after_2006", file = vg_data_url("stocks_after_2006.parquet"),
+    select = c("Symbol", "Close", "Date"), where = "Close < 100"
+  ) |>
+  vg_params(
+    brush = list(select = "intersect"), bandwidth = 0, pixelSize = 2,
+    schemeColor = "pubugn", scaleColor = "sqrt"
+  ) |>
+  vg_vconcat(
+    vg_hconcat(
+      vg_slider(label = "Bandwidth (σ)", as = bandwidth, min = 0, max = 10, step = 0.1),
+      vg_menu(label = "Pixel Size", as = pixel_size, options = c(0.5, 1, 2))
+    ),
+    vg_vspace(10),
+    top_plot, bottom_plot
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/line-density.html) exactly,
+aside from `data.stocks_after_2006.file` (`vg_data_url()` vs. a
+relative path) and object key order.
+</details>

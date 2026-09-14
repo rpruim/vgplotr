@@ -1,0 +1,74 @@
+---
+title: "U.S. Counties"
+subtitle: "A map of U.S. counties with hidden centroid tooltips."
+format: html
+engine: knitr
+---
+
+Recreates [U.S. Counties](https://idl.uw.edu/mosaic/examples/us-county-map.html)
+from the mosaic/vgplot example gallery. County name tooltips are
+anchored to invisible centroid dot marks. Requires the DuckDB
+`spatial` extension.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "U.S. Counties",
+    description = paste(
+      "A map of U.S. counties. County name tooltips are anchored to invisible centroid dot",
+      "marks. Requires the DuckDB `spatial` extension."
+    )
+  ) |>
+  vg_data(
+    name = "counties",
+    type = "spatial",
+    file = vg_data_url("us-counties-10m.json"),
+    layer = "counties"
+  ) |>
+  vg_data(
+    name = "states",
+    type = "spatial",
+    file = vg_data_url("us-counties-10m.json"),
+    layer = "states"
+  ) |>
+  vg_mark_geo(
+    data_from = "counties",
+    stroke = "currentColor",
+    stroke_width = 0.25
+  ) |>
+  vg_mark_geo(
+    data_from = "states",
+    stroke = "currentColor",
+    stroke_width = 1
+  ) |>
+  vg_mark_dot(
+    data_from = "counties",
+    x = ~ vg_centroid_x(geom),
+    y = ~ vg_centroid_y(geom),
+    r = 2,
+    fill = "transparent",
+    tip = TRUE,
+    title = ~name
+  ) |>
+  vg_plot(margin = 0, projection_type = "albers")
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/us-county-map.html) exactly,
+aside from `data.counties.file`/`data.states.file` (`vg_data_url()`
+vs. a relative path) and object key order.
+</details>

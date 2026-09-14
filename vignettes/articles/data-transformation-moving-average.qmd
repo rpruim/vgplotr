@@ -1,0 +1,69 @@
+---
+title: "Moving Average"
+subtitle: "Daily reported COVID-19 cases in Berlin, smoothed with a moving average over various window frames."
+format: html
+engine: knitr
+---
+
+Recreates [Moving Average](https://idl.uw.edu/mosaic/examples/moving-average.html)
+from the mosaic/vgplot example gallery. This plot shows daily reported
+COVID-19 cases from March 3 (day 1) to May 5, 2020 (day 64) in Berlin,
+Germany. We can smooth the raw counts using a moving average over
+various choices of window query frames.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+frame <- param(frame)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Moving Average",
+    description = paste(
+      "This plot shows daily reported COVID-19 cases from March 3 (day 1) to May 5, 2020",
+      "(day 64) in Berlin, Germany, as reported by the Robert Koch Institute. We can smooth",
+      "the raw counts using a moving average over various choices of window query frames."
+    ),
+    credit = "Adapted from the [Arquero window query tutorial](https://observablehq.com/@uwdata/working-with-window-queries)."
+  ) |>
+  vg_data(name = "cases", file = vg_data_url("berlin-covid.parquet")) |>
+  vg_params(frame = c(-6, 0)) |>
+  vg_vconcat(
+    vg_mark_rect_y(
+      data_from = "cases", x1 = ~day, x2 = ~ sql("day + 1"), inset = 1, y = ~cases, fill = "steelblue"
+    ) |>
+      vg_mark_line_y(
+        data_from = "cases", x = ~ sql("day + 0.5"),
+        y = ~ vg_avg(cases, orderby = "day", rows = frame),
+        curve = "monotone-x", stroke = "currentColor"
+      ) |>
+      vg_plot(x_label = "day", width = 680, height = 300),
+    vg_menu(
+      label = "Window Frame", as = frame,
+      options = list(
+        list(label = "7-day moving average, with prior 6 days: [-6, 0]", value = c(-6, 0)),
+        list(label = "7-day moving average, centered at current day: [-3, 3]", value = c(-3, 3)),
+        list(label = "Moving average, with all prior days [-∞, 0]", value = list(NULL, 0)),
+        list(label = "Global average [-∞, +∞]", value = list(NULL, NULL))
+      )
+    )
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/moving-average.html) exactly,
+aside from `data.cases.file` (`vg_data_url()` vs. a relative path) and
+object key order.
+</details>

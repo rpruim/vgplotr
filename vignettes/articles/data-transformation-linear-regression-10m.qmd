@@ -1,0 +1,89 @@
+---
+title: "Linear Regression 10M"
+subtitle: "A linear regression plot over 10 million flight records, with optimized selection updates using materialized sample views."
+format: html
+engine: knitr
+---
+
+Recreates [Linear Regression
+10M](https://idl.uw.edu/mosaic/examples/linear-regression-10m.html)
+from the mosaic/vgplot example gallery. Regression computation is
+performed in the database, with optimized selection updates using
+pre-aggregated materialized views. The area around a regression line
+shows a 95% confidence interval. Select a region to view regression
+results for a data subset.
+
+Note: the underlying `flights-10m.parquet` file is ~10 million rows,
+hosted outside mosaic's usual `data/` directory (a Cloudflare R2
+bucket, referenced directly inside the SQL query text below rather than
+via `vg_data_url()`, which only covers files under mosaic's own GitHub
+`data/` directory). Rendering this one may be slow.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+data_p <- param(data)
+query <- param(query)
+
+flights_url <- "https://pub-1da360b43ceb401c809f68ca37c7f8a4.r2.dev/data/flights-10m.parquet"
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Linear Regression 10M",
+    description = paste(
+      "A linear regression plot predicting flight arrival delay based on the time of",
+      "departure, over 10 million flight records. Regression computation is performed in",
+      "the database, with optimized selection updates using pre-aggregated materialized",
+      "views. The area around a regression line shows a 95% confidence interval. Select a",
+      "region to view regression results for a data subset."
+    )
+  ) |>
+  vg_data(name = "flights10m", query = sprintf(
+    "SELECT GREATEST(-60, LEAST(ARR_DELAY, 180))::DOUBLE AS delay, DISTANCE AS distance, DEP_TIME AS time FROM %s",
+    shQuote(flights_url, type = "sh")
+  )) |>
+  vg_data(name = "flights10p", query = "SELECT * FROM flights10m USING SAMPLE 10%") |>
+  vg_data(name = "flights5p", query = "SELECT * FROM flights10m USING SAMPLE 5%") |>
+  vg_data(name = "flights1p", query = "SELECT * FROM flights10m USING SAMPLE 1%") |>
+  vg_params(data = "flights10m") |>
+  vg_vconcat(
+    vg_menu(
+      label = "Sample", as = data_p,
+      options = list(
+        list(value = "flights10m", label = "Full Data"),
+        list(value = "flights10p", label = "10% Sample"),
+        list(value = "flights5p", label = "5% Sample"),
+        list(value = "flights1p", label = "1% Sample")
+      )
+    ),
+    vg_vspace(10),
+    vg_mark_raster(
+      data_from = data_p, x = ~time, y = ~delay,
+      pixel_size = 4, pad = 0, image_rendering = "pixelated"
+    ) |>
+      vg_mark_regression_y(data_from = data_p, x = ~time, y = ~delay, stroke = "gray") |>
+      vg_mark_regression_y(data_from = data_p, filter_by = query, x = ~time, y = ~delay, stroke = "firebrick") |>
+      vg_interval_xy(as = query, brush = list(fillOpacity = 0, stroke = "currentColor")) |>
+      vg_plot(
+        x_domain = c(0, 24), y_domain = c(-60, 180),
+        color_scale = "symlog", color_scheme = "blues", color_domain = "Fixed"
+      )
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/linear-regression-10m.html)
+exactly, aside from object key order.
+</details>

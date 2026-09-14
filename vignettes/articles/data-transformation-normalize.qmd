@@ -1,0 +1,76 @@
+---
+title: "Normalized Stock Prices"
+subtitle: "Hover over the chart to normalize stock prices for the percentage return on a given day."
+format: html
+engine: knitr
+---
+
+Recreates [Normalized Stock
+Prices](https://idl.uw.edu/mosaic/examples/normalize.html) from the
+mosaic/vgplot example gallery. A `nearestX` interactor selects the
+nearest date, and parameterized expressions reactively update in
+response.
+
+The `point` param is declared as a mosaic `ParamDate` (`list(date =
+"2013-05-13")`, mosaic-spec's `{"date": "..."}` shape), and used both
+directly as a mark encoding (`x = point`, with no `~` formula needed,
+since a `param()` reference is already a self-contained value) and
+interpolated inside `sql()` expressions.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+point <- param(point)
+
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Normalized Stock Prices",
+    description = paste(
+      "What is the return on investment for different days? Hover over the chart to",
+      "normalize the stock prices for the percentage return on a given day. A `nearestX`",
+      "interactor selects the nearest date, and parameterized expressions reactively update",
+      "in response."
+    )
+  ) |>
+  vg_data(name = "stocks", file = vg_data_url("stocks.parquet")) |>
+  vg_data(
+    name = "labels",
+    query = "SELECT MAX(Date) as Date, ARGMAX(Close, Date) AS Close, Symbol FROM stocks GROUP BY Symbol"
+  ) |>
+  vg_params(point = list(date = "2013-05-13")) |>
+  vg_mark_rule_x(x = point) |>
+  vg_mark_text_x(x = point, text = point, frame_anchor = "top", line_anchor = "bottom", dy = -7) |>
+  vg_mark_text(
+    data_from = "labels", x = ~Date,
+    y = ~ sql("Close / (SELECT max(Close) FROM stocks WHERE Symbol = source.Symbol AND Date = ", point, ")"),
+    dx = 2, text = ~Symbol, fill = ~Symbol, text_anchor = "start"
+  ) |>
+  vg_mark_line_y(
+    data_from = "stocks", x = ~Date,
+    y = ~ sql("Close / (SELECT max(Close) FROM stocks WHERE Symbol = source.Symbol AND Date = ", point, ")"),
+    stroke = ~Symbol
+  ) |>
+  vg_nearest_x(as = point) |>
+  vg_plot(
+    y_scale = "log", y_domain = c(0.2, 6), y_grid = TRUE, x_label = NULL, y_label = NULL,
+    y_tick_format = "%", width = 680, height = 400, margin_right = 35
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/normalize.html) exactly, aside
+from `data.stocks.file` (`vg_data_url()` vs. a relative path) and
+object key order.
+</details>

@@ -1,0 +1,75 @@
+---
+title: "U.S. Unemployment"
+subtitle: "A choropleth map of unemployment rates for U.S. counties."
+format: html
+engine: knitr
+---
+
+Recreates [U.S.
+Unemployment](https://idl.uw.edu/mosaic/examples/unemployment.html)
+from the mosaic/vgplot example gallery (adapted from an [Observable
+Plot example](https://observablehq.com/@observablehq/plot-us-choropleth)).
+Requires the DuckDB `spatial` extension.
+
+`combined` is a derived table (a plain SQL join query, mosaic-spec's
+bare-string `DataQuery`) joining the spatial `counties` geometry with
+the `rates` unemployment data by county id.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "U.S. Unemployment",
+    description = "A choropleth map of unemployment rates for U.S. counties. Requires the DuckDB `spatial` extension.",
+    credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-us-choropleth)."
+  ) |>
+  vg_data(
+    name = "counties",
+    type = "spatial",
+    file = vg_data_url("us-counties-10m.json"),
+    layer = "counties"
+  ) |>
+  vg_data(
+    name = "rates",
+    file = vg_data_url("us-county-unemployment.parquet")
+  ) |>
+  vg_data(
+    name = "combined",
+    query = "SELECT a.geom AS geom, b.rate AS rate FROM counties AS a, rates AS b WHERE a.id = b.id\n"
+  ) |>
+  vg_vconcat(
+    vg_legend_color(for_plot = "county-map", label = "Unemployment (%)"),
+    vg_mark_geo(
+      data_from = "combined",
+      fill = ~rate,
+      title = ~ sql("concat(rate, '%')")
+    ) |>
+      vg_plot(
+        name = "county-map",
+        margin = 0,
+        color_scale = "quantile",
+        color_n = 9,
+        color_scheme = "blues",
+        projection_type = "albers-usa"
+      )
+  )
+
+vg_render(spec)
+```
+
+<details>
+<summary>Comparing to mosaic's own JSON spec</summary>
+
+```{r}
+cat(to_json(spec))
+```
+
+Matches [mosaic's own JSON
+spec](https://idl.uw.edu/mosaic/examples/unemployment.html) exactly,
+aside from `data.counties.file`/`data.rates.file` (`vg_data_url()` vs.
+a relative path) and object key order.
+</details>
