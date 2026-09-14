@@ -16,3 +16,5 @@ vignettes/.quarto/
 # inst/htmlwidgets/lib/mosaic-bundle.min.js, is committed; the node_modules
 # used to produce it are not.
 data-raw/js/node_modules/
+inst/doc
+**/.quarto/

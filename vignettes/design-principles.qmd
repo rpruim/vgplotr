@@ -1,0 +1,174 @@
+---
+title: "{vgplotr} Design Principles"
+vignette: >
+  %\VignetteIndexEntry{{vgplotr} Design Principles}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+
+```{r}
+#| label: setup
+#| include: false
+library(tibble)
+library(dplyr)
+library(gt)
+library(vgplotr)
+library(palmerpenguins)
+```
+
+Part of learning a new graphics system is learning the 
+principles that were used in its design.  This
+vignette lays out some of the important vocabulary,
+concepts, and design principles used to create {vgplotr},
+many of which are inherited either from mosaic or
+from the grammar of graphics more generally.
+
+# What is a graphic?  What is a grammar of graphics?
+
+A **graphic** is a visual^[Perhaps *sensory* would be 
+better than visual, since once could make tactile
+representations of data as well. But since {vgplotr}
+is concerned with *visual* representations, we will
+stick with visual here.] 
+display of data.  Leland Wilkerson proposed a 
+**grammar of graphics** that would allow those 
+fluent in it to use the grammar to flexibly describe all
+sorts of graphics, which a computer could then **render**
+into the desired visual representation.  Indeed,
+the core ideas contained in Wilkerson's grammar of 
+graphics have been used to design and implement
+a number of computer graphics systems including
+... 
+
+In some of these systems, the code resembles the grammar
+especially closely.  Mosaic, and hence {vgplotr}, is
+one of those systems.
+
+Important components of the grammar of graphics (using
+terminology to match {vgplotr}) include
+
+marks (geoms, glyphs)
+: The visual elements (dots, lines, etc.) that appear
+on the graphic
+
+attributes (properties, aesthetics)
+: Each mark has a number of attributes 
+(e.g., position, color, size, etc.)
+that determine how and where it is displayed within
+the graphic.
+
+scales
+: A scale is a function that **maps** data values to 
+visual values of attributes 
+(position, color, shape, etc.) that 
+determine how and where those data values are represented
+on the graphic.  Attribute values can also be 
+**set** to constant values that do not depend on data.
+
+guides
+: A guide is a visual element that helps the reader of
+the graphic reverse the scale, i.e., determine a 
+data value corresponding to the value of a visual
+attribute.
+
+transformations
+: A transformation is a function applied to data
+before visualization.  A histogram, for example,
+uses a transformation that puts data values into 
+bins and counts how many values are in each bin.
+
+A **specification** describes the marks, attributes,
+scales, guides, and transformations and how they are 
+to be combined to produce a graphic.
+
+Many graphics consist of several (sub)**plots** that
+are arranged or layered to produce the composite 
+graphic.
+
+# Code conventions used in {vgplotr}
+
+## snake_case
+
+Various mosaic APIs use either camelCase or snake_case
+for names of elements of a mosaic specification.
+{vgplotr} adopts snake_case (as does the Python API).
+To translate camelCase to snake_case, simply insert
+an underscore before any block of capitals and then
+make all letters lower case as in the examples below.
+
+```{r}
+#| label: camel-to-snake
+#| echo: false
+
+tribble(
+  ~camelCase    , ~snake_case    ,
+  "fillOpacity" , "fill_opacity" ,
+  "scaleX"      , "scale_x"
+) |>
+  gt()
+```
+
+This makes it easy to translate documentation written
+for one naming style into the other.
+
+Nearly all functions in {vgplotr} begin `vg_`.
+Functions for specifying marks begin `vg_mark_`,
+for scales, `vg_scale_`, for guides `vg_guide_`, etc.
+Generally, the names resemble the names used 
+in mosaic, but there are a few important exceptions.
+
+* mosaic uses axis or legend for guides, depending on 
+which type of guide it is. This leads to some awkward
+name collisions for axes which are easily avoided 
+by using *guide* for both axes and legends.
+
+## Formulas for mapping
+
+Attributes can be mapped to data or set to constant values.
+To map an attribute to a variable, we use a formula. This 
+reduces the need for quoting or non-standard evaluation.
+
+## Use of the pipe (`|>`)
+
+The first argument for most `vg_*()` functions
+is `spec` (a specifcation for a graphic or a graphic 
+fragment), and most also return a specification.
+This allows a piped workflow to build up the components
+of a graphic specification.
+
+To make simple graphics easier to specify, `vg_mark_*()`
+functions also allow `spec` to be a data source (e.g., a 
+data frame).  This allows us to pipe a data frame -- perhaps
+after some tidyverse data wrangling -- directly into
+the first mark of a layered graphic.
+
+```{r}
+#| label: spec-as-data
+library(vgplotr)
+library(palmerpenguins)
+
+penguins |>
+  filter(!is.na(sex)) |>
+  filter(species == "Gentoo") |>
+  vg_mark_dot(
+    x = ~bill_depth_mm,
+    y = ~bill_length_mm,
+    fill = ~sex
+  ) |>
+  vg_mark_regression_y(
+    x = ~bill_depth_mm,
+    y = ~bill_length_mm,
+    stroke = ~sex
+  ) |>
+  vg_guide_color(label = "sex") |>
+  vg_meta(title = "Gentoo penguins") |>
+  # vg_render() |>
+  to_yaml(suppress_data = TRUE) |>
+  cat()
+```
+

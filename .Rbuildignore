@@ -3,3 +3,5 @@
 ^\.github$
 ^data-raw/js/node_modules$
 ^data-raw$
+^vignettes/\.quarto$
+^vignettes/*_files$
