@@ -21,7 +21,18 @@
 #' convenience layered on top of what mosaic itself does; `description`/
 #' `credit` remain inert for now.
 #'
-#' @param spec A `vgspec` with a layout of plots/vconcat()/hconcat().
+#' @param spec A `vgspec` with a layout of plots/vconcat()/hconcat(), or a
+#'   single JSON or YAML string holding an already-complete mosaic spec --
+#'   e.g. copied from mosaic's own example gallery, or the output of
+#'   [to_json()]/[to_yaml()] -- to render it directly without building it up
+#'   through `vg_*()` calls first. Format is auto-detected (JSON if the
+#'   trimmed text starts with an opening brace or bracket, YAML otherwise).
+#'   Data references in
+#'   such a spec are left exactly as given -- unlike a `vgspec`'s own local
+#'   `file =`/inline-data-frame sources, nothing here is read or embedded,
+#'   so a local file path needs to actually be fetchable (an http(s) URL,
+#'   or a path relative to wherever the rendered page is ultimately opened
+#'   from) for duckdb-wasm to load it in the browser.
 #' @param width,height Widget sizing, in CSS units (e.g. `"100%"`) or pixels.
 #' @param elementId Optional DOM element ID for the widget.
 #' @param use_cache Whether this plot should use the local duckdb-wasm engine
@@ -71,11 +82,11 @@ vg_render <- function(
     )
   )
 
-  if (!is.null(spec$meta$title)) {
+  if (!is.null(payload$spec$meta$title)) {
     widget <- htmlwidgets::prependContent(
       widget,
       htmltools::div(
-        spec$meta$title,
+        payload$spec$meta$title,
         style = "font-weight: 600; font-size: 1.1em; margin-bottom: 0.4em;"
       )
     )

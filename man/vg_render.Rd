@@ -13,7 +13,18 @@ vg_render(
 )
 }
 \arguments{
-\item{spec}{A \code{vgspec} with a layout of plots/vconcat()/hconcat().}
+\item{spec}{A \code{vgspec} with a layout of plots/vconcat()/hconcat(), or a
+single JSON or YAML string holding an already-complete mosaic spec --
+e.g. copied from mosaic's own example gallery, or the output of
+\code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}} -- to render it directly without building it up
+through \verb{vg_*()} calls first. Format is auto-detected (JSON if the
+trimmed text starts with an opening brace or bracket, YAML otherwise).
+Data references in
+such a spec are left exactly as given -- unlike a \code{vgspec}'s own local
+\verb{file =}/inline-data-frame sources, nothing here is read or embedded,
+so a local file path needs to actually be fetchable (an http(s) URL,
+or a path relative to wherever the rendered page is ultimately opened
+from) for duckdb-wasm to load it in the browser.}
 
 \item{width, height}{Widget sizing, in CSS units (e.g. \code{"100\%"}) or pixels.}
 

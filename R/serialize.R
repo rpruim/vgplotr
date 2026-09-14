@@ -23,6 +23,9 @@
 # would be wrong for a large or possibly-updated-later remote file.
 #' @noRd
 as_spec_payload <- function(spec) {
+  if (is.character(spec)) {
+    return(list(spec = parse_spec_string(spec), tables = list(), files = list()))
+  }
   stopifnot(is_vgspec(spec))
   if (is.null(spec$layout)) {
     stop("This vgspec doesn't have any plots yet.", call. = FALSE)
@@ -57,6 +60,75 @@ as_spec_payload <- function(spec) {
   if (length(spec$attrs)) out <- merge_attrs(out, lapply(spec$attrs, serialize_value), context = "vg_attributes()")
 
   list(spec = out, tables = tables, files = files)
+}
+
+# Parses a length-1 JSON or YAML string -- an already-complete mosaic-spec
+# (e.g. copied from mosaic's own example gallery, or from to_json()/
+# to_yaml()) -- into a plain nested list in the same shape as_spec_payload()
+# builds from a vgspec. Format is auto-detected: trimmed text starting with
+# `{` or `[` is parsed as JSON, anything else as YAML (YAML has no such
+# marker, but every JSON document is also valid YAML, so this only matters
+# for picking error messages). `simplifyVector = FALSE` keeps
+# jsonlite::fromJSON() from ever coercing an array of mark/plot objects into
+# a data.frame, which would silently break re-serialization.
+parse_spec_string <- function(text) {
+  if (length(text) != 1 || is.na(text)) {
+    stop(
+      "`spec` must be a single JSON/YAML string (or a vgspec), not ",
+      "length ", length(text), ".",
+      call. = FALSE
+    )
+  }
+  is_json <- grepl("^[[{]", trimws(text))
+  parsed <- tryCatch(
+    if (is_json) jsonlite::fromJSON(text, simplifyVector = FALSE) else yaml::yaml.load(quote_yaml_bool_keys(text)),
+    error = function(e) {
+      stop(
+        "Couldn't parse `spec` as ", if (is_json) "JSON" else "YAML", ": ",
+        conditionMessage(e),
+        call. = FALSE
+      )
+    }
+  )
+  is_object <- is.list(parsed) && (length(parsed) == 0 || !is.null(names(parsed)))
+  if (!is_object) {
+    stop(
+      "`spec` must parse to a JSON/YAML object (a mapping of keys like ",
+      "`plot`/`meta`/`data`), not a bare ",
+      if (is.list(parsed)) "array" else class(parsed)[1], ".",
+      call. = FALSE
+    )
+  }
+  parsed
+}
+
+# YAML 1.1 (what libyaml/the yaml package implements) resolves a handful of
+# short, unquoted words as booleans: y/n/on/off/yes/no (any case), on top of
+# the unambiguous true/false. That's a real hazard here specifically because
+# `y` -- as in the *x*/*y* encoding channel, one of the most common property
+# names in a mosaic spec -- silently becomes the logical TRUE if left
+# unquoted, which R then coerces to the list name "TRUE" (confirmed
+# directly: `yaml::yaml.load("y: b")` returns a list named "TRUE", not
+# "y"). The yaml package's own `handlers` argument can't fix this: it's
+# never invoked for *implicit* type resolution at all (confirmed directly
+# -- a custom "bool" handler simply never fires), only for explicit `!!tag`
+# annotations. So this quotes those specific bare words when they appear as
+# a mapping key, before parsing, leaving true/false (unambiguous, and what
+# to_yaml() itself always emits for real booleans) alone.
+quote_yaml_bool_keys <- function(text) {
+  bool_words <- c("y", "Y", "yes", "Yes", "YES", "n", "N", "no", "No", "NO",
+                   "on", "On", "ON", "off", "Off", "OFF")
+  pattern <- paste0(
+    "^(\\s*(?:-\\s+)?)(", paste(bool_words, collapse = "|"), ")(\\s*:)(\\s|$)"
+  )
+  lines <- strsplit(text, "\n", fixed = TRUE)[[1]]
+  lines <- vapply(
+    lines,
+    function(line) sub(pattern, "\\1'\\2'\\3\\4", line, perl = TRUE),
+    character(1),
+    USE.NAMES = FALSE
+  )
+  paste(lines, collapse = "\n")
 }
 
 # Reads a local data file into a form embeddable in the htmlwidget payload:

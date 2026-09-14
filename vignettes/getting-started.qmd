@@ -543,3 +543,36 @@ to_yaml(
     vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close)
 )
 ```
+
+## Rendering a spec from elsewhere
+
+`vg_render()` also accepts a JSON or YAML string directly -- an
+already-complete mosaic spec, e.g. copied from mosaic's own [example
+gallery](https://idl.uw.edu/mosaic/examples/) or the output of
+`to_json()`/`to_yaml()` above -- so an example found elsewhere can be
+dropped straight into a Quarto document without translating it into
+`vg_*()` calls first. Format is auto-detected from the text:
+
+```{r}
+vg_render('
+meta:
+  title: Pasted from elsewhere
+data:
+  penguins:
+    file: https://raw.githubusercontent.com/uwdata/mosaic/refs/heads/main/data/penguins.parquet
+plot:
+  - mark: dot
+    data:
+      from: penguins
+    x: bill_length
+    y: bill_depth
+    fill: species
+')
+```
+
+Since it's a plain string, anything it references has to be resolvable
+on its own -- a local data frame already loaded into R isn't available
+to it the way `vg_data()` makes one available to a `vgspec`, so
+`file =` needs to be a real, fetchable URL (as above) rather than a
+local path, unless the rendered page will always be opened from that
+same local directory.

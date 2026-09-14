@@ -177,3 +177,83 @@ test_that("data_from accepts a Param/Selection for a menu-driven dynamic data so
   payload <- serialize_item(spec$items[[1]])
   expect_equal(payload$data, list(from = "$data"))
 })
+
+test_that("as_spec_payload() parses a JSON string spec directly, with no tables/files", {
+  json <- '{"meta": {"title": "Hi"}, "plot": [{"mark": "dot", "x": "a", "y": "b"}]}'
+  payload <- as_spec_payload(json)
+
+  expect_equal(payload$spec$meta$title, "Hi")
+  expect_equal(payload$spec$plot[[1]], list(mark = "dot", x = "a", y = "b"))
+  expect_equal(payload$tables, list())
+  expect_equal(payload$files, list())
+})
+
+test_that("as_spec_payload() parses a YAML string spec directly", {
+  yml <- "
+meta:
+  title: Hi
+plot:
+  - mark: dot
+    x: a
+    y: b
+"
+  payload <- as_spec_payload(yml)
+
+  expect_equal(payload$spec$meta$title, "Hi")
+  expect_equal(payload$spec$plot[[1]], list(mark = "dot", x = "a", y = "b"))
+})
+
+test_that("as_spec_payload() doesn't mangle an unquoted YAML `y:` key into a boolean", {
+  # YAML 1.1 (what the yaml package implements) resolves bare y/n/yes/no/
+  # on/off as booleans -- `y` collides with the x/y encoding channel name,
+  # so an unquoted `y:` key would otherwise come back named "TRUE".
+  yml <- "
+plot:
+  - mark: dot
+    x: a
+    y: b
+"
+  payload <- as_spec_payload(yml)
+  expect_named(payload$spec$plot[[1]], c("mark", "x", "y"))
+  expect_equal(payload$spec$plot[[1]]$y, "b")
+})
+
+test_that("as_spec_payload() leaves real YAML booleans (true/false) as logicals, keys and values alike", {
+  yml <- "
+plot:
+  - mark: dot
+    x: a
+    y: b
+    tip: true
+    no_border: false
+    label: yes
+"
+  payload <- as_spec_payload(yml)
+  mark <- payload$spec$plot[[1]]
+  expect_identical(mark$tip, TRUE)
+  expect_identical(mark$no_border, FALSE)
+  expect_identical(mark$label, TRUE) # unquoted `yes` as a *value* is legitimately boolean
+})
+
+test_that("as_spec_payload() round-trips a vgspec through to_yaml()", {
+  spec <- vg_create() |>
+    vg_mark_dot(x = ~a, y = ~b)
+  via_string <- as_spec_payload(to_yaml(spec))
+  direct <- as_spec_payload(spec)
+  expect_equal(via_string$spec, direct$spec)
+})
+
+test_that("as_spec_payload() gives a clear error on a non-length-1 string", {
+  expect_error(as_spec_payload(character(0)), "single JSON/YAML string")
+  expect_error(as_spec_payload(c("a", "b")), "single JSON/YAML string")
+})
+
+test_that("as_spec_payload() gives a clear error on malformed JSON/YAML text", {
+  expect_error(as_spec_payload("{not valid"), "Couldn't parse `spec` as JSON")
+  expect_error(as_spec_payload("not: [valid yaml: ["), "Couldn't parse `spec` as YAML")
+})
+
+test_that("as_spec_payload() rejects a string that doesn't parse to an object", {
+  expect_error(as_spec_payload("[1, 2, 3]"), "must parse to a JSON/YAML object")
+  expect_error(as_spec_payload("just a string"), "must parse to a JSON/YAML object")
+})
