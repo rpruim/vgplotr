@@ -229,7 +229,8 @@ continuous variable and counting rows per bin -- all computed by DuckDB, not
 in R.
 
 ```{r}
-delays <- data.frame(delay = rgamma(2000, shape = 2, rate = 0.3) - 5)
+delays <-
+  data.frame(delay = rgamma(2000, shape = 2, rate = 0.3) - 5)
 
 spec4 <-
   vg_create() |>
@@ -523,8 +524,10 @@ alongside other mosaic examples). `to_json()`/`to_yaml()` work on a full
 string:
 
 ```{r}
-frag <- vg_mark_dot(x = ~x, y = ~y, fill = "steelblue") |>
+frag <-
+  vg_mark_dot(x = ~x, y = ~y, fill = "steelblue") |>
   vg_interval_x(as = param(brush))
+
 to_json(frag)
 ```
 
@@ -537,11 +540,10 @@ objects (mosaic-spec's own `{data: [...]}` form), matching how mosaic's
 own example specs represent small inline datasets:
 
 ```{r}
-to_yaml(
-  vg_create() |>
-    vg_data(name = "aapl", data = aapl) |>
-    vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close)
-)
+vg_create() |>
+  vg_data(name = "aapl", data = aapl) |>
+  vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
+  to_yaml()
 ```
 
 ## Rendering a spec from elsewhere
