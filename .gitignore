@@ -22,3 +22,5 @@ inst/doc
 # pkgdown build output -- regenerate with pkgdown::build_site(); deploy via
 # a gh-pages workflow rather than committing built HTML to main.
 docs/
+
+**/*.quarto_ipynb

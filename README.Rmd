@@ -1,37 +1,37 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # {vgplotr}: An R interface to Mosaic vgplot
 
 ## What is Mosaic?
 
-Mosaic is a framework for linking data visualizations, tables, input
-widgets, and other data-driven components, while leveraging a database
-for scalable processing. With Mosaic, you can interactively visualize
-and explore millions and even billions of data points.
+Mosaic is a framework for linking data visualizations, tables, input widgets, and other data-driven components, while leveraging a database for scalable processing. With Mosaic, you can interactively visualize and explore millions and even billions of data points.
 
-A key idea is that interface components – Mosaic clients – publish their
-data needs as queries that are managed by a central coordinator. The
-coordinator may further optimize queries before issuing them to a
-backing data source such as DuckDB.
+A key idea is that interface components – Mosaic clients – publish their data needs as queries that are managed by a central coordinator. The coordinator may further optimize queries before issuing them to a backing data source such as DuckDB.
 
-Mosaic/vgplot is a grammar of interactive graphics in which graphical
-marks are Mosaic clients.
+Mosaic/vgplot is a grammar of interactive graphics in 
+which graphical marks are Mosaic clients.
 
-As the name suggests, vgplot combines concepts from existing tools such
-as Vega-Lite, ggplot2, and Observable Plot. Like Vega-Lite, vgplot
-supports rich interactions and declarative specification either using an
-API or standalone JSON/YAML specs (via the mosaic-spec package).
-However, because vgplot is based on Mosaic, it interoperates with other
-Mosaic clients, such as the included Mosaic Inputs. vgplot calls
-Observable Plot to render SVG output.
+As the name suggests, vgplot combines concepts from existing tools such as Vega-Lite, ggplot2, and Observable Plot. Like Vega-Lite, vgplot supports rich interactions and declarative specification either using an API or standalone JSON/YAML specs (via the mosaic-spec package). However, because vgplot is based on Mosaic, it interoperates with other Mosaic clients, such as the included Mosaic Inputs. vgplot calls Observable Plot to render SVG output.
 
 ## Bringing Mosaic to R
 
-The goal of {vgplotr} is to bring Mosaic functionality to R in a way
-that feels familiar to R users.
+The goal of {vgplotr} is to bring Mosaic functionality to R
+in a way that feels familiar to R users.
 
-``` r
+```{r}
 library(vgplotr)
 library(mosaicData)
 Births2015 |>
@@ -40,12 +40,12 @@ Births2015 |>
   vg_render()
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
+Here is an example that shows some of the interactive
+capabilities of {vgplotr}:
 
-Here is an example that shows some of the interactive capabilities of
-{vgplotr}:
-
-``` r
+```{r}
+#| label: stocks
+#| code-fold: true
 library(vgplotr)
 
 point <- param(point)
@@ -112,18 +112,17 @@ vg_create() |>
   vg_render()
 ```
 
-<img src="man/figures/README-stocks-1.png" alt="" width="100%" />
-
 <!-- badges: start -->
-
 <!-- badges: end -->
+
 
 ## Installation
 
-Once the GitHub repo has been made public, you can install the
+Once the GitHub repo has been made public, you can install the 
 development version of vgplotr from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
 pak::pak("rpruim/vgplotr")
 ```
+
