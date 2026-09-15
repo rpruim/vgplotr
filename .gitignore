@@ -24,3 +24,7 @@ inst/doc
 docs/
 
 **/*.quarto_ipynb
+
+# rmarkdown::render()'s local HTML preview of README.Rmd -- README.md
+# (committed) is the real output; this is just a render byproduct.
+README.html

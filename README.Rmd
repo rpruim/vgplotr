@@ -37,7 +37,7 @@ library(mosaicData)
 Births2015 |>
   vg_mark_line(x = ~date, y = ~births, stroke = ~wday) |>
   vg_meta(title = "US Births in 2015") |>
-  vg_render()
+  vg_snapshot()
 ```
 
 Here is an example that shows some of the interactive
@@ -109,7 +109,7 @@ vg_create() |>
     height = 400,
     margin_right = 35
   ) |>
-  vg_render()
+  vg_snapshot()
 ```
 
 <!-- badges: start -->

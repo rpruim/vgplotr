@@ -22,12 +22,14 @@ Imports:
 Suggests:
     dplyr,
     gt,
+    httpuv,
     knitr,
     palmerpenguins,
     pkgdown,
     quarto,
     testthat (>= 3.0.0),
-    tibble
+    tibble,
+    webshot2
 Config/testthat/edition: 3
 VignetteBuilder: quarto
 Config/roxygen2/version: 8.0.0
@@ -50,5 +52,6 @@ Collate:
     'render.R'
     'scale-generated.R'
     'serialize.R'
+    'snapshot.R'
     'sql.R'
     'transforms.R'

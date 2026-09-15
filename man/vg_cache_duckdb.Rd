@@ -41,6 +41,7 @@ Other duckdb caching functions:
 \code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}},
 \code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}},
 \code{\link[=vg_render]{vg_render()}},
+\code{\link[=vg_snapshot]{vg_snapshot()}},
 \code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}}
 }
 \concept{duckdb caching functions}
