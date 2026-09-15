@@ -37,20 +37,6 @@
 #' @param ... Encodings (e.g. `x = ~var1`), mark options, and/or plot-level
 #'   attributes (`width =`, `name =`, ...). See [vg_plot()] for how
 #'   plot-level attributes from multiple marks are combined.
-# Whether any value in a mark's `...` args actually references data -- a
-# formula (`~col`, `~fn(col)`), an unwrapped sql()/agg() (a "vg_sql_expr"),
-# or an unwrapped transform like vg_bin()/vg_count() (a "vg_transform").
-# Plain literals (numbers, strings, TRUE/FALSE) and param() references
-# ("vg_param") don't -- a param is a reactive scalar, not a per-row lookup,
-# so it doesn't need a backing table either.
-args_reference_data <- function(args) {
-  any(vapply(
-    args,
-    function(v) inherits(v, "formula") || inherits(v, "vg_transform") || inherits(v, "vg_sql_expr"),
-    logical(1)
-  ))
-}
-
 #' @export
 vg_mark <- function(spec = NULL, mark, ...) {
   args <- list(...)
@@ -112,6 +98,20 @@ vg_mark <- function(spec = NULL, mark, ...) {
   fragment$attrs <- merge_attrs(fragment$attrs, split$plot_attrs, context = paste0("mark `", mark, "`"))
 
   update_layout(spec, fragment)
+}
+
+# Whether any value in a mark's `...` args actually references data -- a
+# formula (`~col`, `~fn(col)`), an unwrapped sql()/agg() (a "vg_sql_expr"),
+# or an unwrapped transform like vg_bin()/vg_count() (a "vg_transform").
+# Plain literals (numbers, strings, TRUE/FALSE) and param() references
+# ("vg_param") don't -- a param is a reactive scalar, not a per-row lookup,
+# so it doesn't need a backing table either.
+args_reference_data <- function(args) {
+  any(vapply(
+    args,
+    function(v) inherits(v, "formula") || inherits(v, "vg_transform") || inherits(v, "vg_sql_expr"),
+    logical(1)
+  ))
 }
 
 # Shared by every generated vg_mark_<mark>() wrapper (R/marks-generated.R):
