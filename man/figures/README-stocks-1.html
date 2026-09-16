@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+<link href="README-stocks-1_files/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="README-stocks-1_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="README-stocks-1_files/vgplotr-mosaic-bundle-1.0.0/mosaic-bundle.min.js" type="module"></script>
+<script src="README-stocks-1_files/vgplotr-binding-0.0.0.9000/vgplotr.js"></script>
+  <title>vgplotr</title>
+</head>
+<body>
+<div id="htmlwidget_container">
+  <div style="font-weight: 600; font-size: 1.1em; margin-bottom: 0.4em;">Normalized Stock Prices</div>
+  <div class="vgplotr html-widget html-fill-item" id="htmlwidget-f371b8197ff23a819d53" style="width:960px;height:500px;"></div>
+</div>
+<script type="application/json" data-for="htmlwidget-f371b8197ff23a819d53">{"x":{"spec":{"meta":{"title":"Normalized Stock Prices","description":"What is the return on investment for different days? Hover over the chart to normalize the stock prices for the percentage return on a given day. A `nearestX` interactor selects the nearest date, and parameterized expressions reactively update in response."},"data":{"stocks":{"file":"https://raw.githubusercontent.com/uwdata/mosaic/refs/heads/main/data/stocks.parquet"},"labels":"SELECT MAX(Date) as Date, ARGMAX(Close, Date) AS Close, Symbol FROM stocks GROUP BY Symbol"},"params":{"point":{"date":"2013-05-13"}},"plot":[{"mark":"ruleX","x":"$point"},{"mark":"textX","dy":-7,"frameAnchor":"top","lineAnchor":"bottom","text":"$point","x":"$point"},{"mark":"text","data":{"from":"labels"},"dx":2,"fill":"Symbol","text":"Symbol","textAnchor":"start","x":"Date","y":{"sql":"Close / (SELECT max(Close) FROM stocks WHERE Symbol = source.Symbol AND Date = $point)"}},{"mark":"lineY","data":{"from":"stocks"},"stroke":"Symbol","x":"Date","y":{"sql":"Close / (SELECT max(Close) FROM stocks WHERE Symbol = source.Symbol AND Date = $point)"}},{"select":"nearestX","as":"$point"}],"yScale":"log","yDomain":[0.2,6],"yGrid":true,"xLabel":null,"yLabel":null,"yTickFormat":"%","width":680,"height":400,"marginRight":35},"tables":[],"files":[]},"evals":[],"jsHooks":[]}</script>
+<script type="application/htmlwidget-sizing" data-for="htmlwidget-f371b8197ff23a819d53">{"viewer":{"width":450,"height":350,"padding":15,"fill":true},"browser":{"width":960,"height":500,"padding":40,"fill":false}}</script>
+</body>
+</html>

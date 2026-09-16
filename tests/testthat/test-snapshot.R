@@ -61,3 +61,63 @@ test_that("vg_snapshot(file =) always captures a static screenshot, even when em
   expect_true(file.exists(out))
   expect_gt(file.size(out), 1000) # a real screenshot, not a near-empty file
 })
+
+test_that("vg_snapshot(iframe = TRUE) always embeds a live widget via <iframe>, even when not embeddable", {
+  skip_if_not_installed("httpuv")
+
+  old <- options(knitr.in.progress = TRUE)
+  on.exit(options(old), add = TRUE)
+  testthat::local_mocked_bindings(pandoc_to = function(...) "gfm", .package = "knitr")
+
+  tmp_root <- tempfile()
+  on.exit(unlink(tmp_root, recursive = TRUE), add = TRUE)
+  old_wd <- setwd(local({ dir.create(tmp_root); tmp_root }))
+  on.exit(setwd(old_wd), add = TRUE)
+
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
+  out <- "man/figures/test-vg-snapshot-live.html"
+
+  result <- vg_snapshot(spec, file = out, iframe = TRUE)
+
+  expect_s3_class(result, "knit_asis")
+  expect_true(file.exists(out))
+  expect_match(as.character(result), '<iframe src="reference/figures/', fixed = TRUE)
+})
+
+test_that("vg_snapshot(iframe = TRUE) never embeds the local duckdb-wasm cache", {
+  # Regression test: iframe mode saves to a *committed* file, and
+  # htmlwidgets bundles a cached dependency as a real file copy --
+  # duckdb-wasm's engine is a ~35 MB binary. On a machine with a local
+  # cache set up (vg_cache_duckdb()), the old default (use_cache tracking
+  # vg_duckdb_cache_status()) would silently embed a full copy of it into
+  # every iframe-mode widget saved -- confirmed directly, this happened
+  # and would have added ~70 MB to two committed example widgets.
+  skip_if_not_installed("httpuv")
+
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
+  out <- tempfile(fileext = ".html")
+  on.exit(unlink(c(out, paste0(tools::file_path_sans_ext(out), "_files")), recursive = TRUE), add = TRUE)
+
+  vg_snapshot(spec, file = out, iframe = TRUE)
+
+  files_dir <- paste0(tools::file_path_sans_ext(out), "_files")
+  expect_false(any(grepl("duckdb-wasm", list.dirs(files_dir, recursive = TRUE))))
+})
+
+test_that("vg_snapshot_iframe() rewrites a man/figures/ path to reference/figures/ for the src", {
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
+  w <- vg_render(spec)
+  tmp_root <- tempfile()
+  on.exit(unlink(tmp_root, recursive = TRUE), add = TRUE)
+  old_wd <- setwd(local({ dir.create(tmp_root); tmp_root }))
+  on.exit(setwd(old_wd), add = TRUE)
+
+  out <- "man/figures/test-vg-snapshot-iframe.html"
+  result <- vg_snapshot_iframe(w, out, vwidth = 500, vheight = 300)
+
+  expect_true(file.exists(out))
+  expect_identical(
+    as.character(result),
+    '<iframe src="reference/figures/test-vg-snapshot-iframe.html" width="500" height="300" style="border: none;" loading="lazy"></iframe>'
+  )
+})

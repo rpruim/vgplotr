@@ -1,4 +1,6 @@
 
+<!-- pkgdown/index.md is generated from this file. Please edit that file. This renders README.Rmd's own content (as a child document) with vg_iframe_mode set TRUE first, so its two example chunks embed live widgets via <iframe> instead of the static screenshots README.md gets. Knit with, from the package root: rmarkdown::render("pkgdown/index.Rmd", knit_root_dir = normalizePath(".")) -- knit_root_dir needs to be an *absolute* path (a relative one resolves against this file's own directory, pkgdown/, not your working directory); it's what makes the child= path below ("README.Rmd", not "../README.Rmd") resolve at the package root rather than pkgdown/, and what makes README.Rmd's own relative paths (fig.path = "man/figures/README-", ...) land in the usual place too. -->
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # {vgplotr}: An R interface to Mosaic vgplot
@@ -40,7 +42,9 @@ Births2015 |>
   vg_snapshot(iframe = vg_iframe_mode)
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
+<iframe src="reference/figures/README-unnamed-chunk-6-1.html" width="992" height="744" style="border: none;" loading="lazy">
+
+</iframe>
 
 Here is an example that shows some of the interactive capabilities of
 {vgplotr}:
@@ -112,7 +116,9 @@ vg_create() |>
   vg_snapshot(iframe = vg_iframe_mode)
 ```
 
-<img src="man/figures/README-stocks-1.png" alt="" width="100%" />
+<iframe src="reference/figures/README-stocks-1.html" width="992" height="744" style="border: none;" loading="lazy">
+
+</iframe>
 
 <!-- badges: start -->
 

@@ -5,26 +5,41 @@
 \title{Render a vgspec live or as a static screenshot, whichever the current
 output format can actually display}
 \usage{
-vg_snapshot(spec, file = NULL, delay = 3, vwidth = 992, vheight = 744, ...)
+vg_snapshot(
+  spec,
+  file = NULL,
+  delay = 3,
+  vwidth = 992,
+  vheight = 744,
+  iframe = FALSE,
+  ...
+)
 }
 \arguments{
 \item{spec}{A \code{vgspec}, a JSON/YAML spec string (see \code{\link[=vg_render]{vg_render()}}),
 or an already-built widget (i.e. the result of calling
 \code{\link[=vg_render]{vg_render()}} yourself).}
 
-\item{file}{If given, always save a static PNG to this exact path
-(ignoring the current output format) and return the path,
-invisibly -- for one-off or scripted use outside a document. Left
-\code{NULL} (the default), the function instead decides live-vs-static
-from the current knitr/rmarkdown output format, as described above.}
+\item{file}{If given, always save to this exact path (a PNG, unless
+\code{iframe = TRUE}, in which case an HTML file) instead of the usual
+\code{fig.path} convention, and return the path invisibly instead of an
+embeddable result -- for one-off or scripted use outside a
+document. Ignored (with a live widget returned instead) when the
+current output format can embed one and \code{iframe} is \code{FALSE}.}
 
 \item{delay}{Seconds to wait after the widget loads before taking the
 screenshot, to give duckdb-wasm and mosaic time to fetch data and
 draw. 3 seconds is enough for a small/local data source; a large or
-remote one may need more.}
+remote one may need more. Not used when \code{iframe = TRUE} (nothing is
+screenshotted).}
 
 \item{vwidth, vheight}{Browser viewport size (pixels) for the
-screenshot.}
+screenshot, or the \verb{<iframe>}'s own width/height when
+\code{iframe = TRUE}.}
+
+\item{iframe}{If \code{TRUE}, always embed a live widget via an \verb{<iframe>}
+rather than deciding live-vs-static from the output format -- see
+Details.}
 
 \item{...}{Passed on to \code{\link[=vg_render]{vg_render()}} when \code{spec} isn't already a
 built widget (e.g. \verb{width =}, \verb{height =}).}
@@ -56,6 +71,21 @@ falls back to a static screenshot otherwise (\code{github_document}, PDF,
 Word, ...). This is what lets a single \code{README.Rmd} serve as both the
 GitHub README (\code{github_document}, screenshotted) and an HTML page
 (live widgets) from the same source.
+
+\code{iframe = TRUE} forces a third option: the widget is saved as a real,
+non-self-contained HTML file (under the same \code{fig.path} convention
+used for the screenshot PNGs, e.g. \verb{man/figures/README-*.html}) and
+embedded as a live \verb{<iframe>} -- raw HTML, which markdown/gfm passes
+through untouched. This is specifically for a pkgdown home page built
+from \code{pkgdown/index.md} rather than \code{README.md}: pkgdown always
+copies \verb{man/figures/} into \verb{docs/reference/figures/} (confirmed
+directly, for any file type, not just images), and the deployed page
+is served over real HTTPS, so the \verb{file://} restriction that makes
+screenshotting necessary in the first place doesn't apply -- the
+iframe's widget genuinely runs live once deployed. It won't run
+correctly if you preview the raw \code{.md}/\code{.html} output locally via
+\verb{file://}, only once actually served over HTTP(S) (e.g. via
+\code{pkgdown::build_site()} + serving \verb{docs/}, or the real deployed site).
 }
 \seealso{
 Other duckdb caching functions:
