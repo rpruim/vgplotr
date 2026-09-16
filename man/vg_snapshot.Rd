@@ -2,97 +2,61 @@
 % Please edit documentation in R/snapshot.R
 \name{vg_snapshot}
 \alias{vg_snapshot}
-\title{Render a vgspec live or as a static screenshot, whichever the current
-output format can actually display}
+\title{Render a vgspec as a static screenshot}
 \usage{
-vg_snapshot(
-  spec,
-  file = NULL,
-  delay = 3,
-  vwidth = 992,
-  vheight = 744,
-  iframe = FALSE,
-  ...
-)
+vg_snapshot(spec, file = NULL, delay = 3, vwidth = 992, vheight = 744, ...)
 }
 \arguments{
-\item{spec}{A \code{vgspec}, a JSON/YAML spec string (see \code{\link[=vg_render]{vg_render()}}),
+\item{spec}{A \code{vgspec}, a JSON/YAML spec string (see \code{\link[=vg_widget]{vg_widget()}}),
 or an already-built widget (i.e. the result of calling
-\code{\link[=vg_render]{vg_render()}} yourself).}
+\code{\link[=vg_widget]{vg_widget()}} yourself).}
 
-\item{file}{If given, always save to this exact path (a PNG, unless
-\code{iframe = TRUE}, in which case an HTML file) instead of the usual
-\code{fig.path} convention, and return the path invisibly instead of an
-embeddable result -- for one-off or scripted use outside a
-document. Ignored (with a live widget returned instead) when the
-current output format can embed one and \code{iframe} is \code{FALSE}.}
+\item{file}{If given, always save to this exact path and return it
+invisibly -- for one-off or scripted use outside a document. Left
+\code{NULL} (the default), the screenshot is saved under the usual
+\code{fig.path} convention (e.g. \verb{man/figures/README-*.png}) and the
+result is a \code{\link[knitr:include_graphics]{knitr::include_graphics()}} value meant to be the
+value of a knitted chunk.}
 
 \item{delay}{Seconds to wait after the widget loads before taking the
 screenshot, to give duckdb-wasm and mosaic time to fetch data and
 draw. 3 seconds is enough for a small/local data source; a large or
-remote one may need more. Not used when \code{iframe = TRUE} (nothing is
-screenshotted).}
+remote one may need more.}
 
-\item{vwidth, vheight}{Browser viewport size (pixels) for the
-screenshot, or the \verb{<iframe>}'s own width/height when
-\code{iframe = TRUE}.}
+\item{vwidth, vheight}{Browser viewport size (pixels) for the screenshot.}
 
-\item{iframe}{If \code{TRUE}, always embed a live widget via an \verb{<iframe>}
-rather than deciding live-vs-static from the output format -- see
-Details.}
-
-\item{...}{Passed on to \code{\link[=vg_render]{vg_render()}} when \code{spec} isn't already a
-built widget (e.g. \verb{width =}, \verb{height =}).}
+\item{...}{Passed on to \code{\link[=vg_widget]{vg_widget()}} when \code{spec} isn't already a
+built widget (e.g. \verb{width =}, \verb{height =}). Also silently absorbs
+arguments meant for \code{\link[=vg_iframe]{vg_iframe()}} instead (e.g. \code{iframe}-only
+options), so \code{\link[=vg_render]{vg_render()}} can forward its own \code{...} uniformly.}
 }
 \description{
-\code{\link[=vg_render]{vg_render()}}'s widget can't survive being embedded as plain
-markdown/PDF/Word text -- those formats can't run JavaScript, so a
-static image is needed instead there. Unfortunately, knitr/rmarkdown's
-own built-in mechanism for turning a widget into a static screenshot
-(used e.g. for \code{output: github_document}) doesn't work for vgplotr
-specifically: it captures the widget by opening it as a local file
-(\verb{file://}), and Chrome refuses to load an ES module script (vgplotr's
-JS runtime is one) -- or run \code{fetch()} at all -- under \verb{file://}, for
-security reasons. Confirmed directly: this produces a blank screenshot
-no matter how long you wait, on both the legacy \code{webshot} (PhantomJS)
-and modern \code{webshot2} (real headless Chrome) backends.
+Renders \code{spec} as a static PNG.  Useful when
+\code{\link[=vg_widget]{vg_widget()}}'s live widget doesn't work because
+the output format can't run JavaScript
+(e.g., plain markdown, PDF, Word, ...).
+For a document that should render \emph{live} when possible and
+fall back to a screenshot only when it has to,
+see \code{\link[=vg_render]{vg_render()}}.
 }
 \details{
-\code{vg_snapshot()} works around this the way a real deployment would:
-it serves the widget over a local HTTP server (via the \code{httpuv}
-package) before screenshotting it (via the \code{webshot2} package), which
-lets the widget's JS actually run. Use \code{vg_snapshot(spec)} anywhere
-you'd otherwise write \code{vg_render(spec)} in a document meant to be
-knitted to more than one kind of output -- it renders live when the
-current output format supports embedded JavaScript (an HTML
-vignette, a Quarto HTML page, or no active knit at all, e.g. typed at
-the console -- so it behaves exactly like \code{\link[=vg_render]{vg_render()}} there), and
-falls back to a static screenshot otherwise (\code{github_document}, PDF,
-Word, ...). This is what lets a single \code{README.Rmd} serve as both the
-GitHub README (\code{github_document}, screenshotted) and an HTML page
-(live widgets) from the same source.
+knitr/rmarkdown's own built-in mechanism for turning a widget into a
+static screenshot (used e.g. for \code{output: github_document}) doesn't
+work for vgplotr: it captures the widget by opening it as a local file
+(\verb{file://}), and Chrome refuses to load an ES module script (vgplotr's
+JS runtime is one) -- or run \code{fetch()} at all -- under \verb{file://}, for
+security reasons. The result is a blank screenshot no matter how long
+you wait, on both the legacy \code{webshot} (PhantomJS) and modern
+\code{webshot2} (real headless Chrome) backends.
 
-\code{iframe = TRUE} forces a third option: the widget is saved as a real,
-non-self-contained HTML file (under the same \code{fig.path} convention
-used for the screenshot PNGs, e.g. \verb{man/figures/README-*.html}) and
-embedded as a live \verb{<iframe>} -- raw HTML, which markdown/gfm passes
-through untouched. This is specifically for a pkgdown home page built
-from \code{pkgdown/index.md} rather than \code{README.md}: pkgdown always
-copies \verb{man/figures/} into \verb{docs/reference/figures/} (confirmed
-directly, for any file type, not just images), and the deployed page
-is served over real HTTPS, so the \verb{file://} restriction that makes
-screenshotting necessary in the first place doesn't apply -- the
-iframe's widget genuinely runs live once deployed. It won't run
-correctly if you preview the raw \code{.md}/\code{.html} output locally via
-\verb{file://}, only once actually served over HTTP(S) (e.g. via
-\code{pkgdown::build_site()} + serving \verb{docs/}, or the real deployed site).
+\code{vg_snapshot()} works around this by serving the widget over a local
+HTTP server (via the \code{httpuv} package) before screenshotting it (via
+the \code{webshot2} package), which lets the widget's JS actually run.
 }
 \seealso{
-Other duckdb caching functions:
-\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}},
-\code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}},
-\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}},
+Other rendering functions:
+\code{\link[=vg_iframe]{vg_iframe()}},
 \code{\link[=vg_render]{vg_render()}},
-\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}}
+\code{\link[=vg_widget]{vg_widget()}}
 }
-\concept{duckdb caching functions}
+\concept{rendering functions}

@@ -1,39 +1,79 @@
-test_that("vg_render() renders meta$title as a caption above the widget", {
-  spec <- vg_create(title = "AAPL closing value") |> vg_mark_dot(x = ~a, y = ~b)
-  w <- vg_render(spec)
-
-  expect_length(w$prepend, 1)
-  expect_true(grepl("AAPL closing value", as.character(w$prepend[[1]]), fixed = TRUE))
+test_that("can_embed_live_widget() defaults to TRUE outside any active knit", {
+  old <- options(knitr.in.progress = NULL)
+  on.exit(options(old), add = TRUE)
+  expect_true(can_embed_live_widget())
 })
 
-test_that("vg_render() adds no prepend when there's no title", {
+test_that("can_embed_live_widget() is format-aware inside an active knit", {
+  old <- options(knitr.in.progress = TRUE)
+  on.exit(options(old), add = TRUE)
+
+  testthat::local_mocked_bindings(pandoc_to = function(...) "html", .package = "knitr")
+  expect_true(can_embed_live_widget())
+
+  testthat::local_mocked_bindings(pandoc_to = function(...) "gfm", .package = "knitr")
+  expect_false(can_embed_live_widget())
+
+  testthat::local_mocked_bindings(pandoc_to = function(...) "markdown", .package = "knitr")
+  expect_false(can_embed_live_widget())
+
+  testthat::local_mocked_bindings(pandoc_to = function(...) "latex", .package = "knitr")
+  expect_false(can_embed_live_widget())
+
+  testthat::local_mocked_bindings(pandoc_to = function(...) character(0), .package = "knitr")
+  expect_true(can_embed_live_widget())
+})
+
+test_that("vg_render() mode='auto' returns a live widget when embeddable", {
+  old <- options(knitr.in.progress = NULL)
+  on.exit(options(old), add = TRUE)
   spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
-  w <- vg_render(spec)
 
-  expect_null(w$prepend)
+  expect_identical(vg_render(spec)$x, vg_widget(spec)$x)
+  expect_s3_class(vg_render(spec), "htmlwidget")
 })
 
-test_that("vg_render() renders a title set via vg_create(title=) or vg_meta() the same way", {
-  via_create <- vg_create(title = "Via create") |> vg_mark_dot(x = ~a, y = ~b)
-  via_meta <- vg_create() |> vg_mark_dot(x = ~a, y = ~b) |> vg_meta(title = "Via meta")
-
-  expect_true(grepl("Via create", as.character(vg_render(via_create)$prepend[[1]]), fixed = TRUE))
-  expect_true(grepl("Via meta", as.character(vg_render(via_meta)$prepend[[1]]), fixed = TRUE))
-})
-
-test_that("vg_attributes(title=) does NOT render a title -- title isn't a real plot attribute", {
-  # vg_attributes() targets the spec's own top-level *plot* attrs (width,
-  # height, ...); `title` isn't one of mosaic's plot attributes, so this
-  # sets an inert top-level `title` key rather than mosaic-spec's `meta`,
-  # which is what vg_render() actually checks. Use vg_create(title =)/
-  # vg_meta(title =) instead -- and vg_attributes() warns about exactly
-  # this (see test-attributes.R).
-  expect_warning(
-    spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b) |> vg_attributes(title = "Not rendered"),
-    "not a recognized mosaic-spec plot attribute"
+test_that("vg_render() mode='auto' falls back to vg_snapshot() when not embeddable", {
+  old <- options(knitr.in.progress = TRUE)
+  on.exit(options(old), add = TRUE)
+  testthat::local_mocked_bindings(pandoc_to = function(...) "gfm", .package = "knitr")
+  testthat::local_mocked_bindings(
+    vg_snapshot = function(spec, ...) "called vg_snapshot",
+    .package = "vgplotr"
   )
 
-  expect_equal(spec$attrs$title, "Not rendered")
-  expect_null(spec$meta$title)
-  expect_null(vg_render(spec)$prepend)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
+  expect_equal(vg_render(spec), "called vg_snapshot")
+})
+
+test_that("vg_render() mode= forces a specific rendering function regardless of context", {
+  old <- options(knitr.in.progress = NULL) # would otherwise auto-pick "widget"
+  on.exit(options(old), add = TRUE)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
+
+  testthat::local_mocked_bindings(
+    vg_widget = function(spec, ...) "called vg_widget",
+    vg_snapshot = function(spec, ...) "called vg_snapshot",
+    vg_iframe = function(spec, ...) "called vg_iframe",
+    .package = "vgplotr"
+  )
+
+  expect_equal(vg_render(spec, mode = "widget"), "called vg_widget")
+  expect_equal(vg_render(spec, mode = "snapshot"), "called vg_snapshot")
+  expect_equal(vg_render(spec, mode = "iframe"), "called vg_iframe")
+})
+
+test_that("vg_render() rejects an unrecognized mode", {
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
+  expect_error(vg_render(spec, mode = "png"), "should be one of")
+})
+
+test_that("vg_render() forwards ... to whichever function ends up handling the request", {
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
+
+  testthat::local_mocked_bindings(
+    vg_widget = function(spec, ...) list(...),
+    .package = "vgplotr"
+  )
+  expect_equal(vg_render(spec, mode = "widget", width = 500)$width, 500)
 })

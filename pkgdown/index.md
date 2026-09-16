@@ -1,5 +1,5 @@
 
-<!-- pkgdown/index.md is generated from this file. Please edit that file. This renders README.Rmd's own content (as a child document) with vg_iframe_mode set TRUE first, so its two example chunks embed live widgets via <iframe> instead of the static screenshots README.md gets. Knit with, from the package root: rmarkdown::render("pkgdown/index.Rmd", knit_root_dir = normalizePath(".")) -- knit_root_dir needs to be an *absolute* path (a relative one resolves against this file's own directory, pkgdown/, not your working directory); it's what makes the child= path below ("README.Rmd", not "../README.Rmd") resolve at the package root rather than pkgdown/, and what makes README.Rmd's own relative paths (fig.path = "man/figures/README-", ...) land in the usual place too. -->
+<!-- pkgdown/index.md is generated from this file. Please edit that file. This renders README.Rmd's own content (as a child document) with vg_render_mode set to "iframe" first, so its two example chunks embed live widgets via <iframe> instead of the static screenshots README.md gets. Knit with, from the package root: rmarkdown::render("pkgdown/index.Rmd", knit_root_dir = normalizePath(".")) -- knit_root_dir needs to be an *absolute* path (a relative one resolves against this file's own directory, pkgdown/, not your working directory); it's what makes the child= path below ("README.Rmd", not "../README.Rmd") resolve at the package root rather than pkgdown/, and what makes README.Rmd's own relative paths (fig.path = "man/figures/README-", ...) land in the usual place too. -->
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -39,7 +39,7 @@ library(mosaicData)
 Births2015 |>
   vg_mark_line(x = ~date, y = ~births, stroke = ~wday) |>
   vg_meta(title = "US Births in 2015") |>
-  vg_snapshot(iframe = vg_iframe_mode)
+  vg_render(mode = vg_render_mode)
 ```
 
 <iframe src="reference/figures/README-unnamed-chunk-6-1.html" width="992" height="744" style="border: none;" loading="lazy">
@@ -113,7 +113,7 @@ vg_create() |>
     height = 400,
     margin_right = 35
   ) |>
-  vg_snapshot(iframe = vg_iframe_mode)
+  vg_render(mode = vg_render_mode)
 ```
 
 <iframe src="reference/figures/README-stocks-1.html" width="992" height="744" style="border: none;" loading="lazy">

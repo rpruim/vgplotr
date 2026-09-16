@@ -18,8 +18,7 @@ DuckDB WASM engine
 Other duckdb caching functions:
 \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}},
 \code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}},
-\code{\link[=vg_render]{vg_render()}},
-\code{\link[=vg_snapshot]{vg_snapshot()}},
-\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}}
+\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}},
+\code{\link[=vg_widget]{vg_widget()}}
 }
 \concept{duckdb caching functions}

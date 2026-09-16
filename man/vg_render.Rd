@@ -2,71 +2,59 @@
 % Please edit documentation in R/render.R
 \name{vg_render}
 \alias{vg_render}
-\title{Render a vgspec as a live mosaic vgplot}
+\title{Render a vgspec, picking the right way to display it}
 \usage{
-vg_render(
-  spec,
-  width = NULL,
-  height = NULL,
-  elementId = NULL,
-  use_cache = vg_duckdb_cache_status()$cached
-)
+vg_render(spec, ..., mode = c("auto", "widget", "snapshot", "iframe"))
 }
 \arguments{
-\item{spec}{A \code{vgspec} with a layout of plots/vconcat()/hconcat(), or a
-single JSON or YAML string holding an already-complete mosaic spec --
-e.g. copied from mosaic's own example gallery, or the output of
-\code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}} -- to render it directly without building it up
-through \verb{vg_*()} calls first. Format is auto-detected (JSON if the
-trimmed text starts with an opening brace or bracket, YAML otherwise).
-Data references in
-such a spec are left exactly as given -- unlike a \code{vgspec}'s own local
-\verb{file =}/inline-data-frame sources, nothing here is read or embedded,
-so a local file path needs to actually be fetchable (an http(s) URL,
-or a path relative to wherever the rendered page is ultimately opened
-from) for duckdb-wasm to load it in the browser.}
+\item{spec}{A \code{vgspec}, a JSON/YAML spec string (see \code{\link[=vg_widget]{vg_widget()}}),
+or an already-built widget (i.e. the result of calling
+\code{\link[=vg_widget]{vg_widget()}} yourself).}
 
-\item{width, height}{Widget sizing, in CSS units (e.g. \code{"100\%"}) or pixels.}
+\item{...}{Passed on to whichever of \code{\link[=vg_widget]{vg_widget()}}, \code{\link[=vg_snapshot]{vg_snapshot()}},
+or \code{\link[=vg_iframe]{vg_iframe()}} ends up handling the request (e.g. \verb{width =} or
+\verb{use_cache =} for \code{\link[=vg_widget]{vg_widget()}}, \verb{delay =} for \code{\link[=vg_snapshot]{vg_snapshot()}}).
+Each of those three accepts and silently ignores arguments meant for
+one of the other two, so it's fine to pass along options for a mode
+that doesn't end up being used.}
 
-\item{elementId}{Optional DOM element ID for the widget.}
-
-\item{use_cache}{Whether this plot should use the local duckdb-wasm engine
-cache (see \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}) if one exists. Defaults to whatever
-\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}} currently reports, so it tracks the cache
-automatically; set to \code{FALSE} to force this one plot to fetch the engine
-from the CDN even when a cache is present, or \code{TRUE} to request the
-cache explicitly (harmless, and equivalent to the default, when no cache
-exists -- it just falls back to the CDN).}
+\item{mode}{\code{"auto"} (the default, see Details), or force one of
+\code{"widget"}, \code{"snapshot"}, \code{"iframe"} regardless of context.}
 }
 \description{
-Renders the spec in the browser using a client-side DuckDB (via
-duckdb-wasm). Most of the JS runtime this needs (mosaic-spec/mosaic-core)
-is vendored with the package (\verb{inst/htmlwidgets/lib/}), so it works
-offline out of the box. The one exception is duckdb-wasm's actual
-database engine -- a ~35 MB compiled WebAssembly binary, too large to
-ship with the package -- which is fetched from a CDN each time a plot is
-\emph{viewed}, unless you've called \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}} to cache it locally
-(in which case that cached copy is used instead, and no CDN is involved
-at all). If the cache doesn't exist, this function will offer to set it
-up for you the first time you call it in an interactive session; see
-\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}} for details, including how to silence that offer.
+The multitool of the rendering-functions family: renders \code{spec} using
+whichever of \code{\link[=vg_widget]{vg_widget()}}, \code{\link[=vg_snapshot]{vg_snapshot()}}, or \code{\link[=vg_iframe]{vg_iframe()}} makes
+sense for the current rendering context, or whichever \code{mode} asks for
+explicitly.
 }
 \details{
-Mosaic-spec's own \code{meta} (title/description/credit -- see \code{\link[=vg_meta]{vg_meta()}})
-isn't rendered by mosaic's JS runtime at all; it's inert, spec-level
-metadata (confirmed directly in \verb{@uwdata/mosaic-spec}'s own
-\code{astToDOM()}, which never reads it). Since a title is nonetheless the
-most commonly expected use of it, \code{vg_render()} renders \code{meta$title}
-itself -- as a caption prepended above the widget -- as a vgplotr-level
-convenience layered on top of what mosaic itself does; \code{description}/
-\code{credit} remain inert for now.
+Left at the default \code{mode = "auto"}, \code{vg_render()} inspects whether the
+current output can actually run JavaScript. An HTML vignette or Quarto
+HTML page -- or no active knit at all, e.g. typed directly at the
+console -- gets \code{\link[=vg_widget]{vg_widget()}}'s live widget; a plain-markdown or other
+non-HTML output (\code{github_document}, PDF, Word, ...), which can't run
+embedded JavaScript, gets \code{\link[=vg_snapshot]{vg_snapshot()}}'s static screenshot instead.
+This check is deliberately narrower than \code{knitr::is_html_output()}:
+that function also counts "markdown"/"gfm" as HTML-capable (they do
+support \emph{passing through} raw HTML blocks), but GitHub strips
+\verb{<script>} tags out of a rendered README regardless, so a live widget
+still wouldn't actually run there.
+
+\code{mode = "iframe"} is never chosen automatically -- ask for it
+explicitly (e.g. for a pkgdown home page built from
+\code{pkgdown/index.md}; see \code{\link[=vg_iframe]{vg_iframe()}} for why that one needs to be
+deliberate).
+
+Use \code{vg_render(spec)} anywhere you'd otherwise write a bare
+\code{\link[=vg_widget]{vg_widget()}} call, in a document meant to be knitted to more than one
+kind of output. It can also be used anywhere \code{\link[=vg_widget]{vg_widget()}},
+\code{\link[=vg_iframe]{vg_iframe()}} or \code{\link[=vg_snapshot]{vg_snapshot()}} are used by
+setting \code{mode} appropriately.
 }
 \seealso{
-Other duckdb caching functions:
-\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}},
-\code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}},
-\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}},
+Other rendering functions:
+\code{\link[=vg_iframe]{vg_iframe()}},
 \code{\link[=vg_snapshot]{vg_snapshot()}},
-\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}}
+\code{\link[=vg_widget]{vg_widget()}}
 }
-\concept{duckdb caching functions}
+\concept{rendering functions}

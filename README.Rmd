@@ -11,10 +11,11 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-# Set to TRUE (before child-including this file) to embed live widgets via
-# <iframe> instead of static screenshots -- see pkgdown/index.Rmd, which
-# renders this same content for the pkgdown home page.
-if (!exists("vg_iframe_mode")) vg_iframe_mode <- FALSE
+# Set to "iframe" (before child-including this file) to embed live
+# widgets via <iframe> instead of static screenshots -- see
+# pkgdown/index.Rmd, which renders this same content for the pkgdown
+# home page.
+if (!exists("vg_render_mode")) vg_render_mode <- "auto"
 ```
 
 # {vgplotr}: An R interface to Mosaic vgplot
@@ -41,7 +42,7 @@ library(mosaicData)
 Births2015 |>
   vg_mark_line(x = ~date, y = ~births, stroke = ~wday) |>
   vg_meta(title = "US Births in 2015") |>
-  vg_snapshot(iframe = vg_iframe_mode)
+  vg_render(mode = vg_render_mode)
 ```
 
 Here is an example that shows some of the interactive
@@ -113,7 +114,7 @@ vg_create() |>
     height = 400,
     margin_right = 35
   ) |>
-  vg_snapshot(iframe = vg_iframe_mode)
+  vg_render(mode = vg_render_mode)
 ```
 
 <!-- badges: start -->

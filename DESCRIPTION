@@ -42,6 +42,7 @@ Collate:
     'export.R'
     'utils.R'
     'guide-generated.R'
+    'iframe.R'
     'interactor.R'
     'interactors-generated.R'
     'legend.R'
@@ -55,3 +56,4 @@ Collate:
     'snapshot.R'
     'sql.R'
     'transforms.R'
+    'widget.R'

@@ -2,10 +2,10 @@
 output: github_document
 ---
 
-<!-- pkgdown/index.md is generated from this file. Please edit that file. This renders README.Rmd's own content (as a child document) with vg_iframe_mode set TRUE first, so its two example chunks embed live widgets via <iframe> instead of the static screenshots README.md gets. Knit with, from the package root: rmarkdown::render("pkgdown/index.Rmd", knit_root_dir = normalizePath(".")) -- knit_root_dir needs to be an *absolute* path (a relative one resolves against this file's own directory, pkgdown/, not your working directory); it's what makes the child= path below ("README.Rmd", not "../README.Rmd") resolve at the package root rather than pkgdown/, and what makes README.Rmd's own relative paths (fig.path = "man/figures/README-", ...) land in the usual place too. -->
+<!-- pkgdown/index.md is generated from this file. Please edit that file. This renders README.Rmd's own content (as a child document) with vg_render_mode set to "iframe" first, so its two example chunks embed live widgets via <iframe> instead of the static screenshots README.md gets. Knit with, from the package root: rmarkdown::render("pkgdown/index.Rmd", knit_root_dir = normalizePath(".")) -- knit_root_dir needs to be an *absolute* path (a relative one resolves against this file's own directory, pkgdown/, not your working directory); it's what makes the child= path below ("README.Rmd", not "../README.Rmd") resolve at the package root rather than pkgdown/, and what makes README.Rmd's own relative paths (fig.path = "man/figures/README-", ...) land in the usual place too. -->
 
 ```{r, include = FALSE}
-vg_iframe_mode <- TRUE
+vg_render_mode <- "iframe"
 ```
 
 ```{r, child = "README.Rmd"}
