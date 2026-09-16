@@ -1,6 +1,6 @@
 Package: vgplotr
 Title: An R Interface to Mosaic vgplot
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R:
     person("Randall", "Pruim", , "rpruim@gmail.com", role = c("aut", "cre"))
 Description: Provides a piped, tidyverse-flavored R API for building
