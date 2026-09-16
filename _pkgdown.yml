@@ -18,6 +18,86 @@ navbar:
       text: Examples
       href: articles/examples.html
 
+reference:
+- title: Spec functions
+  desc: >
+    Start and configure a vgspec -- data sources, params/selections,
+    metadata, and top-level attributes.
+  contents:
+  - has_concept("spec functions")
+
+- title: Mark functions
+  desc: >
+    Add a visual layer (points, lines, bars, ...) to a plot -- one
+    `vg_mark_*()` wrapper per mark type mosaic supports, plus the generic
+    `vg_mark()` they're built on.
+  contents:
+  - has_concept("mark functions")
+
+- title: Scale functions
+  desc: >
+    Set the scale (domain/range, type, palette, ...) backing an encoding
+    channel -- position, facet, color, opacity, radius, length, symbol.
+  contents:
+  - has_concept("scale functions")
+
+- title: Guide functions
+  desc: >
+    Set axis-guide attributes (labels, ticks, grid lines, ...) for a
+    scale, without adding a visible legend.
+  contents:
+  - has_concept("guide functions")
+
+- title: Legend functions
+  desc: >
+    Add a visible legend -- embedded in a plot, or standalone.
+  contents:
+  - has_concept("legend functions")
+
+- title: Interactor functions
+  desc: >
+    Selections that live inside a plot alongside its marks (brushes,
+    pan/zoom, highlight, ...), and standalone layout-level input widgets
+    (menu, search, slider, table) -- one wrapper per type, plus the
+    generic `vg_interactor()` they're built on.
+  contents:
+  - has_concept("interactor functions")
+
+- title: Transform functions
+  desc: >
+    Binning, aggregation, and window functions for use inside a mapping
+    formula, plus raw SQL/aggregate expressions.
+  contents:
+  - has_concept("transform functions")
+
+- title: Layout functions
+  desc: >
+    Combine plots (and other layout items) into one spec -- side by side,
+    stacked, or with plot-level attributes attached.
+  contents:
+  - has_concept("layout functions")
+
+- title: Rendering functions
+  desc: >
+    Turn a vgspec into something you can actually look at -- a live
+    widget, a static screenshot, or a live `<iframe>` embed -- either
+    picked automatically or requested explicitly.
+  contents:
+  - has_concept("rendering functions")
+
+- title: Spec export functions
+  desc: >
+    Convert a vgspec to mosaic's own portable JSON/YAML spec format.
+  contents:
+  - has_concept("spec export functions")
+
+- title: DuckDB caching functions
+  desc: >
+    Manage a local cache of duckdb-wasm's database engine, so rendered
+    plots don't need to fetch it from a CDN every time.
+  contents:
+  - has_concept("duckdb caching functions")
+
 articles:
 - title: Get Started
   contents:

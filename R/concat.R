@@ -50,6 +50,7 @@ vg_concat_ <- function(direction, spec, ...) {
 #' @param spec A `vgspec`, an existing layout item to prepend, or `NULL` to
 #'   start a new layout.
 #' @param ... Additional layout items (plots, spacers, nested concats).
+#' @family layout functions
 #' @export
 vg_vconcat <- function(spec = NULL, ...) vg_concat_("vconcat", spec, ...)
 
@@ -59,6 +60,7 @@ vg_hconcat <- function(spec = NULL, ...) vg_concat_("hconcat", spec, ...)
 
 #' Fixed-size spacers for use inside `vg_vconcat()`/`vg_hconcat()`
 #' @param amount Spacer size in pixels.
+#' @family layout functions
 #' @export
 vg_hspace <- function(amount) new_vg_space("hspace", amount)
 

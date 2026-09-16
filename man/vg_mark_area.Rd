@@ -175,6 +175,7 @@ The area mark.
 }
 \seealso{
 Other mark functions:
+\code{\link[=vg_mark]{vg_mark()}},
 \code{\link[=vg_mark_area_x]{vg_mark_area_x()}},
 \code{\link[=vg_mark_area_y]{vg_mark_area_y()}},
 \code{\link[=vg_mark_arrow]{vg_mark_arrow()}},

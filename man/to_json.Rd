@@ -43,7 +43,7 @@ becomes an inline array of row objects (mosaic-spec's own
 plain reference rather than having its content read and embedded.
 }
 \seealso{
-Other spec export function:
+Other spec export functions:
 \code{\link[=to_yaml]{to_yaml()}}
 }
-\concept{spec export function}
+\concept{spec export functions}

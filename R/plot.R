@@ -73,6 +73,7 @@ update_layout <- function(spec, fragment) {
 #' @param ... Additional plot fragments (marks/interactors) to include, and/or
 #'   named plot-level attributes (`width =`, `height =`, `name =`, `x_domain =`,
 #'   ..., snake_case -- translated to mosaic's own camelCase key, e.g. `xDomain`).
+#' @family layout functions
 #' @export
 vg_plot <- function(spec = NULL, ...) {
   args <- canonicalize_plot_attr_names(list(...))

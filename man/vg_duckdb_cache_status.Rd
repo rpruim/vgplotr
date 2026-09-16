@@ -26,7 +26,6 @@ See \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}.
 Other duckdb caching functions:
 \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}},
 \code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}},
-\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}},
-\code{\link[=vg_widget]{vg_widget()}}
+\code{\link[=vg_uncache_duckdb]{vg_uncache_duckdb()}}
 }
 \concept{duckdb caching functions}

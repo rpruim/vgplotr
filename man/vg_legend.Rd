@@ -35,3 +35,4 @@ a matching encoding automatically) or, given \code{for_plot}, live as a
 standalone layout item referencing a plot by name (its \verb{name =} attribute,
 see \code{\link[=vg_plot]{vg_plot()}}) -- mirroring mosaic-spec's own two legend forms.
 }
+\concept{legend functions}

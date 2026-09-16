@@ -23,3 +23,15 @@ A data frame passed as \code{data} is loaded into DuckDB directly (see
 \code{\link[=vg_render]{vg_render()}}); other arguments (\verb{file =}, \verb{query =}, \verb{where =}, ...)
 describe a source for mosaic's own data loading instead.
 }
+\seealso{
+Other spec functions:
+\code{\link[=param]{param()}},
+\code{\link[=vg_attributes]{vg_attributes()}},
+\code{\link[=vg_config]{vg_config()}},
+\code{\link[=vg_create]{vg_create()}},
+\code{\link[=vg_data_url]{vg_data_url()}},
+\code{\link[=vg_meta]{vg_meta()}},
+\code{\link[=vg_params]{vg_params()}},
+\code{\link[=vg_plot_defaults]{vg_plot_defaults()}}
+}
+\concept{spec functions}

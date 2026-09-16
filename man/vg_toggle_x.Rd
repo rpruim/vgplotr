@@ -19,8 +19,9 @@ vg_toggle_x(spec = NULL, as = vg_unset, peers = vg_unset, ...)
 A toggleX interactor.
 }
 \seealso{
-Other interactor function:
+Other interactor functions:
 \code{\link[=vg_highlight]{vg_highlight()}},
+\code{\link[=vg_interactor]{vg_interactor()}},
 \code{\link[=vg_interval_x]{vg_interval_x()}},
 \code{\link[=vg_interval_xy]{vg_interval_xy()}},
 \code{\link[=vg_interval_y]{vg_interval_y()}},
@@ -41,4 +42,4 @@ Other interactor function:
 \code{\link[=vg_toggle_color]{vg_toggle_color()}},
 \code{\link[=vg_toggle_y]{vg_toggle_y()}}
 }
-\concept{interactor function}
+\concept{interactor functions}

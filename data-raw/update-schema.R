@@ -385,7 +385,7 @@ for (type in interactor_types) {
     prop_docs = interactor_prop_docs,
     title = docline(interactor_defs[[type]]$description, paste0("A `", type, "` interactor.")),
     spec_doc = "A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.",
-    family = "interactor function"
+    family = "interactor functions"
   ))
 }
 for (type in input_types) {
@@ -398,7 +398,7 @@ for (type in input_types) {
     prop_docs = interactor_prop_docs,
     title = docline(interactor_defs[[type]]$description, paste0("A `", type, "` input.")),
     spec_doc = NULL,
-    family = "interactor function"
+    family = "interactor functions"
   ))
 }
 writeLines(inter_lines, "R/interactors-generated.R")

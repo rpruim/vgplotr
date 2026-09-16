@@ -2,6 +2,7 @@
 #'
 #' @param file file name
 #' @return The URL as a string
+#' @family spec functions
 #' @export
 #' @examples
 #' vg_data_url('atheletes.csv')

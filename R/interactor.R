@@ -41,6 +41,7 @@ vg_interactor_placement <- function(interactor) {
 #' @param ... Options for the interactor/input (e.g. `as = param(brush)`,
 #'   `label = "Bias"`, `min = 0`, `max = 100`), and/or, for plot-embedded
 #'   interactors, plot-level attributes.
+#' @family interactor functions
 #' @export
 vg_interactor <- function(spec = NULL, interactor, ...) {
   placement <- vg_interactor_placement(interactor)

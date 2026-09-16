@@ -15,3 +15,9 @@ vg_vspace(amount)
 \description{
 Fixed-size spacers for use inside \code{vg_vconcat()}/\code{vg_hconcat()}
 }
+\seealso{
+Other layout functions:
+\code{\link[=vg_plot]{vg_plot()}},
+\code{\link[=vg_vconcat]{vg_vconcat()}}
+}
+\concept{layout functions}

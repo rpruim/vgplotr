@@ -57,7 +57,7 @@
 #'   handling a request, without erroring on arguments meant for one of
 #'   the other two (e.g. `delay =`, only meaningful for [vg_snapshot()]).
 #' @family rendering functions
-#' @family duckdb caching functions
+#' @seealso [vg_cache_duckdb()], [vg_duckdb_cache_status()]
 #' @export
 vg_widget <- function(
   spec,

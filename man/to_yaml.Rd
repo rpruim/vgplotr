@@ -32,7 +32,7 @@ files use (e.g. the examples under \verb{docs/public/specs/yaml/} in
 uwdata/mosaic).
 }
 \seealso{
-Other spec export function:
+Other spec export functions:
 \code{\link[=to_json]{to_json()}}
 }
-\concept{spec export function}
+\concept{spec export functions}

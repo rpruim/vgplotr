@@ -17,7 +17,6 @@ preference; see \code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_r
 Other duckdb caching functions:
 \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}},
 \code{\link[=vg_duckdb_cache_reset_preference]{vg_duckdb_cache_reset_preference()}},
-\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}},
-\code{\link[=vg_widget]{vg_widget()}}
+\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}}
 }
 \concept{duckdb caching functions}

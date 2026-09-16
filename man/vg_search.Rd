@@ -36,8 +36,9 @@ vg_search(
 A search input component.
 }
 \seealso{
-Other interactor function:
+Other interactor functions:
 \code{\link[=vg_highlight]{vg_highlight()}},
+\code{\link[=vg_interactor]{vg_interactor()}},
 \code{\link[=vg_interval_x]{vg_interval_x()}},
 \code{\link[=vg_interval_xy]{vg_interval_xy()}},
 \code{\link[=vg_interval_y]{vg_interval_y()}},
@@ -58,4 +59,4 @@ Other interactor function:
 \code{\link[=vg_toggle_x]{vg_toggle_x()}},
 \code{\link[=vg_toggle_y]{vg_toggle_y()}}
 }
-\concept{interactor function}
+\concept{interactor functions}

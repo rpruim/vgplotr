@@ -28,3 +28,15 @@ rather than overloading this one.
 A name that isn't one of mosaic's own plot attributes triggers a warning,
 since it won't do anything to the rendered plot -- see \code{\link[=vg_attributes]{vg_attributes()}}.
 }
+\seealso{
+Other spec functions:
+\code{\link[=param]{param()}},
+\code{\link[=vg_attributes]{vg_attributes()}},
+\code{\link[=vg_config]{vg_config()}},
+\code{\link[=vg_create]{vg_create()}},
+\code{\link[=vg_data]{vg_data()}},
+\code{\link[=vg_data_url]{vg_data_url()}},
+\code{\link[=vg_meta]{vg_meta()}},
+\code{\link[=vg_params]{vg_params()}}
+}
+\concept{spec functions}

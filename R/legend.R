@@ -17,6 +17,7 @@ NULL
 #'   `field =`, `tickSize =`, `columns =`, or margin/width/height settings.
 #' @param for_plot For a standalone legend: the `name` of the plot it
 #'   decorates.
+#' @family legend functions
 #' @export
 vg_legend <- function(spec = NULL, type, ..., for_plot = NULL) {
   legend_obj <- structure(

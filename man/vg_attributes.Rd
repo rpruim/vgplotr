@@ -30,3 +30,15 @@ since it won't do anything to the rendered plot (there's nowhere else it
 could still take effect) -- e.g. \code{title}, which belongs in \code{\link[=vg_meta]{vg_meta()}}
 instead.
 }
+\seealso{
+Other spec functions:
+\code{\link[=param]{param()}},
+\code{\link[=vg_config]{vg_config()}},
+\code{\link[=vg_create]{vg_create()}},
+\code{\link[=vg_data]{vg_data()}},
+\code{\link[=vg_data_url]{vg_data_url()}},
+\code{\link[=vg_meta]{vg_meta()}},
+\code{\link[=vg_params]{vg_params()}},
+\code{\link[=vg_plot_defaults]{vg_plot_defaults()}}
+}
+\concept{spec functions}

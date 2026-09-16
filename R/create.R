@@ -21,6 +21,7 @@
 #'   just the spec's own top level) instead, call [vg_plot_defaults()]
 #'   explicitly -- it's never chosen automatically, since every name valid
 #'   there is also valid at the top level, which is preferred.
+#' @family spec functions
 #' @export
 vg_create <- function(data = NULL, ...) {
   routed <- route_spec_args(list(...))
@@ -70,6 +71,7 @@ route_spec_args <- function(args) {
 #'
 #' @param spec A `vgspec`.
 #' @param ... Named metadata fields, e.g. `title =`, `description =`.
+#' @family spec functions
 #' @export
 vg_meta <- function(spec, ...) {
   stopifnot(is_vgspec(spec))
@@ -88,6 +90,7 @@ vg_meta <- function(spec, ...) {
 #' @param spec A `vgspec`.
 #' @param ... Named config options, e.g. `extensions = "spatial"` (or a
 #'   character vector for more than one extension).
+#' @family spec functions
 #' @export
 vg_config <- function(spec, ...) {
   stopifnot(is_vgspec(spec))
@@ -107,6 +110,7 @@ vg_config <- function(spec, ...) {
 #'   `"data2"`, ...), e.g. for the shorthand described in [vg_mark()].
 #' @param data An optional data frame to use as this data source.
 #' @param ... Data source options, e.g. `file =`, `query =`, `where =`.
+#' @family spec functions
 #' @export
 vg_data <- function(spec, name = NULL, data = NULL, ...) {
   stopifnot(is_vgspec(spec))
@@ -153,6 +157,7 @@ resolve_data_from_index <- function(i, names_vec) {
 #'   list(select = "intersect")` (mosaic-spec's `Selection` shape --
 #'   `select` is one of `"crossfilter"`/`"intersect"`/`"single"`/`"union"`,
 #'   with optional `cross`/`empty`/`include` fields).
+#' @family spec functions
 #' @export
 vg_params <- function(spec, ...) {
   stopifnot(is_vgspec(spec))
@@ -181,6 +186,7 @@ vg_params <- function(spec, ...) {
 #' @param ... Named top-level attributes, e.g. `width =`, `height =`,
 #'   `x_domain =` (snake_case -- translated to mosaic's own camelCase key,
 #'   e.g. `xDomain`).
+#' @family spec functions
 #' @export
 vg_attributes <- function(spec, ...) {
   stopifnot(is_vgspec(spec))
@@ -209,6 +215,7 @@ vg_attributes <- function(spec, ...) {
 #' @param ... Named plot-default attributes, e.g. `width =`, `height =`,
 #'   `x_domain =` (snake_case -- translated to mosaic's own camelCase key,
 #'   e.g. `xDomain`).
+#' @family spec functions
 #' @export
 vg_plot_defaults <- function(spec, ...) {
   stopifnot(is_vgspec(spec))

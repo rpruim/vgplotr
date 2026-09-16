@@ -12,6 +12,7 @@
 #' result directly just shows the `$name` form for inspection.
 #'
 #' @param name The name of the param/selection, unquoted.
+#' @family spec functions
 #' @export
 #' @examples
 #' param(brush)

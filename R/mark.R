@@ -37,6 +37,7 @@
 #' @param ... Encodings (e.g. `x = ~var1`), mark options, and/or plot-level
 #'   attributes (`width =`, `name =`, ...). See [vg_plot()] for how
 #'   plot-level attributes from multiple marks are combined.
+#' @family mark functions
 #' @export
 vg_mark <- function(spec = NULL, mark, ...) {
   args <- list(...)

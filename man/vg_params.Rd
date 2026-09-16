@@ -16,3 +16,15 @@ with optional \code{cross}/\code{empty}/\code{include} fields).}
 \description{
 Declare Params/Selections on a vgspec
 }
+\seealso{
+Other spec functions:
+\code{\link[=param]{param()}},
+\code{\link[=vg_attributes]{vg_attributes()}},
+\code{\link[=vg_config]{vg_config()}},
+\code{\link[=vg_create]{vg_create()}},
+\code{\link[=vg_data]{vg_data()}},
+\code{\link[=vg_data_url]{vg_data_url()}},
+\code{\link[=vg_meta]{vg_meta()}},
+\code{\link[=vg_plot_defaults]{vg_plot_defaults()}}
+}
+\concept{spec functions}

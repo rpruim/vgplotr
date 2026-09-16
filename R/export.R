@@ -27,7 +27,7 @@
 #' @param ... Additional arguments passed on to [jsonlite::toJSON()].
 #' @return A `json` object (see [jsonlite::toJSON()]); printing it shows the
 #'   raw JSON text.
-#' @family spec export function
+#' @family spec export functions
 #' @export
 to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, ...) {
   # Built via modifyList()/do.call() rather than passed as literal named
@@ -64,7 +64,7 @@ to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, ...) {
 #' @return A `vg_yaml` object (a character string with a `print()` method
 #'   that writes it out unquoted/unescaped); use [writeLines()] or
 #'   `cat(..., file = ...)` to save it to disk.
-#' @family spec export function
+#' @family spec export functions
 #' @export
 to_yaml <- function(spec, suppress_data = FALSE, ...) {
   # yaml::as.yaml() defaults to YAML 1.1's `yes`/`no` for logicals, which a

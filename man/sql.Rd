@@ -32,3 +32,8 @@ object as one of the pieces -- \code{sql("v + $point")} and
 \code{sql("v + ", param(point))} are equivalent. Both work directly as a
 value (\code{y = sql(...)}) or inside a mapping formula (\code{y = ~ sql(...)}).
 }
+\seealso{
+Other transform functions:
+\code{\link{vg_transforms}}
+}
+\concept{transform functions}

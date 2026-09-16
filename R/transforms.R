@@ -131,7 +131,7 @@ rm(.name, .spec)
 #' @param orderby,partitionby,rows,range,groups,exclude Window options,
 #'   shared by aggregate and window transforms: control the ordering,
 #'   partitioning, and frame of the window the transform is computed over.
-#' @family transform function
+#' @family transform functions
 #' @name vg_transforms
 #' @aliases vg_bin vg_column vg_date_month vg_date_month_day vg_date_day vg_centroid vg_centroid_x vg_centroid_y vg_geojson vg_argmax vg_argmin vg_avg vg_count vg_covariance vg_covar_pop vg_first vg_geomean vg_last vg_max vg_min vg_median vg_mode vg_product vg_quantile vg_stddev vg_stddev_pop vg_sum vg_variance vg_var_pop vg_row_number vg_rank vg_dense_rank vg_percent_rank vg_cume_dist vg_ntile vg_lag vg_lead vg_first_value vg_last_value vg_nth_value
 #' @export vg_bin

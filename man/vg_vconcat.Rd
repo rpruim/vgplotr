@@ -24,3 +24,9 @@ promoted to its own plot), \code{vg_plot()}-wrapped plots (to attach
 plot-level attributes), spacers (\code{vg_hspace()}/\code{vg_vspace()}), or nested
 \code{vg_vconcat()}/\code{vg_hconcat()} results.
 }
+\seealso{
+Other layout functions:
+\code{\link[=vg_hspace]{vg_hspace()}},
+\code{\link[=vg_plot]{vg_plot()}}
+}
+\concept{layout functions}

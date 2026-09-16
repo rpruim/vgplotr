@@ -35,3 +35,9 @@ values accumulate silently. A named argument that isn't one of mosaic's
 own plot attributes also triggers a warning, since it won't do anything
 to the rendered plot -- see \code{\link[=vg_attributes]{vg_attributes()}}.
 }
+\seealso{
+Other layout functions:
+\code{\link[=vg_hspace]{vg_hspace()}},
+\code{\link[=vg_vconcat]{vg_vconcat()}}
+}
+\concept{layout functions}
