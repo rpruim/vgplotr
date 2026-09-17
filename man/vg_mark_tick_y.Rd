@@ -6,6 +6,7 @@
 \usage{
 vg_mark_tick_y(
   spec = NULL,
+  formula = vg_unset,
   aria_description = vg_unset,
   aria_hidden = vg_unset,
   aria_label = vg_unset,
@@ -63,6 +64,8 @@ vg_mark_tick_y(
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this mark to, or \code{NULL} to start a new plot with just this mark.}
+
+\item{formula}{A shorthand for this mark's position channels (\code{x}, \code{y}, \code{fx}, \code{fy}, and paired \code{x1}/\code{x2} or \code{y1}/\code{y2}), e.g. \code{Sepal.Length ~ Sepal.Width | ~ Species} for \verb{y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species}. See \code{\link[=vg_mark]{vg_mark()}} for the full grammar.}
 
 \item{aria_description}{The aria-description; a constant textual description.}
 

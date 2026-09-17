@@ -34,13 +34,30 @@
 #'   is never a valid index (there's no "0th" source), so it's treated the
 #'   same as `data_from = 0` -- literal inline data, not an index.
 #' @param mark The mosaic mark type, e.g. `"dot"`, `"lineY"`.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`,
+#'   `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g.
+#'   `Sepal.Length ~ Sepal.Width | ~ Species` for
+#'   `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. Before the
+#'   optional `| facet` part: `y ~ x`, `~ x` or `y ~ .` (`.` means "don't set
+#'   this channel"), or `y1 + y2 ~ x1 + x2` (or one side alone, e.g.
+#'   `y ~ x1 + x2`) for marks with paired channels. After `| `: `~ fx`,
+#'   `fy ~ .`, `fy ~ fx`, or a bare `| facet` (equivalent to `| ~ facet`,
+#'   since mosaic has no separate facet-wrap concept). Parenthesizing part
+#'   of a term (e.g. `y ~ (a + b)`) treats `+`/`|` inside it as ordinary
+#'   arithmetic instead of splitting on it. An explicit `x =`/`y =`/etc.
+#'   given alongside `formula` wins over the value `formula` implies for
+#'   that same channel, with a warning if the two actually disagree. See
+#'   `vignette("getting-started")` for worked examples.
 #' @param ... Encodings (e.g. `x = ~var1`), mark options, and/or plot-level
 #'   attributes (`width =`, `name =`, ...). See [vg_plot()] for how
 #'   plot-level attributes from multiple marks are combined.
 #' @family mark functions
 #' @export
-vg_mark <- function(spec = NULL, mark, ...) {
+vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
   args <- list(...)
+  if (!identical(formula, vg_unset)) {
+    args <- merge_vg_formula(args, parse_vg_formula(formula, mark), mark)
+  }
   if (is.data.frame(spec)) {
     given_name <- args$data_from
     has_given_name <- is.character(given_name) && length(given_name) == 1

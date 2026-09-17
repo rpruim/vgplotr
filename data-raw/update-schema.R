@@ -275,14 +275,30 @@ interactor_prop_docs <- property_docs(interactor_defs)
 # property name in the schema (see design/design-reflections.qmd question
 # 2c) -- if a future schema version ever introduces a colliding pair, the
 # `stopifnot()` below catches it.
+#' The `formula` shorthand (design/vg_formula.qmd) is mark-only, so it's
+#' injected here as its own dedicated 2nd formal (right after `spec`, before
+#' the schema-derived props) rather than reusing `extra_formals` -- that
+#' mechanism appends *after* `...` (data_from/filter_by/data_optimize),
+#' which wouldn't let `formula` be used positionally the way
+#' `vg_mark_dot(iris, Sepal.Length ~ Sepal.Width, ...)` needs.
+.vg_formula_doc <- paste(
+  "A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and",
+  "paired `x1`/`x2` or `y1`/`y2`), e.g.",
+  "`Sepal.Length ~ Sepal.Width | ~ Species` for",
+  "`y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()]",
+  "for the full grammar."
+)
+
 generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, extra_formals = character(),
-                              extra_docs = character(), title, spec_doc, family, required = character()) {
+                              extra_docs = character(), title, spec_doc, family, required = character(),
+                              formula_arg = FALSE) {
   props <- names(properties)
   props <- c(intersect(required, props), setdiff(props, required))
   snake_props <- camel_to_snake(props)
   has_spec <- !is.null(spec_doc)
   formals_str <- paste(c(
     if (has_spec) "spec = NULL",
+    if (formula_arg) "formula = vg_unset",
     ifelse(props %in% required, snake_props, paste0(snake_props, " = vg_unset")),
     "...",
     if (length(extra_formals)) paste0(extra_formals, " = vg_unset")
@@ -290,6 +306,7 @@ generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, extra_
   call_args <- paste(c(
     if (has_spec) "spec" else "NULL",
     sprintf('"%s"', type_arg),
+    if (formula_arg) "formula = formula",
     paste0(props, " = ", snake_props),
     "...",
     if (length(extra_formals)) paste0(extra_formals, " = ", extra_formals)
@@ -299,6 +316,7 @@ generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, extra_
     paste0("#' ", title),
     "#'",
     if (!is.null(spec_doc)) sprintf("#' @param spec %s", spec_doc),
+    if (formula_arg) sprintf("#' @param formula %s", .vg_formula_doc),
     sprintf("#' @param %s %s", snake_props, unlist(prop_docs[props])),
     "#' @param ... Additional options or plot-level attributes.",
     extra_docs,
@@ -345,7 +363,8 @@ for (name in sort(names(mark_defs))) {
     title = docline(mark_defs[[name]]$description, paste0("The `", name, "` mark.")),
     spec_doc = "A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.",
     family = "mark functions",
-    required = mark_defs[[name]]$required
+    required = mark_defs[[name]]$required,
+    formula_arg = TRUE
   ))
 }
 writeLines(mark_lines, "R/marks-generated.R")

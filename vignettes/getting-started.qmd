@@ -121,6 +121,32 @@ mosaic's own literal inline-data shorthand (`"data": [0]`, e.g. for a
 reference line), so only a real R integer is read as an index --
 `data_from = 0L` included, since `0` is never a valid index anyway.
 
+## Formula shorthand for position channels
+
+Every mark also accepts a `formula` argument -- a shorthand for its position
+channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`) in one
+formula instead of naming each channel separately. The part before an
+optional `| facet` sets `y ~ x`; the part after it sets faceting:
+
+```{r}
+mtcars |> vg_mark_dot(mpg ~ hp | cyl, fill = "steelblue", width = 500)
+```
+
+is equivalent to writing out every channel by hand:
+
+```{r}
+mtcars |> vg_mark_dot(y = ~mpg, x = ~hp, fx = ~cyl, fill = "steelblue", width = 500)
+```
+
+A two-sided facet formula sets `fy` and `fx` independently (`cyl ~ gear` for
+both, `cyl ~ .` for `fy` alone), and a `.` on the position side skips that
+channel (`mpg ~ .` sets only `y`). Marks with paired channels accept two
+terms per side, e.g. `vg_mark_rect(mpg + wt ~ hp + disp)` sets
+`y1`/`y2`/`x1`/`x2`; asymmetric term counts (`mpg ~ hp + disp`) map each
+side independently. An explicit `x =`/`y =`/etc. alongside `formula`
+overrides the value the formula implies for that channel, with a warning
+only if the two actually disagree. See `?vg_mark` for the full grammar.
+
 ## Loading data from a file
 
 `vg_data()` can also point at a file instead of an inline data frame -- the

@@ -6,6 +6,7 @@
 \usage{
 vg_mark_axis_x(
   spec = NULL,
+  formula = vg_unset,
   anchor = vg_unset,
   aria_description = vg_unset,
   aria_hidden = vg_unset,
@@ -94,6 +95,8 @@ vg_mark_axis_x(
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this mark to, or \code{NULL} to start a new plot with just this mark.}
+
+\item{formula}{A shorthand for this mark's position channels (\code{x}, \code{y}, \code{fx}, \code{fy}, and paired \code{x1}/\code{x2} or \code{y1}/\code{y2}), e.g. \code{Sepal.Length ~ Sepal.Width | ~ Species} for \verb{y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species}. See \code{\link[=vg_mark]{vg_mark()}} for the full grammar.}
 
 \item{anchor}{The side of the frame on which to place the axis: \emph{top} or \emph{bottom} for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or \emph{left} or \emph{right} for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).}
 

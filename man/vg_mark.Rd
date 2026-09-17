@@ -4,7 +4,7 @@
 \alias{vg_mark}
 \title{Add a mark (a single visual layer, e.g. points or a line) to a plot}
 \usage{
-vg_mark(spec = NULL, mark, ...)
+vg_mark(spec = NULL, mark, formula = vg_unset, ...)
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this mark to, \code{NULL} to
@@ -34,6 +34,21 @@ is never a valid index (there's no "0th" source), so it's treated the
 same as \code{data_from = 0} -- literal inline data, not an index.}
 
 \item{mark}{The mosaic mark type, e.g. \code{"dot"}, \code{"lineY"}.}
+
+\item{formula}{A shorthand for this mark's position channels (\code{x}, \code{y},
+\code{fx}, \code{fy}, and paired \code{x1}/\code{x2} or \code{y1}/\code{y2}), e.g.
+\code{Sepal.Length ~ Sepal.Width | ~ Species} for
+\verb{y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species}. Before the
+optional \verb{| facet} part: \code{y ~ x}, \code{~ x} or \code{y ~ .} (\code{.} means "don't set
+this channel"), or \code{y1 + y2 ~ x1 + x2} (or one side alone, e.g.
+\code{y ~ x1 + x2}) for marks with paired channels. After \verb{| }: \code{~ fx},
+\code{fy ~ .}, \code{fy ~ fx}, or a bare \verb{| facet} (equivalent to \verb{| ~ facet},
+since mosaic has no separate facet-wrap concept). Parenthesizing part
+of a term (e.g. \code{y ~ (a + b)}) treats \code{+}/\code{|} inside it as ordinary
+arithmetic instead of splitting on it. An explicit \verb{x =}/\verb{y =}/etc.
+given alongside \code{formula} wins over the value \code{formula} implies for
+that same channel, with a warning if the two actually disagree. See
+\code{vignette("getting-started")} for worked examples.}
 
 \item{...}{Encodings (e.g. \code{x = ~var1}), mark options, and/or plot-level
 attributes (\verb{width =}, \verb{name =}, ...). See \code{\link[=vg_plot]{vg_plot()}} for how

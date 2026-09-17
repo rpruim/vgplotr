@@ -44,6 +44,7 @@ Collate:
     'data.R'
     'duckdb_cache.R'
     'export.R'
+    'formula.R'
     'utils.R'
     'guide-generated.R'
     'iframe.R'
