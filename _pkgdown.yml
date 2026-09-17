@@ -5,7 +5,7 @@ template:
 
 navbar:
   structure:
-    left:  [intro, design, examples, reference]
+    left:  [intro, design, articles, examples, reference]
     right: [search]
   components:
     intro:
@@ -14,6 +14,15 @@ navbar:
     design:
       text: Design Principles
       href: articles/design-principles.html
+    articles:
+      text: Articles
+      menu:
+      - text: Getting Started
+        href: articles/getting-started.html
+      - text: Design Principles
+        href: articles/design-principles.html
+      - text: Using Databases
+        href: articles/using-databases.html
     examples:
       text: Examples
       href: articles/examples.html
