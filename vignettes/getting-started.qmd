@@ -604,3 +604,11 @@ to it the way `vg_data()` makes one available to a `vgspec`, so
 `file =` needs to be a real, fetchable URL (as above) rather than a
 local path, unless the rendered page will always be opened from that
 same local directory.
+
+Every example in this vignette renders through DuckDB-Wasm -- a real
+DuckDB compiled to WebAssembly and run entirely inside the browser, which
+is what keeps these plots self-contained and shareable as plain HTML.
+For data too large for the browser, or that actually lives in another
+database (Postgres, MySQL, SQLite, via DuckDB's own federation
+extensions), see `vignette("using-databases")` for `vg_duckdb_connector()`,
+an opt-in way to render against a real, native DuckDB process instead.

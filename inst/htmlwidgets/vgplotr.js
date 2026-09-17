@@ -11,6 +11,13 @@
 // which just holds a URL -- the file itself is copied alongside the
 // rendered output, not embedded in it) and this script uses that instead
 // of touching the network at all.
+//
+// This is all the *default* connector (vg_wasm_connector()). A widget can
+// instead ask for vg_duckdb_connector() (R/connector.R) -- a real, native
+// DuckDB reached over a local REST server (R/duckdb_server.R) instead of
+// DuckDB-Wasm in-browser -- flagged by an `x.connector` field on the widget
+// payload; see getCoordinator()/renderVgplotr() below for where the two
+// paths diverge.
 (function () {
   // The bundle (inst/htmlwidgets/vgplotr.yaml declares it, auto-injected as
   // <script type="module">) sets window.__vgplotrBundle as a side effect
@@ -58,25 +65,45 @@
     return db;
   }
 
-  // A page can hold multiple vgplotr widgets; they share one Coordinator
-  // (and one DuckDB-WASM instance) rather than each spinning up their own.
-  // Tables are namespaced by the names the user gave vg_data(), so this is
-  // fine as long as different widgets don't reuse the same table name for
-  // different data. The singleton is built from a promise, set synchronously
-  // on the first call, so concurrent widget renders don't race to create it.
-  function getCoordinator(mosaicCore, duckdbWasm) {
-    if (!window.__vgplotrCoordinatorPromise) {
-      window.__vgplotrCoordinatorPromise = (async function () {
+  // A page can hold multiple vgplotr widgets; those using the same backend
+  // share one Coordinator (and, for wasm, one DuckDB-WASM instance) rather
+  // than each spinning up their own -- keyed so a page mixing the default
+  // wasm connector with a vg_duckdb_connector() one (R/connector.R) gets
+  // two independent coordinators instead of the first widget's choice
+  // silently winning for every other widget on the page. Tables are
+  // namespaced by the names the user gave vg_data(), so sharing one
+  // coordinator is fine as long as different widgets don't reuse the same
+  // table name for different data. Each entry is built from a promise, set
+  // synchronously on first use, so concurrent widget renders don't race to
+  // create it.
+  function coordinatorKey(x) {
+    return x.connector && x.connector.type === "rest" ? "rest:" + x.connector.uri : "wasm";
+  }
+
+  function getCoordinator(mosaicCore, duckdbWasm, x) {
+    window.__vgplotrCoordinators = window.__vgplotrCoordinators || {};
+    var key = coordinatorKey(x);
+    if (!window.__vgplotrCoordinators[key]) {
+      window.__vgplotrCoordinators[key] = (async function () {
         var coord = mosaicCore.coordinator();
-        var bundle = localDuckdbBundle();
-        var connector = bundle
-          ? mosaicCore.wasmConnector({ duckdb: await instantiateLocalDuckDB(duckdbWasm, bundle) })
-          : mosaicCore.wasmConnector();
+        var connector;
+        if (key === "wasm") {
+          var bundle = localDuckdbBundle();
+          connector = bundle
+            ? mosaicCore.wasmConnector({ duckdb: await instantiateLocalDuckDB(duckdbWasm, bundle) })
+            : mosaicCore.wasmConnector();
+        } else {
+          // A real DuckDB reached over vg_duckdb_connector()'s local REST
+          // server (R/duckdb_server.R) -- its tables are already registered
+          // server-side by the time this page ever asks, so unlike wasm
+          // there's no loadTables()/loadFiles() step for this connector.
+          connector = mosaicCore.restConnector({ uri: x.connector.uri });
+        }
         coord.databaseConnector(connector);
         return coord;
       })();
     }
-    return window.__vgplotrCoordinatorPromise;
+    return window.__vgplotrCoordinators[key];
   }
 
   async function loadTables(coord, tables) {
@@ -137,9 +164,11 @@
   async function renderVgplotr(el, x) {
     var mod = await waitForBundle();
 
-    var coord = await getCoordinator(mod.mosaicCore, mod.duckdbWasm);
-    await loadTables(coord, x.tables);
-    await loadFiles(coord, x.files);
+    var coord = await getCoordinator(mod.mosaicCore, mod.duckdbWasm, x);
+    if (coordinatorKey(x) === "wasm") {
+      await loadTables(coord, x.tables);
+      await loadFiles(coord, x.files);
+    }
 
     var ast = mod.mosaicSpec.parseSpec(x.spec);
     var app = await mod.mosaicSpec.astToDOM(ast);

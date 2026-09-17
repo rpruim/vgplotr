@@ -12,8 +12,9 @@ or an already-built widget (i.e. the result of calling
 \code{\link[=vg_widget]{vg_widget()}} yourself).}
 
 \item{...}{Passed on to whichever of \code{\link[=vg_widget]{vg_widget()}}, \code{\link[=vg_snapshot]{vg_snapshot()}},
-or \code{\link[=vg_iframe]{vg_iframe()}} ends up handling the request (e.g. \verb{width =} or
-\verb{use_cache =} for \code{\link[=vg_widget]{vg_widget()}}, \verb{delay =} for \code{\link[=vg_snapshot]{vg_snapshot()}}).
+or \code{\link[=vg_iframe]{vg_iframe()}} ends up handling the request (e.g. \verb{width =},
+\verb{use_cache =}, or \verb{connector =} for \code{\link[=vg_widget]{vg_widget()}}, \verb{delay =} for
+\code{\link[=vg_snapshot]{vg_snapshot()}}).
 Each of those three accepts and silently ignores arguments meant for
 one of the other two, so it's fine to pass along options for a mode
 that doesn't end up being used.}

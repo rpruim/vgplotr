@@ -36,9 +36,10 @@ as_spec_payload <- function(spec) {
   data_entries <- list()
   for (nm in names(spec$data)) {
     src <- spec$data[[nm]]
-    if (!is.null(src$data) && is.data.frame(src$data)) {
+    kind <- vg_data_source_kind(src)
+    if (kind == "table") {
       tables[[nm]] <- src$data
-    } else if (!is.null(src$file) && !grepl("^https?://", src$file, ignore.case = TRUE)) {
+    } else if (kind == "local_file") {
       file_info <- read_local_data_file(src$file)
       file_info$options <- src[setdiff(names(src), c("file", "type"))]
       files[[nm]] <- file_info
@@ -129,6 +130,25 @@ quote_yaml_bool_keys <- function(text) {
     USE.NAMES = FALSE
   )
   paste(lines, collapse = "\n")
+}
+
+# Classifies a spec's data source the way vg_render() needs to: "table" (an
+# inline data frame) and "local_file" (a file= that isn't an http(s) URL)
+# are the two kinds vgplotr must preload itself before mosaic's own runtime
+# ever sees the spec (see as_spec_payload()'s own comment for why); "other"
+# (query=, a genuine http(s) file=, ...) is already connector-agnostic and
+# needs no special handling. Shared by as_spec_payload() (wasm: embeds
+# tables/local files for the browser to load) and
+# register_native_data_sources() (R/duckdb_server.R; native: registers them
+# directly into a real DuckDB connection instead).
+vg_data_source_kind <- function(src) {
+  if (!is.null(src$data) && is.data.frame(src$data)) {
+    "table"
+  } else if (!is.null(src$file) && !grepl("^https?://", src$file, ignore.case = TRUE)) {
+    "local_file"
+  } else {
+    "other"
+  }
 }
 
 # Reads a local data file into a form embeddable in the htmlwidget payload:

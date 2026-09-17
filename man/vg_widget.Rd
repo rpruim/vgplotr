@@ -10,6 +10,7 @@ vg_widget(
   height = NULL,
   elementId = NULL,
   use_cache = vg_duckdb_cache_status()$cached,
+  connector = vg_wasm_connector(),
   ...
 )
 }
@@ -37,7 +38,14 @@ cache (see \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}) if one exists. Def
 automatically; set to \code{FALSE} to force this one plot to fetch the engine
 from the CDN even when a cache is present, or \code{TRUE} to request the
 cache explicitly (harmless, and equivalent to the default, when no cache
-exists -- it just falls back to the CDN).}
+exists -- it just falls back to the CDN). Ignored when \code{connector} isn't
+the default (there's no duckdb-wasm engine to cache).}
+
+\item{connector}{Which database this plot's SQL actually runs against:
+\code{\link[=vg_wasm_connector]{vg_wasm_connector()}} (the default -- DuckDB-Wasm in the browser, fully
+self-contained) or \code{\link[=vg_duckdb_connector]{vg_duckdb_connector()}} (a real, native DuckDB,
+reached over a local server started automatically -- see its docs for
+when you'd want this and its sharing/security caveats).}
 
 \item{...}{Not used by \code{vg_widget()} itself. Accepted (and silently
 ignored) so that \code{\link[=vg_render]{vg_render()}} can forward its own \code{...} uniformly to

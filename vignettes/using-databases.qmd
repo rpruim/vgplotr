@@ -1,0 +1,102 @@
+---
+title: "Using Databases with vgplotr"
+vignette: >
+  %\VignetteIndexEntry{Using Databases with vgplotr}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+format: html
+engine: knitr
+---
+
+```{r setup}
+library(vgplotr)
+```
+
+Every plot vgplotr renders is ultimately answered by a live SQL query
+against a DuckDB database -- that's what makes mosaic's plots interactive
+and scalable in the first place. By default that database is DuckDB-Wasm,
+a real DuckDB compiled to WebAssembly and run entirely inside the browser
+(see `vignette("getting-started")` for the basics: `vg_data()`, `file =`,
+`query =`, and `sql()`/`agg()` for raw SQL expressions, all of which work
+the same way regardless of which database is actually running underneath).
+This article is about the *other* option: rendering against a real, native
+DuckDB process instead.
+
+## Why you'd want native DuckDB instead of DuckDB-Wasm
+
+DuckDB-Wasm keeps a rendered plot fully self-contained and shareable as
+plain HTML, which is why it's vgplotr's default. But it's still DuckDB
+running inside a browser sandbox, which caps how much data it can
+comfortably hold and how far it can reach: it can't run DuckDB's own
+federation extensions -- `postgres_scanner`/`ATTACH ... (TYPE postgres)`,
+`mysql_scanner`, `sqlite_scanner` -- that let a *native* DuckDB process
+transparently query Postgres, MySQL, or SQLite as if they were ordinary
+local tables. If your data is too large for the browser, or actually
+lives in one of those other databases, native DuckDB is the way to reach
+it.
+
+## `vg_duckdb_connector()`
+
+`vg_widget()`/`vg_render()` accept a `connector =` argument: the default
+is `vg_wasm_connector()` (DuckDB-Wasm, as above); `vg_duckdb_connector()`
+switches to a real DuckDB process instead, started on your own machine and
+reached over a small local server that vgplotr manages for you.
+
+```r
+# vgplotr creates and manages its own private native DuckDB connection
+big_data |> vg_mark_dot(x = ~a, y = ~b) |> vg_render(connector = vg_duckdb_connector())
+```
+
+Everything else about building a spec -- `vg_data()`, `vg_mark_*()`,
+`vg_interactor()`, transforms, `sql()`/`agg()` -- works exactly the same
+way; only how the resulting SQL actually gets executed changes.
+
+## Reaching an external database
+
+Since DuckDB's federation extensions are just ordinary SQL, vgplotr
+doesn't need any special code to support them -- set up a connection
+however you'd normally use DuckDB from R, and hand it to
+`vg_duckdb_connector()`:
+
+```r
+con <- DBI::dbConnect(duckdb::duckdb())
+DBI::dbExecute(con, "INSTALL postgres; LOAD postgres; ATTACH 'dbname=mydb host=...' AS pg (TYPE postgres)")
+
+vg_create() |>
+  vg_data(name = "orders", query = "SELECT * FROM pg.orders") |>
+  vg_mark_dot(data_from = "orders", x = ~date, y = ~amount) |>
+  vg_render(connector = vg_duckdb_connector(con))
+```
+
+`vg_data(query = ...)` is the same option used for any SQL-defined data
+source (see `vignette("getting-started")`) -- here it just happens to
+query a table that DuckDB is transparently proxying to Postgres. A `con`
+you supply yourself is never closed by vgplotr; you own its lifecycle.
+
+Only one native connection is served per R session -- if you need to
+switch to a different `con`, call `vg_duckdb_server_stop()` first.
+
+## What you need installed
+
+Native DuckDB rendering needs the `duckdb` and `nanoarrow` packages
+(`install.packages(c("duckdb", "nanoarrow"))`); neither is required for
+the default DuckDB-Wasm path, so plain `vg_widget(spec)` never needs them.
+
+## Sharing and security
+
+This article's examples aren't demonstrated live, because native-DuckDB
+output behaves differently from DuckDB-Wasm output in one important way:
+**it's only interactive on the machine/session that rendered it.** The
+browser talks to a small local server started for that R session; opening
+the rendered page again later, or on another machine, gives a plot that
+can't connect to anything. DuckDB-Wasm output has no such limitation --
+it's genuinely self-contained -- which is exactly why it stays vgplotr's
+default.
+
+The local server also has no authentication: it runs whatever SQL the
+page sends it (mosaic's own generated queries, in normal use), mitigated
+by binding to `127.0.0.1` only, never a public network interface. Don't
+point `vg_duckdb_connector()` at a connection with more access than you'd
+want a browser tab to have -- prefer a read-only role or connection when
+attaching to a real external database. See `?vg_duckdb_connector` and
+`?vg_duckdb_server_stop` for the full details.

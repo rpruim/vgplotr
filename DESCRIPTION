@@ -24,10 +24,13 @@ Imports:
     rlang,
     yaml
 Suggests:
+    DBI,
     dplyr,
+    duckdb,
     gt,
     httpuv,
     knitr,
+    nanoarrow,
     palmerpenguins,
     pkgdown,
     quarto,
@@ -40,9 +43,11 @@ Config/roxygen2/version: 8.0.0
 Collate: 
     'attrs-generated.R'
     'concat.R'
+    'connector.R'
     'create.R'
     'data.R'
     'duckdb_cache.R'
+    'duckdb_server.R'
     'export.R'
     'formula.R'
     'utils.R'

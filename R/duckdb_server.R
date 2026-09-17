@@ -1,0 +1,206 @@
+# Backs vg_duckdb_connector() (R/connector.R): a persistent, session-scoped
+# local HTTP server speaking mosaic's own REST connector wire protocol
+# (@uwdata/mosaic-core/src/connectors/rest.ts) -- one POST endpoint, a JSON
+# body `{type: "exec"|"json"|"arrow", sql}` in, and either an empty 200
+# ("exec"), a JSON array of row objects ("json"), or raw Arrow IPC bytes
+# ("arrow") out. Deliberately not modeled on vg_snapshot()'s httpuv server
+# (R/snapshot.R) -- that one is throwaway/static-file-only, torn down via
+# on.exit() before the function that started it even returns; this one has
+# to survive across many separate vg_widget() calls in the same session and
+# handle queries dynamically, so it lives in package-level state instead.
+.vgplotr_native <- new.env(parent = emptyenv())
+
+# Only one native connection is served per session (see vg_duckdb_connector()
+# docs) -- reuses the running server if `connector` refers to the same
+# connection (implicit-and-already-owns-one, or the identical explicit
+# `con`), errors if asked to switch to a different one without stopping
+# the current server first.
+ensure_vg_duckdb_server <- function(connector) {
+  needed <- c("duckdb", "nanoarrow", "DBI", "httpuv")
+  missing <- needed[!vapply(needed, requireNamespace, logical(1), quietly = TRUE)]
+  if (length(missing)) {
+    stop(
+      "vg_duckdb_connector() needs the ", paste(missing, collapse = ", "),
+      " package(s) (install.packages(c(", paste0('"', missing, '"', collapse = ", "), "))).",
+      call. = FALSE
+    )
+  }
+
+  if (!is.null(.vgplotr_native$server)) {
+    same_con <- if (is.null(connector$con)) {
+      .vgplotr_native$owns_con
+    } else {
+      identical(connector$con, .vgplotr_native$con)
+    }
+    if (!same_con) {
+      stop(
+        "A native DuckDB server is already running for a different ",
+        "connection in this session. Call vg_duckdb_server_stop() first ",
+        "if you want to switch connections.",
+        call. = FALSE
+      )
+    }
+    return(list(con = .vgplotr_native$con, uri = .vgplotr_native$uri))
+  }
+
+  con <- connector$con
+  owns_con <- is.null(con)
+  if (owns_con) con <- DBI::dbConnect(duckdb::duckdb())
+
+  port <- httpuv::randomPort()
+  server <- httpuv::startServer("127.0.0.1", port, vg_duckdb_app(con))
+
+  .vgplotr_native$server <- server
+  .vgplotr_native$con <- con
+  .vgplotr_native$owns_con <- owns_con
+  .vgplotr_native$uri <- sprintf("http://127.0.0.1:%d/", port)
+
+  list(con = con, uri = .vgplotr_native$uri)
+}
+
+#' Stop the local native-DuckDB rendering server
+#'
+#' Stops the persistent local HTTP server started automatically by
+#' [vg_duckdb_connector()] and, if vgplotr created its own private DuckDB
+#' connection for it (i.e. `con` was left `NULL`), disconnects it too. A
+#' `con` you supplied yourself is left connected -- you own its lifecycle.
+#' Any already-rendered widgets using the server stop working once it's
+#' stopped. A no-op if no native server is currently running.
+#'
+#' @return Invisibly, `TRUE` if a server was actually stopped, `FALSE` if
+#'   none was running.
+#' @family connector functions
+#' @export
+vg_duckdb_server_stop <- function() {
+  if (is.null(.vgplotr_native$server)) {
+    return(invisible(FALSE))
+  }
+  httpuv::stopServer(.vgplotr_native$server)
+  if (isTRUE(.vgplotr_native$owns_con)) {
+    DBI::dbDisconnect(.vgplotr_native$con, shutdown = TRUE)
+  }
+  rm(list = ls(.vgplotr_native), envir = .vgplotr_native)
+  invisible(TRUE)
+}
+
+# The httpuv app for ensure_vg_duckdb_server(): a single call() handler
+# implementing mosaic's REST connector protocol against `con`. CORS headers
+# are required since the page (served from wherever the widget itself is
+# opened from) and this server (its own random 127.0.0.1 port) are
+# different origins from the browser's point of view; a POST with a JSON
+# body triggers a preflight OPTIONS request, handled separately below.
+vg_duckdb_app <- function(con) {
+  cors <- list("Access-Control-Allow-Origin" = "*")
+  list(
+    call = function(req) {
+      if (identical(req$REQUEST_METHOD, "OPTIONS")) {
+        return(list(
+          status = 204L,
+          headers = c(cors, list(
+            "Access-Control-Allow-Methods" = "POST, OPTIONS",
+            "Access-Control-Allow-Headers" = "Content-Type"
+          )),
+          body = NULL
+        ))
+      }
+
+      query <- tryCatch(
+        jsonlite::fromJSON(rawToChar(req$rook.input$read()), simplifyVector = FALSE),
+        error = function(e) NULL
+      )
+      if (is.null(query) || is.null(query$sql)) {
+        return(list(status = 400L, headers = cors, body = "Malformed query request."))
+      }
+      type <- query$type
+      if (is.null(type)) type <- "arrow"
+
+      tryCatch(
+        vg_duckdb_query_response(con, type, query$sql, cors),
+        error = function(e) list(status = 500L, headers = cors, body = conditionMessage(e))
+      )
+    }
+  )
+}
+
+vg_duckdb_query_response <- function(con, type, sql, cors) {
+  if (type == "exec") {
+    DBI::dbExecute(con, sql)
+    return(list(status = 200L, headers = cors, body = ""))
+  }
+  if (type == "json") {
+    rows <- jsonlite::toJSON(DBI::dbGetQuery(con, sql), dataframe = "rows", na = "null", auto_unbox = FALSE)
+    return(list(
+      status = 200L,
+      headers = c(cors, list("Content-Type" = "application/json")),
+      body = as.character(rows)
+    ))
+  }
+  if (type == "arrow") {
+    stream <- duckdb::dbFetchArrow(duckdb::dbSendQueryArrow(con, sql))
+    rc <- rawConnection(raw(0), "w+b")
+    on.exit(close(rc), add = TRUE)
+    nanoarrow::write_nanoarrow(stream, rc)
+    return(list(
+      status = 200L,
+      headers = c(cors, list("Content-Type" = "application/vnd.apache.arrow.stream")),
+      body = rawConnectionValue(rc)
+    ))
+  }
+  stop("Unknown mosaic query type: `", type, "`.", call. = FALSE)
+}
+
+# duckdb_register() maps an R factor to DuckDB's own ENUM type, which
+# DuckDB's Arrow exporter then dictionary-encodes -- and DuckDB's Arrow IPC
+# writer can't serialize a dictionary-encoded array at all ("ArrowIpcWriter
+# WriteArrayStream() failed: Cannot encode dictionary arrays", confirmed
+# directly). Converting factor columns to plain character first sidesteps
+# it entirely, and also matches what the wasm/JSON-embedding path already
+# does to a factor column (df_to_rows()/jsonlite::toJSON() has no concept
+# of "factor" either -- it's already just a string there), so native mode
+# doesn't newly diverge in how a factor column renders.
+drop_factors <- function(df) {
+  is_factor_col <- vapply(df, is.factor, logical(1))
+  if (any(is_factor_col)) df[is_factor_col] <- lapply(df[is_factor_col], as.character)
+  df
+}
+
+# Registers a spec's own data.frame/local-file sources (vg_data_source_kind(),
+# R/serialize.R) directly into a native DuckDB connection -- the native-mode
+# counterpart of as_spec_payload()'s embed-for-the-browser handling.
+# data.frame sources are a genuine zero-copy registration
+# (duckdb::duckdb_register(), "no data is copied"); local files are read by
+# DuckDB itself server-side instead of being read+base64-embedded by R and
+# shipped to the browser. Anything else (query=, a real http(s) file=) is
+# already connector-agnostic and needs no handling here at all.
+register_native_data_sources <- function(spec, con) {
+  reader_fn <- c(parquet = "read_parquet", csv = "read_csv_auto", json = "read_json_auto")
+  for (nm in names(spec$data)) {
+    src <- spec$data[[nm]]
+    kind <- vg_data_source_kind(src)
+    if (kind == "table") {
+      duckdb::duckdb_register(con, nm, drop_factors(src$data), overwrite = TRUE)
+    } else if (kind == "local_file") {
+      if (!file.exists(src$file)) {
+        stop(
+          "Data file not found: '", src$file, "' (looked relative to the ",
+          "current working directory, ", getwd(), ").",
+          call. = FALSE
+        )
+      }
+      ext <- tolower(tools::file_ext(src$file))
+      reader <- reader_fn[[ext]]
+      if (is.null(reader)) {
+        stop(
+          "Don't know how to load a local data file with extension `.", ext, "` ",
+          "(expected .csv, .json, or .parquet).",
+          call. = FALSE
+        )
+      }
+      DBI::dbExecute(con, sprintf(
+        "CREATE OR REPLACE VIEW %s AS SELECT * FROM %s(%s)",
+        DBI::dbQuoteIdentifier(con, nm), reader, DBI::dbQuoteString(con, normalizePath(src$file))
+      ))
+    }
+  }
+  invisible(NULL)
+}

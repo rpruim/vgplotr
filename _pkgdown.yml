@@ -98,10 +98,22 @@ reference:
   contents:
   - has_concept("duckdb caching functions")
 
+- title: Connector functions
+  desc: >
+    Choose what database a plot's SQL actually runs against: the default
+    duckdb-wasm in the browser, or a real, native DuckDB reached over a
+    local server.
+  contents:
+  - has_concept("connector functions")
+
 articles:
 - title: Get Started
   contents:
   - getting-started
+
+- title: Using Databases
+  contents:
+  - using-databases
 
 - title: Design Principles
   contents:
