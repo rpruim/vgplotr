@@ -5,7 +5,7 @@
 #' the result is a fully self-contained page needing no server -- see
 #' [vg_widget()] for details. You won't normally construct this directly;
 #' it's the implicit default. Use [vg_duckdb_connector()] instead when you
-#' need a real (native) DuckDB, e.g. for data too large for the browser, or
+#' need a real (native) DuckDB, e.g., for data too large for the browser, or
 #' to reach an external database via DuckDB's own extensions
 #' (`postgres_scanner`, `mysql_scanner`, `sqlite_scanner`, ...).
 #'
@@ -24,7 +24,7 @@ vg_wasm_connector <- function() {
 #' *real* DuckDB process running in this R session. This removes
 #' DuckDB-Wasm's size/extension limits -- in particular, it's the only way
 #' to visualize data that actually lives in another database, via DuckDB's
-#' own federation extensions (e.g. `ATTACH '...' AS pg (TYPE postgres)`,
+#' own federation extensions (e.g., `ATTACH '...' AS pg (TYPE postgres)`,
 #' `mysql_scanner`, `sqlite_scanner`): set those up yourself on `con` however
 #' you like, vgplotr just proxies queries to it.
 #'
@@ -43,7 +43,7 @@ vg_wasm_connector <- function() {
 #' can't connect to anything, since there's no server running for it to
 #' reach on the recipient's machine.
 #'
-#' @param con An existing DBI connection to a DuckDB database (e.g. from
+#' @param con An existing DBI connection to a DuckDB database (e.g., from
 #'   `DBI::dbConnect(duckdb::duckdb())`), already set up with any extensions
 #'   or `ATTACH`ed external databases you want reachable. Left `NULL` (the
 #'   default), vgplotr creates and manages a private in-process connection
@@ -56,7 +56,7 @@ vg_wasm_connector <- function() {
 vg_duckdb_connector <- function(con = NULL) {
   if (!is.null(con) && !inherits(con, "DBIConnection")) {
     stop(
-      "`con` must be a DBI connection, e.g. from DBI::dbConnect(duckdb::duckdb()).",
+      "`con` must be a DBI connection, e.g., from DBI::dbConnect(duckdb::duckdb()).",
       call. = FALSE
     )
   }
@@ -71,7 +71,7 @@ is_vg_connector <- function(x) inherits(x, "vg_connector")
 # The session's default connector, read fresh by vg_widget()'s own
 # `connector` formal default (`connector = vg_default_connector()`) on
 # every call that doesn't pass its own -- NULL means "no override set",
-# i.e. vg_wasm_connector().
+# i.e., vg_wasm_connector().
 .vgplotr_default_connector <- new.env(parent = emptyenv())
 .vgplotr_default_connector$connector <- NULL
 
@@ -97,7 +97,7 @@ vg_default_connector <- function() {
 #' `vg_render(spec)` behave differently depending on unrelated earlier
 #' code, silently losing DuckDB-Wasm's self-contained/shareable output).
 #'
-#' @param connector A `vg_connector` (e.g. `vg_duckdb_connector(con)`) to
+#' @param connector A `vg_connector` (e.g., `vg_duckdb_connector(con)`) to
 #'   use as the default from now on. Left at the default
 #'   ([vg_wasm_connector()]), or called with no arguments, this resets the
 #'   session back to its own built-in default.

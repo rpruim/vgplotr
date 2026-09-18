@@ -10,7 +10,7 @@ Authors@R: c(
 Description: Provides a piped, tidyverse-flavored R API for building
     declarative 'mosaic' vgplot specifications
     (<https://github.com/uwdata/mosaic>), which can be rendered as
-    interactive, database-backed graphics in HTML output (e.g. via
+    interactive, database-backed graphics in HTML output (e.g., via
     'htmlwidgets' and Quarto/R Markdown documents).
 License: MIT + file LICENSE
 URL: https://rpruim.github.io/vgplotr/, https://github.com/rpruim/vgplotr

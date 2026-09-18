@@ -12,11 +12,11 @@ vg_data(spec, name = NULL, data = NULL, ...)
 \item{name}{The name other parts of the spec use to refer to this data
 (via \verb{data_from =}/\verb{filter_by =} on marks and interactors). Optional --
 if omitted, an unused name is generated (\code{"data"}, then \code{"data1"},
-\code{"data2"}, ...), e.g. for the shorthand described in \code{\link[=vg_mark]{vg_mark()}}.}
+\code{"data2"}, ...), e.g., for the shorthand described in \code{\link[=vg_mark]{vg_mark()}}.}
 
 \item{data}{An optional data frame to use as this data source.}
 
-\item{...}{Data source options, e.g. \verb{file =}, \verb{query =}, \verb{where =}.}
+\item{...}{Data source options, e.g., \verb{file =}, \verb{query =}, \verb{where =}.}
 }
 \description{
 A data frame passed as \code{data} is loaded into DuckDB directly (see

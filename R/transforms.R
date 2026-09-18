@@ -1,5 +1,5 @@
 # Transform functions (vg_bin(), vg_count(), ...) for use inside mapping
-# formulas, e.g. `x = ~vg_bin(delay, step = 10)`, or called directly (each
+# formulas, e.g., `x = ~vg_bin(delay, step = 10)`, or called directly (each
 # returns a "vg_transform" object). Transcribed from mosaic-spec's
 # Transform.ts (uwdata/mosaic packages/vgplot/spec/src/spec/Transform.ts),
 # which is the source of truth for names/arguments if this ever needs
@@ -112,7 +112,7 @@ rm(.name, .spec)
 #' Transform and aggregate functions from mosaic's SQL layer (binning,
 #' aggregates like `vg_avg()`/`vg_count()`/`vg_sum()`, and window functions
 #' like `vg_rank()`/`vg_lag()`), for use as (or inside) a mark's mapping
-#' formula, e.g. `x = ~vg_bin(delay, step = 10)` or `y = ~vg_count()`.
+#' formula, e.g., `x = ~vg_bin(delay, step = 10)` or `y = ~vg_count()`.
 #'
 #' Each function's first argument(s) are the field(s) (column names or
 #' nested expressions) it operates on; remaining named arguments configure

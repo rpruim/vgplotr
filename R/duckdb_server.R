@@ -62,7 +62,7 @@ ensure_vg_duckdb_server <- function(connector) {
 #'
 #' Stops the persistent local HTTP server started automatically by
 #' [vg_duckdb_connector()] and, if vgplotr created its own private DuckDB
-#' connection for it (i.e. `con` was left `NULL`), disconnects it too. A
+#' connection for it (i.e., `con` was left `NULL`), disconnects it too. A
 #' `con` you supplied yourself is left connected -- you own its lifecycle.
 #' Any already-rendered widgets using the server stop working once it's
 #' stopped. A no-op if no native server is currently running.

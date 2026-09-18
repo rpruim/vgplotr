@@ -8,13 +8,13 @@ vg_snapshot(spec, file = NULL, delay = 3, vwidth = 992, vheight = 744, ...)
 }
 \arguments{
 \item{spec}{A \code{vgspec}, a JSON/YAML spec string (see \code{\link[=vg_widget]{vg_widget()}}),
-or an already-built widget (i.e. the result of calling
+or an already-built widget (i.e., the result of calling
 \code{\link[=vg_widget]{vg_widget()}} yourself).}
 
 \item{file}{If given, always save to this exact path and return it
 invisibly -- for one-off or scripted use outside a document. Left
 \code{NULL} (the default), the screenshot is saved under the usual
-\code{fig.path} convention (e.g. \verb{man/figures/README-*.png}) and the
+\code{fig.path} convention (e.g., \verb{man/figures/README-*.png}) and the
 result is a \code{\link[knitr:include_graphics]{knitr::include_graphics()}} value meant to be the
 value of a knitted chunk.}
 
@@ -26,8 +26,8 @@ remote one may need more.}
 \item{vwidth, vheight}{Browser viewport size (pixels) for the screenshot.}
 
 \item{...}{Passed on to \code{\link[=vg_widget]{vg_widget()}} when \code{spec} isn't already a
-built widget (e.g. \verb{width =}, \verb{height =}). Also silently absorbs
-arguments meant for \code{\link[=vg_iframe]{vg_iframe()}} instead (e.g. \code{iframe}-only
+built widget (e.g., \verb{width =}, \verb{height =}). Also silently absorbs
+arguments meant for \code{\link[=vg_iframe]{vg_iframe()}} instead (e.g., \code{iframe}-only
 options), so \code{\link[=vg_render]{vg_render()}} can forward its own \code{...} uniformly.}
 }
 \description{
@@ -41,7 +41,7 @@ see \code{\link[=vg_render]{vg_render()}}.
 }
 \details{
 knitr/rmarkdown's own built-in mechanism for turning a widget into a
-static screenshot (used e.g. for \code{output: github_document}) doesn't
+static screenshot (used e.g., for \code{output: github_document}) doesn't
 work for vgplotr: it captures the widget by opening it as a local file
 (\verb{file://}), and Chrome refuses to load an ES module script (vgplotr's
 JS runtime is one) -- or run \code{fetch()} at all -- under \verb{file://}, for

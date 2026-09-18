@@ -1,5 +1,5 @@
 test_that("vg_params() preserves an explicit NULL value instead of dropping it", {
-  # offset = NULL is a real, meaningful mosaic param value (e.g. densityY's
+  # offset = NULL is a real, meaningful mosaic param value (e.g., densityY's
   # offset, later set by a menu) -- utils::modifyList() would silently drop
   # the key entirely, same "NULL removes the element" pitfall as
   # merge_attrs() (test-merge.R) and vg_plot_defaults() (test-plot-defaults.R).

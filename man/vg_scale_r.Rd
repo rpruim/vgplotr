@@ -60,14 +60,14 @@ start a new plot fragment with just these attributes.}
 \item{percent}{If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{rPercent}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_scale_r()} (aliased as \code{vg_scale_radius()}) sets the scale
 properties mosaic-spec exposes for the \code{r} channel (\code{rScale},
 \code{rDomain}, ... -- the scale that a \code{dot}/\code{circle} mark's \code{r}
 encoding is bound to unless it's a literal constant). Which
-properties exist here (e.g. no \code{reverse} -- mosaic doesn't define
+properties exist here (e.g., no \code{reverse} -- mosaic doesn't define
 \code{rReverse}) is derived from the schema, not hand-picked. For the
 axis-guide property, see \code{\link[=vg_guide_r]{vg_guide_r()}}/\code{\link[=vg_guide_radius]{vg_guide_radius()}}; for an
 actual rendered radius/size legend, see \code{\link[=vg_legend_symbol]{vg_legend_symbol()}}

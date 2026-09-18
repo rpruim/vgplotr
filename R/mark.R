@@ -1,4 +1,4 @@
-#' Add a mark (a single visual layer, e.g. points or a line) to a plot
+#' Add a mark (a single visual layer, e.g., points or a line) to a plot
 #'
 #' This is the generic, low-level constructor that the `vg_mark_dot()`,
 #' `vg_mark_line_y()`, etc. convenience functions -- one per mark type in
@@ -7,10 +7,10 @@
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, `NULL` to
 #'   start a new plot with just this mark, or a data frame -- shorthand for
-#'   `vg_create() |> vg_data(data = spec) |> vg_mark_<mark>(...)`, i.e.
+#'   `vg_create() |> vg_data(data = spec) |> vg_mark_<mark>(...)`, i.e.,
 #'   starting a brand-new spec with `spec` registered as its data source
 #'   (named per [vg_data()]) and used automatically as this mark's own
-#'   `data_from` -- e.g. `some_data |> vg_mark_dot(x = ~a, y = ~b)`. A
+#'   `data_from` -- e.g., `some_data |> vg_mark_dot(x = ~a, y = ~b)`. A
 #'   `data_from =` string given explicitly names the registered source
 #'   instead of the [vg_data()] default (handy since it's also what later
 #'   marks in the chain need for their own `data_from =`); giving anything
@@ -23,32 +23,32 @@
 #'   note the `L` -- `data_from = 1` is a double, mosaic's own literal
 #'   inline-data shorthand, see below) giving a 1-based index into the
 #'   spec's data sources in registration order, negative counting from the
-#'   end (e.g. `-1L` for the most recently registered one). Left unset
+#'   end (e.g., `-1L` for the most recently registered one). Left unset
 #'   entirely, any mark that takes data at all defaults to `data_from =
 #'   1L`, the first registered source. This is what lets a whole
 #'   multi-layer plot share one data source without repeating `data_from
-#'   =` on every mark, e.g. `some_data |> vg_mark_dot(x = ~a, y = ~b) |>
+#'   =` on every mark, e.g., `some_data |> vg_mark_dot(x = ~a, y = ~b) |>
 #'   vg_mark_line_y(x = ~a, y = ~b)`. Both only look at the data registered
 #'   so far when *this* mark is added; they don't reach back to fill in
 #'   earlier marks if a data source is registered later. `data_from = 0L`
 #'   is never a valid index (there's no "0th" source), so it's treated the
 #'   same as `data_from = 0` -- literal inline data, not an index.
-#' @param mark The mosaic mark type, e.g. `"dot"`, `"lineY"`.
+#' @param mark The mosaic mark type, e.g., `"dot"`, `"lineY"`.
 #' @param formula A shorthand for this mark's position channels (`x`, `y`,
-#'   `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g.
+#'   `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g.,
 #'   `Sepal.Length ~ Sepal.Width | ~ Species` for
 #'   `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. Before the
 #'   optional `| facet` part: `y ~ x`, `~ x` or `y ~ .` (`.` means "don't set
-#'   this channel"), or `y1 + y2 ~ x1 + x2` (or one side alone, e.g.
+#'   this channel"), or `y1 + y2 ~ x1 + x2` (or one side alone, e.g.,
 #'   `y ~ x1 + x2`) for marks with paired channels. After `| `: `~ fx`,
 #'   `fy ~ .`, `fy ~ fx`, or a bare `| facet` (equivalent to `| ~ facet`,
 #'   since mosaic has no separate facet-wrap concept). Parenthesizing part
-#'   of a term (e.g. `y ~ (a + b)`) treats `+`/`|` inside it as ordinary
+#'   of a term (e.g., `y ~ (a + b)`) treats `+`/`|` inside it as ordinary
 #'   arithmetic instead of splitting on it. An explicit `x =`/`y =`/etc.
 #'   given alongside `formula` wins over the value `formula` implies for
 #'   that same channel, with a warning if the two actually disagree. See
 #'   `vignette("getting-started")` for worked examples.
-#' @param ... Encodings (e.g. `x = ~var1`), mark options, and/or plot-level
+#' @param ... Encodings (e.g., `x = ~var1`), mark options, and/or plot-level
 #'   attributes (`width =`, `name =`, ...). See [vg_plot()] for how
 #'   plot-level attributes from multiple marks are combined.
 #' @family mark functions
@@ -85,7 +85,7 @@ vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
     args$data_from <- resolve_data_from_index(args$data_from, names(spec$data))
   }
 
-  # A mark that takes data at all (not e.g. frame/sphere/hexgrid/the axis
+  # A mark that takes data at all (not e.g., frame/sphere/hexgrid/the axis
   # and grid marks, which compute their own geometry and have no `data`
   # property to begin with -- .vg_mark_has_data, R/attrs-generated.R),
   # wasn't given its own data_from, and actually *references* data in at
@@ -96,7 +96,7 @@ vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
   # or added via vg_data() -- with no data_from repeated on every mark.
   #
   # The data-reference check matters: a mark built entirely from literal
-  # values (e.g. vg_mark_rule_x(x = 0), a plain reference line) has nothing
+  # values (e.g., vg_mark_rule_x(x = 0), a plain reference line) has nothing
   # to look up, and mosaic errors on an empty SELECT if data_from is
   # attached anyway -- confirmed directly, this used to happen.
   if (is.null(args$data_from) && is_vgspec(spec) && length(spec$data) &&
@@ -134,7 +134,7 @@ args_reference_data <- function(args) {
 
 # Shared by every generated vg_mark_<mark>() wrapper (R/marks-generated.R):
 # drops whichever named arguments the caller left at their vg_unset
-# default (i.e. didn't actually supply) before dispatching to vg_mark().
+# default (i.e., didn't actually supply) before dispatching to vg_mark().
 #
 # Safe to name this parameter `mark` (matching vg_mark()'s own parameter):
 # "mark" is always excluded from a mark's own generated properties (it's

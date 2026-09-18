@@ -9,7 +9,7 @@ vg_params(spec, ...)
 \arguments{
 \item{spec}{A \code{vgspec}.}
 
-\item{...}{Named params, e.g. \code{point = 0}, or selections, e.g. \code{query = list(select = "intersect")} (mosaic-spec's \code{Selection} shape --
+\item{...}{Named params, e.g., \code{point = 0}, or selections, e.g., \code{query = list(select = "intersect")} (mosaic-spec's \code{Selection} shape --
 \code{select} is one of \code{"crossfilter"}/\code{"intersect"}/\code{"single"}/\code{"union"},
 with optional \code{cross}/\code{empty}/\code{include} fields).}
 }

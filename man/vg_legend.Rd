@@ -23,7 +23,7 @@ using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconca
 
 \item{type}{The legend type: \code{"color"}, \code{"opacity"}, or \code{"symbol"}.}
 
-\item{...}{Legend options, e.g. \code{as = param(brush)}, \code{label = "Species"},
+\item{...}{Legend options, e.g., \code{as = param(brush)}, \code{label = "Species"},
 \verb{field =}, \verb{tickSize =}, \verb{columns =}, or margin/width/height settings.}
 
 \item{for_plot}{For a standalone legend: the \code{name} of the plot it

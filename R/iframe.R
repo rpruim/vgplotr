@@ -21,7 +21,7 @@
 #'
 #' Note: [vg_render()] never picks this mode automatically
 #' (only [vg_widget()] or [vg_snapshot()]), so you must ask for it
-#' explicitly, e.g. via `vg_render(spec, mode = "iframe")`. This is
+#' explicitly, e.g., via `vg_render(spec, mode = "iframe")`. This is
 #' because [vg_render()]'s auto-detection works by asking
 #' "Can this pandoc target run embedded JavaScript?" — that's a real,
 #' fixed property of the output format itself
@@ -65,7 +65,7 @@
 #'
 #' @inheritParams vg_snapshot
 #' @param file If given, save to this exact HTML path instead of the
-#'   usual `fig.path` convention (e.g. `man/figures/README-*.html`).
+#'   usual `fig.path` convention (e.g., `man/figures/README-*.html`).
 #' @param src The `<iframe>`'s `src` attribute -- where the *deployed*
 #'   page should look for the saved widget, which is not always the
 #'   same as `file` (see the section above). Left `NULL` (the default),
@@ -73,12 +73,12 @@
 #'   `reference/figures/` if present (the pkgdown convention) and is
 #'   used as-is otherwise. Ignored -- with the plain save path returned
 #'   invisibly instead of an `<iframe>` block -- if neither `src` nor
-#'   the default `file` is given (i.e. one-off/scripted use with only
+#'   the default `file` is given (i.e., one-off/scripted use with only
 #'   `file` set).
 #' @param vwidth,vheight The `<iframe>`'s own width/height (pixels).
 #' @param ... Passed on to [vg_widget()] when `spec` isn't already a
-#'   built widget (e.g. `width =`, `height =`). Also silently absorbs
-#'   arguments meant for [vg_snapshot()] instead (e.g. `delay =`), so
+#'   built widget (e.g., `width =`, `height =`). Also silently absorbs
+#'   arguments meant for [vg_snapshot()] instead (e.g., `delay =`), so
 #'   [vg_render()] can forward its own `...` uniformly. `use_cache`
 #'   defaults to `FALSE` here specifically, even if this machine has a
 #'   local duckdb-wasm cache set up (see [vg_cache_duckdb()]):

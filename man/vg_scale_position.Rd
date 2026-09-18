@@ -126,7 +126,7 @@ start a new plot fragment with just these attributes.}
 \item{inset_top, inset_bottom}{Pixel inset at the top/bottom end of the range; only meaningful for \code{which = "y"} (\code{yInsetTop}/\code{yInsetBottom}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_scale_x()}/\code{vg_scale_y()} set the scale properties mosaic-spec

@@ -16,7 +16,7 @@ start a new plot fragment with just these attributes.}
 \item{label}{A textual label to show on the axis or legend; if null, show no label. (\code{rLabel}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_guide_r()} (aliased as \code{vg_guide_radius()}) sets the axis-guide

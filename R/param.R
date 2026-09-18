@@ -1,7 +1,7 @@
 #' Reference a mosaic Param or Selection by name
 #'
 #' `param(brush)` is how a `$brush`-style reference (to a Param or Selection
-#' declared elsewhere in the spec, e.g. via `vg_params()` or as the `as =`
+#' declared elsewhere in the spec, e.g., via `vg_params()` or as the `as =`
 #' target of an interactor) is written in valid R. `$brush` alone is not
 #' parseable R, so `param()` captures the bare name you give it and returns an
 #' object that serializes as `$brush`.

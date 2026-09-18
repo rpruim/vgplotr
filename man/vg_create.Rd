@@ -13,10 +13,10 @@ source (equivalent to following up with \code{vg_data(data = data)} -- see
 \code{some_data |> vg_mark_dot(...)} shorthand).}
 
 \item{...}{Named values routed automatically to wherever mosaic-spec
-allows them: a known plot-level attribute (e.g. \verb{width =}, \verb{height =})
+allows them: a known plot-level attribute (e.g., \verb{width =}, \verb{height =})
 goes to the spec's own top level (as if passed to \code{\link[=vg_attributes]{vg_attributes()}});
 anything else goes to \code{meta} (as if passed to \code{\link[=vg_meta]{vg_meta()}}), since
-mosaic-spec's metadata accepts arbitrary keys (e.g. \verb{title =}). To set
+mosaic-spec's metadata accepts arbitrary keys (e.g., \verb{title =}). To set
 mosaic-spec's \code{plotDefaults} (applied to \emph{every} plot, as opposed to
 just the spec's own top level) instead, call \code{\link[=vg_plot_defaults]{vg_plot_defaults()}}
 explicitly -- it's never chosen automatically, since every name valid
@@ -26,9 +26,9 @@ there is also valid at the top level, which is preferred.}
 \code{vg_create()} starts a new \code{vgspec}, the top-level object that other
 \verb{vg_*()} functions are piped through to add data sources, params, marks,
 interactors, and layout. Marks and interactors can be piped directly onto
-a freshly created spec (e.g. \code{vg_create() |> vg_mark_dot(x = ~a, y = ~b)}) as
+a freshly created spec (e.g., \code{vg_create() |> vg_mark_dot(x = ~a, y = ~b)}) as
 long as the spec only needs a single plot; a spec with multiple plots, or
-with layout-level inputs (e.g. \code{\link[=vg_menu]{vg_menu()}}, \code{\link[=vg_table]{vg_table()}}), needs an
+with layout-level inputs (e.g., \code{\link[=vg_menu]{vg_menu()}}, \code{\link[=vg_table]{vg_table()}}), needs an
 explicit layout (see \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}).
 }
 \seealso{

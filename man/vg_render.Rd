@@ -8,11 +8,11 @@ vg_render(spec, ..., mode = c("auto", "widget", "snapshot", "iframe"))
 }
 \arguments{
 \item{spec}{A \code{vgspec}, a JSON/YAML spec string (see \code{\link[=vg_widget]{vg_widget()}}),
-or an already-built widget (i.e. the result of calling
+or an already-built widget (i.e., the result of calling
 \code{\link[=vg_widget]{vg_widget()}} yourself).}
 
 \item{...}{Passed on to whichever of \code{\link[=vg_widget]{vg_widget()}}, \code{\link[=vg_snapshot]{vg_snapshot()}},
-or \code{\link[=vg_iframe]{vg_iframe()}} ends up handling the request (e.g. \verb{width =},
+or \code{\link[=vg_iframe]{vg_iframe()}} ends up handling the request (e.g., \verb{width =},
 \verb{use_cache =}, or \verb{connector =} for \code{\link[=vg_widget]{vg_widget()}}, \verb{delay =} for
 \code{\link[=vg_snapshot]{vg_snapshot()}}).
 Each of those three accepts and silently ignores arguments meant for
@@ -31,7 +31,7 @@ explicitly.
 \details{
 Left at the default \code{mode = "auto"}, \code{vg_render()} inspects whether the
 current output can actually run JavaScript. An HTML vignette or Quarto
-HTML page -- or no active knit at all, e.g. typed directly at the
+HTML page -- or no active knit at all, e.g., typed directly at the
 console -- gets \code{\link[=vg_widget]{vg_widget()}}'s live widget; a plain-markdown or other
 non-HTML output (\code{github_document}, PDF, Word, ...), which can't run
 embedded JavaScript, gets \code{\link[=vg_snapshot]{vg_snapshot()}}'s static screenshot instead.
@@ -42,7 +42,7 @@ support \emph{passing through} raw HTML blocks), but GitHub strips
 still wouldn't actually run there.
 
 \code{mode = "iframe"} is never chosen automatically -- ask for it
-explicitly (e.g. for a pkgdown home page built from
+explicitly (e.g., for a pkgdown home page built from
 \code{pkgdown/index.md}; see \code{\link[=vg_iframe]{vg_iframe()}} for why that one needs to be
 deliberate).
 

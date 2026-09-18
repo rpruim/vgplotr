@@ -8,11 +8,11 @@ vg_iframe(spec, file = NULL, src = NULL, vwidth = 992, vheight = 744, ...)
 }
 \arguments{
 \item{spec}{A \code{vgspec}, a JSON/YAML spec string (see \code{\link[=vg_widget]{vg_widget()}}),
-or an already-built widget (i.e. the result of calling
+or an already-built widget (i.e., the result of calling
 \code{\link[=vg_widget]{vg_widget()}} yourself).}
 
 \item{file}{If given, save to this exact HTML path instead of the
-usual \code{fig.path} convention (e.g. \verb{man/figures/README-*.html}).}
+usual \code{fig.path} convention (e.g., \verb{man/figures/README-*.html}).}
 
 \item{src}{The \verb{<iframe>}'s \code{src} attribute -- where the \emph{deployed}
 page should look for the saved widget, which is not always the
@@ -21,14 +21,14 @@ same as \code{file} (see the section above). Left \code{NULL} (the default),
 \verb{reference/figures/} if present (the pkgdown convention) and is
 used as-is otherwise. Ignored -- with the plain save path returned
 invisibly instead of an \verb{<iframe>} block -- if neither \code{src} nor
-the default \code{file} is given (i.e. one-off/scripted use with only
+the default \code{file} is given (i.e., one-off/scripted use with only
 \code{file} set).}
 
 \item{vwidth, vheight}{The \verb{<iframe>}'s own width/height (pixels).}
 
 \item{...}{Passed on to \code{\link[=vg_widget]{vg_widget()}} when \code{spec} isn't already a
-built widget (e.g. \verb{width =}, \verb{height =}). Also silently absorbs
-arguments meant for \code{\link[=vg_snapshot]{vg_snapshot()}} instead (e.g. \verb{delay =}), so
+built widget (e.g., \verb{width =}, \verb{height =}). Also silently absorbs
+arguments meant for \code{\link[=vg_snapshot]{vg_snapshot()}} instead (e.g., \verb{delay =}), so
 \code{\link[=vg_render]{vg_render()}} can forward its own \code{...} uniformly. \code{use_cache}
 defaults to \code{FALSE} here specifically, even if this machine has a
 local duckdb-wasm cache set up (see \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}):
@@ -61,7 +61,7 @@ ends up served alongside everything else on the deployed site, and
 
 Note: \code{\link[=vg_render]{vg_render()}} never picks this mode automatically
 (only \code{\link[=vg_widget]{vg_widget()}} or \code{\link[=vg_snapshot]{vg_snapshot()}}), so you must ask for it
-explicitly, e.g. via \code{vg_render(spec, mode = "iframe")}. This is
+explicitly, e.g., via \code{vg_render(spec, mode = "iframe")}. This is
 because \code{\link[=vg_render]{vg_render()}}'s auto-detection works by asking
 "Can this pandoc target run embedded JavaScript?" — that's a real,
 fixed property of the output format itself

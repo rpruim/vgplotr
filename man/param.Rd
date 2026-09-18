@@ -11,7 +11,7 @@ param(name)
 }
 \description{
 \code{param(brush)} is how a \verb{$brush}-style reference (to a Param or Selection
-declared elsewhere in the spec, e.g. via \code{vg_params()} or as the \verb{as =}
+declared elsewhere in the spec, e.g., via \code{vg_params()} or as the \verb{as =}
 target of an interactor) is written in valid R. \verb{$brush} alone is not
 parseable R, so \code{param()} captures the bare name you give it and returns an
 object that serializes as \verb{$brush}.

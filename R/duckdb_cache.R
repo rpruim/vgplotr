@@ -102,7 +102,7 @@ print.vg_duckdb_cache_status <- function(x, ...) {
 #'
 #' This is entirely opt-in: without a cached binary, vgplotr keeps fetching
 #' from a CDN at view time, exactly as before. Set `force = TRUE` to
-#' re-download even if already cached (e.g. after clearing it with
+#' re-download even if already cached (e.g., after clearing it with
 #' [vg_uncache_duckdb()]).
 #'
 #' [vg_render()] will offer to run this for you interactively (at most once

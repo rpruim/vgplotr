@@ -12,7 +12,7 @@ to_json(spec, pretty = TRUE, suppress_data = FALSE, ...)
 \item{pretty}{Whether to indent the JSON for readability (default \code{TRUE}).}
 
 \item{suppress_data}{If \code{TRUE}, omit data sources defined \emph{with} the spec
-(an inline data frame, e.g. \code{vg_data(name, data = df)}, serialized as
+(an inline data frame, e.g., \code{vg_data(name, data = df)}, serialized as
 mosaic-spec's own \verb{\{data: [...]\}} row-object array) from the output --
 handy for a compact, human-readable spec when the actual data isn't
 the point. Data sources specified \emph{by name} elsewhere (\verb{file =},
@@ -27,7 +27,7 @@ A \code{json} object (see \code{\link[jsonlite:toJSON]{jsonlite::toJSON()}}); pr
 raw JSON text.
 }
 \description{
-Produces the same kind of JSON mosaic's own spec files use (e.g. the
+Produces the same kind of JSON mosaic's own spec files use (e.g., the
 examples under \verb{docs/public/specs/json/} in uwdata/mosaic) -- useful for
 inspecting exactly what a spec built with vgplotr's R API translates to,
 or for saving/sharing it independent of R. Works on a full \code{vgspec} (from

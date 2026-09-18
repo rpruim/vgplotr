@@ -13,7 +13,7 @@ NULL
 #'   for a standalone legend with `for_plot` set -- combine that with plots
 #'   using [vg_vconcat()]/[vg_hconcat()] instead.
 #' @param type The legend type: `"color"`, `"opacity"`, or `"symbol"`.
-#' @param ... Legend options, e.g. `as = param(brush)`, `label = "Species"`,
+#' @param ... Legend options, e.g., `as = param(brush)`, `label = "Species"`,
 #'   `field =`, `tickSize =`, `columns =`, or margin/width/height settings.
 #' @param for_plot For a standalone legend: the `name` of the plot it
 #'   decorates.

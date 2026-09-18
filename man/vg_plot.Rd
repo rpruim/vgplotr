@@ -12,7 +12,7 @@ vg_plot(spec = NULL, ...)
 
 \item{...}{Additional plot fragments (marks/interactors) to include, and/or
 named plot-level attributes (\verb{width =}, \verb{height =}, \verb{name =}, \verb{x_domain =},
-..., snake_case -- translated to mosaic's own camelCase key, e.g. \code{xDomain}).}
+..., snake_case -- translated to mosaic's own camelCase key, e.g., \code{xDomain}).}
 }
 \description{
 Plot-level attributes such as \code{width}, \code{height}, \code{name}, and \code{margins}

@@ -15,7 +15,7 @@ runs entirely client-side against a DuckDB compiled to WebAssembly, so
 the result is a fully self-contained page needing no server -- see
 \code{\link[=vg_widget]{vg_widget()}} for details. You won't normally construct this directly;
 it's the implicit default. Use \code{\link[=vg_duckdb_connector]{vg_duckdb_connector()}} instead when you
-need a real (native) DuckDB, e.g. for data too large for the browser, or
+need a real (native) DuckDB, e.g., for data too large for the browser, or
 to reach an external database via DuckDB's own extensions
 (\code{postgres_scanner}, \code{mysql_scanner}, \code{sqlite_scanner}, ...).
 }

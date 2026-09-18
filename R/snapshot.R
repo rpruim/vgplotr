@@ -10,7 +10,7 @@
 #'
 #' @details
 #' knitr/rmarkdown's own built-in mechanism for turning a widget into a
-#' static screenshot (used e.g. for `output: github_document`) doesn't
+#' static screenshot (used e.g., for `output: github_document`) doesn't
 #' work for vgplotr: it captures the widget by opening it as a local file
 #' (`file://`), and Chrome refuses to load an ES module script (vgplotr's
 #' JS runtime is one) -- or run `fetch()` at all -- under `file://`, for
@@ -23,12 +23,12 @@
 #' the `webshot2` package), which lets the widget's JS actually run.
 #'
 #' @param spec A `vgspec`, a JSON/YAML spec string (see [vg_widget()]),
-#'   or an already-built widget (i.e. the result of calling
+#'   or an already-built widget (i.e., the result of calling
 #'   [vg_widget()] yourself).
 #' @param file If given, always save to this exact path and return it
 #'   invisibly -- for one-off or scripted use outside a document. Left
 #'   `NULL` (the default), the screenshot is saved under the usual
-#'   `fig.path` convention (e.g. `man/figures/README-*.png`) and the
+#'   `fig.path` convention (e.g., `man/figures/README-*.png`) and the
 #'   result is a [knitr::include_graphics()] value meant to be the
 #'   value of a knitted chunk.
 #' @param delay Seconds to wait after the widget loads before taking the
@@ -37,8 +37,8 @@
 #'   remote one may need more.
 #' @param vwidth,vheight Browser viewport size (pixels) for the screenshot.
 #' @param ... Passed on to [vg_widget()] when `spec` isn't already a
-#'   built widget (e.g. `width =`, `height =`). Also silently absorbs
-#'   arguments meant for [vg_iframe()] instead (e.g. `iframe`-only
+#'   built widget (e.g., `width =`, `height =`). Also silently absorbs
+#'   arguments meant for [vg_iframe()] instead (e.g., `iframe`-only
 #'   options), so [vg_render()] can forward its own `...` uniformly.
 #' @family rendering functions
 #' @export
@@ -71,7 +71,7 @@ vg_snapshot <- function(
 
 # Where to save a snapshot/iframe file when the caller didn't give an
 # explicit `file`: knitr's own fig.path/label/counter convention when
-# there's an active knit (so output lands in the usual place, e.g.
+# there's an active knit (so output lands in the usual place, e.g.,
 # man/figures/README-*), otherwise a plain tempfile.
 default_snapshot_path <- function(ext) {
   if (isTRUE(getOption("knitr.in.progress", FALSE)) && requireNamespace("knitr", quietly = TRUE)) {

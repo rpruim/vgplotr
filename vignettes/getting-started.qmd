@@ -59,7 +59,7 @@ spec
 
 `vg_attributes()` sets attributes directly on the spec's own top level --
 distinct from this plot's own attributes (`spec$layout$attrs`, accumulated
-from marks/interactors, e.g. via `width =` on `vg_mark_dot()`) and from
+from marks/interactors, e.g., via `width =` on `vg_mark_dot()`) and from
 mosaic-spec's `plotDefaults` (set via `vg_plot_defaults()`, applied to
 *every* plot in the spec -- see the two-plot example below):
 
@@ -117,7 +117,7 @@ as usual -- the default only ever reaches for the *first* one registered.
 spec's data sources instead of a name, negative counting from the end
 (`data_from = -1L` for the most recently registered source) -- note the
 `L`: a plain number like `data_from = 0` keeps its existing meaning,
-mosaic's own literal inline-data shorthand (`"data": [0]`, e.g. for a
+mosaic's own literal inline-data shorthand (`"data": [0]`, e.g., for a
 reference line), so only a real R integer is read as an index --
 `data_from = 0L` included, since `0` is never a valid index anyway.
 
@@ -141,7 +141,7 @@ mtcars |> vg_mark_dot(y = ~mpg, x = ~hp, fx = ~cyl, fill = "steelblue", width = 
 A two-sided facet formula sets `fy` and `fx` independently (`cyl ~ gear` for
 both, `cyl ~ .` for `fy` alone), and a `.` on the position side skips that
 channel (`mpg ~ .` sets only `y`). Marks with paired channels accept two
-terms per side, e.g. `vg_mark_rect(mpg + wt ~ hp + disp)` sets
+terms per side, e.g., `vg_mark_rect(mpg + wt ~ hp + disp)` sets
 `y1`/`y2`/`x1`/`x2`; asymmetric term counts (`mpg ~ hp + disp`) map each
 side independently. An explicit `x =`/`y =`/etc. alongside `formula`
 overrides the value the formula implies for that channel, with a warning
@@ -291,7 +291,7 @@ from mosaic's own JSON schema by `data-raw/update-schema.R` -- see
 `vg_mark_hexbin()`, `vg_mark_text()`, `vg_mark_rule_x()`, ... alongside the marks used
 above), and correctly recognizes every plot-level attribute (215) as
 belonging to the plot, not the mark -- even when a mark has a same-named
-property of its own (e.g. a mark's own `inset` vs. the plot-wide default
+property of its own (e.g., a mark's own `inset` vs. the plot-wide default
 `inset`, told apart by `vg_mark_*()`'s generated list of each mark's real
 properties).
 
@@ -324,7 +324,7 @@ vg_render(spec4b)
 
 `vg_scale_x()`/`vg_scale_y()` and `vg_guide_x()`/`vg_guide_y()` are
 discoverable, per-channel wrappers around the same plot-level attributes
-already set above (`x_domain`, `margin_left`, ...) -- e.g.
+already set above (`x_domain`, `margin_left`, ...) -- e.g.,
 `vg_scale_y(type = "sqrt")` is `vg_plot(y_scale = "sqrt")`. Like
 `vg_plot()`, they can be piped in anywhere alongside marks and
 interactors, since they only ever set attributes on the current plot.
@@ -386,7 +386,7 @@ vg_render(spec4d)
 `opacity`, and `r` encodings are bound to. These three
 channels aren't a symmetric family the way `x`/`y` are, so each gets its
 own dedicated argument list rather than a shared `which =` generic --
-e.g. `vg_scale_color()` has palette-specific arguments
+e.g., `vg_scale_color()` has palette-specific arguments
 (`scheme =`, `interpolate =`, `pivot =`, `symmetric =`) that
 `vg_scale_opacity()`/`vg_scale_r()` don't, and `vg_scale_r()` has no
 `reverse =` (mosaic doesn't define `rReverse`).
@@ -542,7 +542,7 @@ vg_render(spec7)
 
 `vg_render(spec)` renders a spec directly, but sometimes what's wanted is
 the underlying mosaic-spec JSON or YAML itself -- to inspect exactly what
-an R-side spec translates to, or to save/share it independent of R (e.g.
+an R-side spec translates to, or to save/share it independent of R (e.g.,
 to feed to mosaic's own JS `parseSpec()`, or as a `.json`/`.yaml` file
 alongside other mosaic examples). `to_json()`/`to_yaml()` work on a full
 `vgspec` or, as here, on a bare fragment that was never wrapped in
@@ -575,7 +575,7 @@ vg_create() |>
 ## Rendering a spec from elsewhere
 
 `vg_render()` also accepts a JSON or YAML string directly -- an
-already-complete mosaic spec, e.g. copied from mosaic's own [example
+already-complete mosaic spec, e.g., copied from mosaic's own [example
 gallery](https://idl.uw.edu/mosaic/examples/) or the output of
 `to_json()`/`to_yaml()` above -- so an example found elsewhere can be
 dropped straight into a Quarto document without translating it into

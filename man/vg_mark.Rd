@@ -2,17 +2,17 @@
 % Please edit documentation in R/mark.R
 \name{vg_mark}
 \alias{vg_mark}
-\title{Add a mark (a single visual layer, e.g. points or a line) to a plot}
+\title{Add a mark (a single visual layer, e.g., points or a line) to a plot}
 \usage{
 vg_mark(spec = NULL, mark, formula = vg_unset, ...)
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this mark to, \code{NULL} to
 start a new plot with just this mark, or a data frame -- shorthand for
-\verb{vg_create() |> vg_data(data = spec) |> vg_mark_<mark>(...)}, i.e.
+\verb{vg_create() |> vg_data(data = spec) |> vg_mark_<mark>(...)}, i.e.,
 starting a brand-new spec with \code{spec} registered as its data source
 (named per \code{\link[=vg_data]{vg_data()}}) and used automatically as this mark's own
-\code{data_from} -- e.g. \code{some_data |> vg_mark_dot(x = ~a, y = ~b)}. A
+\code{data_from} -- e.g., \code{some_data |> vg_mark_dot(x = ~a, y = ~b)}. A
 \verb{data_from =} string given explicitly names the registered source
 instead of the \code{\link[=vg_data]{vg_data()}} default (handy since it's also what later
 marks in the chain need for their own \verb{data_from =}); giving anything
@@ -25,32 +25,32 @@ can also be a length-1 \emph{nonzero} R integer (\code{1L}, \code{2L}, \code{-1L
 note the \code{L} -- \code{data_from = 1} is a double, mosaic's own literal
 inline-data shorthand, see below) giving a 1-based index into the
 spec's data sources in registration order, negative counting from the
-end (e.g. \code{-1L} for the most recently registered one). Left unset
+end (e.g., \code{-1L} for the most recently registered one). Left unset
 entirely, any mark that takes data at all defaults to \code{data_from = 1L}, the first registered source. This is what lets a whole
-multi-layer plot share one data source without repeating \verb{data_from =} on every mark, e.g. \code{some_data |> vg_mark_dot(x = ~a, y = ~b) |> vg_mark_line_y(x = ~a, y = ~b)}. Both only look at the data registered
+multi-layer plot share one data source without repeating \verb{data_from =} on every mark, e.g., \code{some_data |> vg_mark_dot(x = ~a, y = ~b) |> vg_mark_line_y(x = ~a, y = ~b)}. Both only look at the data registered
 so far when \emph{this} mark is added; they don't reach back to fill in
 earlier marks if a data source is registered later. \code{data_from = 0L}
 is never a valid index (there's no "0th" source), so it's treated the
 same as \code{data_from = 0} -- literal inline data, not an index.}
 
-\item{mark}{The mosaic mark type, e.g. \code{"dot"}, \code{"lineY"}.}
+\item{mark}{The mosaic mark type, e.g., \code{"dot"}, \code{"lineY"}.}
 
 \item{formula}{A shorthand for this mark's position channels (\code{x}, \code{y},
-\code{fx}, \code{fy}, and paired \code{x1}/\code{x2} or \code{y1}/\code{y2}), e.g.
+\code{fx}, \code{fy}, and paired \code{x1}/\code{x2} or \code{y1}/\code{y2}), e.g.,
 \code{Sepal.Length ~ Sepal.Width | ~ Species} for
 \verb{y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species}. Before the
 optional \verb{| facet} part: \code{y ~ x}, \code{~ x} or \code{y ~ .} (\code{.} means "don't set
-this channel"), or \code{y1 + y2 ~ x1 + x2} (or one side alone, e.g.
+this channel"), or \code{y1 + y2 ~ x1 + x2} (or one side alone, e.g.,
 \code{y ~ x1 + x2}) for marks with paired channels. After \verb{| }: \code{~ fx},
 \code{fy ~ .}, \code{fy ~ fx}, or a bare \verb{| facet} (equivalent to \verb{| ~ facet},
 since mosaic has no separate facet-wrap concept). Parenthesizing part
-of a term (e.g. \code{y ~ (a + b)}) treats \code{+}/\code{|} inside it as ordinary
+of a term (e.g., \code{y ~ (a + b)}) treats \code{+}/\code{|} inside it as ordinary
 arithmetic instead of splitting on it. An explicit \verb{x =}/\verb{y =}/etc.
 given alongside \code{formula} wins over the value \code{formula} implies for
 that same channel, with a warning if the two actually disagree. See
 \code{vignette("getting-started")} for worked examples.}
 
-\item{...}{Encodings (e.g. \code{x = ~var1}), mark options, and/or plot-level
+\item{...}{Encodings (e.g., \code{x = ~var1}), mark options, and/or plot-level
 attributes (\verb{width =}, \verb{name =}, ...). See \code{\link[=vg_plot]{vg_plot()}} for how
 plot-level attributes from multiple marks are combined.}
 }

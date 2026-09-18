@@ -1,6 +1,6 @@
 # Parses vg_mark()'s `formula` shorthand (design/vg_formula.qmd) into a
 # named list of one-sided mapping formulas for whichever position channels
-# (x, y, fx, fy, x1, x2, y1, y2) it implies -- e.g.
+# (x, y, fx, fy, x1, x2, y1, y2) it implies -- e.g.,
 # `Sepal.Length ~ Sepal.Width | ~ Species` becomes
 # `list(y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species)`. Each result
 # value is an ordinary one-sided formula, so it plugs straight into the same
@@ -32,10 +32,10 @@ parse_vg_formula <- function(f, mark) {
       channels <- assign_terms(channels, lhs_of(parts$facet), "fy", env)
       channels <- assign_terms(channels, rhs_of(parts$facet), "fx", env)
     } else {
-      # A bare symbol/expr after `|` with no `~` at all (e.g. `| facet`).
+      # A bare symbol/expr after `|` with no `~` at all (e.g., `| facet`).
       # Mosaic has no real facet_wrap-style auto layout (only the explicit
       # fx/fy position channels, confirmed against mosaic-plot's own
-      # PlotAttributes), so this is exactly `| ~ facet`, i.e. fx only.
+      # PlotAttributes), so this is exactly `| ~ facet`, i.e., fx only.
       channels <- assign_terms(channels, parts$facet, "fx", env)
     }
   }
@@ -61,10 +61,10 @@ parse_vg_formula <- function(f, mark) {
 #   y ~ x | facet        ->  ~(op) len 3, LHS = y (leaf),        RHS = `x | facet` (a `|` call)
 #   y ~ x | fy ~ .        ->  ~(op) len 3, LHS = `y ~ x | fy` (a `~` call), RHS = `.`
 #
-# i.e. a two-sided facet always shows up as an extra layer of `~` wrapped
+# i.e., a two-sided facet always shows up as an extra layer of `~` wrapped
 # around the "clean" shape -- detected here by `is_call(expr[[2]], "~")`
 # (only possible in the deep-nesting case; an ordinary two-sided position
-# formula's own LHS, e.g. `y`, is never itself a `~` call).
+# formula's own LHS, e.g., `y`, is never itself a `~` call).
 #
 # A `(`-wrapped sub-expression is never a call to `~`/`|` at its own top
 # level (its head is `` `(` ``), so this same structural test already
@@ -128,7 +128,7 @@ is_dot <- function(expr) identical(expr, quote(.))
 
 # Splits a `+`-chained expression into its individual terms, without
 # descending into a `(`-wrapped sub-expression (its head is `` `(` ``, never
-# `+`) -- e.g. `a ~ (b + c)` keeps `(b + c)` as a single opaque term instead
+# `+`) -- e.g., `a ~ (b + c)` keeps `(b + c)` as a single opaque term instead
 # of splitting it into two channels (design/vg_formula.qmd).
 split_terms <- function(expr) {
   if (is_call(expr, "+")) {
@@ -138,7 +138,7 @@ split_terms <- function(expr) {
   }
 }
 
-# Maps `expr`'s `+`-separated terms onto `slots` (e.g. `c("y", "y1", "y2")`
+# Maps `expr`'s `+`-separated terms onto `slots` (e.g., `c("y", "y1", "y2")`
 # for a position formula's LHS, or a single name like `"fx"` for a facet
 # channel, which never takes more than one term) and adds each as a
 # one-sided formula (`~term`) to `channels`. `.`/NULL means "skip this side"

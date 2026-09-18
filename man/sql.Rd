@@ -13,7 +13,7 @@ agg(..., label = NULL)
 \item{...}{One or more pieces of the SQL expression; character strings
 and \code{\link[=param]{param()}} values are pasted together with no separator in between.}
 
-\item{label}{An optional label for this expression, e.g. for a plot axis.}
+\item{label}{An optional label for this expression, e.g., for a plot axis.}
 }
 \description{
 Wraps a raw SQL expression for use as a mark encoding or other spec
@@ -21,7 +21,7 @@ value, matching mosaic-spec's own \code{SQLExpression}/\code{AggregateExpression
 Unlike \code{\link[=vg_bin]{vg_bin()}}/\code{\link[=vg_count]{vg_count()}}/etc., this is not translated from R syntax
 -- the pieces are just pasted together as SQL text, exactly as DuckDB
 will see it. Use \code{sql()} for ordinary expressions and \code{agg()} when the
-expression contains an aggregate function (e.g. \code{SUM(...)}); mosaic
+expression contains an aggregate function (e.g., \code{SUM(...)}); mosaic
 needs to know which, since aggregates are handled differently in a
 query.
 }

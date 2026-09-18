@@ -24,7 +24,7 @@ as_vg_plot_fragment <- function(spec) {
       spec$layout
     } else {
       stop(
-        "This vgspec already has a non-plot layout (e.g. from vg_vconcat()/vg_hconcat()); ",
+        "This vgspec already has a non-plot layout (e.g., from vg_vconcat()/vg_hconcat()); ",
         "wrap new marks in vg_plot() and add them explicitly instead of piping directly.",
         call. = FALSE
       )
@@ -72,7 +72,7 @@ update_layout <- function(spec, fragment) {
 #' @param spec A plot fragment or `vgspec` to extend, or `NULL` to start a new plot.
 #' @param ... Additional plot fragments (marks/interactors) to include, and/or
 #'   named plot-level attributes (`width =`, `height =`, `name =`, `x_domain =`,
-#'   ..., snake_case -- translated to mosaic's own camelCase key, e.g. `xDomain`).
+#'   ..., snake_case -- translated to mosaic's own camelCase key, e.g., `xDomain`).
 #' @family layout functions
 #' @export
 vg_plot <- function(spec = NULL, ...) {

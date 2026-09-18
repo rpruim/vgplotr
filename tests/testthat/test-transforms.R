@@ -33,7 +33,7 @@ test_that("param() works as a transform option value", {
   expect_equal(serialize_transform(t), list(count = NULL, orderby = "$brush"))
 })
 
-test_that("param() works as a transform's field, e.g. dynamic column selection via a menu", {
+test_that("param() works as a transform's field, e.g., dynamic column selection via a menu", {
   # vg_column(param(x)) is mosaic's `vg.column($x)` pattern -- letting a
   # menu/selection pick which data column an encoding uses at runtime.
   expect_equal(serialize_formula(~ vg_column(param(x))), list(column = "$x"))

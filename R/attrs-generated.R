@@ -224,7 +224,7 @@
 )
 
 # Per-mark-type/interactor-type property names, used by split_plot_args()
-# to protect a mark/interactor's own property (e.g. RectY's own `inset`)
+# to protect a mark/interactor's own property (e.g., RectY's own `inset`)
 # from being mistaken for a same-named PlotAttributes property (a
 # plot-wide `inset` default) and bubbled up to the enclosing plot instead
 # of staying on the mark/interactor that actually declared it.
@@ -321,7 +321,7 @@
 )
 
 # snake_case -> exact camelCase mosaic-spec key for every plot attribute,
-# e.g. x_domain -> xDomain. vg_plot()/vg_plot_defaults()/vg_attributes()/
+# e.g., x_domain -> xDomain. vg_plot()/vg_plot_defaults()/vg_attributes()/
 # vg_create() (and the mark/interactor "attribute riding along" path in
 # split_plot_args()) accept the snake_case form -- matching the rest of
 # the package -- and translate it to this exact key before storing or

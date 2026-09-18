@@ -31,10 +31,10 @@
   "table"
 )
 
-# One vg_<type>() wrapper per interactor type (embedded in a plot, e.g.
-# vg_pan_zoom()) and input type (a standalone layout widget, e.g.
+# One vg_<type>() wrapper per interactor type (embedded in a plot, e.g.,
+# vg_pan_zoom()) and input type (a standalone layout widget, e.g.,
 # vg_menu()) in the mosaic-spec schema, each with a real named argument
-# per option that type accepts -- e.g. vg_toggle(spec, as = param(sel))
+# per option that type accepts -- e.g., vg_toggle(spec, as = param(sel))
 # is vg_interactor(spec, "toggle", as = param(sel)) with `as` (and every
 # other toggle option) as a real, documented argument.
 

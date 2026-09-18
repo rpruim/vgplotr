@@ -63,7 +63,7 @@ vg_mark_circle(
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this mark to, or \code{NULL} to start a new plot with just this mark.}
 
-\item{formula}{A shorthand for this mark's position channels (\code{x}, \code{y}, \code{fx}, \code{fy}, and paired \code{x1}/\code{x2} or \code{y1}/\code{y2}), e.g. \code{Sepal.Length ~ Sepal.Width | ~ Species} for \verb{y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species}. See \code{\link[=vg_mark]{vg_mark()}} for the full grammar.}
+\item{formula}{A shorthand for this mark's position channels (\code{x}, \code{y}, \code{fx}, \code{fy}, and paired \code{x1}/\code{x2} or \code{y1}/\code{y2}), e.g., \code{Sepal.Length ~ Sepal.Width | ~ Species} for \verb{y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species}. See \code{\link[=vg_mark]{vg_mark()}} for the full grammar.}
 
 \item{aria_description}{The aria-description; a constant textual description.}
 
@@ -161,9 +161,9 @@ vg_mark_circle(
 
 \item{...}{Additional options or plot-level attributes.}
 
-\item{data_from}{The name of the data source this mark reads from (see \code{\link[=vg_data]{vg_data()}}); a length-1 nonzero R integer (\code{1L}, \code{-1L}, ...; note the \code{L}) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. \code{-1L} for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's \verb{"data": [...]} shorthand, e.g. for a single reference line -- a bare double like \code{0}/\code{c(0)}, or \code{0L} itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to \code{data_from = 1L}) for any mark type that takes data at all.}
+\item{data_from}{The name of the data source this mark reads from (see \code{\link[=vg_data]{vg_data()}}); a length-1 nonzero R integer (\code{1L}, \code{-1L}, ...; note the \code{L}) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., \code{-1L} for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's \verb{"data": [...]} shorthand, e.g., for a single reference line -- a bare double like \code{0}/\code{c(0)}, or \code{0L} itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to \code{data_from = 1L}) for any mark type that takes data at all.}
 
-\item{filter_by}{A Param/Selection (e.g. from \code{\link[=param]{param()}}) to filter this mark's data by.}
+\item{filter_by}{A Param/Selection (e.g., from \code{\link[=param]{param()}}) to filter this mark's data by.}
 
 \item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
 }

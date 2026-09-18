@@ -72,7 +72,7 @@ Everything else about building a spec -- `vg_data()`, `vg_mark_*()`,
 `vg_interactor()`, transforms, `sql()`/`agg()` -- works exactly the same
 way; only how the resulting SQL actually gets executed changes.
 
-### Bringing your own connection (e.g. MotherDuck)
+### Bringing your own connection (e.g., MotherDuck)
 
 `vg_duckdb_connector()` can also take a connection you build yourself with
 the `DBI` and `duckdb` R packages -- including one that reaches

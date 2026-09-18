@@ -21,7 +21,7 @@
 # vg_guide_*() are snake_case too) -- but it's forwarded to vg_mark()/
 # vg_interactor() under its exact original schema name, since that's the
 # key mosaic's JSON spec actually needs. This is a clean-break rename with
-# no camelCase compatibility alias: existing code calling e.g.
+# no camelCase compatibility alias: existing code calling e.g.,
 # `vg_mark_dot(strokeWidth = 2)` needs updating to `stroke_width = 2`.
 #
 # Mark wrappers are prefixed vg_mark_ (not just vg_<mark>()) so every mark
@@ -72,7 +72,7 @@ docline <- function(desc, fallback) {
   text <- trimws(text)
   first <- strsplit(text, "(?<=\\.)\\s", perl = TRUE)[[1]][1]
   if (is.na(first) || !nzchar(first)) first <- fallback
-  # A literal backslash in the schema text (e.g. "line breaks (\n, \r\n, or
+  # A literal backslash in the schema text (e.g., "line breaks (\n, \r\n, or
   # \r)", describing escape sequences as a documentation topic, not actual
   # newlines) would otherwise reach the .Rd file unescaped, where Rd's own
   # macro processor tries to interpret \n/\r as macro calls ("unknown macro
@@ -86,16 +86,16 @@ docline <- function(desc, fallback) {
 
 # A mark definition either has `properties` directly, or is a union
 # (`anyOf`/`allOf`) whose branches all agree on the same
-# `properties.mark.const` (e.g. densityX/densityY) -- mirrors mosaic's own
+# `properties.mark.const` (e.g., densityX/densityY) -- mirrors mosaic's own
 # markInfo() in bin/generate-python-api.js. Returns NULL for a non-mark def.
 #
 # `required` collects the schema's own required-property lists too (beyond
 # `mark`/`data`, stripped below along with the properties themselves) --
 # these become real, default-less R arguments instead of `= vg_unset`, so
-# e.g. omitting ErrorBarX's `x` fails immediately in R with a clear message
+# e.g., omitting ErrorBarX's `x` fails immediately in R with a clear message
 # instead of silently producing a spec that errors in the browser. A
 # property that's required in every branch but with a *different* `const`
-# per branch (e.g. densityX's `type`: "areaX"/"lineX"/"dotX"/"textX") is a
+# per branch (e.g., densityX's `type`: "areaX"/"lineX"/"dotX"/"textX") is a
 # branch discriminant, not a true requirement -- mosaic applies its own
 # default for it (see its description), so it's excluded here and stays
 # `vg_unset` like everything else.
@@ -166,15 +166,15 @@ for (nm in c("Menu", "Search", "Slider", "Table")) {
 
 plot_attrs <- sort(names(defs$PlotAttributes$properties))
 
-# Some property names exist in *both* a mark/interactor's own schema (e.g.
+# Some property names exist in *both* a mark/interactor's own schema (e.g.,
 # RectY's own `inset`, shrinking just that mark's rects) and
-# PlotAttributes (e.g. a plot-wide `inset` default for every mark's scale)
+# PlotAttributes (e.g., a plot-wide `inset` default for every mark's scale)
 # -- same name, different scope, because mosaic-spec disambiguates by
 # *where* the key appears (inside a mark's own object vs. the plot's own
 # attrs), a distinction split_plot_args() (R/utils.R) can't make from a
 # flat `...` by name alone. These per-type "own property" lists let it
 # special-case names a specific mark/interactor actually declares, so
-# e.g. `vg_mark_rect_y(inset = 1)` keeps `inset` on the mark instead of
+# e.g., `vg_mark_rect_y(inset = 1)` keeps `inset` on the mark instead of
 # always bubbling same-named properties up to the plot.
 mark_own_props <- lapply(mark_defs, function(m) sort(names(m$properties)))
 interactor_own_props <- lapply(interactor_defs, function(m) sort(names(m$properties)))
@@ -184,7 +184,7 @@ cat(length(mark_defs), "marks,", length(interactor_types), "interactors,",
 
 # vg_mark_()/vg_interactor_() (R/mark.R, R/interactor.R) pass a mark/
 # interactor's own properties through to vg_mark()/vg_interactor() using
-# their *exact* schema names, so that e.g. Search's own "type" option (its
+# their *exact* schema names, so that e.g., Search's own "type" option (its
 # query mode) can be set under its real name. That only works because
 # vg_mark()'s/vg_interactor()'s own discriminant parameters are named
 # `mark`/`interactor`, not (say) `type` -- R matches named arguments by
@@ -283,7 +283,7 @@ interactor_prop_docs <- property_docs(interactor_defs)
 #' `vg_mark_dot(iris, Sepal.Length ~ Sepal.Width, ...)` needs.
 .vg_formula_doc <- paste(
   "A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and",
-  "paired `x1`/`x2` or `y1`/`y2`), e.g.",
+  "paired `x1`/`x2` or `y1`/`y2`), e.g.,",
   "`Sepal.Length ~ Sepal.Width | ~ Species` for",
   "`y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()]",
   "for the full grammar."
@@ -337,7 +337,7 @@ mark_lines <- c(
   "#",
   "# One vg_mark_<mark>() wrapper per mark type in the mosaic-spec schema,",
   "# each with a real named argument per property that mark accepts (so tab",
-  "# completion and ?vg_mark_dot show the actual options) -- e.g.",
+  "# completion and ?vg_mark_dot show the actual options) -- e.g.,",
   "# vg_mark_dot(spec, x = ~a, y = ~b) is vg_mark(spec, \"dot\", x = ~a, y =",
   "# ~b) with x/y (and every other dot property) as real, documented",
   "# arguments instead of an opaque `...`. Every mark constructor starts",
@@ -356,8 +356,8 @@ for (name in sort(names(mark_defs))) {
     prop_docs = mark_prop_docs,
     extra_formals = c("data_from", "filter_by", "data_optimize"),
     extra_docs = c(
-      "#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `\"data\": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.",
-      "#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.",
+      "#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `\"data\": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.",
+      "#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.",
       "#' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`)."
     ),
     title = docline(mark_defs[[name]]$description, paste0("The `", name, "` mark.")),
@@ -386,10 +386,10 @@ inter_lines <- c(
   paste0('  "', input_types, '"', collapse = ",\n"),
   ")",
   "",
-  "# One vg_<type>() wrapper per interactor type (embedded in a plot, e.g.",
-  "# vg_pan_zoom()) and input type (a standalone layout widget, e.g.",
+  "# One vg_<type>() wrapper per interactor type (embedded in a plot, e.g.,",
+  "# vg_pan_zoom()) and input type (a standalone layout widget, e.g.,",
   "# vg_menu()) in the mosaic-spec schema, each with a real named argument",
-  "# per option that type accepts -- e.g. vg_toggle(spec, as = param(sel))",
+  "# per option that type accepts -- e.g., vg_toggle(spec, as = param(sel))",
   "# is vg_interactor(spec, \"toggle\", as = param(sel)) with `as` (and every",
   "# other toggle option) as a real, documented argument.",
   ""
@@ -424,7 +424,7 @@ writeLines(inter_lines, "R/interactors-generated.R")
 
 # --- R/attrs-generated.R ---------------------------------------------------
 
-# Formats a named list of character vectors, e.g. list(dot = c("r", "x"),
+# Formats a named list of character vectors, e.g., list(dot = c("r", "x"),
 # lineY = c("curve", "x", "y")), as R source -- one entry per line, list
 # names double-quoted (never assumed to be syntactic R names).
 format_named_char_list <- function(named_list) {
@@ -449,7 +449,7 @@ attr_lines <- c(
   ")",
   "",
   "# Per-mark-type/interactor-type property names, used by split_plot_args()",
-  "# to protect a mark/interactor's own property (e.g. RectY's own `inset`)",
+  "# to protect a mark/interactor's own property (e.g., RectY's own `inset`)",
   "# from being mistaken for a same-named PlotAttributes property (a",
   "# plot-wide `inset` default) and bubbled up to the enclosing plot instead",
   "# of staying on the mark/interactor that actually declared it.",
@@ -462,7 +462,7 @@ attr_lines <- c(
   ")",
   "",
   "# snake_case -> exact camelCase mosaic-spec key for every plot attribute,",
-  "# e.g. x_domain -> xDomain. vg_plot()/vg_plot_defaults()/vg_attributes()/",
+  "# e.g., x_domain -> xDomain. vg_plot()/vg_plot_defaults()/vg_attributes()/",
   "# vg_create() (and the mark/interactor \"attribute riding along\" path in",
   "# split_plot_args()) accept the snake_case form -- matching the rest of",
   "# the package -- and translate it to this exact key before storing or",
@@ -540,7 +540,7 @@ guide_suffixes <- c(
 )
 inset_suffixes <- c("InsetLeft", "InsetRight", "InsetTop", "InsetBottom")
 
-# `prefix` is "" for the bare global-default channel (e.g. "align", not
+# `prefix` is "" for the bare global-default channel (e.g., "align", not
 # "xAlign").
 plot_attr_name <- function(prefix, suffix) {
   if (nchar(prefix) == 0) paste0(tolower(substr(suffix, 1, 1)), substring(suffix, 2)) else paste0(prefix, suffix)
@@ -557,10 +557,10 @@ attr_names_doc <- function(which_values, suffix) {
 
 # Builds one generated vg_scale_*()/vg_guide_*() function (plus its roxygen
 # block and, for a multi-prefix `which_values`, its wrapper_function()-built
-# aliases -- e.g. vg_scale_x()/vg_scale_y() for vg_scale_position()).
-# `which_values` is a single prefix (e.g. "color", or "" for the bare
+# aliases -- e.g., vg_scale_x()/vg_scale_y() for vg_scale_position()).
+# `which_values` is a single prefix (e.g., "color", or "" for the bare
 # global-default channel) for a standalone function with no `which`
-# argument, or two prefixes sharing one generic function (e.g. c("x", "y"))
+# argument, or two prefixes sharing one generic function (e.g., c("x", "y"))
 # with `which` selecting between them. `has_inset` enables the
 # position/facet-scale-only left/right-vs-top/bottom inset handling (see
 # add_inset_attrs(), R/utils.R) -- never needed for guide functions, or for
@@ -659,7 +659,7 @@ generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, 
     arg_docs,
     inset_docs,
     "#' @param ... Additional plot-level attributes not covered above, snake_case",
-    "#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.",
+    "#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.",
     sprintf("#' @family %s", family),
     "#' @export",
     examples,
@@ -868,7 +868,7 @@ scale_lines <- c(scale_lines, scale_group(
     "#' properties mosaic-spec exposes for the `r` channel (`rScale`,",
     "#' `rDomain`, ... -- the scale that a `dot`/`circle` mark's `r`",
     "#' encoding is bound to unless it's a literal constant). Which",
-    "#' properties exist here (e.g. no `reverse` -- mosaic doesn't define",
+    "#' properties exist here (e.g., no `reverse` -- mosaic doesn't define",
     "#' `rReverse`) is derived from the schema, not hand-picked. For the",
     "#' axis-guide property, see [vg_guide_r()]/[vg_guide_radius()]; for an",
     "#' actual rendered radius/size legend, see [vg_legend_symbol()]",
@@ -947,7 +947,7 @@ guide_lines <- c(guide_lines, guide_group(
     "#' substitute `y` for the vertical axis). Like the `xScale`/`yScale`",
     "#' properties handled by [vg_scale_position()], these are already",
     "#' plot-level attributes that [vg_plot()]/[vg_attributes()] accept",
-    "#' directly, snake_case (e.g. `x_ticks =`).",
+    "#' directly, snake_case (e.g., `x_ticks =`).",
     "#'",
     "#' These are named `vg_guide_*()` rather than `vg_axis_*()` to avoid",
     "#' colliding with `vg_mark_axis_x()`/`vg_mark_axis_y()`",

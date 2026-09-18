@@ -3,7 +3,7 @@
 #
 # One vg_mark_<mark>() wrapper per mark type in the mosaic-spec schema,
 # each with a real named argument per property that mark accepts (so tab
-# completion and ?vg_mark_dot show the actual options) -- e.g.
+# completion and ?vg_mark_dot show the actual options) -- e.g.,
 # vg_mark_dot(spec, x = ~a, y = ~b) is vg_mark(spec, "dot", x = ~a, y =
 # ~b) with x/y (and every other dot property) as real, documented
 # arguments instead of an opaque `...`. Every mark constructor starts
@@ -14,7 +14,7 @@
 #' The area mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -65,8 +65,8 @@
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -77,7 +77,7 @@ vg_mark_area <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' The areaX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -128,8 +128,8 @@ vg_mark_area <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -140,7 +140,7 @@ vg_mark_area_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The areaY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -191,8 +191,8 @@ vg_mark_area_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -203,7 +203,7 @@ vg_mark_area_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The arrow mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -258,8 +258,8 @@ vg_mark_area_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -270,7 +270,7 @@ vg_mark_arrow <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' The axisFx mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -352,8 +352,8 @@ vg_mark_arrow <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -364,7 +364,7 @@ vg_mark_axis_fx <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, 
 #' The axisFy mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -446,8 +446,8 @@ vg_mark_axis_fx <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -458,7 +458,7 @@ vg_mark_axis_fy <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, 
 #' The axisX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -540,8 +540,8 @@ vg_mark_axis_fy <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -552,7 +552,7 @@ vg_mark_axis_x <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, a
 #' The axisY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -634,8 +634,8 @@ vg_mark_axis_x <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, a
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -646,7 +646,7 @@ vg_mark_axis_y <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, a
 #' The barX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -703,8 +703,8 @@ vg_mark_axis_y <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, a
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -715,7 +715,7 @@ vg_mark_bar_x <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' The barY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -772,8 +772,8 @@ vg_mark_bar_x <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -784,7 +784,7 @@ vg_mark_bar_y <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' The cell mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -835,8 +835,8 @@ vg_mark_bar_y <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -847,7 +847,7 @@ vg_mark_cell <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' The cellX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -898,8 +898,8 @@ vg_mark_cell <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -910,7 +910,7 @@ vg_mark_cell_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The cellY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -961,8 +961,8 @@ vg_mark_cell_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -973,7 +973,7 @@ vg_mark_cell_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The circle mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1022,8 +1022,8 @@ vg_mark_cell_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1034,7 +1034,7 @@ vg_mark_circle <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The contour mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1085,8 +1085,8 @@ vg_mark_circle <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1097,7 +1097,7 @@ vg_mark_contour <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' The delaunayLink mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1148,8 +1148,8 @@ vg_mark_contour <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1160,7 +1160,7 @@ vg_mark_delaunay_link <- function(spec = NULL, formula = vg_unset, aria_descript
 #' The delaunayMesh mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1211,8 +1211,8 @@ vg_mark_delaunay_link <- function(spec = NULL, formula = vg_unset, aria_descript
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1223,7 +1223,7 @@ vg_mark_delaunay_mesh <- function(spec = NULL, formula = vg_unset, aria_descript
 #' The denseLine mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1276,8 +1276,8 @@ vg_mark_delaunay_mesh <- function(spec = NULL, formula = vg_unset, aria_descript
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1288,7 +1288,7 @@ vg_mark_dense_line <- function(spec = NULL, formula = vg_unset, aria_description
 #' The density mark for 2D densities.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1354,8 +1354,8 @@ vg_mark_dense_line <- function(spec = NULL, formula = vg_unset, aria_description
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1366,7 +1366,7 @@ vg_mark_density <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' The densityX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1439,8 +1439,8 @@ vg_mark_density <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' @param text_anchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param text_overflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1451,7 +1451,7 @@ vg_mark_density_x <- function(spec = NULL, formula = vg_unset, aria_description 
 #' The densityY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1524,8 +1524,8 @@ vg_mark_density_x <- function(spec = NULL, formula = vg_unset, aria_description 
 #' @param text_anchor The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of *start*, *end*, or *middle*.
 #' @param text_overflow How truncate (or wrap) lines of text longer than the given **lineWidth**; one of: - null (default) - preserve overflowing characters (and wrap if needed) - *clip* or *clip-end* - remove characters from the end - *clip-start* - remove characters from the start - *ellipsis* or *ellipsis-end* - replace characters from the end with an ellipsis (…) - *ellipsis-start* - replace characters from the start with an ellipsis (…) - *ellipsis-middle* - replace characters from the middle with an ellipsis (…) If no **title** was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1536,7 +1536,7 @@ vg_mark_density_y <- function(spec = NULL, formula = vg_unset, aria_description 
 #' The dot mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1585,8 +1585,8 @@ vg_mark_density_y <- function(spec = NULL, formula = vg_unset, aria_description 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1597,7 +1597,7 @@ vg_mark_dot <- function(spec = NULL, formula = vg_unset, aria_description = vg_u
 #' The dotX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1647,8 +1647,8 @@ vg_mark_dot <- function(spec = NULL, formula = vg_unset, aria_description = vg_u
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1659,7 +1659,7 @@ vg_mark_dot_x <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' The dotY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1709,8 +1709,8 @@ vg_mark_dot_x <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1721,7 +1721,7 @@ vg_mark_dot_y <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' The errorbarX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -1771,8 +1771,8 @@ vg_mark_dot_y <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1783,7 +1783,7 @@ vg_mark_errorbar_x <- function(spec = NULL, formula = vg_unset, x, aria_descript
 #' The errorbarY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -1833,8 +1833,8 @@ vg_mark_errorbar_x <- function(spec = NULL, formula = vg_unset, x, aria_descript
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1845,7 +1845,7 @@ vg_mark_errorbar_y <- function(spec = NULL, formula = vg_unset, y, aria_descript
 #' The frame mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -1895,8 +1895,8 @@ vg_mark_errorbar_y <- function(spec = NULL, formula = vg_unset, y, aria_descript
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
 #' @param title The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1907,7 +1907,7 @@ vg_mark_frame <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, ar
 #' The geo mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -1951,8 +1951,8 @@ vg_mark_frame <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, ar
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
 #' @param title The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -1963,7 +1963,7 @@ vg_mark_geo <- function(spec = NULL, formula = vg_unset, aria_description = vg_u
 #' The graticule mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2005,8 +2005,8 @@ vg_mark_geo <- function(spec = NULL, formula = vg_unset, aria_description = vg_u
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
 #' @param title The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2017,7 +2017,7 @@ vg_mark_graticule <- function(spec = NULL, formula = vg_unset, aria_description 
 #' The gridFx mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -2075,8 +2075,8 @@ vg_mark_graticule <- function(spec = NULL, formula = vg_unset, aria_description 
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2087,7 +2087,7 @@ vg_mark_grid_fx <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, 
 #' The gridFy mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -2145,8 +2145,8 @@ vg_mark_grid_fx <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, 
 #' @param x2 The optional secondary (ending, often right) horizontal position channel, representing the area’s topline, typically bound to the *x* scale; if not specified, **x1** is used.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2157,7 +2157,7 @@ vg_mark_grid_fy <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, 
 #' The gridX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -2215,8 +2215,8 @@ vg_mark_grid_fy <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, 
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2227,7 +2227,7 @@ vg_mark_grid_x <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, a
 #' The gridY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -2285,8 +2285,8 @@ vg_mark_grid_x <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, a
 #' @param x2 The optional secondary (ending, often right) horizontal position channel, representing the area’s topline, typically bound to the *x* scale; if not specified, **x1** is used.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2297,7 +2297,7 @@ vg_mark_grid_y <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, a
 #' The heatmap mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2348,8 +2348,8 @@ vg_mark_grid_y <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, a
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2360,7 +2360,7 @@ vg_mark_heatmap <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' The hexagon mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2409,8 +2409,8 @@ vg_mark_heatmap <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2421,7 +2421,7 @@ vg_mark_hexagon <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' The hexbin mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2482,8 +2482,8 @@ vg_mark_hexagon <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2494,7 +2494,7 @@ vg_mark_hexbin <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The hexgrid mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2537,8 +2537,8 @@ vg_mark_hexbin <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
 #' @param title The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2549,7 +2549,7 @@ vg_mark_hexgrid <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' The hull mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2600,8 +2600,8 @@ vg_mark_hexgrid <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2612,7 +2612,7 @@ vg_mark_hull <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' The `image` mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2665,8 +2665,8 @@ vg_mark_hull <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2677,7 +2677,7 @@ vg_mark_image <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' The line mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2728,8 +2728,8 @@ vg_mark_image <- function(spec = NULL, formula = vg_unset, aria_description = vg
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2740,7 +2740,7 @@ vg_mark_line <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' The lineX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2791,8 +2791,8 @@ vg_mark_line <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2803,7 +2803,7 @@ vg_mark_line_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The lineY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2854,8 +2854,8 @@ vg_mark_line_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2866,7 +2866,7 @@ vg_mark_line_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The link mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2920,8 +2920,8 @@ vg_mark_line_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2932,7 +2932,7 @@ vg_mark_link <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' The raster mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -2983,8 +2983,8 @@ vg_mark_link <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -2995,7 +2995,7 @@ vg_mark_raster <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The rasterTile mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3047,8 +3047,8 @@ vg_mark_raster <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3059,7 +3059,7 @@ vg_mark_raster_tile <- function(spec = NULL, formula = vg_unset, aria_descriptio
 #' The rect mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3118,8 +3118,8 @@ vg_mark_raster_tile <- function(spec = NULL, formula = vg_unset, aria_descriptio
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3130,7 +3130,7 @@ vg_mark_rect <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' The rectX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3189,8 +3189,8 @@ vg_mark_rect <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3201,7 +3201,7 @@ vg_mark_rect_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The rectY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3260,8 +3260,8 @@ vg_mark_rect_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3272,7 +3272,7 @@ vg_mark_rect_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The regressionY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3319,8 +3319,8 @@ vg_mark_rect_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3331,7 +3331,7 @@ vg_mark_regression_y <- function(spec = NULL, formula = vg_unset, aria_descripti
 #' The ruleX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3385,8 +3385,8 @@ vg_mark_regression_y <- function(spec = NULL, formula = vg_unset, aria_descripti
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3397,7 +3397,7 @@ vg_mark_rule_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The ruleY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3451,8 +3451,8 @@ vg_mark_rule_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param y1 The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the *y* scale.
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3463,7 +3463,7 @@ vg_mark_rule_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The sphere mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3505,8 +3505,8 @@ vg_mark_rule_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param tip Whether to generate a tooltip for this mark, and any tip options.
 #' @param title The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3517,7 +3517,7 @@ vg_mark_sphere <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The spike mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -3567,8 +3567,8 @@ vg_mark_sphere <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3579,7 +3579,7 @@ vg_mark_spike <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, ar
 #' The text mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3638,8 +3638,8 @@ vg_mark_spike <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, ar
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3650,7 +3650,7 @@ vg_mark_text <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' The textX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3710,8 +3710,8 @@ vg_mark_text <- function(spec = NULL, formula = vg_unset, aria_description = vg_
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3722,7 +3722,7 @@ vg_mark_text_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The textY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3782,8 +3782,8 @@ vg_mark_text_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3794,7 +3794,7 @@ vg_mark_text_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The tickX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3845,8 +3845,8 @@ vg_mark_text_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3857,7 +3857,7 @@ vg_mark_tick_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The tickY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -3908,8 +3908,8 @@ vg_mark_tick_x <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3920,7 +3920,7 @@ vg_mark_tick_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' The vector mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -3970,8 +3970,8 @@ vg_mark_tick_y <- function(spec = NULL, formula = vg_unset, aria_description = v
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -3982,7 +3982,7 @@ vg_mark_vector <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, a
 #' The vectorX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -4032,8 +4032,8 @@ vg_mark_vector <- function(spec = NULL, formula = vg_unset, anchor = vg_unset, a
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -4044,7 +4044,7 @@ vg_mark_vector_x <- function(spec = NULL, formula = vg_unset, anchor = vg_unset,
 #' The vectorY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param anchor The side of the frame on which to place the axis: *top* or *bottom* for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or *left* or *right* for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
@@ -4094,8 +4094,8 @@ vg_mark_vector_x <- function(spec = NULL, formula = vg_unset, anchor = vg_unset,
 #' @param x The horizontal position (or length) channel, typically bound to the *x* scale.
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -4106,7 +4106,7 @@ vg_mark_vector_y <- function(spec = NULL, formula = vg_unset, anchor = vg_unset,
 #' The voronoi mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -4157,8 +4157,8 @@ vg_mark_vector_y <- function(spec = NULL, formula = vg_unset, anchor = vg_unset,
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -4169,7 +4169,7 @@ vg_mark_voronoi <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' The voronoiMesh mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -4220,8 +4220,8 @@ vg_mark_voronoi <- function(spec = NULL, formula = vg_unset, aria_description = 
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -4232,7 +4232,7 @@ vg_mark_voronoi_mesh <- function(spec = NULL, formula = vg_unset, aria_descripti
 #' The waffleX mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -4293,8 +4293,8 @@ vg_mark_voronoi_mesh <- function(spec = NULL, formula = vg_unset, aria_descripti
 #' @param y The vertical position channel, typically bound to the *y* scale; defaults to the zero-based index of the data 0, 1, 2, ….
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export
@@ -4305,7 +4305,7 @@ vg_mark_waffle_x <- function(spec = NULL, formula = vg_unset, aria_description =
 #' The waffleY mark.
 #'
 #' @param spec A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.
-#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g. `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
+#' @param formula A shorthand for this mark's position channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g., `Sepal.Length ~ Sepal.Width | ~ Species` for `y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species`. See [vg_mark()] for the full grammar.
 #' @param aria_description The aria-description; a constant textual description.
 #' @param aria_hidden The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.
 #' @param aria_label The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.
@@ -4366,8 +4366,8 @@ vg_mark_waffle_x <- function(spec = NULL, formula = vg_unset, aria_description =
 #' @param y2 The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the *y* scale; if not specified, **y1** is used.
 #' @param z An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to **fill** if a channel, or **stroke** if a channel.
 #' @param ... Additional options or plot-level attributes.
-#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g. `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g. for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
-#' @param filter_by A Param/Selection (e.g. from [param()]) to filter this mark's data by.
+#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `"data": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.
+#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.
 #' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`).
 #' @family mark functions
 #' @export

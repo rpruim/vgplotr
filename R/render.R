@@ -7,7 +7,7 @@
 #'
 #' Left at the default `mode = "auto"`, `vg_render()` inspects whether the
 #' current output can actually run JavaScript. An HTML vignette or Quarto
-#' HTML page -- or no active knit at all, e.g. typed directly at the
+#' HTML page -- or no active knit at all, e.g., typed directly at the
 #' console -- gets [vg_widget()]'s live widget; a plain-markdown or other
 #' non-HTML output (`github_document`, PDF, Word, ...), which can't run
 #' embedded JavaScript, gets [vg_snapshot()]'s static screenshot instead.
@@ -18,7 +18,7 @@
 #' still wouldn't actually run there.
 #'
 #' `mode = "iframe"` is never chosen automatically -- ask for it
-#' explicitly (e.g. for a pkgdown home page built from
+#' explicitly (e.g., for a pkgdown home page built from
 #' `pkgdown/index.md`; see [vg_iframe()] for why that one needs to be
 #' deliberate).
 #'
@@ -30,10 +30,10 @@
 
 #'
 #' @param spec A `vgspec`, a JSON/YAML spec string (see [vg_widget()]),
-#'   or an already-built widget (i.e. the result of calling
+#'   or an already-built widget (i.e., the result of calling
 #'   [vg_widget()] yourself).
 #' @param ... Passed on to whichever of [vg_widget()], [vg_snapshot()],
-#'   or [vg_iframe()] ends up handling the request (e.g. `width =`,
+#'   or [vg_iframe()] ends up handling the request (e.g., `width =`,
 #'   `use_cache =`, or `connector =` for [vg_widget()], `delay =` for
 #'   [vg_snapshot()]).
 #'   Each of those three accepts and silently ignores arguments meant for
@@ -66,7 +66,7 @@ vg_render <- function(
 # "markdown"/"gfm" as HTML output (they do support *passing through* raw
 # HTML blocks), but GitHub sanitizes <script> tags out of a rendered
 # README regardless, so a live widget still wouldn't actually run there.
-# No active knit at all (e.g. called at the console) defaults to TRUE,
+# No active knit at all (e.g., called at the console) defaults to TRUE,
 # matching vg_widget()'s normal interactive behavior.
 can_embed_live_widget <- function() {
   if (!isTRUE(getOption("knitr.in.progress", FALSE))) {

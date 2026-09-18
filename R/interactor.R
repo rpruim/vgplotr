@@ -20,8 +20,8 @@ vg_interactor_placement <- function(interactor) {
 #' widget like a slider) to a spec
 #'
 #' Mosaic distinguishes interactors that live inside a plot, alongside its
-#' marks (e.g. `intervalX`, which brushes a Selection), from inputs that live
-#' in the surrounding layout as standalone widgets (e.g. `slider`, `menu`).
+#' marks (e.g., `intervalX`, which brushes a Selection), from inputs that live
+#' in the surrounding layout as standalone widgets (e.g., `slider`, `menu`).
 #' `vg_interactor()` covers both; which kind a given `interactor` is gets
 #' looked up internally (see `vg_interactor_placement()`). One convenience
 #' wrapper per type -- `vg_toggle()`, `vg_menu()`, etc. -- is generated from
@@ -29,16 +29,16 @@ vg_interactor_placement <- function(interactor) {
 #'
 #' The second argument is named `interactor`, not `type`, on purpose: some
 #' interactor/input types have their own unrelated option that mosaic calls
-#' `type` (e.g. `vg_search()`'s `type = "prefix"`, its query mode). Naming
+#' `type` (e.g., `vg_search()`'s `type = "prefix"`, its query mode). Naming
 #' this parameter `type` would collide with that whenever both are supplied
 #' -- `interactor` can never collide with a real mosaic-spec property name.
 #'
 #' @param spec For a plot-embedded interactor: a plot fragment or `vgspec`
 #'   to add it to, or `NULL` to start a new plot with just this interactor.
-#'   Layout-level inputs (e.g. `"slider"`) don't take a `spec` -- combine
+#'   Layout-level inputs (e.g., `"slider"`) don't take a `spec` -- combine
 #'   them with plots using [vg_vconcat()]/[vg_hconcat()] instead.
-#' @param interactor The interactor/input type, e.g. `"intervalX"`, `"slider"`.
-#' @param ... Options for the interactor/input (e.g. `as = param(brush)`,
+#' @param interactor The interactor/input type, e.g., `"intervalX"`, `"slider"`.
+#' @param ... Options for the interactor/input (e.g., `as = param(brush)`,
 #'   `label = "Bias"`, `min = 0`, `max = 100`), and/or, for plot-embedded
 #'   interactors, plot-level attributes.
 #' @family interactor functions
@@ -61,7 +61,7 @@ vg_interactor <- function(spec = NULL, interactor, ...) {
       stop(
         "`", interactor, "` is a layout-level input; it doesn't take a spec/plot ",
         "to extend. Combine it with plots using vg_vconcat()/vg_hconcat() ",
-        "instead, e.g. vg_vconcat(vg_", interactor, "(...), your_plot).",
+        "instead, e.g., vg_vconcat(vg_", interactor, "(...), your_plot).",
         call. = FALSE
       )
     }
@@ -71,11 +71,11 @@ vg_interactor <- function(spec = NULL, interactor, ...) {
 
 # Shared by every generated vg_<type>() wrapper (R/interactors-generated.R):
 # drops whichever named arguments the caller left at their vg_unset default
-# (i.e. didn't actually supply) before dispatching to vg_interactor(). The
+# (i.e., didn't actually supply) before dispatching to vg_interactor(). The
 # discriminant is always passed positionally by the generated wrappers, so
 # naming this parameter `interactor` (matching vg_interactor()'s own,
 # collision-safe name -- see its documentation) is enough on its own: a
-# same-named real property (e.g. vg_search()'s `type`) now flows through
+# same-named real property (e.g., vg_search()'s `type`) now flows through
 # `...` untouched instead of being intercepted by exact-name matching.
 vg_interactor_ <- function(spec, interactor, ...) {
   do.call(vg_interactor, c(list(spec = spec, interactor = interactor), drop_unset(list(...))))

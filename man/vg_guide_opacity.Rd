@@ -15,7 +15,7 @@ start a new plot fragment with just these attributes.}
 \item{label}{A textual label to show on the axis or legend; if null, show no label. (\code{opacityLabel}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g. \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
 \code{vg_guide_opacity()} sets the axis-guide properties mosaic-spec

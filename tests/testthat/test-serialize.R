@@ -57,7 +57,7 @@ test_that("vg_data() with `data` stores a data frame, otherwise stores file/quer
   expect_equal(spec$data$b, list(file = "x.parquet"))
 })
 
-test_that("an explicit NULL plot attribute (e.g. xAxis = NULL, hiding an axis) survives to the JSON payload", {
+test_that("an explicit NULL plot attribute (e.g., xAxis = NULL, hiding an axis) survives to the JSON payload", {
   spec <- vg_create() |>
     vg_data(name = "d", data = data.frame(a = 1, b = 2)) |>
     vg_mark_dot(data_from = "d", x = ~a, y = ~b) |>
@@ -83,7 +83,7 @@ test_that("vg_plot_defaults() with an explicit NULL survives per-plot serializat
 })
 
 test_that("data_from accepts a literal vector for mosaic's inline-data shorthand (not just a table name)", {
-  # e.g. ruleY({data: [0]}) for a single reference line, rather than a
+  # e.g., ruleY({data: [0]}) for a single reference line, rather than a
   # named data source.
   spec <- vg_mark_rule_y(data_from = c(0))
   payload <- serialize_item(spec$items[[1]])
@@ -127,7 +127,7 @@ test_that("vg_params() already supports Selections, not just plain Params", {
 })
 
 test_that("a plot-level attribute value that's a param() reference serializes as \"$name\", not the raw object", {
-  # e.g. vg_plot(projection_rotate = param(rotate)), for a slider-driven
+  # e.g., vg_plot(projection_rotate = param(rotate)), for a slider-driven
   # globe rotation -- attrs (vg_plot()/vg_attributes()/vg_plot_defaults())
   # weren't run through serialize_value() at all before, so a vg_param
   # value reached jsonlite as a raw, unserializable object.
@@ -147,7 +147,7 @@ test_that("a plot-level attribute value that's a param() reference serializes as
   expect_equal(as_spec_payload(spec3)$spec$projectionRotate, "$rotate")
 })
 
-test_that("a param's value can combine other param references (e.g. mosaic's rotate: [$x, $y] pattern)", {
+test_that("a param's value can combine other param references (e.g., mosaic's rotate: [$x, $y] pattern)", {
   lon <- param(longitude)
   lat <- param(latitude)
   spec <- vg_create() |> vg_params(longitude = -180, latitude = -30, rotate = list(lon, lat)) |> vg_mark_dot(x = ~a)
@@ -161,14 +161,14 @@ test_that("a param's value can combine other param references (e.g. mosaic's rot
 
 test_that("data_optimize sets the data object's optimize flag", {
   # mosaic-spec's data: {from:, optimize:} -- disables mark-specific query
-  # optimizations (e.g. M4/LTTB line simplification) for this mark's data.
+  # optimizations (e.g., M4/LTTB line simplification) for this mark's data.
   spec <- vg_mark_line_y(data_from = "bls_unemp", data_optimize = FALSE, x = ~date, y = ~unemployment)
   payload <- serialize_item(spec$items[[1]])
   expect_equal(payload$data, list(from = "bls_unemp", optimize = FALSE))
 })
 
 test_that("data_from accepts a Param/Selection for a menu-driven dynamic data source", {
-  # e.g. `data_from = param(data)`, for a menu that switches between
+  # e.g., `data_from = param(data)`, for a menu that switches between
   # differently-sampled tables -- this is a table reference ("$data"),
   # not mosaic-spec's inline-data shorthand (which only applies to a
   # literal vector).

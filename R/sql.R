@@ -19,7 +19,7 @@ is_vg_sql_expr <- function(x) inherits(x, "vg_sql_expr")
 #' Unlike [vg_bin()]/[vg_count()]/etc., this is not translated from R syntax
 #' -- the pieces are just pasted together as SQL text, exactly as DuckDB
 #' will see it. Use `sql()` for ordinary expressions and `agg()` when the
-#' expression contains an aggregate function (e.g. `SUM(...)`); mosaic
+#' expression contains an aggregate function (e.g., `SUM(...)`); mosaic
 #' needs to know which, since aggregates are handled differently in a
 #' query.
 #'
@@ -31,7 +31,7 @@ is_vg_sql_expr <- function(x) inherits(x, "vg_sql_expr")
 #'
 #' @param ... One or more pieces of the SQL expression; character strings
 #'   and [param()] values are pasted together with no separator in between.
-#' @param label An optional label for this expression, e.g. for a plot axis.
+#' @param label An optional label for this expression, e.g., for a plot axis.
 #' @family transform functions
 #' @export
 sql <- function(..., label = NULL) new_vg_sql_expr("sql", list(...), label)

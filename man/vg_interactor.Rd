@@ -10,19 +10,19 @@ vg_interactor(spec = NULL, interactor, ...)
 \arguments{
 \item{spec}{For a plot-embedded interactor: a plot fragment or \code{vgspec}
 to add it to, or \code{NULL} to start a new plot with just this interactor.
-Layout-level inputs (e.g. \code{"slider"}) don't take a \code{spec} -- combine
+Layout-level inputs (e.g., \code{"slider"}) don't take a \code{spec} -- combine
 them with plots using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}} instead.}
 
-\item{interactor}{The interactor/input type, e.g. \code{"intervalX"}, \code{"slider"}.}
+\item{interactor}{The interactor/input type, e.g., \code{"intervalX"}, \code{"slider"}.}
 
-\item{...}{Options for the interactor/input (e.g. \code{as = param(brush)},
+\item{...}{Options for the interactor/input (e.g., \code{as = param(brush)},
 \code{label = "Bias"}, \code{min = 0}, \code{max = 100}), and/or, for plot-embedded
 interactors, plot-level attributes.}
 }
 \description{
 Mosaic distinguishes interactors that live inside a plot, alongside its
-marks (e.g. \code{intervalX}, which brushes a Selection), from inputs that live
-in the surrounding layout as standalone widgets (e.g. \code{slider}, \code{menu}).
+marks (e.g., \code{intervalX}, which brushes a Selection), from inputs that live
+in the surrounding layout as standalone widgets (e.g., \code{slider}, \code{menu}).
 \code{vg_interactor()} covers both; which kind a given \code{interactor} is gets
 looked up internally (see \code{vg_interactor_placement()}). One convenience
 wrapper per type -- \code{vg_toggle()}, \code{vg_menu()}, etc. -- is generated from
@@ -31,7 +31,7 @@ mosaic's own JSON schema into \code{R/interactors-generated.R}.
 \details{
 The second argument is named \code{interactor}, not \code{type}, on purpose: some
 interactor/input types have their own unrelated option that mosaic calls
-\code{type} (e.g. \code{vg_search()}'s \code{type = "prefix"}, its query mode). Naming
+\code{type} (e.g., \code{vg_search()}'s \code{type = "prefix"}, its query mode). Naming
 this parameter \code{type} would collide with that whenever both are supplied
 -- \code{interactor} can never collide with a real mosaic-spec property name.
 }

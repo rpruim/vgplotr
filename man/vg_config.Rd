@@ -9,13 +9,13 @@ vg_config(spec, ...)
 \arguments{
 \item{spec}{A \code{vgspec}.}
 
-\item{...}{Named config options, e.g. \code{extensions = "spatial"} (or a
+\item{...}{Named config options, e.g., \code{extensions = "spatial"} (or a
 character vector for more than one extension).}
 }
 \description{
 Sets mosaic-spec's top-level \code{config} object: runtime configuration for
 the database connection itself (currently just \code{extensions}, DuckDB
-extensions to load before the spec runs, e.g. \code{"spatial"} for
+extensions to load before the spec runs, e.g., \code{"spatial"} for
 geospatial data/marks) -- as opposed to \code{meta} (inert descriptive
 metadata) or any of the spec's actual data/params/graphic content.
 }

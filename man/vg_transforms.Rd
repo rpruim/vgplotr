@@ -62,7 +62,7 @@ partitioning, and frame of the window the transform is computed over.}
 Transform and aggregate functions from mosaic's SQL layer (binning,
 aggregates like \code{vg_avg()}/\code{vg_count()}/\code{vg_sum()}, and window functions
 like \code{vg_rank()}/\code{vg_lag()}), for use as (or inside) a mark's mapping
-formula, e.g. \code{x = ~vg_bin(delay, step = 10)} or \code{y = ~vg_count()}.
+formula, e.g., \code{x = ~vg_bin(delay, step = 10)} or \code{y = ~vg_count()}.
 }
 \details{
 Each function's first argument(s) are the field(s) (column names or

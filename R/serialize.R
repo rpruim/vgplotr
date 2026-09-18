@@ -13,7 +13,7 @@
 # are handled the same way, but for a different reason: duckdb-wasm can
 # only *fetch* http(s) URLs, so any relative/local path referenced directly
 # in the spec's `data:` block fails whenever the rendered page is opened as
-# a plain file (`file://`, e.g. a Positron/RStudio viewer or just opening
+# a plain file (`file://`, e.g., a Positron/RStudio viewer or just opening
 # the .html directly) rather than served over HTTP. Reading the file here
 # and embedding its bytes sidesteps that entirely -- it's loaded into
 # DuckDB from memory, with no fetch involved, so it works the same way
@@ -64,7 +64,7 @@ as_spec_payload <- function(spec) {
 }
 
 # Parses a length-1 JSON or YAML string -- an already-complete mosaic-spec
-# (e.g. copied from mosaic's own example gallery, or from to_json()/
+# (e.g., copied from mosaic's own example gallery, or from to_json()/
 # to_yaml()) -- into a plain nested list in the same shape as_spec_payload()
 # builds from a vgspec. Format is auto-detected: trimmed text starting with
 # `{` or `[` is parsed as JSON, anything else as YAML (YAML has no such
@@ -241,7 +241,7 @@ serialize_legend <- function(x) {
 # expects, and translates each remaining value (formulas, param()
 # references) to plain JSON-able values.
 #
-# `data_from` doubles as a way to supply a literal inline data array (e.g.
+# `data_from` doubles as a way to supply a literal inline data array (e.g.,
 # `data_from = c(0)` for a single reference line, mosaic-spec's `"data":
 # [0]` shorthand -- distinct from the `{"data": {"from": name}}` form used
 # for a named data source): if it isn't a single string, it's treated as
@@ -260,7 +260,7 @@ serialize_encodings <- function(enc) {
   out <- lapply(enc, serialize_value)
 
   # A table reference is either a table-name string or a Param/Selection
-  # (e.g. `data_from = param(data)`, for a menu-driven dynamic data source)
+  # (e.g., `data_from = param(data)`, for a menu-driven dynamic data source)
   # -- anything else (a literal vector) is mosaic-spec's inline-data
   # shorthand instead.
   is_table_ref <- (is.character(data_from) && length(data_from) == 1) || is_vg_param(data_from)
@@ -280,7 +280,7 @@ serialize_encodings <- function(enc) {
 # A param's own declared value (spec$params, from vg_params()) isn't just
 # a plain scalar or Selection/ParamDate-shaped list ({select: ...}, {date:
 # ...}) -- mosaic also allows one param to be built from *other* param
-# references, e.g. `rotate = list(param(longitude), param(latitude))`
+# references, e.g., `rotate = list(param(longitude), param(latitude))`
 # (mosaic's own `rotate: [$longitude, $latitude]` pattern, combining two
 # sliders into one projectionRotate value). Recurses into any nested list
 # so a vg_param anywhere inside turns into its "$name" string; everything
@@ -333,12 +333,12 @@ serialize_formula <- function(f) {
 # vg_transform_specs functions (vg_bin(), vg_count(), ...) -- recognized
 # here purely syntactically, via match.call() against the real function's
 # formals, without ever evaluating the call itself (which would fail, since
-# e.g. `delay` in `~vg_bin(delay)` isn't a bound variable).
+# e.g., `delay` in `~vg_bin(delay)` isn't a bound variable).
 serialize_expr <- function(expr, env) {
   if (is.symbol(expr)) {
     # Usually a bare column-name reference that isn't a bound R variable at
-    # all (e.g. `delay` in `~vg_bin(delay)`) -- but it can also be a
-    # variable holding a param()/selection object (e.g. `xp <- param(x);
+    # all (e.g., `delay` in `~vg_bin(delay)`) -- but it can also be a
+    # variable holding a param()/selection object (e.g., `xp <- param(x);
     # ~vg_column(xp)`), so try evaluating it first and use that value if
     # it resolves to one; otherwise fall back to the symbol's own name.
     val <- tryCatch(eval(expr, envir = env), error = function(e) NULL)
@@ -352,7 +352,7 @@ serialize_expr <- function(expr, env) {
     spec <- vg_transform_specs[[fn_name]]
     if (is.null(spec)) {
       stop(
-        "Only simple column references (e.g. ~Date), sql()/agg(), or known ",
+        "Only simple column references (e.g., ~Date), sql()/agg(), or known ",
         "transform functions (", paste(names(vg_transform_specs), collapse = "(), "), "()) ",
         "can be used inside a mapping formula. Got a call to `", fn_name, "()`.",
         call. = FALSE

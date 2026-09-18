@@ -9,12 +9,12 @@ vg_attributes(spec, ...)
 \arguments{
 \item{spec}{A \code{vgspec}.}
 
-\item{...}{Named top-level attributes, e.g. \verb{width =}, \verb{height =},
+\item{...}{Named top-level attributes, e.g., \verb{width =}, \verb{height =},
 \verb{x_domain =} (snake_case -- translated to mosaic's own camelCase key,
-e.g. \code{xDomain}).}
+e.g., \code{xDomain}).}
 }
 \description{
-Sets attributes directly on the spec's own top level -- e.g. for a
+Sets attributes directly on the spec's own top level -- e.g., for a
 single-plot spec, sibling keys to \verb{plot:} such as \code{width}/\code{height},
 exactly like mosaic's own example specs write them. This is distinct
 from \code{\link[=vg_plot_defaults]{vg_plot_defaults()}} (mosaic-spec's \code{plotDefaults}, applied to
@@ -27,7 +27,7 @@ single mark's encodings.
 \details{
 A name that isn't one of mosaic's own plot attributes triggers a warning,
 since it won't do anything to the rendered graphic (there's nowhere else
-it could still take effect) -- e.g. \code{title}, which belongs in \code{\link[=vg_meta]{vg_meta()}}
+it could still take effect) -- e.g., \code{title}, which belongs in \code{\link[=vg_meta]{vg_meta()}}
 instead.
 }
 \seealso{

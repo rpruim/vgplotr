@@ -10,7 +10,7 @@ to_yaml(spec, suppress_data = FALSE, ...)
 \item{spec}{A \code{vgspec}, or a bare layout fragment.}
 
 \item{suppress_data}{If \code{TRUE}, omit data sources defined \emph{with} the spec
-(an inline data frame, e.g. \code{vg_data(name, data = df)}, serialized as
+(an inline data frame, e.g., \code{vg_data(name, data = df)}, serialized as
 mosaic-spec's own \verb{\{data: [...]\}} row-object array) from the output --
 handy for a compact, human-readable spec when the actual data isn't
 the point. Data sources specified \emph{by name} elsewhere (\verb{file =},
@@ -28,7 +28,7 @@ that writes it out unquoted/unescaped); use \code{\link[=writeLines]{writeLines(
 \description{
 The YAML counterpart to \code{\link[=to_json]{to_json()}} -- see its documentation for what
 gets converted and how. Produces the same kind of YAML mosaic's own spec
-files use (e.g. the examples under \verb{docs/public/specs/yaml/} in
+files use (e.g., the examples under \verb{docs/public/specs/yaml/} in
 uwdata/mosaic).
 }
 \seealso{

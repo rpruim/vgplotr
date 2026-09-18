@@ -105,7 +105,7 @@ test_that("marks with no `data` property (frame, sphere, hexgrid, axis/grid mark
 })
 
 test_that("a mark with `data` support but only literal args doesn't get a default data_from", {
-  # e.g. vg_mark_rule_x(x = 0, ...) as a plain reference line layered on a
+  # e.g., vg_mark_rule_x(x = 0, ...) as a plain reference line layered on a
   # data-bound plot -- unlike frame/sphere/etc. (which never have a `data`
   # property at all), ruleX *can* be data-bound, but nothing here
   # references a column, so attaching data_from would make mosaic try to
@@ -188,7 +188,7 @@ test_that("an integer data_from index with no data source registered yet errors 
 
 test_that("a bare (double) numeric data_from is still mosaic's literal inline-data shorthand, not an index", {
   # data_from = 0 (a double, not 0L) must keep meaning "inline data [0]",
-  # e.g. for a single reference line -- only a strict R integer (1L, -1L,
+  # e.g., for a single reference line -- only a strict R integer (1L, -1L,
   # ...) is treated as a data-source index. This is what data_from = c(0)
   # already relied on before the index feature existed.
   spec <- vg_mark_rule_y(data_from = c(0))

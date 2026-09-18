@@ -17,7 +17,7 @@ vg_widget(
 \arguments{
 \item{spec}{A \code{vgspec} with a layout of plots/vconcat()/hconcat(), or a
 single JSON or YAML string holding an already-complete mosaic spec --
-e.g. copied from mosaic's own example gallery, or the output of
+e.g., copied from mosaic's own example gallery, or the output of
 \code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}} -- to render it directly without building it up
 through \verb{vg_*()} calls first. Format is auto-detected (JSON if the
 trimmed text starts with an opening brace or bracket, YAML otherwise).
@@ -28,7 +28,7 @@ so a local file path needs to actually be fetchable (an http(s) URL,
 or a path relative to wherever the rendered page is ultimately opened
 from) for duckdb-wasm to load it in the browser.}
 
-\item{width, height}{Widget sizing, in CSS units (e.g. \code{"100\%"}) or pixels.}
+\item{width, height}{Widget sizing, in CSS units (e.g., \code{"100\%"}) or pixels.}
 
 \item{elementId}{Optional DOM element ID for the widget.}
 
@@ -53,7 +53,7 @@ don't need to repeat this on every call once you've set one.}
 ignored) so that \code{\link[=vg_render]{vg_render()}} can forward its own \code{...} uniformly to
 whichever of \code{\link[=vg_widget]{vg_widget()}}/\code{\link[=vg_snapshot]{vg_snapshot()}}/\code{\link[=vg_iframe]{vg_iframe()}} ends up
 handling a request, without erroring on arguments meant for one of
-the other two (e.g. \verb{delay =}, only meaningful for \code{\link[=vg_snapshot]{vg_snapshot()}}).}
+the other two (e.g., \verb{delay =}, only meaningful for \code{\link[=vg_snapshot]{vg_snapshot()}}).}
 }
 \description{
 Returns a live, interactive \code{htmlwidget} -- useful directly

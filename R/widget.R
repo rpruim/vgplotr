@@ -32,7 +32,7 @@
 #'
 #' @param spec A `vgspec` with a layout of plots/vconcat()/hconcat(), or a
 #'   single JSON or YAML string holding an already-complete mosaic spec --
-#'   e.g. copied from mosaic's own example gallery, or the output of
+#'   e.g., copied from mosaic's own example gallery, or the output of
 #'   [to_json()]/[to_yaml()] -- to render it directly without building it up
 #'   through `vg_*()` calls first. Format is auto-detected (JSON if the
 #'   trimmed text starts with an opening brace or bracket, YAML otherwise).
@@ -42,7 +42,7 @@
 #'   so a local file path needs to actually be fetchable (an http(s) URL,
 #'   or a path relative to wherever the rendered page is ultimately opened
 #'   from) for duckdb-wasm to load it in the browser.
-#' @param width,height Widget sizing, in CSS units (e.g. `"100%"`) or pixels.
+#' @param width,height Widget sizing, in CSS units (e.g., `"100%"`) or pixels.
 #' @param elementId Optional DOM element ID for the widget.
 #' @param use_cache Whether this graphic should use the local duckdb-wasm
 #'   engine cache (see [vg_cache_duckdb()]) if one exists. Defaults to
@@ -63,7 +63,7 @@
 #'   ignored) so that [vg_render()] can forward its own `...` uniformly to
 #'   whichever of [vg_widget()]/[vg_snapshot()]/[vg_iframe()] ends up
 #'   handling a request, without erroring on arguments meant for one of
-#'   the other two (e.g. `delay =`, only meaningful for [vg_snapshot()]).
+#'   the other two (e.g., `delay =`, only meaningful for [vg_snapshot()]).
 #' @family rendering functions
 #' @seealso [vg_cache_duckdb()], [vg_duckdb_cache_status()]
 #' @export
@@ -91,7 +91,7 @@ vg_widget <- function(
   } else {
     maybe_offer_duckdb_cache()
     x <- list(spec = payload$spec, tables = payload$tables, files = payload$files)
-    # `use_cache`'s default is a promise that isn't forced until here, i.e.
+    # `use_cache`'s default is a promise that isn't forced until here, i.e.,
     # *after* maybe_offer_duckdb_cache() above may have just created the
     # cache -- so a first-ever call that accepts the offer still uses it
     # immediately, in the same render, rather than only from the next call on.

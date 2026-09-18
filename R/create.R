@@ -3,9 +3,9 @@
 #' `vg_create()` starts a new `vgspec`, the top-level object that other
 #' `vg_*()` functions are piped through to add data sources, params, marks,
 #' interactors, and layout. Marks and interactors can be piped directly onto
-#' a freshly created spec (e.g. `vg_create() |> vg_mark_dot(x = ~a, y = ~b)`) as
+#' a freshly created spec (e.g., `vg_create() |> vg_mark_dot(x = ~a, y = ~b)`) as
 #' long as the spec only needs a single plot; a spec with multiple plots, or
-#' with layout-level inputs (e.g. [vg_menu()], [vg_table()]), needs an
+#' with layout-level inputs (e.g., [vg_menu()], [vg_table()]), needs an
 #' explicit layout (see [vg_vconcat()]/[vg_hconcat()]).
 #'
 #' @param data An optional data frame to register as this spec's first data
@@ -13,10 +13,10 @@
 #'   [vg_data()] for the name this gets, and [vg_mark()] for the analogous
 #'   `some_data |> vg_mark_dot(...)` shorthand).
 #' @param ... Named values routed automatically to wherever mosaic-spec
-#'   allows them: a known plot-level attribute (e.g. `width =`, `height =`)
+#'   allows them: a known plot-level attribute (e.g., `width =`, `height =`)
 #'   goes to the spec's own top level (as if passed to [vg_attributes()]);
 #'   anything else goes to `meta` (as if passed to [vg_meta()]), since
-#'   mosaic-spec's metadata accepts arbitrary keys (e.g. `title =`). To set
+#'   mosaic-spec's metadata accepts arbitrary keys (e.g., `title =`). To set
 #'   mosaic-spec's `plotDefaults` (applied to *every* plot, as opposed to
 #'   just the spec's own top level) instead, call [vg_plot_defaults()]
 #'   explicitly -- it's never chosen automatically, since every name valid
@@ -49,7 +49,7 @@ is_vgspec <- function(x) inherits(x, "vgspec")
 # plotDefaults both use; snake_case is accepted here too, translated via
 # canonicalize_plot_attr_names()), or to `meta` otherwise (mosaic-spec's
 # Meta type accepts arbitrary keys, so it's a safe catch-all for anything
-# else, e.g. `title`). plotDefaults is deliberately not a third destination
+# else, e.g., `title`). plotDefaults is deliberately not a third destination
 # here: since it accepts exactly the same names as the top level, top level
 # always wins under a "first match" priority -- plotDefaults is only
 # reachable via an explicit call to vg_plot_defaults().
@@ -63,14 +63,14 @@ route_spec_args <- function(args) {
 #'
 #' Mosaic-spec's own `meta` is inert as far as mosaic's JS runtime is
 #' concerned -- it never reads `meta` when building the DOM, so this is
-#' pure metadata (e.g. for a spec browser/gallery tool, or round-tripping
+#' pure metadata (e.g., for a spec browser/gallery tool, or round-tripping
 #' through [to_json()]/[to_yaml()]), not something that appears on the
 #' rendered graphic by itself. As a vgplotr-level convenience, [vg_render()]
 #' *does* render `meta$title` (as a caption above the widget); `description`/
 #' `credit` remain inert for now.
 #'
 #' @param spec A `vgspec`.
-#' @param ... Named metadata fields, e.g. `title =`, `description =`.
+#' @param ... Named metadata fields, e.g., `title =`, `description =`.
 #' @family spec functions
 #' @export
 vg_meta <- function(spec, ...) {
@@ -83,12 +83,12 @@ vg_meta <- function(spec, ...) {
 #'
 #' Sets mosaic-spec's top-level `config` object: runtime configuration for
 #' the database connection itself (currently just `extensions`, DuckDB
-#' extensions to load before the spec runs, e.g. `"spatial"` for
+#' extensions to load before the spec runs, e.g., `"spatial"` for
 #' geospatial data/marks) -- as opposed to `meta` (inert descriptive
 #' metadata) or any of the spec's actual data/params/graphic content.
 #'
 #' @param spec A `vgspec`.
-#' @param ... Named config options, e.g. `extensions = "spatial"` (or a
+#' @param ... Named config options, e.g., `extensions = "spatial"` (or a
 #'   character vector for more than one extension).
 #' @family spec functions
 #' @export
@@ -107,9 +107,9 @@ vg_config <- function(spec, ...) {
 #' @param name The name other parts of the spec use to refer to this data
 #'   (via `data_from =`/`filter_by =` on marks and interactors). Optional --
 #'   if omitted, an unused name is generated (`"data"`, then `"data1"`,
-#'   `"data2"`, ...), e.g. for the shorthand described in [vg_mark()].
+#'   `"data2"`, ...), e.g., for the shorthand described in [vg_mark()].
 #' @param data An optional data frame to use as this data source.
-#' @param ... Data source options, e.g. `file =`, `query =`, `where =`.
+#' @param ... Data source options, e.g., `file =`, `query =`, `where =`.
 #' @family spec functions
 #' @export
 vg_data <- function(spec, name = NULL, data = NULL, ...) {
@@ -131,7 +131,7 @@ auto_data_name <- function(spec) {
 
 # Resolves an integer data_from (a 1-based index into `names_vec`, the
 # spec's registered data source names in registration order; negative
-# counts from the end, e.g. -1 is the most recently registered one) to
+# counts from the end, e.g., -1 is the most recently registered one) to
 # the data-source name it refers to. Used by vg_mark() so `data_from = 1L`
 # works the same as naming that source explicitly -- the *integer* type
 # (1L, not 1) is what distinguishes this from mosaic's own literal
@@ -153,7 +153,7 @@ resolve_data_from_index <- function(i, names_vec) {
 
 #' Declare Params/Selections on a vgspec
 #' @param spec A `vgspec`.
-#' @param ... Named params, e.g. `point = 0`, or selections, e.g. `query =
+#' @param ... Named params, e.g., `point = 0`, or selections, e.g., `query =
 #'   list(select = "intersect")` (mosaic-spec's `Selection` shape --
 #'   `select` is one of `"crossfilter"`/`"intersect"`/`"single"`/`"union"`,
 #'   with optional `cross`/`empty`/`include` fields).
@@ -167,7 +167,7 @@ vg_params <- function(spec, ...) {
 
 #' Set top-level attributes on a vgspec
 #'
-#' Sets attributes directly on the spec's own top level -- e.g. for a
+#' Sets attributes directly on the spec's own top level -- e.g., for a
 #' single-plot spec, sibling keys to `plot:` such as `width`/`height`,
 #' exactly like mosaic's own example specs write them. This is distinct
 #' from [vg_plot_defaults()] (mosaic-spec's `plotDefaults`, applied to
@@ -179,13 +179,13 @@ vg_params <- function(spec, ...) {
 #'
 #' A name that isn't one of mosaic's own plot attributes triggers a warning,
 #' since it won't do anything to the rendered graphic (there's nowhere else
-#' it could still take effect) -- e.g. `title`, which belongs in [vg_meta()]
+#' it could still take effect) -- e.g., `title`, which belongs in [vg_meta()]
 #' instead.
 #'
 #' @param spec A `vgspec`.
-#' @param ... Named top-level attributes, e.g. `width =`, `height =`,
+#' @param ... Named top-level attributes, e.g., `width =`, `height =`,
 #'   `x_domain =` (snake_case -- translated to mosaic's own camelCase key,
-#'   e.g. `xDomain`).
+#'   e.g., `xDomain`).
 #' @family spec functions
 #' @export
 vg_attributes <- function(spec, ...) {
@@ -212,9 +212,9 @@ vg_attributes <- function(spec, ...) {
 #' since it won't do anything to the rendered graphic -- see [vg_attributes()].
 #'
 #' @param spec A `vgspec`.
-#' @param ... Named plot-default attributes, e.g. `width =`, `height =`,
+#' @param ... Named plot-default attributes, e.g., `width =`, `height =`,
 #'   `x_domain =` (snake_case -- translated to mosaic's own camelCase key,
-#'   e.g. `xDomain`).
+#'   e.g., `xDomain`).
 #' @family spec functions
 #' @export
 vg_plot_defaults <- function(spec, ...) {

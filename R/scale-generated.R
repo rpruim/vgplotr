@@ -57,7 +57,7 @@ vg_position_counterpart <- c(x = "y", y = "x", fx = "fy", fy = "fx")
 #' @param inset_left,inset_right Pixel inset at the left/right end of the range; only meaningful for `which = "x"` (`xInsetLeft`/`xInsetRight`).
 #' @param inset_top,inset_bottom Pixel inset at the top/bottom end of the range; only meaningful for `which = "y"` (`yInsetTop`/`yInsetBottom`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
+#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
 #' @export
 #' @examples
@@ -107,7 +107,7 @@ vg_scale_y <- wrapper_function(vg_scale_position, which = "y", drop = c("inset_l
 #' @param inset_left,inset_right Pixel inset at the left/right end of the range; only meaningful for `which = "fx"` (`fxInsetLeft`/`fxInsetRight`).
 #' @param inset_top,inset_bottom Pixel inset at the top/bottom end of the range; only meaningful for `which = "fy"` (`fyInsetTop`/`fyInsetBottom`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
+#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
 #' @export
 #' @examples
@@ -162,7 +162,7 @@ vg_scale_fy <- wrapper_function(vg_scale_facet, which = "fy", drop = c("inset_le
 #' @param percent If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`colorPercent`).
 #' @param n For a *quantile* scale, the number of quantiles (creates *n* - 1 thresholds); for a *quantize* scale, the approximate number of thresholds; defaults to 5. (`colorN`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
+#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
 #' @export
 #' @examples
@@ -198,7 +198,7 @@ vg_scale_color <- function(spec = NULL, type = vg_unset, domain = vg_unset, rang
 #' @param constant A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`opacityConstant`).
 #' @param percent If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`opacityPercent`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
+#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
 #' @export
 #' @examples
@@ -217,7 +217,7 @@ vg_scale_opacity <- function(spec = NULL, type = vg_unset, domain = vg_unset, ra
 #' properties mosaic-spec exposes for the `r` channel (`rScale`,
 #' `rDomain`, ... -- the scale that a `dot`/`circle` mark's `r`
 #' encoding is bound to unless it's a literal constant). Which
-#' properties exist here (e.g. no `reverse` -- mosaic doesn't define
+#' properties exist here (e.g., no `reverse` -- mosaic doesn't define
 #' `rReverse`) is derived from the schema, not hand-picked. For the
 #' axis-guide property, see [vg_guide_r()]/[vg_guide_radius()]; for an
 #' actual rendered radius/size legend, see [vg_legend_symbol()]
@@ -236,7 +236,7 @@ vg_scale_opacity <- function(spec = NULL, type = vg_unset, domain = vg_unset, ra
 #' @param constant A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`rConstant`).
 #' @param percent If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`rPercent`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
+#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
 #' @export
 #' @examples
@@ -275,7 +275,7 @@ vg_scale_radius <- vg_scale_r
 #' @param constant A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`lengthConstant`).
 #' @param percent If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`lengthPercent`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
+#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
 #' @export
 #' @examples
@@ -303,7 +303,7 @@ vg_scale_length <- function(spec = NULL, type = vg_unset, domain = vg_unset, ran
 #' @param domain The extent of the scale’s inputs (abstract values). (`symbolDomain`).
 #' @param range The extent of the scale’s outputs (visual values). (`symbolRange`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
+#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
 #' @export
 #' @examples
@@ -332,7 +332,7 @@ vg_scale_symbol <- function(spec = NULL, type = vg_unset, domain = vg_unset, ran
 #' @param align How to distribute unused space in the **range** for *point* and *band* scales. (`align`).
 #' @param inset Shorthand to set the same default for all four insets: **insetTop**, **insetRight**, **insetBottom**, and **insetLeft**. (`inset`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g. `x_domain =`) -- translated to mosaic's own camelCase key.
+#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
 #' @export
 #' @examples

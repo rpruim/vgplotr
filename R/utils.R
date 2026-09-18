@@ -4,7 +4,7 @@
 #
 # .vg_plot_attrs comes from mosaic's own JSON schema (R/attrs-generated.R,
 # produced by data-raw/update-schema.R) -- these are the *exact* camelCase
-# names mosaic-spec uses (e.g. "marginLeft", "xDomain"), the key that's
+# names mosaic-spec uses (e.g., "marginLeft", "xDomain"), the key that's
 # actually stored/serialized. The R-facing spelling a caller types is
 # snake_case (matching mark/interactor/scale/guide arguments elsewhere in
 # the package) and gets translated to this exact key by
@@ -13,7 +13,7 @@ vg_plot_level_args <- function() {
   .vg_plot_attrs
 }
 
-# Renames any snake_case plot-attribute name in `args` (e.g. `x_domain`) to
+# Renames any snake_case plot-attribute name in `args` (e.g., `x_domain`) to
 # its real camelCase mosaic-spec key (`xDomain`), via `.vg_plot_attrs_snake`
 # (R/attrs-generated.R) -- the plot-attribute equivalent of what the
 # generated vg_mark_*()/vg_scale_*()/etc. wrappers already do for their own
@@ -38,7 +38,7 @@ canonicalize_plot_attr_names <- function(args) {
 #'
 #' `protect` names (typically from `.vg_mark_own_props`/
 #' `.vg_interactor_own_props`, R/attrs-generated.R) are always kept local
-#' even if they also appear in `vg_plot_level_args()` -- e.g. RectY's own
+#' even if they also appear in `vg_plot_level_args()` -- e.g., RectY's own
 #' `inset` property collides by name with PlotAttributes' plot-wide `inset`
 #' default, but an explicit `inset =` on a `vg_mark_rect_y()` call means
 #' the mark's own property, not "bubble this up to the plot."
@@ -60,7 +60,7 @@ split_plot_args <- function(args, protect = character()) {
 #' specifications are incompatible.
 #'
 #' Uses single-bracket assignment (`old[nm] <- new[nm]`), not `old[[nm]] <-
-#' new[[nm]]`, so that an explicit `NULL` value (e.g. `xAxis = NULL`, mosaic's
+#' new[[nm]]`, so that an explicit `NULL` value (e.g., `xAxis = NULL`, mosaic's
 #' way of hiding an axis) is stored as-is instead of deleting the attribute --
 #' `old[[nm]] <- NULL` always removes the element, even when the caller meant
 #' to *set* it to `NULL` rather than unset it.
@@ -106,7 +106,7 @@ warn_unknown_attrs <- function(names, context) {
   }
   warning(
     sprintf(
-      "In %s: %s, so %s won't affect the rendered graphic. Check spelling (mosaic's plot-attribute names are camelCase, e.g. `marginLeft`), or use vg_meta() for spec-level metadata like `title`.",
+      "In %s: %s, so %s won't affect the rendered graphic. Check spelling (mosaic's plot-attribute names are camelCase, e.g., `marginLeft`), or use vg_meta() for spec-level metadata like `title`.",
       context, subject, pronoun
     ),
     call. = FALSE
@@ -114,7 +114,7 @@ warn_unknown_attrs <- function(names, context) {
 }
 
 # Like utils::modifyList(), but preserves an explicit NULL in `overrides`
-# (mosaic's way of unsetting/hiding something, e.g. `xAxis = NULL` to hide
+# (mosaic's way of unsetting/hiding something, e.g., `xAxis = NULL` to hide
 # an axis) instead of treating it as "remove this key" -- modifyList()'s
 # NULL-removes-the-element behavior is right for building up an options
 # list incrementally, but wrong for spec attributes, where NULL is a real,
@@ -151,10 +151,10 @@ drop_unset <- function(args) {
 
 # Shared by the vg_scale_*()/vg_guide_*() constructors (R/scale.R, R/guide.R):
 # builds a named list of mosaic attrs from a snake_case-argument-name ->
-# camelCase-suffix lookup table (e.g. c(type = "Scale") for `xScale`),
+# camelCase-suffix lookup table (e.g., c(type = "Scale") for `xScale`),
 # reading each argument's current value out of the caller's own environment
 # and dropping the ones left at their vg_unset default. `prefix` is the
-# scale/axis this call is for (e.g. "x", "fy").
+# scale/axis this call is for (e.g., "x", "fy").
 prefixed_attrs <- function(prefix, suffixes, env) {
   vals <- drop_unset(mget(names(suffixes), envir = env))
   if (length(vals)) names(vals) <- paste0(prefix, suffixes[names(vals)])
@@ -165,7 +165,7 @@ prefixed_attrs <- function(prefix, suffixes, env) {
 # extra (non-formal) named arguments as raw mosaic attrs, merges everything
 # into the current plot fragment's attrs, and returns the updated spec (or
 # fragment, if `spec` wasn't a vgspec). `attrs` are the ones already built
-# from the function's own named arguments (e.g. via prefixed_attrs());
+# from the function's own named arguments (e.g., via prefixed_attrs());
 # `extra` is whatever arrived through `...` (accepted snake_case, same as
 # vg_plot()/vg_plot_defaults()/vg_attributes()).
 apply_plot_attrs <- function(spec, attrs, extra, context) {
@@ -221,7 +221,7 @@ add_inset_attrs <- function(attrs, which, env, context) {
 #' supplied automatically. Unlike a plain `function(...) ..f(name = value,
 #' ...)` closure, the result's own formal arguments are `..f`'s real
 #' formals (names, defaults, and `...`) minus the ones fixed here -- so
-#' e.g. `wrapper_function(vg_scale_position, which = "x")` has the same
+#' e.g., `wrapper_function(vg_scale_position, which = "x")` has the same
 #' signature as `vg_scale_position()` (type, domain, ..., but no `which`),
 #' which is what lets a generated wrapper like `vg_scale_x()` show its
 #' actual arguments for tab completion and `?vg_scale_x` instead of an
@@ -232,7 +232,7 @@ add_inset_attrs <- function(attrs, which, env, context) {
 #' `vg_legend_symbol()` (R/legend.R).
 #'
 #' `drop` removes formals that don't apply to this particular wrapper
-#' without fixing them to a value -- e.g. `vg_scale_x()` drops
+#' without fixing them to a value -- e.g., `vg_scale_x()` drops
 #' `inset_top`/`inset_bottom` (only `inset_left`/`inset_right` apply to
 #' `x`), so its signature doesn't advertise arguments that are accepted
 #' syntactically but silently do nothing (`..f` still has `...`, so a

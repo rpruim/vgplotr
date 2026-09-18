@@ -7,7 +7,7 @@
 vg_duckdb_connector(con = NULL)
 }
 \arguments{
-\item{con}{An existing DBI connection to a DuckDB database (e.g. from
+\item{con}{An existing DBI connection to a DuckDB database (e.g., from
 \code{DBI::dbConnect(duckdb::duckdb())}), already set up with any extensions
 or \code{ATTACH}ed external databases you want reachable. Left \code{NULL} (the
 default), vgplotr creates and manages a private in-process connection
@@ -25,7 +25,7 @@ HTTP server (started automatically, see \code{\link[=vg_duckdb_server_stop]{vg_d
 \emph{real} DuckDB process running in this R session. This removes
 DuckDB-Wasm's size/extension limits -- in particular, it's the only way
 to visualize data that actually lives in another database, via DuckDB's
-own federation extensions (e.g. \verb{ATTACH '...' AS pg (TYPE postgres)},
+own federation extensions (e.g., \verb{ATTACH '...' AS pg (TYPE postgres)},
 \code{mysql_scanner}, \code{sqlite_scanner}): set those up yourself on \code{con} however
 you like, vgplotr just proxies queries to it.
 }

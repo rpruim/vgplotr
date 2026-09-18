@@ -7,7 +7,7 @@
 vg_set_default_connector(connector = vg_wasm_connector())
 }
 \arguments{
-\item{connector}{A \code{vg_connector} (e.g. \code{vg_duckdb_connector(con)}) to
+\item{connector}{A \code{vg_connector} (e.g., \code{vg_duckdb_connector(con)}) to
 use as the default from now on. Left at the default
 (\code{\link[=vg_wasm_connector]{vg_wasm_connector()}}), or called with no arguments, this resets the
 session back to its own built-in default.}

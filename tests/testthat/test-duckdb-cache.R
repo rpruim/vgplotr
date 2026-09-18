@@ -109,7 +109,7 @@ test_that("vg_render()'s use_cache lets a single plot override the cache default
   testthat::local_mocked_bindings(vg_duckdb_cache_dir = function() tmp_empty)
 
   # Not cached, but this plot asks for it anyway -- harmless, falls back to
-  # no dependency (i.e. the CDN) exactly like the default would.
+  # no dependency (i.e., the CDN) exactly like the default would.
   w2 <- vg_render(spec, use_cache = TRUE)
   expect_null(w2$dependencies)
 })
