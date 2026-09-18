@@ -45,10 +45,27 @@
   // as an HTML dependency named "vgplotr-duckdb-wasm" with `wasm`/`worker`
   // attachments -- see htmltools::htmlDependency()'s `attachment` docs for
   // this <link rel="attachment"> + getElementById(...).href convention.
+  //
+  // The cache can't be used from a page opened directly from disk, though:
+  // there the attachments resolve to file:// URLs, which a browser won't
+  // let the page fetch() (the wasm binary) or importScripts() into a worker
+  // (the worker script) -- Firefox reports "NetworkError when attempting to
+  // fetch resource", Chrome "importScripts ... failed to load" (confirmed
+  // directly, a Positron/RStudio console opens exactly such a page). Only
+  // an http(s) URL works, so in that case return null and let the caller
+  // fall back to fetching the engine from the CDN, which does work from a
+  // file:// page.
   function localDuckdbBundle() {
     var wasmLink = document.getElementById("vgplotr-duckdb-wasm-wasm-attachment");
     var workerLink = document.getElementById("vgplotr-duckdb-wasm-worker-attachment");
     if (!wasmLink || !workerLink) return null;
+    if (/^file:/i.test(wasmLink.href) || /^file:/i.test(workerLink.href)) {
+      console.info(
+        "vgplotr: the locally cached DuckDB-Wasm engine can't be loaded from a " +
+        "file:// page; fetching it from the CDN instead."
+      );
+      return null;
+    }
     return { mainModule: wasmLink.href, mainWorker: workerLink.href, pthreadWorker: null };
   }
 

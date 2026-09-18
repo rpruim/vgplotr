@@ -100,6 +100,14 @@ print.vg_duckdb_cache_status <- function(x, ...) {
 #' involved at all -- including when the rendered page is viewed completely
 #' offline -- and without the cached version ever silently changing later.
 #'
+#' One exception: a page opened directly from disk (a `file://` URL, which is
+#' what happens when a graphic is shown from an R console that opens it in a
+#' browser rather than serving it) can't use the cached copy, because
+#' browsers won't let such a page load the engine from a local file. That
+#' page fetches the engine from the CDN instead, so it needs network access
+#' even though the cache exists. Pages served over http(s) -- a Quarto or
+#' RStudio/Positron preview, a web server -- use the cache as described.
+#'
 #' This is entirely opt-in: without a cached binary, vgplotr keeps fetching
 #' from a CDN at view time, exactly as before. Set `force = TRUE` to
 #' re-download even if already cached (e.g., after clearing it with

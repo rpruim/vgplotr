@@ -17,7 +17,9 @@
 #' ship with the package -- which is fetched from a CDN each time a graphic
 #' is *viewed*, unless you've called [vg_cache_duckdb()] to cache it locally
 #' (in which case that cached copy is used instead, and no CDN is involved
-#' at all). If the cache doesn't exist, this function will offer to set it
+#' at all -- except on a page opened directly from disk (`file://`), which
+#' browsers don't allow to load a local engine, so it uses the CDN anyway).
+#' If the cache doesn't exist, this function will offer to set it
 #' up for you the first time you call it in an interactive session; see
 #' [vg_cache_duckdb()] for details, including how to silence that offer.
 #'
