@@ -98,7 +98,15 @@ vg_duckdb_app <- function(con) {
           status = 204L,
           headers = c(cors, list(
             "Access-Control-Allow-Methods" = "POST, OPTIONS",
-            "Access-Control-Allow-Headers" = "Content-Type"
+            "Access-Control-Allow-Headers" = "Content-Type",
+            # Chrome's Private Network Access policy requires this on the
+            # preflight before it'll let a fetch from a non-local page
+            # origin (e.g. a file:// page, or eventually any non-private
+            # origin) reach a private address like 127.0.0.1 -- without it,
+            # the request never even leaves the browser and surfaces to JS
+            # as a generic "TypeError: Failed to fetch", indistinguishable
+            # from the server simply not running.
+            "Access-Control-Allow-Private-Network" = "true"
           )),
           body = NULL
         ))

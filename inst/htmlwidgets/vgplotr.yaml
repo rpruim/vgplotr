@@ -2,6 +2,9 @@ dependencies:
   - name: vgplotr-mosaic-bundle
     version: 1.0.0
     src: htmlwidgets/lib
-    script:
-      src: mosaic-bundle.min.js
-      type: module
+    # Deliberately a classic script, not `type: module` -- a module script
+    # always fetches its src in CORS mode, which a file:// page can never
+    # satisfy in any browser (confirmed directly: this broke a real
+    # file:// widget). See data-raw/js/build.js's own comment on why the
+    # bundle itself is built as an IIFE, not ESM, to match.
+    script: mosaic-bundle.min.js

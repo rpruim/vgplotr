@@ -12,6 +12,19 @@
 // pinned dependency versions, and DUCKDB_WASM_VERSION must also match
 // the constant of the same name in inst/htmlwidgets/vgplotr.js (which
 // uses it to fetch/validate the separately-cached engine binary).
+//
+// format: "iife", not "esm" -- deliberately: a <script type="module">
+// always fetches its src in CORS mode per the HTML spec, and a page
+// opened via file:// can never satisfy that (Chrome blocks it outright;
+// Firefox's strict per-file file:// origin policy blocks it too, even
+// for a script sitting right next to the HTML) -- confirmed directly,
+// this broke a real user's file:// widget with "CORS request not http"/
+// "Module source URI is not allowed". A classic (non-module) script
+// isn't subject to either restriction. entry.js's own `import` statements
+// are still fine as *source* -- esbuild resolves/inlines them at bundle
+// time regardless of the output format; only the *output*'s module-ness
+// changes. inst/htmlwidgets/vgplotr.yaml must NOT declare `type: module`
+// for this script, to match.
 import { build } from "esbuild";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
@@ -26,7 +39,7 @@ const result = await build({
   entryPoints: [resolve(__dirname, "entry.js")],
   bundle: true,
   minify: true,
-  format: "esm",
+  format: "iife",
   outfile: OUT,
   metafile: true,
   banner: {

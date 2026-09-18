@@ -20,16 +20,18 @@
 // paths diverge.
 (function () {
   // The bundle (inst/htmlwidgets/vgplotr.yaml declares it, auto-injected as
-  // <script type="module">) sets window.__vgplotrBundle as a side effect
-  // rather than being import()-ed by this script directly: it and
-  // vgplotr.js are two separately-versioned htmlwidgets dependencies that
-  // land in sibling (not nested) directories once copied into a rendered
-  // document, so this script can't reliably compute a relative path to it
-  // without hardcoding that layout. Waiting on a global sidesteps that --
-  // module scripts execute before HTMLWidgets' own static render pass
-  // calls renderValue(), so in practice the bundle is already there by the
-  // time this runs; the wait is just a safety margin against ordering
-  // differences across renderers/viewers.
+  // a plain classic <script> -- deliberately not `type: module`, see
+  // data-raw/js/build.js's own comment on why) sets window.__vgplotrBundle
+  // as a side effect rather than being import()-ed by this script
+  // directly: it and vgplotr.js are two separately-versioned htmlwidgets
+  // dependencies that land in sibling (not nested) directories once
+  // copied into a rendered document, so this script can't reliably
+  // compute a relative path to it without hardcoding that layout. Waiting
+  // on a global sidesteps that -- a synchronous classic script runs
+  // immediately as the parser reaches it, well before HTMLWidgets' own
+  // static render pass calls renderValue(), so in practice the bundle is
+  // already there by the time this runs; the wait is just a safety margin
+  // against ordering differences across renderers/viewers.
   function waitForBundle() {
     return new Promise(function (resolve) {
       (function check() {
