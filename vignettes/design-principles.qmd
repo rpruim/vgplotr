@@ -43,26 +43,53 @@ into the desired visual representation.  Indeed,
 the core ideas contained in Wilkerson's grammar of 
 graphics have been used to design and implement
 a number of computer graphics systems including
-... 
-
+the iNVizN system Wilkinson developed for SPSS,
+Tableu (where Wilkinson lead the graphics team),
+ggplot2 for graphics in R, and 
+vega-lite, which is familiar to Python users via the altair package.
 In some of these systems, the code resembles the grammar
 especially closely.  Mosaic, and hence {vgplotr}, is
 one of those systems.
 
-Important components of the grammar of graphics (using
-terminology to match {vgplotr}) include
+Instead of focusing on providing 
+a fixed list of graphic types (histograms, scatter plots, etc.),
+the grammar of graphics approach focus on providing 
+structures, operations, and operations that can be flexibly
+combined to form many types of graphics.
 
-marks (geoms, glyphs)
-: The visual elements (dots, lines, etc.) that appear
-on the graphic
+For those familiar with a graphics tool based on the grammar of 
+graphics, these concepts will be familiar, although the terminology
+used in Mosaic may differ.  As one example of terminology 
+differences, what the original grammar of graphics
+calls geometric objects and {ggplot2} calls geoms, Mosaic calls
+marks.
 
-attributes (properties, aesthetics)
+Below is a list of 
+important components of the grammar of graphics,
+using terminology to match {vgplotr} (with other commonly used
+terminology in parentheses).
+
+graphic
+: The entire collection of elements that make up a data visualization.
+
+plot (subplot, panel)
+: A rectangular (in Cartesian coordinates) portion of a graphic.
+Plots (and other components like interactive controls and data tables) 
+can be concatenated horizontally or vertically to create complex
+graphics.
+
+mark (geom, glyph)
+: The visual element (dots, lines, etc.) that appear
+on the graphic. Using multiple marks in the same plot
+produces a layered plot.
+
+attribute (property, aesthetic)
 : Each mark has a number of attributes 
 (e.g., position, color, size, etc.)
 that determine how and where it is displayed within
 the graphic.
 
-scales
+scale
 : A scale is a function that **maps** data values to 
 visual values of attributes 
 (position, color, shape, etc.) that 
@@ -70,25 +97,29 @@ determine how and where those data values are represented
 on the graphic.  Attribute values can also be 
 **set** to constant values that do not depend on data.
 
-guides
+guide (axis or legend)
 : A guide is a visual element that helps the reader of
 the graphic reverse the scale, i.e., determine a 
 data value corresponding to the value of a visual
 attribute.
 
-transformations
+transformation (statistics)
 : A transformation is a function applied to data
 before visualization.  A histogram, for example,
 uses a transformation that puts data values into 
 bins and counts how many values are in each bin.
 
-A **specification** describes the marks, attributes,
-scales, guides, and transformations and how they are 
-to be combined to produce a graphic.
+interactor
+: An interactor is a component of a graphic that viewers
+can interact with to change some aspect of the graphic.
+Examples: menu, search bar, slides.
 
-Many graphics consist of several (sub)**plots** that
-are arranged or layered to produce the composite 
-graphic.
+A **specification** describes the marks, attributes,
+scales, guides, transformations, etc. and how they are 
+to be combined to produce a graphic.  Mosaic specifications
+can be written in JSON, YAML, javascript, or Python.
+{vgplotr} proivdes a way to produce specifications in R.
+
 
 # Code conventions used in {vgplotr}
 
@@ -120,12 +151,13 @@ Nearly all functions in {vgplotr} begin `vg_`.
 Functions for specifying marks begin `vg_mark_`,
 for scales, `vg_scale_`, for guides `vg_guide_`, etc.
 Generally, the names resemble the names used 
-in mosaic, but there are a few important exceptions.
+in Mosaic, but there are a few important exceptions.
 
-* mosaic uses axis or legend for guides, depending on 
+* Mosaic uses axis or legend for guides, depending on 
 which type of guide it is. This leads to some awkward
-name collisions for axes which are easily avoided 
-by using *guide* for both axes and legends.
+name collisions for axes (which can also be a mark)
+which are easily avoided by using *guide* for both axes 
+and legends.
 
 ## Formulas for mapping
 
@@ -136,7 +168,7 @@ reduces the need for quoting or non-standard evaluation.
 ## Use of the pipe (`|>`)
 
 The first argument for most `vg_*()` functions
-is `spec` (a specifcation for a graphic or a graphic 
+is `spec` (a specification for a graphic or a plot fragment 
 fragment), and most also return a specification.
 This allows a piped workflow to build up the components
 of a graphic specification.
