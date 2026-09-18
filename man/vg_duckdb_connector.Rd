@@ -48,6 +48,7 @@ reach on the recipient's machine.
 \seealso{
 Other connector functions:
 \code{\link[=vg_duckdb_server_stop]{vg_duckdb_server_stop()}},
+\code{\link[=vg_set_default_connector]{vg_set_default_connector()}},
 \code{\link[=vg_wasm_connector]{vg_wasm_connector()}}
 }
 \concept{connector functions}

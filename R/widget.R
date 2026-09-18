@@ -56,7 +56,9 @@
 #'   [vg_wasm_connector()] (the default -- DuckDB-Wasm in the browser, fully
 #'   self-contained) or [vg_duckdb_connector()] (a real, native DuckDB,
 #'   reached over a local server started automatically -- see its docs for
-#'   when you'd want this and its sharing/security caveats).
+#'   when you'd want this and its sharing/security caveats). Defaults to
+#'   the session's default connector ([vg_set_default_connector()]), so you
+#'   don't need to repeat this on every call once you've set one.
 #' @param ... Not used by `vg_widget()` itself. Accepted (and silently
 #'   ignored) so that [vg_render()] can forward its own `...` uniformly to
 #'   whichever of [vg_widget()]/[vg_snapshot()]/[vg_iframe()] ends up
@@ -71,7 +73,7 @@ vg_widget <- function(
   height = NULL,
   elementId = NULL,
   use_cache = vg_duckdb_cache_status()$cached,
-  connector = vg_wasm_connector(),
+  connector = vg_default_connector(),
   ...
 ) {
   if (!is_vg_connector(connector)) {

@@ -16,6 +16,33 @@ test_that("vg_widget() rejects a non-connector `connector` argument", {
   expect_error(vg_widget(spec, connector = "wasm"), "vg_wasm_connector")
 })
 
+test_that("vg_set_default_connector() changes vg_widget()'s implicit connector", {
+  skip_if_not_installed("duckdb")
+  skip_if_not_installed("nanoarrow")
+  skip_if_not_installed("DBI")
+  skip_if_not_installed("httpuv")
+  on.exit(vg_set_default_connector(), add = TRUE)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
+
+  expect_null(vg_widget(spec)$x$connector)
+
+  old <- vg_set_default_connector(vg_duckdb_connector())
+  expect_s3_class(old, "vg_wasm_connector")
+  expect_equal(vg_widget(spec)$x$connector$type, "rest")
+
+  # an explicit connector= on a single call still overrides the session default
+  expect_null(vg_widget(spec, connector = vg_wasm_connector())$x$connector)
+
+  vg_duckdb_server_stop()
+  vg_set_default_connector()
+  expect_null(vg_widget(spec)$x$connector)
+})
+
+test_that("vg_set_default_connector() validates its argument", {
+  on.exit(vg_set_default_connector(), add = TRUE)
+  expect_error(vg_set_default_connector("nope"), "vg_wasm_connector")
+})
+
 test_that("vg_widget() with the default connector doesn't touch native-duckdb machinery", {
   spec <- vg_create() |> vg_data(name = "d", data = data.frame(a = 1:3, b = 4:6)) |>
     vg_mark_dot(data_from = "d", x = ~a, y = ~b)

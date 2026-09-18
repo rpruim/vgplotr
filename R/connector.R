@@ -67,3 +67,48 @@ vg_duckdb_connector <- function(con = NULL) {
 }
 
 is_vg_connector <- function(x) inherits(x, "vg_connector")
+
+# The session's default connector, read fresh by vg_widget()'s own
+# `connector` formal default (`connector = vg_default_connector()`) on
+# every call that doesn't pass its own -- NULL means "no override set",
+# i.e. vg_wasm_connector().
+.vgplotr_default_connector <- new.env(parent = emptyenv())
+.vgplotr_default_connector$connector <- NULL
+
+vg_default_connector <- function() {
+  default <- .vgplotr_default_connector$connector
+  if (is.null(default)) vg_wasm_connector() else default
+}
+
+#' Set (or reset) this session's default rendering connector
+#'
+#' Every `vg_widget()`/`vg_render()` call that doesn't pass its own
+#' `connector =` argument uses this session's default connector --
+#' [vg_wasm_connector()] until you change it. Useful when you're working
+#' with a native DuckDB connection across many plots in one session/script
+#' and don't want to repeat `connector = vg_duckdb_connector(con)` on every
+#' call; a specific call can still override the session default by passing
+#' its own `connector =` explicitly.
+#'
+#' This changes what *unspecified* `connector =` arguments mean for the
+#' rest of the session -- it's deliberately something you opt into
+#' explicitly, rather than vgplotr inferring it from whether a native
+#' server happens to already be running (which would make a plain
+#' `vg_render(spec)` behave differently depending on unrelated earlier
+#' code, silently losing DuckDB-Wasm's self-contained/shareable output).
+#'
+#' @param connector A `vg_connector` (e.g. `vg_duckdb_connector(con)`) to
+#'   use as the default from now on. Left at the default
+#'   ([vg_wasm_connector()]), or called with no arguments, this resets the
+#'   session back to its own built-in default.
+#' @return Invisibly, the previous default connector.
+#' @family connector functions
+#' @export
+vg_set_default_connector <- function(connector = vg_wasm_connector()) {
+  if (!is_vg_connector(connector)) {
+    stop("`connector` must be vg_wasm_connector() or vg_duckdb_connector().", call. = FALSE)
+  }
+  old <- vg_default_connector()
+  .vgplotr_default_connector$connector <- connector
+  invisible(old)
+}

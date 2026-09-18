@@ -10,7 +10,7 @@ vg_widget(
   height = NULL,
   elementId = NULL,
   use_cache = vg_duckdb_cache_status()$cached,
-  connector = vg_wasm_connector(),
+  connector = vg_default_connector(),
   ...
 )
 }
@@ -45,7 +45,9 @@ when no cache exists -- it just falls back to the CDN). Ignored when
 \code{\link[=vg_wasm_connector]{vg_wasm_connector()}} (the default -- DuckDB-Wasm in the browser, fully
 self-contained) or \code{\link[=vg_duckdb_connector]{vg_duckdb_connector()}} (a real, native DuckDB,
 reached over a local server started automatically -- see its docs for
-when you'd want this and its sharing/security caveats).}
+when you'd want this and its sharing/security caveats). Defaults to
+the session's default connector (\code{\link[=vg_set_default_connector]{vg_set_default_connector()}}), so you
+don't need to repeat this on every call once you've set one.}
 
 \item{...}{Not used by \code{vg_widget()} itself. Accepted (and silently
 ignored) so that \code{\link[=vg_render]{vg_render()}} can forward its own \code{...} uniformly to

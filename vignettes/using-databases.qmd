@@ -127,6 +127,26 @@ you own its lifecycle.
 Only one native connection is served per R session -- if you need to
 switch to a different connection, call `vg_duckdb_server_stop()` first.
 
+### Setting a session default
+
+Since only one native connection is served per session anyway, working
+with one for a whole script or analysis usually means passing the same
+`connector = vg_duckdb_connector(con)` to every `vg_widget()`/`vg_render()`
+call. `vg_set_default_connector()` sets it once instead:
+
+```r
+vg_set_default_connector(vg_duckdb_connector(con))
+
+# every subsequent call uses `con` automatically
+spec1 |> vg_render()
+spec2 |> vg_render()
+
+# a specific call can still override the session default
+spec3 |> vg_render(connector = vg_wasm_connector())
+
+vg_set_default_connector()  # back to vg_wasm_connector()
+```
+
 ## Sharing and security
 
 This article's examples aren't demonstrated live, because native-DuckDB

@@ -22,6 +22,7 @@ to reach an external database via DuckDB's own extensions
 \seealso{
 Other connector functions:
 \code{\link[=vg_duckdb_connector]{vg_duckdb_connector()}},
-\code{\link[=vg_duckdb_server_stop]{vg_duckdb_server_stop()}}
+\code{\link[=vg_duckdb_server_stop]{vg_duckdb_server_stop()}},
+\code{\link[=vg_set_default_connector]{vg_set_default_connector()}}
 }
 \concept{connector functions}
