@@ -52,7 +52,13 @@ that same channel, with a warning if the two actually disagree. See
 
 \item{...}{Encodings (e.g., \code{x = ~var1}), mark options, and/or plot-level
 attributes (\verb{width =}, \verb{name =}, ...). See \code{\link[=vg_plot]{vg_plot()}} for how
-plot-level attributes from multiple marks are combined.}
+plot-level attributes from multiple marks are combined. Note that
+\code{vg_mark()} itself takes each mark option under mosaic-spec's own
+camelCase name (\verb{fillOpacity =}), where the \verb{vg_mark_*()} wrappers
+take snake_case (\verb{fill_opacity =}). An argument that is neither a
+property of this mark type in mosaic-spec nor a plot-level attribute
+-- most commonly \verb{color =}, which should be \verb{fill =} and/or
+\verb{stroke =} -- warns, since mosaic would silently ignore it.}
 }
 \description{
 This is the generic, low-level constructor that the \code{vg_mark_dot()},

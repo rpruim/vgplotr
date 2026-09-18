@@ -135,6 +135,8 @@ test_that("a required property that's really a branch discriminant with its own 
   expect_identical(formals(vg_mark_density_x)$type, quote(vg_unset))
   expect_identical(formals(vg_mark_density_y)$type, quote(vg_unset))
 
-  frag <- vg_mark_density_x(x = ~a)
+  # densityX's input channel is `y` (the suffix names the computed axis:
+  # mosaic's own examples use `densityY` with `x:`).
+  frag <- vg_mark_density_x(y = ~a)
   expect_equal(frag$items[[1]]$mark, "densityX")
 })

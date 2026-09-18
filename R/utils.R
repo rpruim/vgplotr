@@ -144,6 +144,65 @@ warn_unrecognized_enum_values <- function(args) {
   invisible(NULL)
 }
 
+# Warns on a mark argument that mosaic-spec doesn't list as a property of
+# that mark type (.vg_mark_own_props, R/attrs-generated.R) and that isn't
+# one of vgplotr's own data-source arguments -- it would otherwise pass
+# straight through into the spec, where mosaic silently ignores it (the
+# classic case is `color =`: mosaic marks have `fill`/`stroke`, not
+# `color`, and a mark just quietly draws in its default color). `args` is
+# the mark's *local* arguments, i.e., after plot-level attributes have
+# already been split off (split_plot_args()), so a plot attribute riding
+# along (`width =`, `x_domain =`, ...) is never flagged. A mark type with
+# no schema entry (nothing to check against) is skipped rather than
+# risking a false positive. One warning per call, listing every offender.
+warn_unrecognized_mark_args <- function(args, mark) {
+  own <- .vg_mark_own_props[[mark]]
+  nms <- names(args)
+  if (is.null(own) || is.null(nms)) return(invisible(NULL))
+
+  handled <- c(own, "data_from", "filter_by", "data_optimize")
+  unknown <- setdiff(nms[nzchar(nms)], handled)
+  if (length(unknown) == 0) return(invisible(NULL))
+
+  names_str <- paste0("`", unknown, "`", collapse = ", ")
+  subject <- if (length(unknown) == 1) {
+    paste0(names_str, " is not a property of the `", mark, "` mark in mosaic-spec, so it won't")
+  } else {
+    paste0(names_str, " are not properties of the `", mark, "` mark in mosaic-spec, so they won't")
+  }
+  hints <- Filter(Negate(is.null), lapply(unknown, mark_arg_hint, own = own))
+  warning(
+    paste(c(sprintf("In mark `%s`: %s affect the rendered graphic.", mark, subject), unlist(hints)), collapse = " "),
+    call. = FALSE
+  )
+  invisible(NULL)
+}
+
+# A suggestion for one unrecognized mark argument, or NULL if there's
+# nothing useful to say. `color`/`colour` is by far the most common
+# mistake -- mosaic (like Observable Plot) has no such channel, only
+# `fill` (the inside of a shape) and `stroke` (its outline/line) -- and
+# only suggests whichever of the two this mark actually has. Otherwise,
+# looks for a property that differs only by case/underscores/dots (e.g.
+# `fill_opacity` or `fillopacity` for `fillOpacity`, which is what the
+# generic vg_mark() needs even though the vg_mark_*() wrappers take
+# snake_case).
+mark_arg_hint <- function(nm, own) {
+  if (tolower(nm) %in% c("color", "colour")) {
+    choices <- intersect(c("fill", "stroke"), own)
+    if (length(choices) == 0) return(NULL)
+    what <- c(fill = "`fill` (the inside of a shape)", stroke = "`stroke` (its outline or line)")[choices]
+    return(sprintf(
+      "For `%s`, use %s, e.g., `%s = ~my_column` or `%s = \"steelblue\"`.",
+      nm, paste(what, collapse = " and/or "), choices[[1]], choices[[1]]
+    ))
+  }
+  norm <- function(x) tolower(gsub("[_.]", "", x))
+  close <- own[norm(own) == norm(nm)]
+  if (length(close) == 0) return(NULL)
+  sprintf("Did you mean `%s`?", close[[1]])
+}
+
 # An ordered factor's level order (e.g. "low" < "medium" < "high") has no
 # equivalent in mosaic-spec's own data model -- every rendering path (live
 # wasm/native DuckDB registration, to_json()/to_yaml() export) only ever

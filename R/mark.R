@@ -50,7 +50,13 @@
 #'   `vignette("getting-started")` for worked examples.
 #' @param ... Encodings (e.g., `x = ~var1`), mark options, and/or plot-level
 #'   attributes (`width =`, `name =`, ...). See [vg_plot()] for how
-#'   plot-level attributes from multiple marks are combined.
+#'   plot-level attributes from multiple marks are combined. Note that
+#'   `vg_mark()` itself takes each mark option under mosaic-spec's own
+#'   camelCase name (`fillOpacity =`), where the `vg_mark_*()` wrappers
+#'   take snake_case (`fill_opacity =`). An argument that is neither a
+#'   property of this mark type in mosaic-spec nor a plot-level attribute
+#'   -- most commonly `color =`, which should be `fill =` and/or
+#'   `stroke =` -- warns, since mosaic would silently ignore it.
 #' @family mark functions
 #' @export
 vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
@@ -105,6 +111,7 @@ vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
   }
 
   split <- split_plot_args(args, protect = .vg_mark_own_props[[mark]])
+  warn_unrecognized_mark_args(split$local_args, mark)
   warn_unrecognized_enum_values(args)
 
   mark_obj <- structure(
