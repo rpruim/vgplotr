@@ -115,6 +115,13 @@ reference:
   contents:
   - has_concept("connector functions")
 
+- title: Info functions
+  desc: >
+    Report which versions of vgplotr's dependencies (Mosaic, DuckDB-Wasm,
+    the optional native-DuckDB R packages) are actually in use.
+  contents:
+  - has_concept("info functions")
+
 articles:
 - title: Get Started
   contents:

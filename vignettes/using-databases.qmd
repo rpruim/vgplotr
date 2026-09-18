@@ -32,6 +32,13 @@ rendering against a native DuckDB process instead.
 Native DuckDB rendering needs the `duckdb` and `nanoarrow` packages
 (`install.packages(c("duckdb", "nanoarrow"))`); neither is required for
 the default DuckDB-Wasm path, so plain `vg_widget(spec)` never needs them.
+`vg_info()` reports whether they're installed (and which versions), along
+with which Mosaic/DuckDB-Wasm versions this vgplotr bundles for the
+default path:
+
+```r
+vg_info()
+```
 
 ## Why you'd want native DuckDB instead of DuckDB-Wasm
 

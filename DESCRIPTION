@@ -24,13 +24,13 @@ Imports:
     rlang,
     yaml
 Suggests:
-    DBI,
+    DBI (>= 1.3.0),
     dplyr,
-    duckdb,
+    duckdb (>= 1.5.5),
     gt,
     httpuv,
     knitr,
-    nanoarrow,
+    nanoarrow (>= 0.9.0),
     palmerpenguins,
     pkgdown,
     quarto,
@@ -53,6 +53,7 @@ Collate:
     'utils.R'
     'guide-generated.R'
     'iframe.R'
+    'info.R'
     'interactor.R'
     'interactors-generated.R'
     'legend.R'
