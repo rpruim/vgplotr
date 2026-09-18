@@ -17,7 +17,7 @@ Sets mosaic-spec's top-level \code{config} object: runtime configuration for
 the database connection itself (currently just \code{extensions}, DuckDB
 extensions to load before the spec runs, e.g. \code{"spatial"} for
 geospatial data/marks) -- as opposed to \code{meta} (inert descriptive
-metadata) or any of the spec's actual data/params/plot content.
+metadata) or any of the spec's actual data/params/graphic content.
 }
 \seealso{
 Other spec functions:

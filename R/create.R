@@ -65,7 +65,7 @@ route_spec_args <- function(args) {
 #' concerned -- it never reads `meta` when building the DOM, so this is
 #' pure metadata (e.g. for a spec browser/gallery tool, or round-tripping
 #' through [to_json()]/[to_yaml()]), not something that appears on the
-#' rendered plot by itself. As a vgplotr-level convenience, [vg_render()]
+#' rendered graphic by itself. As a vgplotr-level convenience, [vg_render()]
 #' *does* render `meta$title` (as a caption above the widget); `description`/
 #' `credit` remain inert for now.
 #'
@@ -85,7 +85,7 @@ vg_meta <- function(spec, ...) {
 #' the database connection itself (currently just `extensions`, DuckDB
 #' extensions to load before the spec runs, e.g. `"spatial"` for
 #' geospatial data/marks) -- as opposed to `meta` (inert descriptive
-#' metadata) or any of the spec's actual data/params/plot content.
+#' metadata) or any of the spec's actual data/params/graphic content.
 #'
 #' @param spec A `vgspec`.
 #' @param ... Named config options, e.g. `extensions = "spatial"` (or a
@@ -178,8 +178,8 @@ vg_params <- function(spec, ...) {
 #' single mark's encodings.
 #'
 #' A name that isn't one of mosaic's own plot attributes triggers a warning,
-#' since it won't do anything to the rendered plot (there's nowhere else it
-#' could still take effect) -- e.g. `title`, which belongs in [vg_meta()]
+#' since it won't do anything to the rendered graphic (there's nowhere else
+#' it could still take effect) -- e.g. `title`, which belongs in [vg_meta()]
 #' instead.
 #'
 #' @param spec A `vgspec`.
@@ -209,7 +209,7 @@ vg_attributes <- function(spec, ...) {
 #' rather than overloading this one.
 #'
 #' A name that isn't one of mosaic's own plot attributes triggers a warning,
-#' since it won't do anything to the rendered plot -- see [vg_attributes()].
+#' since it won't do anything to the rendered graphic -- see [vg_attributes()].
 #'
 #' @param spec A `vgspec`.
 #' @param ... Named plot-default attributes, e.g. `width =`, `height =`,

@@ -26,8 +26,8 @@ single mark's encodings.
 }
 \details{
 A name that isn't one of mosaic's own plot attributes triggers a warning,
-since it won't do anything to the rendered plot (there's nowhere else it
-could still take effect) -- e.g. \code{title}, which belongs in \code{\link[=vg_meta]{vg_meta()}}
+since it won't do anything to the rendered graphic (there's nowhere else
+it could still take effect) -- e.g. \code{title}, which belongs in \code{\link[=vg_meta]{vg_meta()}}
 instead.
 }
 \seealso{

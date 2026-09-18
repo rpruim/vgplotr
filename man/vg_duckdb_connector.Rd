@@ -41,7 +41,7 @@ connection with write access to anything you wouldn't want arbitrary SQL
 run against from that browser tab (prefer a read-only role for real
 external databases), and (2) unlike DuckDB-Wasm output, a page rendered
 this way is only live on the machine/session that rendered it -- sharing
-the HTML file (email, hosting it, opening it later) gives a plot that
+the HTML file (email, hosting it, opening it later) gives a graphic that
 can't connect to anything, since there's no server running for it to
 reach on the recipient's machine.
 }

@@ -32,16 +32,16 @@ from) for duckdb-wasm to load it in the browser.}
 
 \item{elementId}{Optional DOM element ID for the widget.}
 
-\item{use_cache}{Whether this plot should use the local duckdb-wasm engine
-cache (see \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}) if one exists. Defaults to whatever
-\code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}} currently reports, so it tracks the cache
-automatically; set to \code{FALSE} to force this one plot to fetch the engine
-from the CDN even when a cache is present, or \code{TRUE} to request the
-cache explicitly (harmless, and equivalent to the default, when no cache
-exists -- it just falls back to the CDN). Ignored when \code{connector} isn't
-the default (there's no duckdb-wasm engine to cache).}
+\item{use_cache}{Whether this graphic should use the local duckdb-wasm
+engine cache (see \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}) if one exists. Defaults to
+whatever \code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}} currently reports, so it tracks the
+cache automatically; set to \code{FALSE} to force this one graphic to fetch
+the engine from the CDN even when a cache is present, or \code{TRUE} to
+request the cache explicitly (harmless, and equivalent to the default,
+when no cache exists -- it just falls back to the CDN). Ignored when
+\code{connector} isn't the default (there's no duckdb-wasm engine to cache).}
 
-\item{connector}{Which database this plot's SQL actually runs against:
+\item{connector}{Which database this graphic's SQL actually runs against:
 \code{\link[=vg_wasm_connector]{vg_wasm_connector()}} (the default -- DuckDB-Wasm in the browser, fully
 self-contained) or \code{\link[=vg_duckdb_connector]{vg_duckdb_connector()}} (a real, native DuckDB,
 reached over a local server started automatically -- see its docs for
@@ -69,8 +69,8 @@ duckdb-wasm). Most of the JS runtime this needs
 (\verb{inst/htmlwidgets/lib/}), so it works offline out of the box.
 The one exception is duckdb-wasm's actual database engine --
 a ~35 MB compiled WebAssembly binary, too large to
-ship with the package -- which is fetched from a CDN each time a plot is
-\emph{viewed}, unless you've called \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}} to cache it locally
+ship with the package -- which is fetched from a CDN each time a graphic
+is \emph{viewed}, unless you've called \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}} to cache it locally
 (in which case that cached copy is used instead, and no CDN is involved
 at all). If the cache doesn't exist, this function will offer to set it
 up for you the first time you call it in an interactive session; see

@@ -67,7 +67,7 @@ update_layout <- function(spec, fragment) {
 #' different values, the later one wins and a warning is emitted; identical
 #' values accumulate silently. A named argument that isn't one of mosaic's
 #' own plot attributes also triggers a warning, since it won't do anything
-#' to the rendered plot -- see [vg_attributes()].
+#' to the rendered graphic -- see [vg_attributes()].
 #'
 #' @param spec A plot fragment or `vgspec` to extend, or `NULL` to start a new plot.
 #' @param ... Additional plot fragments (marks/interactors) to include, and/or

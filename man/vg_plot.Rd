@@ -33,7 +33,7 @@ When two sibling marks/interactors set the same plot-level attribute to
 different values, the later one wins and a warning is emitted; identical
 values accumulate silently. A named argument that isn't one of mosaic's
 own plot attributes also triggers a warning, since it won't do anything
-to the rendered plot -- see \code{\link[=vg_attributes]{vg_attributes()}}.
+to the rendered graphic -- see \code{\link[=vg_attributes]{vg_attributes()}}.
 }
 \seealso{
 Other layout functions:

@@ -103,13 +103,13 @@ reference:
 - title: DuckDB caching functions
   desc: >
     Manage a local cache of duckdb-wasm's database engine, so rendered
-    plots don't need to fetch it from a CDN every time.
+    graphics don't need to fetch it from a CDN every time.
   contents:
   - has_concept("duckdb caching functions")
 
 - title: Connector functions
   desc: >
-    Choose what database a plot's SQL actually runs against: the default
+    Choose what database a graphic's SQL actually runs against: the default
     duckdb-wasm in the browser, or a real, native DuckDB reached over a
     local server.
   contents:

@@ -26,7 +26,7 @@ rather than overloading this one.
 }
 \details{
 A name that isn't one of mosaic's own plot attributes triggers a warning,
-since it won't do anything to the rendered plot -- see \code{\link[=vg_attributes]{vg_attributes()}}.
+since it won't do anything to the rendered graphic -- see \code{\link[=vg_attributes]{vg_attributes()}}.
 }
 \seealso{
 Other spec functions:

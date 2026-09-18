@@ -17,7 +17,7 @@ Invisibly, the result of \code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_st
 Most of the JS runtime it uses ships with vgplotr, but the database
 engine itself is a compiled WebAssembly binary too large to include in
 the package (about 35 MB). Without this, \code{vg_render()} must fetch it from a
-CDN each time a plot is \emph{viewed}.
+CDN each time a graphic is \emph{viewed}.
 }
 \details{
 Calling \code{vg_cache_duckdb()} once downloads the WebAssembly binary into a

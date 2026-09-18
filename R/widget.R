@@ -14,8 +14,8 @@
 #' (`inst/htmlwidgets/lib/`), so it works offline out of the box.
 #' The one exception is duckdb-wasm's actual database engine --
 #' a ~35 MB compiled WebAssembly binary, too large to
-#' ship with the package -- which is fetched from a CDN each time a plot is
-#' *viewed*, unless you've called [vg_cache_duckdb()] to cache it locally
+#' ship with the package -- which is fetched from a CDN each time a graphic
+#' is *viewed*, unless you've called [vg_cache_duckdb()] to cache it locally
 #' (in which case that cached copy is used instead, and no CDN is involved
 #' at all). If the cache doesn't exist, this function will offer to set it
 #' up for you the first time you call it in an interactive session; see
@@ -44,15 +44,15 @@
 #'   from) for duckdb-wasm to load it in the browser.
 #' @param width,height Widget sizing, in CSS units (e.g. `"100%"`) or pixels.
 #' @param elementId Optional DOM element ID for the widget.
-#' @param use_cache Whether this plot should use the local duckdb-wasm engine
-#'   cache (see [vg_cache_duckdb()]) if one exists. Defaults to whatever
-#'   [vg_duckdb_cache_status()] currently reports, so it tracks the cache
-#'   automatically; set to `FALSE` to force this one plot to fetch the engine
-#'   from the CDN even when a cache is present, or `TRUE` to request the
-#'   cache explicitly (harmless, and equivalent to the default, when no cache
-#'   exists -- it just falls back to the CDN). Ignored when `connector` isn't
-#'   the default (there's no duckdb-wasm engine to cache).
-#' @param connector Which database this plot's SQL actually runs against:
+#' @param use_cache Whether this graphic should use the local duckdb-wasm
+#'   engine cache (see [vg_cache_duckdb()]) if one exists. Defaults to
+#'   whatever [vg_duckdb_cache_status()] currently reports, so it tracks the
+#'   cache automatically; set to `FALSE` to force this one graphic to fetch
+#'   the engine from the CDN even when a cache is present, or `TRUE` to
+#'   request the cache explicitly (harmless, and equivalent to the default,
+#'   when no cache exists -- it just falls back to the CDN). Ignored when
+#'   `connector` isn't the default (there's no duckdb-wasm engine to cache).
+#' @param connector Which database this graphic's SQL actually runs against:
 #'   [vg_wasm_connector()] (the default -- DuckDB-Wasm in the browser, fully
 #'   self-contained) or [vg_duckdb_connector()] (a real, native DuckDB,
 #'   reached over a local server started automatically -- see its docs for

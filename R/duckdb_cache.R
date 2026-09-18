@@ -92,7 +92,7 @@ print.vg_duckdb_cache_status <- function(x, ...) {
 #' Most of the JS runtime it uses ships with vgplotr, but the database
 #' engine itself is a compiled WebAssembly binary too large to include in
 #' the package (about 35 MB). Without this, `vg_render()` must fetch it from a
-#' CDN each time a plot is *viewed*.
+#' CDN each time a graphic is *viewed*.
 #'
 #' Calling `vg_cache_duckdb()` once downloads the WebAssembly binary into a
 #' local, version-pinned cache (`tools::R_user_dir("vgplotr", "cache")`).
@@ -153,7 +153,7 @@ vg_uncache_duckdb <- function() {
 }
 
 # Tracks whether we've already offered to cache in *this* R session, so
-# vg_render() asks at most once per session even across many plots -- reset
+# vg_render() asks at most once per session even across many graphics -- reset
 # naturally on every new session, independent of the persistent
 # "don't ask again" preference file.
 .vgplotr_session <- new.env(parent = emptyenv())

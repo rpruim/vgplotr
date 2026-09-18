@@ -12,8 +12,8 @@ engine: knitr
 library(vgplotr)
 ```
 
-Every plot vgplotr renders is ultimately answered by a live SQL query
-against a DuckDB database -- that's what makes mosaic's plots interactive
+Every graphic vgplotr renders is ultimately answered by a live SQL query
+against a DuckDB database -- that's what makes mosaic's graphics interactive
 and scalable in the first place. By default that database is DuckDB-Wasm,
 a real DuckDB compiled to WebAssembly and run entirely inside the browser
 (see `vignette("getting-started")` for the basics: `vg_data()`, `file =`,
@@ -24,7 +24,7 @@ DuckDB process instead.
 
 ## Why you'd want native DuckDB instead of DuckDB-Wasm
 
-DuckDB-Wasm keeps a rendered plot fully self-contained and shareable as
+DuckDB-Wasm keeps a rendered graphic fully self-contained and shareable as
 plain HTML, which is why it's vgplotr's default. But it's still DuckDB
 running inside a browser sandbox, which caps how much data it can
 comfortably hold and how far it can reach: it can't run DuckDB's own
@@ -88,7 +88,7 @@ This article's examples aren't demonstrated live, because native-DuckDB
 output behaves differently from DuckDB-Wasm output in one important way:
 **it's only interactive on the machine/session that rendered it.** The
 browser talks to a small local server started for that R session; opening
-the rendered page again later, or on another machine, gives a plot that
+the rendered page again later, or on another machine, gives a graphic that
 can't connect to anything. DuckDB-Wasm output has no such limitation --
 it's genuinely self-contained -- which is exactly why it stays vgplotr's
 default.

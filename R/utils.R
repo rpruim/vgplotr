@@ -90,7 +90,7 @@ merge_attrs <- function(old, new, context = NULL) {
 #' place it could still take effect (it isn't a mark/interactor encoding),
 #' so it's silently inert: it'll show up in `spec$attrs`/`spec$plot_defaults`
 #' and even round-trip through `to_json()`/`to_yaml()`, but never affect the
-#' rendered plot. A typo (or reaching for the wrong function -- `title`
+#' rendered graphic. A typo (or reaching for the wrong function -- `title`
 #' belongs in `vg_meta()`, not here) would otherwise fail silently.
 #' @noRd
 warn_unknown_attrs <- function(names, context) {
@@ -106,7 +106,7 @@ warn_unknown_attrs <- function(names, context) {
   }
   warning(
     sprintf(
-      "In %s: %s, so %s won't affect the rendered plot. Check spelling (mosaic's plot-attribute names are camelCase, e.g. `marginLeft`), or use vg_meta() for spec-level metadata like `title`.",
+      "In %s: %s, so %s won't affect the rendered graphic. Check spelling (mosaic's plot-attribute names are camelCase, e.g. `marginLeft`), or use vg_meta() for spec-level metadata like `title`.",
       context, subject, pronoun
     ),
     call. = FALSE
