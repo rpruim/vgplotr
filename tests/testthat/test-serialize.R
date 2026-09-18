@@ -333,7 +333,7 @@ test_that("an unquoted y/n/yes/on as a *value* is a string, e.g., a column liter
 
 test_that("bool-like words inside a flow sequence stay strings", {
   m <- parsed_mark("{mark: dot, channels: [x, y, n]}\n")
-  expect_identical(m$channels, c("x", "y", "n"))
+  expect_identical(m$channels, list("x", "y", "n"))   # a sequence is a list (as from JSON)
 })
 
 test_that("prose inside a block scalar is never rewritten", {
@@ -387,7 +387,7 @@ plot:
 xDomain: [1706227200000, 1706832000000]
 "
   payload <- as_spec_payload(yml)
-  expect_equal(payload$spec$xDomain, c(1706227200000, 1706832000000))
+  expect_equal(unlist(payload$spec$xDomain), c(1706227200000, 1706832000000))
 })
 
 test_that("as_spec_payload() round-trips a vgspec through to_yaml()", {
@@ -521,4 +521,110 @@ test_that("as_spec_payload() gives a clear error on malformed JSON/YAML text", {
 test_that("as_spec_payload() rejects a string that doesn't parse to an object", {
   expect_error(as_spec_payload("[1, 2, 3]"), "must parse to a JSON/YAML object")
   expect_error(as_spec_payload("just a string"), "must parse to a JSON/YAML object")
+})
+
+# --- the rest of the YAML 1.1 vs 1.2 differences (see yaml_handlers()) -------
+
+json_of <- function(x) as.character(jsonlite::toJSON(x, auto_unbox = TRUE, digits = NA))
+
+test_that("a length-1 YAML sequence stays an array, as it does in JSON", {
+  # `data: [0]` is mosaic's inline-data shorthand (a reference line); it used to
+  # be read as the bare integer 0 and sent as `"data": 0`
+  spec <- parse_spec_string("plot:\n  - mark: ruleY\n    data: [0]\n    channels: [id]\n")
+  expect_identical(json_of(spec), '{"plot":[{"mark":"ruleY","data":[0],"channels":["id"]}]}')
+  expect_identical(spec$plot[[1]]$data, list(0L))
+  expect_identical(spec$plot[[1]]$channels, list("id"))
+})
+
+test_that("YAML sequences of every shape parse to lists, matching the JSON path", {
+  yaml_spec <- parse_spec_string("a: [[1], [2]]\nb: [1, x]\nc: []\nd: [{k: 1}]\ne: [1, 2, 3]\nf: [a]\n")
+  json_spec <- parse_spec_string('{"a": [[1], [2]], "b": [1, "x"], "c": [], "d": [{"k": 1}], "e": [1, 2, 3], "f": ["a"]}')
+  expect_equal(yaml_spec, json_spec)
+  expect_identical(json_of(yaml_spec), '{"a":[[1],[2]],"b":[1,"x"],"c":[],"d":[{"k":1}],"e":[1,2,3],"f":["a"]}')
+})
+
+test_that("the widget payload for a YAML spec is the same JSON as for the equivalent JSON spec", {
+  yml <- "plot:\n  - mark: ruleY\n    data: [0]\n  - mark: dot\n    data: {from: d}\n    x: a\n    channels: [id]\n    xDomain: [9.75e5, 1.0e6]\n"
+  jsn <- '{"plot":[{"mark":"ruleY","data":[0]},{"mark":"dot","data":{"from":"d"},"x":"a","channels":["id"],"xDomain":[975000,1000000]}]}'
+  expect_identical(json_of(as_spec_payload(yml)$spec), json_of(as_spec_payload(jsn)$spec))
+})
+
+test_that("exponent floats are numbers, as in YAML 1.2", {
+  # YAML 1.1 only recognises an exponent that has both a sign and a decimal point
+  spec <- parse_spec_string("a: 9.75e5\nb: 1e5\nc: 1E3\nd: 1e-3\ne: .5e3\nf: -1.5e3\ng: 2.5e-3\nh: 2.5e+3\ni: 1.0e6\n")
+  expect_equal(unlist(spec), c(a = 975000, b = 1e5, c = 1000, d = 0.001, e = 500, f = -1500, g = 0.0025, h = 2500, i = 1e6))
+  expect_true(all(vapply(spec, is.numeric, logical(1))))
+  expect_equal(unlist(parse_spec_string("xDomain: [9.75e5, 1.0e6]\n")$xDomain), c(975000, 1e6))
+})
+
+test_that("leading-zero integers are decimal, as in YAML 1.2 (not octal)", {
+  spec <- parse_spec_string("a: 0755\nb: 007\nc: 089\nd: 02134\ne: 0\nf: 0x1F\ng: 42\n")
+  expect_identical(spec$a, 755L)     # 1.1 octal would say 493
+  expect_identical(spec$b, 7L)
+  expect_identical(spec$c, 89L)      # invalid octal: used to stay the string "089"
+  expect_identical(spec$d, 2134L)    # e.g., an unquoted zip code
+  expect_identical(spec$e, 0L)
+  expect_identical(spec$f, 31L)      # hex is unchanged
+  expect_identical(spec$g, 42L)
+})
+
+test_that("a quoted number-like string stays a string", {
+  spec <- parse_spec_string("a: \"9.75e5\"\nb: '1e5'\nc: '089'\nd: \"0755\"\ne: \"2020\"\nf: '12'\n")
+  expect_identical(spec$a, "9.75e5")
+  expect_identical(spec$b, "1e5")
+  expect_identical(spec$c, "089")
+  expect_identical(spec$d, "0755")
+  expect_identical(spec$e, "2020")
+  expect_identical(spec$f, "12")
+})
+
+test_that("a quoted number-like string inside a sequence or nested mapping stays a string", {
+  spec <- parse_spec_string("a: [\"1e5\", '089']\nb: {k: \"9.75e5\"}\n")
+  expect_identical(spec$a, list("1e5", "089"))
+  expect_identical(spec$b$k, "9.75e5")
+})
+
+test_that("if a value is quoted anywhere, the same text unquoted elsewhere is kept as a string too (the safe direction)", {
+  # the handler can't tell the two apart, so it errs toward the old behaviour
+  spec <- parse_spec_string("a: \"1e5\"\nb: 1e5\n")
+  expect_identical(spec$a, "1e5")
+  expect_identical(spec$b, "1e5")
+})
+
+test_that("quoted_number_like_tokens() finds quoted number-like scalars only", {
+  txt <- "a: \"1e5\"\nb: '089'\nc: \"hello\"\nd: 1e5\ne: \"a 1e5 b\"\nf: '2020'\n"
+  expect_setequal(quoted_number_like_tokens(txt), c("1e5", "089", "2020"))
+  expect_equal(quoted_number_like_tokens("no quotes here: 1e5"), character(0))
+})
+
+test_that("scalars YAML 1.1 and 1.2 already agree on are unchanged", {
+  spec <- parse_spec_string(paste0(
+    "a: 2001-12-14\nb: 1:30\nc: 1_000\nd: hello\ne: 3.14\nf: -7\ng: ~\nh: null\ni: true\nj: ''\nk: \"\"\n"
+  ))
+  expect_identical(spec$a, "2001-12-14")     # timestamps stay strings
+  expect_identical(spec$b, "1:30")
+  expect_identical(spec$c, "1_000")
+  expect_identical(spec$d, "hello")
+  expect_identical(spec$e, 3.14)
+  expect_identical(spec$f, -7L)
+  expect_true("g" %in% names(spec) && is.null(spec$g))
+  expect_identical(spec$i, TRUE)
+  expect_identical(spec$j, "")
+  expect_identical(spec$k, "")
+})
+
+test_that("block scalars and long strings are never reinterpreted as numbers", {
+  spec <- parse_spec_string("d: |\n  1e5\n  089\ne: >\n  9.75e5\n")
+  expect_type(spec$d, "character")
+  expect_type(spec$e, "character")
+})
+
+test_that("a large inline data array parses quickly (the quoted-token guard is one pass, not one search per string)", {
+  rows <- vapply(seq_len(20000), function(i) sprintf("    - {a: %d, b: \"%d\", c: 1e%d}", i, i, i %% 10), character(1))
+  yml <- paste(c("data:", "  d:", rows, "plot:", "  - {mark: dot, data: {from: d}, x: a, y: b}"), collapse = "\n")
+  elapsed <- system.time(spec <- parse_spec_string(yml))[["elapsed"]]
+  expect_length(spec$data$d, 20000)
+  expect_lt(elapsed, 10)
+  expect_identical(spec$data$d[[5]]$b, "5")   # quoted digits stay strings
+  expect_true(is.numeric(spec$data$d[[5]]$c))
 })

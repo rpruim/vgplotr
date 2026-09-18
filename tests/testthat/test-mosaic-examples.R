@@ -219,3 +219,34 @@ test_that("an unquoted `Y` menu label in mosaic's symbols example is the string 
   spec <- parse_spec_string(paste(readLines(path, warn = FALSE), collapse = "\n"))
   expect_true("Y" %in% collect_type_refs(spec, "label"))
 })
+
+json_fixture_files <- list.files(
+  testthat::test_path("fixtures", "mosaic-examples-json"),
+  pattern = "\\.json$", full.names = TRUE
+)
+
+test_that("every vendored mosaic YAML example has a JSON twin", {
+  skip_if(length(fixture_files) == 0, "no vendored mosaic examples found")
+  expect_setequal(
+    sub("\\.json$", "", basename(json_fixture_files)),
+    sub("\\.yaml$", "", basename(fixture_files))
+  )
+})
+
+test_that("parsing each mosaic YAML example gives the same structure as parsing its JSON twin", {
+  # mosaic publishes each example as YAML *and* JSON (produced by its own
+  # tooling, and checked to agree with an independent YAML 1.2 parser), so
+  # the JSON is an independent statement of what the YAML means. R's `yaml`
+  # package is YAML 1.1, and differences from 1.2 are silent and visible only
+  # in the rendered plot -- an unquoted `y` read as a boolean, `data: [0]`
+  # collapsing to the scalar 0, `9.75e5` staying a string -- so this is the
+  # test that catches that whole family, not any one case of it.
+  skip_if(length(fixture_files) == 0, "no vendored mosaic examples found")
+  read_spec <- function(path) parse_spec_string(paste(readLines(path, warn = FALSE), collapse = "\n"))
+
+  for (path in fixture_files) {
+    json_path <- testthat::test_path("fixtures", "mosaic-examples-json", sub("\\.yaml$", ".json", basename(path)))
+    skip_if_not(file.exists(json_path), paste("missing JSON twin for", basename(path)))
+    expect_equal(read_spec(path), read_spec(json_path), info = basename(path))
+  }
+})

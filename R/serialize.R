@@ -96,10 +96,7 @@ parse_spec_string <- function(text) {
     if (is_json) {
       jsonlite::fromJSON(text, simplifyVector = FALSE)
     } else {
-      yaml::yaml.load(
-        text,
-        handlers = list(int = yaml_int_handler, "bool#yes" = yaml_bool_handler, "bool#no" = yaml_bool_handler)
-      )
+      yaml::yaml.load(text, handlers = yaml_handlers(text))
     },
     error = function(e) {
       stop(
@@ -148,6 +145,70 @@ yaml_bool_handler <- function(x) {
     TRUE
   } else if (x %in% c("false", "False", "FALSE")) {
     FALSE
+  } else {
+    x
+  }
+}
+
+# The `yaml` package is YAML 1.1; the JavaScript parsers a mosaic spec is
+# written for are YAML 1.2 (see yaml_bool_handler() above). Beyond booleans,
+# that leaves four places where a pasted YAML spec would otherwise be read
+# differently from how mosaic's own tooling reads it, all fixed here so the
+# YAML path gives the same structure as the JSON path:
+#
+#  * `seq`: a sequence of same-typed scalars is normally *simplified* to an
+#    atomic vector, and a length-1 vector is then written to JSON as a bare
+#    scalar -- `data: [0]` (mosaic's inline-data shorthand, e.g. a reference
+#    line) became `data: 0`, and `channels: [id]` became `"id"`. Supplying any
+#    `seq` handler switches the simplification off (probed directly: the
+#    handler receives the plain list), so sequences stay lists, exactly like
+#    the JSON path's `simplifyVector = FALSE`.
+#  * exponent floats (`9.75e5`, `1e5`, `1e-3`, `.5e3`): 1.1 only recognises an
+#    exponent that has both a sign and a decimal point, so these stayed strings
+#    (`xDomain: [9.75e5, 1.0e6]` was sent as two strings) where 1.2 has numbers.
+#  * leading-zero integers: `0755` is 1.1 octal (493), but 1.2 reads it as
+#    decimal 755 -- handled by the `int#oct` handler -- and `089`, invalid
+#    octal, stayed a string.
+#  * (Unchanged, and already agreeing with `yaml`: timestamps stay strings,
+#    `1:30` stays a string, `0x1F` is 31.)
+#
+# The exponent-float and `089` cases can only be caught in the `str` handler
+# (that's where an unrecognised plain scalar ends up), and that handler cannot
+# tell a plain `1e5` from a deliberately *quoted* "1e5" -- both arrive as the
+# same string. So it also refuses to convert any string whose quoted form
+# ("1e5" or '1e5') appears in the source text: a guard, not a rewrite, and the
+# safe direction to be wrong in (it keeps the old string behaviour). The set of
+# quoted number-like tokens is collected once per parse, so the guard costs one
+# pass over the text rather than one search per string.
+yaml_handlers <- function(text) {
+  quoted <- quoted_number_like_tokens(text)
+  list(
+    int = yaml_int_handler,
+    "int#oct" = yaml_int_handler,
+    "bool#yes" = yaml_bool_handler,
+    "bool#no" = yaml_bool_handler,
+    seq = function(x) x,
+    str = function(x) yaml_str_handler(x, quoted)
+  )
+}
+
+# Every quoted scalar in `text` made only of characters a number can contain,
+# quotes stripped -- "1e5", '089', "2020", ... -- for yaml_str_handler()'s guard.
+quoted_number_like_tokens <- function(text) {
+  m <- gregexpr("\"[-+.0-9eE]+\"|'[-+.0-9eE]+'", text)
+  tokens <- regmatches(text, m)[[1]]
+  unique(substr(tokens, 2L, nchar(tokens) - 1L))
+}
+
+# Resolves an unrecognised plain scalar the YAML 1.2 way: an exponent float
+# (`9.75e5`) or a leading-zero decimal integer (`089`) is a number. Anything
+# else -- and any string that was quoted somewhere in the source, `quoted` --
+# is left alone.
+yaml_str_handler <- function(x, quoted) {
+  is_exponent_float <- grepl("^[-+]?([0-9]+(\\.[0-9]*)?|\\.[0-9]+)[eE][-+]?[0-9]+$", x)
+  is_decimal_int <- grepl("^[-+]?[0-9]+$", x)
+  if ((is_exponent_float || is_decimal_int) && !(x %in% quoted)) {
+    if (is_decimal_int) yaml_int_handler(x) else as.numeric(x)
   } else {
     x
   }

@@ -10,8 +10,19 @@
 # whenever MOSAIC_VERSION is bumped -- keep it in sync with the constant of
 # the same name in data-raw/update-schema.R and data-raw/js/build.js.
 #
-# This is dev-only tooling (fetches from GitHub) -- the vendored .yaml
-# files it writes are the only thing the test suite itself reads, so
+# It also vendors the JSON version of each spec that mosaic publishes
+# alongside the YAML (docs/public/specs/json) into
+# tests/testthat/fixtures/mosaic-examples-json/. mosaic's own tooling
+# produced those, so they're an independent statement of what each YAML
+# spec *means* -- tests/testthat/test-mosaic-examples.R checks that
+# parse_spec_string() reads every YAML example into the same structure as
+# its JSON twin, which is what catches a YAML 1.1-vs-1.2 difference (an
+# unquoted `y` read as a boolean, `data: [0]` collapsing to `0`, `9.75e5`
+# staying a string). (Verified separately that these JSON files match an
+# independent `yaml`@2 parse of the YAML exactly, all 55.)
+#
+# This is dev-only tooling (fetches from GitHub) -- the vendored .yaml and
+# .json files it writes are the only things the test suite itself reads, so
 # running the tests never needs network access.
 
 MOSAIC_VERSION <- "0.31.0"
@@ -37,3 +48,17 @@ for (nm in names_) {
 }
 
 cat("Vendored", length(names_), "example specs (mosaic v", MOSAIC_VERSION, ") into", out_dir, "\n")
+
+json_dir <- "tests/testthat/fixtures/mosaic-examples-json"
+unlink(json_dir, recursive = TRUE)
+dir.create(json_dir, recursive = TRUE)
+
+for (nm in sub("\\.yaml$", ".json", names_)) {
+  raw_url <- sprintf(
+    "https://raw.githubusercontent.com/uwdata/mosaic/v%s/docs/public/specs/json/%s",
+    MOSAIC_VERSION, nm
+  )
+  utils::download.file(raw_url, file.path(json_dir, nm), quiet = TRUE, mode = "wb")
+}
+
+cat("Vendored", length(names_), "JSON twins into", json_dir, "\n")
