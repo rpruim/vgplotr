@@ -30,7 +30,7 @@ test_that("`color =` on an interactor gets the fill/stroke hint only where it ha
   # highlight styles the unselected marks, so it has fill/stroke...
   expect_warning(
     vg_highlight(by = param(sel), color = "red"),
-    "`color` is not a property.*use `fill`.*`stroke`"
+    "`color` is not a property.*Did you perhaps mean `fill` or `stroke`\\?"
   )
   # ...whereas a brush has neither, so there's nothing sensible to suggest
   w <- character()
@@ -49,11 +49,11 @@ test_that("`color =` on an interactor gets the fill/stroke hint only where it ha
 test_that("the generic vg_interactor() takes camelCase; a snake_case name warns and points at the real one", {
   expect_warning(
     vg_interactor(interactor = "intervalX", as = param(sel), pixel_size = 2),
-    "`pixel_size` is not a property.*Did you mean `pixelSize`\\?"
+    "`pixel_size` is not a property.*Did you perhaps mean `pixelSize`\\?"
   )
   expect_warning(
     vg_interactor(interactor = "menu", column = "a", filter_by = param(sel)),
-    "`filter_by` is not a property.*Did you mean `filterBy`\\?"
+    "`filter_by` is not a property.*Did you perhaps mean `filterBy`\\?"
   )
   expect_no_warning(vg_interactor(interactor = "intervalX", as = param(sel), pixelSize = 2))
   # ...while the wrappers take snake_case

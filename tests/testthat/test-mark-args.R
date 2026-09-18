@@ -3,9 +3,9 @@ test_that("a mark's `color =` warns and suggests fill/stroke", {
   # otherwise silently ignored and the mark draws in its default color.
   expect_warning(
     vg_mark_dot(x = ~a, y = ~b, color = ~g),
-    "In mark `dot`: `color` is not a property of the `dot` mark.*use `fill`.*`stroke`"
+    "In mark `dot`: `color` is not a property of the `dot` mark.*Did you perhaps mean `fill` or `stroke`\\?"
   )
-  expect_warning(vg_mark_dot(x = ~a, y = ~b, colour = "red"), "`colour` is not a property.*`fill`.*`stroke`")
+  expect_warning(vg_mark_dot(x = ~a, y = ~b, colour = "red"), "`colour` is not a property.*Did you perhaps mean `fill` or `stroke`\\?")
 })
 
 test_that("`color =` warns when a data frame is piped in, too", {
@@ -19,11 +19,11 @@ test_that("`color =` is fine on a mark that genuinely has a `color` property", {
   expect_no_warning(vg_mark_axis_x(color = "red"))
 })
 
-test_that("the color hint only suggests fill/stroke where the mark actually has them", {
-  own <- c("stroke", "x")
-  expect_match(unrecognized_arg_hint("color", own), "`stroke`")
-  expect_no_match(unrecognized_arg_hint("color", own), "fill")
-  expect_null(unrecognized_arg_hint("color", "x"))
+test_that("the color suggestion only offers fill/stroke where the mark actually has them", {
+  expect_equal(suggest_names("color", c("stroke", "x")), "stroke")
+  expect_equal(suggest_names("color", c("fill", "stroke", "x")), c("fill", "stroke"))
+  # neither -> nothing to suggest (and no fuzzy match against the rest either)
+  expect_equal(suggest_names("color", c("x", "colorN")), character())
 })
 
 test_that("an unrecognized argument with no known fix still warns, just without a hint", {
@@ -49,7 +49,7 @@ test_that("several unrecognized arguments produce a single warning naming all of
 test_that("the generic vg_mark() takes camelCase; a snake_case name warns and points at the real one", {
   expect_warning(
     vg_mark(mark = "dot", x = ~a, y = ~b, fill_opacity = 0.5),
-    "`fill_opacity` is not a property.*Did you mean `fillOpacity`\\?"
+    "`fill_opacity` is not a property.*Did you perhaps mean `fillOpacity`\\?"
   )
   expect_no_warning(vg_mark(mark = "dot", x = ~a, y = ~b, fillOpacity = 0.5))
   # ...while the wrappers take snake_case

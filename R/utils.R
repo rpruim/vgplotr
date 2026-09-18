@@ -157,8 +157,14 @@ warn_unrecognized_enum_values <- function(args) {
 # schema entry (`own` is NULL -- nothing to check against) is skipped
 # rather than risking a false positive. One warning per call, listing
 # every offender.
+#
+# Each offender gets a "Did you perhaps mean ...?" (R/suggest.R) drawn from
+# everything valid to pass here: `own`, `extra_handled`, and `suggest_extra`
+# -- names that are valid but were never candidates for being flagged
+# (the plot attributes a mark or plot-embedded interactor also accepts, so
+# `widht` can still be pointed at `width`).
 warn_unrecognized_args <- function(args, own, kind, name, extra_handled = character(),
-                                   effect = "have any effect") {
+                                   suggest_extra = character(), effect = "have any effect") {
   nms <- names(args)
   if (is.null(own) || is.null(nms)) return(invisible(NULL))
 
@@ -171,9 +177,15 @@ warn_unrecognized_args <- function(args, own, kind, name, extra_handled = charac
   } else {
     sprintf("%s are not properties of the `%s` %s in mosaic-spec, so they won't", names_str, name, kind)
   }
-  hints <- Filter(Negate(is.null), lapply(unknown, unrecognized_arg_hint, own = own))
+  valid <- unique(c(own, extra_handled, suggest_extra))
+  suggestions <- lapply(unknown, function(nm) {
+    format_suggestion(
+      suggest_names(nm, valid, present = nms),
+      arg = if (length(unknown) > 1) nm
+    )
+  })
   warning(
-    paste(c(sprintf("In %s `%s`: %s %s.", kind, name, subject, effect), unlist(hints)), collapse = " "),
+    paste(c(sprintf("In %s `%s`: %s %s.", kind, name, subject, effect), unlist(suggestions)), collapse = " "),
     call. = FALSE
   )
   invisible(NULL)
@@ -183,14 +195,19 @@ warn_unrecognized_mark_args <- function(args, mark) {
   warn_unrecognized_args(
     args, .vg_mark_own_props[[mark]], "mark", mark,
     extra_handled = c("data_from", "filter_by", "data_optimize"),
+    suggest_extra = vg_plot_level_args(),
     effect = "affect the rendered graphic"
   )
 }
 
-# `kind` is "interactor" (embedded in a plot) or "input" (a standalone
-# layout widget) -- see vg_interactor_placement(), R/interactor.R.
+# `kind` is "interactor" (embedded in a plot, so it also takes plot
+# attributes) or "input" (a standalone layout widget, which doesn't) -- see
+# vg_interactor_placement(), R/interactor.R.
 warn_unrecognized_interactor_args <- function(args, interactor, kind = "interactor") {
-  warn_unrecognized_args(args, .vg_interactor_own_props[[interactor]], kind, interactor)
+  warn_unrecognized_args(
+    args, .vg_interactor_own_props[[interactor]], kind, interactor,
+    suggest_extra = if (kind == "interactor") vg_plot_level_args() else character()
+  )
 }
 
 # A legend's options aren't split into plot attributes (vg_legend() takes
@@ -199,31 +216,6 @@ warn_unrecognized_interactor_args <- function(args, interactor, kind = "interact
 # legend types.
 warn_unrecognized_legend_args <- function(args, type) {
   warn_unrecognized_args(args, .vg_legend_props, "legend", type)
-}
-
-# A suggestion for one unrecognized argument, or NULL if there's nothing
-# useful to say. `color`/`colour` is by far the most common mistake --
-# mosaic (like Observable Plot) has no such channel, only `fill` (the
-# inside of a shape) and `stroke` (its outline/line) -- and only suggests
-# whichever of the two this mark/interactor actually has. Otherwise, looks
-# for a property that differs only by case/underscores/dots (e.g.
-# `fill_opacity` or `fillopacity` for `fillOpacity`, which is what the
-# generic vg_mark()/vg_interactor() need even though the generated
-# vg_mark_*()/vg_<interactor>() wrappers take snake_case).
-unrecognized_arg_hint <- function(nm, own) {
-  if (tolower(nm) %in% c("color", "colour")) {
-    choices <- intersect(c("fill", "stroke"), own)
-    if (length(choices) == 0) return(NULL)
-    what <- c(fill = "`fill` (the inside of a shape)", stroke = "`stroke` (its outline or line)")[choices]
-    return(sprintf(
-      "For `%s`, use %s, e.g., `%s = ~my_column` or `%s = \"steelblue\"`.",
-      nm, paste(what, collapse = " and/or "), choices[[1]], choices[[1]]
-    ))
-  }
-  norm <- function(x) tolower(gsub("[_.]", "", x))
-  close <- own[norm(own) == norm(nm)]
-  if (length(close) == 0) return(NULL)
-  sprintf("Did you mean `%s`?", close[[1]])
 }
 
 # An ordered factor's level order (e.g. "low" < "medium" < "high") has no

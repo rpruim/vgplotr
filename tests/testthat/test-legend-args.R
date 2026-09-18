@@ -27,8 +27,8 @@ test_that("several unrecognized options produce a single warning naming all of t
 })
 
 test_that("legends take camelCase options; a snake_case name warns and points at the real one", {
-  expect_warning(vg_legend_symbol(tick_size = 5), "`tick_size` is not a property.*Did you mean `tickSize`\\?")
-  expect_warning(vg_legend_color(margin_left = 5), "Did you mean `marginLeft`\\?")
+  expect_warning(vg_legend_symbol(tick_size = 5), "`tick_size` is not a property.*Did you perhaps mean `tickSize`\\?")
+  expect_warning(vg_legend_color(margin_left = 5), "Did you perhaps mean `marginLeft`\\?")
   expect_no_warning(vg_legend_symbol(tickSize = 5, marginLeft = 5))
 })
 
