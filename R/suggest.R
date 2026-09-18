@@ -27,8 +27,10 @@
 # so a name that resembles nothing gets no suggestion rather than a
 # far-fetched one. More than `max_suggestions` tied candidates means the
 # match is too vague to be useful (a lone `x` is one edit from half the
-# schema), so that yields none either.
-similar_names <- function(name, candidates, max_suggestions = 3) {
+# schema), so that yields none either. `limit` overrides the allowed distance
+# for a caller that knows better than the name's own length (see
+# transform_name_suggestion(), R/transforms.R).
+similar_names <- function(name, candidates, max_suggestions = 3, limit = NULL) {
   norm <- function(x) tolower(gsub("[_.]", "", x))
   candidates <- unique(candidates)
   target <- norm(name)
@@ -36,7 +38,7 @@ similar_names <- function(name, candidates, max_suggestions = 3) {
 
   dist <- stringdist::stringdist(target, norm(candidates), method = "osa")
   best <- min(dist)
-  limit <- max(1L, nchar(target) %/% 3L)
+  if (is.null(limit)) limit <- max(1L, nchar(target) %/% 3L)
   hits <- candidates[dist == best]
   if (best > limit || length(hits) > max_suggestions) return(character())
   hits

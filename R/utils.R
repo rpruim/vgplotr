@@ -85,13 +85,20 @@ merge_attrs <- function(old, new, context = NULL) {
 #' Warn about names that aren't recognized mosaic-spec plot attributes.
 #'
 #' For functions whose *entire* purpose is setting plot-level attributes
-#' (`vg_attributes()`, `vg_plot_defaults()`, `vg_plot()`) -- unlike
+#' (`vg_attributes()`, `vg_plot_defaults()`, `vg_plot()`, and the
+#' scale/guide constructors, whose `...` is exactly that) -- unlike
 #' `vg_mark()`/`vg_interactor()`, an unrecognized name here has no other
 #' place it could still take effect (it isn't a mark/interactor encoding),
 #' so it's silently inert: it'll show up in `spec$attrs`/`spec$plot_defaults`
 #' and even round-trip through `to_json()`/`to_yaml()`, but never affect the
 #' rendered graphic. A typo (or reaching for the wrong function -- `title`
 #' belongs in `vg_meta()`, not here) would otherwise fail silently.
+#'
+#' Ends with a "Did you perhaps mean ...?" (R/suggest.R) drawn from every
+#' plot attribute plus the constructor's own arguments (found from `context`,
+#' the function's own label, e.g., "vg_scale_x()" -- so a typo of
+#' `vg_scale_x()`'s `domain` argument is pointed at `domain`, not just at
+#' the several plot attributes it could also be).
 #' @noRd
 warn_unknown_attrs <- function(names, context) {
   unknown <- setdiff(names, vg_plot_level_args())
@@ -104,13 +111,46 @@ warn_unknown_attrs <- function(names, context) {
     subject <- paste0(names_str, " are not recognized mosaic-spec plot attributes")
     pronoun <- "they"
   }
+
+  valid <- unique(c(context_arg_names(context), vg_plot_level_arg_names()))
+  suggestions <- lapply(unknown, function(nm) {
+    format_suggestion(
+      suggest_names(nm, valid, present = names),
+      arg = if (length(unknown) > 1) nm
+    )
+  })
+  # spec-level metadata isn't a plot attribute at all, so no spelling
+  # suggestion could fix it -- point at where it does belong.
+  meta <- intersect(unknown, c("title", "description", "credit"))
+  meta_hint <- if (length(meta)) {
+    sprintf("%s belong%s in `vg_meta()`.", paste0("`", meta, "`", collapse = ", "), if (length(meta) == 1) "s" else "")
+  }
+
   warning(
-    sprintf(
-      "In %s: %s, so %s won't affect the rendered graphic. Check spelling (mosaic's plot-attribute names are camelCase, e.g., `marginLeft`), or use vg_meta() for spec-level metadata like `title`.",
-      context, subject, pronoun
+    paste(
+      c(sprintf("In %s: %s, so %s won't affect the rendered graphic.", context, subject, pronoun), unlist(suggestions), meta_hint),
+      collapse = " "
     ),
     call. = FALSE
   )
+}
+
+# The R-facing (snake_case) spellings of every plot attribute -- what the
+# vg_*() functions document (`x_domain =`) and accept alongside mosaic's
+# exact camelCase key (`xDomain`), so what a suggestion should offer.
+vg_plot_level_arg_names <- function() {
+  names(.vg_plot_attrs_snake)
+}
+
+# The user-facing argument names of the constructor a warning is about,
+# looked up from its `context` label ("vg_scale_x()") -- e.g., `domain`,
+# `tick_size` -- or none if `context` doesn't name a function. `spec` (the
+# fragment being extended) and `which` (a scale/guide's own dispatch
+# argument) are never something to suggest, and neither is `...`.
+context_arg_names <- function(context) {
+  fn <- get0(sub("\\(\\)$", "", context), envir = topenv(environment(context_arg_names)), mode = "function")
+  if (is.null(fn)) return(character())
+  setdiff(names(formals(fn)), c("spec", "which", "..."))
 }
 
 # Warns on a mark/interactor argument whose name is a known mosaic-spec
@@ -195,7 +235,7 @@ warn_unrecognized_mark_args <- function(args, mark) {
   warn_unrecognized_args(
     args, .vg_mark_own_props[[mark]], "mark", mark,
     extra_handled = c("data_from", "filter_by", "data_optimize"),
-    suggest_extra = vg_plot_level_args(),
+    suggest_extra = vg_plot_level_arg_names(),
     effect = "affect the rendered graphic"
   )
 }
@@ -206,7 +246,7 @@ warn_unrecognized_mark_args <- function(args, mark) {
 warn_unrecognized_interactor_args <- function(args, interactor, kind = "interactor") {
   warn_unrecognized_args(
     args, .vg_interactor_own_props[[interactor]], kind, interactor,
-    suggest_extra = if (kind == "interactor") vg_plot_level_args() else character()
+    suggest_extra = if (kind == "interactor") vg_plot_level_arg_names() else character()
   )
 }
 

@@ -428,11 +428,12 @@ serialize_expr <- function(expr, env) {
         "Only simple column references (e.g., ~Date), sql()/agg(), or known ",
         "transform functions (", paste(names(vg_transform_specs), collapse = "(), "), "()) ",
         "can be used inside a mapping formula. Got a call to `", fn_name, "()`.",
+        transform_name_suggestion(fn_name),
         call. = FALSE
       )
     }
     fn <- get(fn_name, mode = "function")
-    mc <- match.call(definition = fn, call = expr)
+    mc <- match_transform_call(fn_name, fn, expr)
     serialize_transform(build_vg_transform(spec, mc, env))
   } else if (is.numeric(expr) || is.character(expr) || is.logical(expr) || is.null(expr)) {
     expr

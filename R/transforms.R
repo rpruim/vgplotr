@@ -43,6 +43,83 @@ build_vg_transform <- function(spec, mc, env) {
 
 is_vg_transform <- function(x) inherits(x, "vg_transform")
 
+# A transform written inside a mapping formula (`~vg_bin(delay, step = 10)`)
+# is never *called* -- serialize_expr() (R/serialize.R) reads it
+# syntactically with match.call() -- and that happens at render/export time,
+# well after the mark was built. A misspelled option there fails with R's own
+# bare "unused argument (stp = 10)", which doesn't even say which transform it
+# was about. So this is match.call() plus, when it fails on an unrecognized
+# *name*, an error that names the transform and suggests the closest valid
+# argument (or lists them, if none is close). Anything else that goes wrong
+# (a stray positional argument, an ambiguous partial name) re-raises R's own
+# error untouched. `expr` is the unevaluated call, `fn` the transform.
+match_transform_call <- function(fn_name, fn, expr) {
+  tryCatch(
+    match.call(definition = fn, call = expr),
+    error = function(e) {
+      valid <- names(formals(fn))
+      supplied <- names(expr)[-1]
+      supplied <- supplied[!is.na(supplied) & nzchar(supplied)]
+      # match.call() accepts an unambiguous partial name (`inter =` for
+      # `interval`), so that's not "unrecognized" -- only a name that
+      # matches nothing is.
+      is_partial <- vapply(supplied, function(s) sum(startsWith(valid, s)) == 1, logical(1))
+      unknown <- supplied[!(supplied %in% valid) & !is_partial]
+      if (length(unknown) == 0) stop(e)
+
+      names_str <- paste0("`", unknown, "`", collapse = ", ")
+      subject <- if (length(unknown) == 1) {
+        paste0(names_str, " is not an argument of this transform.")
+      } else {
+        paste0(names_str, " are not arguments of this transform.")
+      }
+      suggestions <- lapply(unknown, function(nm) {
+        format_suggestion(
+          suggest_names(nm, valid, present = supplied),
+          arg = if (length(unknown) > 1) nm
+        )
+      })
+      suggestions <- unlist(suggestions)
+      if (length(suggestions) == 0) {
+        suggestions <- paste0("Its arguments are ", paste0("`", valid, "`", collapse = ", "), ".")
+      }
+      stop(paste(c(sprintf("In `%s()`: %s", fn_name, subject), suggestions), collapse = " "), call. = FALSE)
+    }
+  )
+}
+
+# " Did you perhaps mean `vg_bin()`?" (leading space, ready to append to an
+# error message) for a call to an unrecognized function inside a mapping
+# formula, or "" if nothing known is close. Draws on every transform plus
+# the sql()/agg()/param() calls a formula also accepts.
+#
+# The distance is measured on the full names, so a typo in the `vg_` prefix
+# itself (`vh_bin`) still counts as an edit -- but how many edits are
+# tolerated is worked out from the length of the name *without* that prefix.
+# The shared prefix pads every name's length, which used to make unrelated
+# names look close: `vg_hist` matched `vg_first` and `vg_last`, which are two
+# edits away from it, too far for a 4-letter name once the prefix is ignored.
+#
+# A name written without the prefix at all (`~bin(delay)`, `~count()`) is
+# a likely slip of its own -- and two whole characters from every match, so
+# no edit-distance rule would find it -- so if putting `vg_` in front of it
+# gives exactly a known name, that's the suggestion, and it beats a fuzzy
+# match (`avg` is one edit from `agg`, but `vg_avg` is what was meant). Only
+# an exact match counts there: a fuzzy one on top would be guessing twice,
+# and would tell a base-R `log(x)` to use `vg_lag()`.
+transform_name_suggestion <- function(fn_name) {
+  known <- c(names(vg_transform_specs), "sql", "agg", "param")
+  prefixed <- paste0("vg_", fn_name)
+  hits <- if (!startsWith(fn_name, "vg_") && prefixed %in% known) {
+    prefixed
+  } else {
+    bare_length <- nchar(gsub("[_.]", "", sub("^vg_", "", fn_name)))
+    similar_names(fn_name, known, limit = max(1L, bare_length %/% 3L))
+  }
+  if (length(hits) == 0) return("")
+  paste0(" ", format_suggestion(paste0(hits, "()")))
+}
+
 #' @export
 print.vg_transform <- function(x, ...) {
   field_str <- vapply(x$field, deparse_short, character(1))

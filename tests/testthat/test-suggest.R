@@ -151,3 +151,219 @@ test_that("a warning doesn't suggest a name that's already been supplied", {
   expect_length(w, 1)
   expect_no_match(w, "perhaps")
 })
+
+# --- scales, guides and the other plot-attribute setters -------------------
+
+test_that("a scale/guide warning suggests the constructor's own argument", {
+  expect_warning(vg_scale_x(domian = c(0, 1)), "In vg_scale_x\\(\\): `domian` is not a recognized.*Did you perhaps mean `domain`\\?")
+  expect_warning(vg_scale_color(schme = "blues"), "Did you perhaps mean `scheme`\\?")
+  expect_warning(vg_guide_x(tick_sise = 5), "Did you perhaps mean `tick_size`\\?")
+  expect_warning(vg_guide_color(tick_fromat = "d"), "Did you perhaps mean `tick_format`\\?")
+})
+
+test_that("a scale/guide warning also suggests plot attributes, spelled snake_case", {
+  expect_warning(vg_scale_x(x_domian = c(0, 1)), "Did you perhaps mean `x_domain`\\?")
+  expect_warning(vg_scale_all(colr_scheme = "blues"), "Did you perhaps mean `color_scheme`\\?")
+})
+
+test_that("vg_plot()/vg_attributes()/vg_plot_defaults() suggest plot attributes, spelled snake_case", {
+  expect_warning(vg_plot(NULL, marginLeftt = 5), "In vg_plot\\(\\).*Did you perhaps mean `margin_left`\\?")
+  expect_warning(vg_create() |> vg_attributes(xdomian = c(0, 1)), "In vg_attributes\\(\\).*Did you perhaps mean `x_domain`\\?")
+  expect_warning(vg_create() |> vg_plot_defaults(widht = 300), "In vg_plot_defaults\\(\\).*Did you perhaps mean `width`\\?")
+})
+
+test_that("a plot-attribute warning makes no suggestion when nothing is similar, and no longer gives stale camelCase advice", {
+  w <- character()
+  withCallingHandlers(
+    vg_scale_x(bogus = 1),
+    warning = function(cnd) {
+      w <<- c(w, conditionMessage(cnd))
+      invokeRestart("muffleWarning")
+    }
+  )
+  expect_length(w, 1)
+  expect_no_match(w, "perhaps")
+  expect_no_match(w, "camelCase")   # snake_case is what these functions document
+})
+
+test_that("spec metadata passed as a plot attribute is pointed at vg_meta(), not spell-checked", {
+  w <- character()
+  withCallingHandlers(
+    vg_create() |> vg_attributes(title = "T"),
+    warning = function(cnd) {
+      w <<- c(w, conditionMessage(cnd))
+      invokeRestart("muffleWarning")
+    }
+  )
+  expect_length(w, 1)
+  expect_match(w, "`title` is not a recognized mosaic-spec plot attribute")
+  expect_match(w, "`title` belongs in `vg_meta\\(\\)`\\.")
+  expect_no_match(w, "perhaps")
+
+  # more than one metadata name: plural
+  w <- character()
+  withCallingHandlers(
+    vg_create() |> vg_attributes(title = "T", credit = "C"),
+    warning = function(cnd) {
+      w <<- c(w, conditionMessage(cnd))
+      invokeRestart("muffleWarning")
+    }
+  )
+  expect_length(w, 1)
+  expect_match(w, "`title`, `credit` belong in `vg_meta\\(\\)`\\.")
+})
+
+test_that("with several unrecognized attributes, each suggestion says which one it's for", {
+  w <- character()
+  withCallingHandlers(
+    vg_create() |> vg_attributes(widht = 3, title = "T", bogus = 1),
+    warning = function(cnd) {
+      w <<- c(w, conditionMessage(cnd))
+      invokeRestart("muffleWarning")
+    }
+  )
+  expect_length(w, 1)
+  expect_match(w, "For `widht`, did you perhaps mean `width`\\?")
+  expect_no_match(w, "For `bogus`")
+  expect_match(w, "`title` belongs in `vg_meta\\(\\)`")
+})
+
+test_that("a mark's plot-attribute suggestions are spelled snake_case too", {
+  expect_warning(vg_mark_dot(x = ~a, y = ~b, x_domian = c(0, 1)), "Did you perhaps mean `x_domain`\\?")
+})
+
+test_that("context_arg_names() finds a constructor's user-facing arguments from its label", {
+  args <- context_arg_names("vg_scale_x()")
+  expect_true(all(c("domain", "range", "nice", "zero", "type") %in% args))
+  expect_false(any(c("spec", "which", "...") %in% args))
+  # arguments the x wrapper drops (they're y-only) aren't offered for it
+  expect_false("inset_top" %in% args)
+  expect_true("inset_left" %in% args)
+  expect_equal(context_arg_names("vg_attributes()"), character())
+  expect_equal(context_arg_names("not_a_function()"), character())
+})
+
+test_that("vg_plot_level_arg_names() is every plot attribute's snake_case spelling", {
+  nms <- vg_plot_level_arg_names()
+  expect_true(all(c("x_domain", "margin_left", "width") %in% nms))
+  expect_false("xDomain" %in% nms)
+  expect_length(nms, length(vg_plot_level_args()))
+})
+
+# --- transforms ------------------------------------------------------------
+
+serialize_with <- function(...) {
+  spec <- vg_create() |>
+    vg_data(name = "d", data = data.frame(delay = 1:3)) |>
+    vg_mark_dot(data_from = "d", ...)
+  as_spec_payload(spec)
+}
+
+test_that("a misspelled option inside a formula names the transform and suggests the right one", {
+  expect_error(
+    serialize_with(x = ~vg_bin(delay, stp = 10), y = ~vg_count()),
+    "In `vg_bin\\(\\)`: `stp` is not an argument of this transform\\. Did you perhaps mean `step`\\?"
+  )
+  expect_error(serialize_with(x = ~vg_bin(delay, nce = TRUE), y = ~vg_count()), "Did you perhaps mean `nice`\\?")
+})
+
+test_that("a misspelled option in a transform nested inside another is caught, too", {
+  expect_error(
+    serialize_with(x = ~delay, y = ~vg_avg(vg_bin(delay, stpe = 1))),
+    "In `vg_bin\\(\\)`: `stpe` is not an argument.*`step`"
+  )
+})
+
+test_that("several misspelled options each get their own suggestion", {
+  expect_error(
+    serialize_with(x = ~vg_bin(delay, stp = 10, intrval = "day"), y = ~vg_count()),
+    "`stp`, `intrval` are not arguments of this transform\\. For `stp`, did you perhaps mean `step`\\? For `intrval`, did you perhaps mean `interval`\\?"
+  )
+})
+
+test_that("with nothing similar, the error lists the transform's arguments instead", {
+  expect_error(
+    serialize_with(x = ~vg_bin(delay, bogus = 10), y = ~vg_count()),
+    "`bogus` is not an argument of this transform\\. Its arguments are `field`, `interval`, `step`, `steps`, `minstep`, `nice`, `offset`\\."
+  )
+})
+
+test_that("an unrecognized transform name is offered the closest known one", {
+  expect_error(serialize_with(x = ~vg_bn(delay), y = ~vg_count()), "Got a call to `vg_bn\\(\\)`\\. Did you perhaps mean `vg_bin\\(\\)`\\?")
+  expect_error(serialize_with(x = ~vg_bin(delay), y = ~vg_cont()), "Did you perhaps mean `vg_count\\(\\)`\\?")
+  # sql()/agg()/param() are accepted in a formula too
+  expect_error(serialize_with(x = ~sqll("a"), y = ~vg_count()), "Did you perhaps mean `sql\\(\\)`\\?")
+})
+
+test_that("an unrecognized function that resembles no transform gets no suggestion (and keeps the full list)", {
+  err <- tryCatch(serialize_with(x = ~sqrt(delay), y = ~vg_count()), error = function(e) conditionMessage(e))
+  expect_match(err, "Got a call to `sqrt\\(\\)`\\.$")
+  expect_match(err, "known transform functions \\(vg_bin\\(\\)")
+  expect_no_match(err, "perhaps")
+})
+
+test_that("valid transform calls -- including an unambiguous partial argument name -- are unaffected", {
+  expect_no_error(serialize_with(x = ~vg_bin(delay, step = 10), y = ~vg_count()))
+  expect_no_error(serialize_with(x = ~vg_bin(delay, inter = "day"), y = ~vg_count()))
+  expect_no_error(serialize_with(x = ~delay, y = ~vg_count()))
+})
+
+test_that("a transform error that isn't about an unrecognized name keeps R's own message", {
+  # too many positional arguments: nothing to suggest
+  expect_error(serialize_with(x = ~vg_bin(delay, 1, 2, 3, 4, 5, 6, 7, 8), y = ~vg_count()), "unused argument")
+})
+
+test_that("a direct call with a misspelled option is R's own error (which already names the call)", {
+  expect_error(vg_bin(delay, stp = 10), "unused argument")
+})
+
+test_that("match_transform_call() is match.call() when nothing is wrong", {
+  mc <- match_transform_call("vg_bin", vg_bin, quote(vg_bin(delay, step = 10)))
+  expect_equal(names(mc), c("", "field", "step"))
+})
+
+test_that("transform_name_suggestion() finds the closest transform for a typo", {
+  expect_equal(transform_name_suggestion("vg_bn"), " Did you perhaps mean `vg_bin()`?")
+  expect_equal(transform_name_suggestion("vg_stdev"), " Did you perhaps mean `vg_stddev()`?")
+  expect_equal(transform_name_suggestion("vg_meadian"), " Did you perhaps mean `vg_median()`?")
+  expect_equal(transform_name_suggestion("sqll"), " Did you perhaps mean `sql()`?")
+})
+
+test_that("a transform written without its vg_ prefix is pointed at the prefixed one", {
+  expect_equal(transform_name_suggestion("bin"), " Did you perhaps mean `vg_bin()`?")
+  expect_equal(transform_name_suggestion("count"), " Did you perhaps mean `vg_count()`?")
+  expect_equal(transform_name_suggestion("median"), " Did you perhaps mean `vg_median()`?")
+})
+
+test_that("a forgotten prefix beats a fuzzy match (avg is one edit from agg, but vg_avg is what was meant)", {
+  expect_equal(transform_name_suggestion("avg"), " Did you perhaps mean `vg_avg()`?")
+})
+
+test_that("a forgotten prefix is only recognised exactly, so base-R functions aren't second-guessed", {
+  expect_equal(transform_name_suggestion("log"), "")     # not `vg_lag()`
+  expect_equal(transform_name_suggestion("sqrt"), "")
+  expect_equal(transform_name_suggestion("paste"), "")
+  expect_equal(transform_name_suggestion("mean"), "")    # there's no vg_mean()
+})
+
+test_that("the shared vg_ prefix doesn't make unrelated transform names look close", {
+  # `hist` is two edits from `first` and `last`: too far for a 4-letter name,
+  # even though the full names differ by the same two edits out of 8
+  expect_equal(transform_name_suggestion("vg_hist"), "")
+  expect_equal(transform_name_suggestion("vg_mean"), "")
+  # ...but a typo *in* the prefix still counts as an edit
+  expect_equal(transform_name_suggestion("vh_bin"), " Did you perhaps mean `vg_bin()`?")
+})
+
+test_that("similar_names() accepts an explicit distance limit", {
+  pool <- c("vg_first", "vg_last")
+  expect_equal(similar_names("vg_hist", pool), c("vg_first", "vg_last"))   # default rule: 2 edits allowed
+  expect_equal(similar_names("vg_hist", pool, limit = 1), character())
+  expect_equal(similar_names("vg_hist", pool, limit = 2), c("vg_first", "vg_last"))
+})
+
+test_that("an unknown transform in a formula that is really a base-R function gets no misleading suggestion", {
+  err <- tryCatch(serialize_with(x = ~log(delay), y = ~vg_count()), error = function(e) conditionMessage(e))
+  expect_match(err, "Got a call to `log\\(\\)`\\.$")
+  expect_no_match(err, "perhaps")
+})
