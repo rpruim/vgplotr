@@ -113,6 +113,37 @@ warn_unknown_attrs <- function(names, context) {
   )
 }
 
+# Warns on a mark/interactor argument whose name is a known mosaic-spec
+# enum property (.vg_enum_props, R/attrs-generated.R) but whose value isn't
+# one of the recognized literals -- most often a typo (e.g.
+# curve = "cardinal-open" misspelled "cardinal_open") that would otherwise
+# only surface as a confusing failure deep inside mosaic's own JS, far from
+# the call that caused it. Only checks a plain length-1 character value: a
+# formula/vg_transform/vg_sql_expr (data references) or a vg_param()
+# (a reactive placeholder) is never a literal value to validate, and any
+# non-character/non-scalar value can't be enum-typed to begin with (an
+# enum property is always string-typed in the schema), so both pass
+# through untouched rather than risk a false positive.
+warn_unrecognized_enum_values <- function(args) {
+  for (nm in names(args)) {
+    allowed <- .vg_enum_props[[nm]]
+    if (is.null(allowed)) next
+    v <- args[[nm]]
+    if (inherits(v, "formula") || inherits(v, "vg_transform") || inherits(v, "vg_sql_expr") || is_vg_param(v)) next
+    if (!is.character(v) || length(v) != 1 || is.na(v)) next
+    if (!(v %in% allowed)) {
+      warning(
+        sprintf(
+          "`%s = \"%s\"` is not a recognized value -- check for a typo. Allowed values: %s.",
+          nm, v, paste0('"', allowed, '"', collapse = ", ")
+        ),
+        call. = FALSE
+      )
+    }
+  }
+  invisible(NULL)
+}
+
 # Like utils::modifyList(), but preserves an explicit NULL in `overrides`
 # (mosaic's way of unsetting/hiding something, e.g., `xAxis = NULL` to hide
 # an axis) instead of treating it as "remove this key" -- modifyList()'s

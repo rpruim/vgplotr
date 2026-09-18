@@ -619,3 +619,40 @@
   waffleX = TRUE,
   waffleY = TRUE
 )
+
+# Every recognized string literal for a given mark/interactor property
+# name (e.g. curve -> "basis", "bundle", ..., "step-before"), unioned
+# across every mark/interactor that declares it (enums are global by
+# property name in mosaic's schema, not truly per-mark -- see
+# data-raw/update-schema.R). Used by warn_unrecognized_enum_values()
+# (R/utils.R) to catch a likely-mistyped literal value at call time.
+.vg_enum_props <- list(
+  "clip" = c("frame", "sphere"),
+  "curve" = c("basis", "basis-closed", "basis-open", "bundle", "bump-x", "bump-y", "cardinal", "cardinal-closed", "cardinal-open", "catmull-rom", "catmull-rom-closed", "catmull-rom-open", "linear", "linear-closed", "monotone-x", "monotone-y", "natural", "step", "step-after", "step-before", "auto"),
+  "facet" = c("auto", "include", "exclude", "super"),
+  "facetAnchor" = c("top", "right", "bottom", "left", "top-left", "top-right", "bottom-left", "bottom-right", "top-empty", "right-empty", "bottom-empty", "left-empty", "empty"),
+  "offset" = c("center", "normalize", "wiggle"),
+  "order" = c("value", "x", "y", "z", "sum", "appearance", "inside-out", "-value", "-x", "-y", "-z", "-sum", "-appearance", "-inside-out"),
+  "select" = c("first", "last", "maxX", "maxY", "minX", "minY", "nearest", "nearestX", "nearestY", "point", "interval"),
+  "tip" = c("x", "y", "xy"),
+  "sweep" = c("+x", "-x", "+y", "-y"),
+  "anchor" = c("top", "right", "bottom", "left", "start", "middle", "end"),
+  "frameAnchor" = c("middle", "top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"),
+  "interval" = c("3 months", "10 years", "second", "minute", "hour", "day", "week", "month", "quarter", "half", "year", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "seconds", "minutes", "hours", "days", "weeks", "months", "quarters", "halfs", "years", "mondays", "tuesdays", "wednesdays", "thursdays", "fridays", "saturdays", "sundays"),
+  "labelAnchor" = c("top", "right", "bottom", "left", "center"),
+  "labelArrow" = c("auto", "up", "right", "down", "left", "none"),
+  "lineAnchor" = c("top", "middle", "bottom"),
+  "marker" = c("arrow", "arrow-reverse", "dot", "circle", "circle-fill", "circle-stroke", "tick", "tick-x", "tick-y", "none"),
+  "markerEnd" = c("arrow", "arrow-reverse", "dot", "circle", "circle-fill", "circle-stroke", "tick", "tick-x", "tick-y", "none"),
+  "markerMid" = c("arrow", "arrow-reverse", "dot", "circle", "circle-fill", "circle-stroke", "tick", "tick-x", "tick-y", "none"),
+  "markerStart" = c("arrow", "arrow-reverse", "dot", "circle", "circle-fill", "circle-stroke", "tick", "tick-x", "tick-y", "none"),
+  "textAnchor" = c("start", "middle", "end"),
+  "textOverflow" = c("clip", "ellipsis", "clip-start", "clip-end", "ellipsis-start", "ellipsis-middle", "ellipsis-end"),
+  "ticks" = c("3 months", "10 years", "second", "minute", "hour", "day", "week", "month", "quarter", "half", "year", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "seconds", "minutes", "hours", "days", "weeks", "months", "quarters", "halfs", "years", "mondays", "tuesdays", "wednesdays", "thursdays", "fridays", "saturdays", "sundays"),
+  "symbol" = c("asterisk", "circle", "cross", "diamond", "diamond2", "hexagon", "plus", "square", "square2", "star", "times", "triangle", "triangle2", "wye"),
+  "interpolate" = c("none", "linear", "nearest", "barycentric", "random-walk"),
+  "type" = c("dot", "circle", "hexagon", "cell", "text", "textX", "lineY", "dotY", "contains", "prefix", "suffix", "regexp"),
+  "normalize" = c("max", "sum", "none"),
+  "shape" = c("arrow", "spike"),
+  "listMatch" = c("any", "all")
+)

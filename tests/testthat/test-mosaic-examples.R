@@ -81,6 +81,80 @@ test_that("every mark/interactor/input type used in mosaic's own examples is rec
   }
 })
 
+# Recursively collects every (property name, value) pair anywhere in a
+# parsed spec whose name is a known enum property (.vg_enum_props,
+# R/attrs-generated.R) and whose value is a length-1 character -- the same
+# shape warn_unrecognized_enum_values() (R/utils.R) checks at call time.
+collect_enum_kv <- function(x) {
+  out <- list()
+  if (is.list(x)) {
+    nms <- names(x)
+    if (!is.null(nms)) {
+      for (nm in nms) {
+        if (nm %in% names(.vg_enum_props)) {
+          val <- x[[nm]]
+          if (is.character(val) && length(val) == 1) out[[length(out) + 1]] <- list(name = nm, value = val)
+        }
+      }
+    }
+    for (el in x) out <- c(out, collect_enum_kv(el))
+  }
+  out
+}
+
+test_that(".vg_enum_props recognizes every enum-typed literal value mosaic's own examples actually use", {
+  skip_if(length(fixture_files) == 0, "no vendored mosaic examples found")
+
+  # Three categories of raw-YAML `key: value` pair can't actually happen as
+  # a warn_unrecognized_enum_values(args) false positive, even though they
+  # show up walking the parsed YAML this way, so they're excluded here
+  # rather than chased as real gaps:
+  #  - `select`/`type` are structurally ambiguous key names reused for
+  #    something else entirely elsewhere in the same YAML (`select` is also
+  #    an embedded interactor's own discriminant and a param's Selection
+  #    strategy; `type` is also vg_data()'s spatial-source `type`) -- see
+  #    the `known_non_interactor_selects` comment above. A real
+  #    vg_mark()/vg_interactor() call never routes either through `...`
+  #    the way it would need to for this check to apply to them.
+  #  - a `$name` string is mosaic-spec's own serialized form of a param()
+  #    reference -- at the R level, warn_unrecognized_enum_values() sees
+  #    the actual vg_param object (and skips it) *before* serialization
+  #    ever turns it into this string.
+  #  - a bare column-reference shorthand (e.g. `symbol: species`, meaning
+  #    "vary this channel by the species column") serializes identically
+  #    to a literal enum string for one of the ~306 enum properties that
+  #    are really a ChannelValueSpec (mark.R's args_reference_data()
+  #    finding) -- at the R level this is a formula (`~species`), also
+  #    skipped before serialization, but indistinguishable from a literal
+  #    once it's already a plain YAML/JSON string.
+  ambiguous_keys <- c("select", "type")
+  bad <- character(0)
+  for (path in fixture_files) {
+    spec <- parse_spec_string(paste(readLines(path, warn = FALSE), collapse = "\n"))
+    for (kv in collect_enum_kv(spec)) {
+      if (kv$name %in% ambiguous_keys || startsWith(kv$value, "$")) next
+      if (!(kv$value %in% .vg_enum_props[[kv$name]])) {
+        bad <- c(bad, sprintf("%s: %s = \"%s\"", basename(path), kv$name, kv$value))
+      }
+    }
+  }
+  # symbols.yaml's `symbol: species` is a real, known instance of the
+  # column-reference-shorthand ambiguity above (Species is a real column
+  # in that example's data, not a SymbolType literal) -- excluded by name
+  # rather than lumped into ambiguous_keys, since `symbol` is a completely
+  # unambiguous literal enum property everywhere else it appears.
+  bad <- setdiff(bad, 'symbols.yaml: symbol = "species"')
+  expect_true(
+    length(bad) == 0,
+    info = paste(
+      "Value(s) mosaic's own examples use but .vg_enum_props doesn't",
+      "recognize (a false-positive risk for warn_unrecognized_enum_values()",
+      "-- rerun data-raw/update-schema.R, or check for a genuine schema",
+      "gap):", paste(bad, collapse = "; ")
+    )
+  )
+})
+
 test_that("the vocabulary actually exercised by mosaic's examples is stable", {
   skip_if(length(fixture_files) == 0, "no vendored mosaic examples found")
 

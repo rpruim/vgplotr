@@ -105,6 +105,7 @@ vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
   }
 
   split <- split_plot_args(args, protect = .vg_mark_own_props[[mark]])
+  warn_unrecognized_enum_values(args)
 
   mark_obj <- structure(
     list(mark = mark, encodings = split$local_args),

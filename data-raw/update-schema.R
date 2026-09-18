@@ -258,6 +258,56 @@ property_docs <- function(type_defs) {
 mark_prop_docs <- property_docs(mark_defs)
 interactor_prop_docs <- property_docs(interactor_defs)
 
+# Every string literal a property schema node accepts, found by walking
+# enum/const/$ref/anyOf/oneOf/allOf recursively -- covers both of mosaic's
+# two enum encodings (a real `enum: [...]` array, e.g. CurveName, and an
+# anyOf of `{const: "x"}` branches, e.g. textAnchor's start/middle/end).
+# Deliberately does NOT recurse into `properties`/`items` -- those describe
+# a nested object/array's own shape, not another alternative value for
+# *this* property -- so an open-ended ChannelValueSpec-style property (a
+# column reference, sql()/agg(), etc.) simply contributes no literals here
+# instead of pulling in unrelated schema fragments. A ParamRef branch
+# (`{type: "string"}`, no enum/const) also naturally contributes nothing,
+# so it doesn't need special-casing either.
+collect_enum_values <- function(node, defs, seen = character(), depth = 0) {
+  if (depth > 8 || is.null(node)) return(character())
+  vals <- character()
+  if (is.character(node$const)) vals <- c(vals, node$const)
+  if (!is.null(node$enum)) {
+    ev <- unlist(node$enum)
+    if (is.character(ev)) vals <- c(vals, ev)
+  }
+  if (!is.null(node$`$ref`)) {
+    rn <- ref_name(node)
+    if (!(rn %in% seen)) vals <- c(vals, collect_enum_values(defs[[rn]], defs, c(seen, rn), depth + 1))
+  }
+  for (key in c("anyOf", "oneOf", "allOf")) {
+    for (b in node[[key]]) vals <- c(vals, collect_enum_values(b, defs, seen, depth + 1))
+  }
+  vals
+}
+
+# Enums are global by property name, not per-mark (confirmed empirically:
+# curve/frameAnchor/interpolate/etc. resolve to the identical shared
+# definition everywhere they appear) -- so this unions every mark/
+# interactor's allowed values into one lookup per property name. Slightly
+# more permissive than strictly correct in the few cases where one mark
+# allows an extra literal a sibling mark doesn't (e.g. curve: "auto" on
+# Line/Density* but not Area* marks), which matches the "warn, don't
+# over-restrict" philosophy call-time validation is for.
+property_enums <- function(type_defs, defs) {
+  out <- list()
+  for (nm in names(type_defs)) {
+    props <- type_defs[[nm]]$properties
+    for (p in names(props)) {
+      vals <- unique(collect_enum_values(props[[p]], defs))
+      if (length(vals)) out[[p]] <- union(or_else(out[[p]], character()), vals)
+    }
+  }
+  out
+}
+enum_props <- property_enums(c(mark_defs, interactor_defs), defs)
+
 # Builds one vg_<name>() function + its roxygen block. `helper` is the
 # shared runtime function (vg_mark_()/vg_interactor_()) that drops any
 # still-`vg_unset` argument before dispatching to the generic constructor.
@@ -481,6 +531,16 @@ attr_lines <- c(
   "# when the caller didn't supply one.",
   ".vg_mark_has_data <- c(",
   paste0('  ', names(mark_has_data), ' = ', ifelse(mark_has_data, "TRUE", "FALSE"), collapse = ",\n"),
+  ")",
+  "",
+  "# Every recognized string literal for a given mark/interactor property",
+  "# name (e.g. curve -> \"basis\", \"bundle\", ..., \"step-before\"), unioned",
+  "# across every mark/interactor that declares it (enums are global by",
+  "# property name in mosaic's schema, not truly per-mark -- see",
+  "# data-raw/update-schema.R). Used by warn_unrecognized_enum_values()",
+  "# (R/utils.R) to catch a likely-mistyped literal value at call time.",
+  ".vg_enum_props <- list(",
+  format_named_char_list(enum_props),
   ")"
 )
 writeLines(attr_lines, "R/attrs-generated.R")
