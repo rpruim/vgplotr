@@ -367,3 +367,81 @@ test_that("an unknown transform in a formula that is really a base-R function ge
   expect_match(err, "Got a call to `log\\(\\)`\\.$")
   expect_no_match(err, "perhaps")
 })
+
+# --- enum values -----------------------------------------------------------
+
+enum_warning <- function(expr) {
+  w <- character()
+  withCallingHandlers(
+    expr,
+    warning = function(cnd) {
+      w <<- c(w, conditionMessage(cnd))
+      invokeRestart("muffleWarning")
+    }
+  )
+  w
+}
+
+test_that("an enum value is offered the closest recognized value, ignoring separators and case", {
+  expect_warning(warn_unrecognized_enum_values(list(curve = "cardinal_open")), "Did you perhaps mean `\"cardinal-open\"`\\?")
+  expect_warning(warn_unrecognized_enum_values(list(curve = "cardinalOpen")), "Did you perhaps mean `\"cardinal-open\"`\\?")
+  expect_warning(warn_unrecognized_enum_values(list(curve = "cardinalopen")), "Did you perhaps mean `\"cardinal-open\"`\\?")
+  expect_warning(warn_unrecognized_enum_values(list(curve = "Natural")), "Did you perhaps mean `\"natural\"`\\?")
+  expect_warning(warn_unrecognized_enum_values(list(curve = "NATURAL")), "Did you perhaps mean `\"natural\"`\\?")
+  expect_warning(warn_unrecognized_enum_values(list(frameAnchor = "top_left")), "Did you perhaps mean `\"top-left\"`\\?")
+})
+
+test_that("an enum value is offered the closest recognized value for an ordinary typo", {
+  expect_warning(warn_unrecognized_enum_values(list(curve = "natral")), "Did you perhaps mean `\"natural\"`\\?")
+  expect_warning(warn_unrecognized_enum_values(list(curve = "step-befor")), "Did you perhaps mean `\"step-before\"`\\?")
+  expect_warning(warn_unrecognized_enum_values(list(symbol = "circel")), "Did you perhaps mean `\"circle\"`\\?")   # swap
+  expect_warning(warn_unrecognized_enum_values(list(facet = "includ")), "Did you perhaps mean `\"include\"`\\?")
+})
+
+test_that("with a suggestion the long list of allowed values is left out; without one it's kept", {
+  w <- enum_warning(warn_unrecognized_enum_values(list(curve = "cardinal_open")))
+  expect_length(w, 1)
+  expect_no_match(w, "Allowed values")
+
+  w <- enum_warning(warn_unrecognized_enum_values(list(curve = "smooth")))
+  expect_length(w, 1)
+  expect_match(w, "Allowed values: \"basis\"")
+  expect_no_match(w, "perhaps")
+})
+
+test_that("a tie between recognized values offers every one of them", {
+  expect_warning(warn_unrecognized_enum_values(list(tip = "xx")), "Did you perhaps mean `\"x\"` or `\"xy\"`\\?")
+  expect_warning(warn_unrecognized_enum_values(list(curve = "monotone")), "`\"monotone-x\"` or `\"monotone-y\"`")
+})
+
+test_that("a leading sign on a value is significant, not a separator", {
+  # `-value` is a descending order, not a spelling of `value`
+  expect_warning(warn_unrecognized_enum_values(list(order = "-valu")), "Did you perhaps mean `\"-value\"`\\?$")
+  expect_warning(warn_unrecognized_enum_values(list(order = "valu")), "Did you perhaps mean `\"value\"`\\?$")
+})
+
+test_that("similar_names() ignores hyphens and spaces inside a name but not a leading sign", {
+  expect_equal(similar_names("cardinal_open", c("cardinal-open", "basis")), "cardinal-open")
+  expect_equal(similar_names("3month", c("3 months", "second")), "3 months")
+  expect_equal(similar_names("-valu", c("value", "-value")), "-value")
+})
+
+test_that("the color -> fill/stroke rule is about argument names and never rewrites a value", {
+  w <- enum_warning(warn_unrecognized_enum_values(list(symbol = "color")))
+  expect_length(w, 1)
+  expect_no_match(w, "fill|stroke")
+})
+
+test_that("an enum-value suggestion is made for marks, interactors and inputs alike", {
+  expect_warning(vg_mark_line(x = ~a, y = ~b, curve = "cardinal_open"), "Did you perhaps mean `\"cardinal-open\"`\\?")
+  expect_warning(vg_mark_dot(x = ~a, y = ~b, frame_anchor = "top_left"), "`frameAnchor = \"top_left\"`.*`\"top-left\"`")
+  expect_warning(vg_mark_dot(x = ~a, y = ~b, select = "nearstX"), "Did you perhaps mean `\"nearestX\"`\\?")
+  expect_warning(vg_slider(column = "a", select = "pont"), "Did you perhaps mean `\"point\"`\\?")
+  expect_warning(vg_menu(column = "a", list_match = "al"), "`listMatch = \"al\"`.*`\"all\"`")
+})
+
+test_that("a valid enum value, a formula, or a param() never gets a suggestion", {
+  expect_no_warning(vg_mark_line(x = ~a, y = ~b, curve = "cardinal-open"))
+  expect_no_warning(vg_mark_line(x = ~a, y = ~b, curve = ~my_curve_col))
+  expect_no_warning(vg_mark_line(x = ~a, y = ~b, curve = param("c")))
+})

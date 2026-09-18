@@ -164,6 +164,14 @@ context_arg_names <- function(context) {
 # non-character/non-scalar value can't be enum-typed to begin with (an
 # enum property is always string-typed in the schema), so both pass
 # through untouched rather than risk a false positive.
+#
+# The warning offers the closest recognized value(s) (R/suggest.R) --
+# `cardinal_open`, `cardinalOpen` and `Cardinal-Open` are all one edit-free
+# step from `cardinal-open` -- and lists every allowed value only when none
+# is close, since a long list (`curve` has 21) is just noise next to a
+# confident suggestion. It deliberately uses similar_names(), not
+# suggest_names(): the color -> fill/stroke rule is about argument *names*
+# and has no business rewriting a value.
 warn_unrecognized_enum_values <- function(args) {
   for (nm in names(args)) {
     allowed <- .vg_enum_props[[nm]]
@@ -172,11 +180,14 @@ warn_unrecognized_enum_values <- function(args) {
     if (inherits(v, "formula") || inherits(v, "vg_transform") || inherits(v, "vg_sql_expr") || is_vg_param(v)) next
     if (!is.character(v) || length(v) != 1 || is.na(v)) next
     if (!(v %in% allowed)) {
+      closest <- similar_names(v, allowed)
+      detail <- if (length(closest) > 0) {
+        format_suggestion(paste0('"', closest, '"'))
+      } else {
+        sprintf("Check for a typo. Allowed values: %s.", paste0('"', allowed, '"', collapse = ", "))
+      }
       warning(
-        sprintf(
-          "`%s = \"%s\"` is not a recognized value -- check for a typo. Allowed values: %s.",
-          nm, v, paste0('"', allowed, '"', collapse = ", ")
-        ),
+        sprintf('`%s = "%s"` is not a recognized value. %s', nm, v, detail),
         call. = FALSE
       )
     }

@@ -19,8 +19,11 @@
 
 # The valid names in `candidates` closest to `name`, or character(0) if
 # nothing is close enough to be worth suggesting. Compared ignoring case and
-# `_`/`.` (so `fill_opacity`, `fillopacity` and `fillOpacity` are all the
-# same name), but the candidates come back exactly as spelled. Like git,
+# `-`, `_`, `.` and spaces (so `fill_opacity`, `fillopacity` and `fillOpacity`
+# are all the same name -- and `cardinal_open` the same value as
+# `cardinal-open`), but the candidates come back exactly as spelled. A
+# *leading* `-`/`+` is kept, since it means something (an `order` of
+# `-value` is descending, not a spelling of `value`). Like git,
 # only the *best* match is offered -- every candidate tied for the smallest
 # distance, never a runner-up -- and only if that distance is small relative
 # to the name's length (about one edit per three characters, at least one),
@@ -31,7 +34,7 @@
 # for a caller that knows better than the name's own length (see
 # transform_name_suggestion(), R/transforms.R).
 similar_names <- function(name, candidates, max_suggestions = 3, limit = NULL) {
-  norm <- function(x) tolower(gsub("[_.]", "", x))
+  norm <- function(x) tolower(gsub("(?<!^)-|[_. ]", "", x, perl = TRUE))
   candidates <- unique(candidates)
   target <- norm(name)
   if (length(candidates) == 0 || !nzchar(target)) return(character())

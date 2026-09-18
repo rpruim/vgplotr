@@ -1,7 +1,14 @@
-test_that("warn_unrecognized_enum_values() warns on an unrecognized enum value, listing the allowed values", {
+test_that("warn_unrecognized_enum_values() warns on an unrecognized enum value, listing the allowed values when none is close", {
+  expect_warning(
+    warn_unrecognized_enum_values(list(curve = "smooth")),
+    "curve.*smooth.*not a recognized value.*Check for a typo.*basis.*step-before"
+  )
+})
+
+test_that("warn_unrecognized_enum_values() suggests the closest value instead of listing them all", {
   expect_warning(
     warn_unrecognized_enum_values(list(curve = "cardinal_open")),
-    "curve.*cardinal_open.*not a recognized value.*basis.*step-before"
+    "`curve = \"cardinal_open\"` is not a recognized value\\. Did you perhaps mean `\"cardinal-open\"`\\?$"
   )
 })
 
