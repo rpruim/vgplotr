@@ -193,6 +193,14 @@ warn_unrecognized_interactor_args <- function(args, interactor, kind = "interact
   warn_unrecognized_args(args, .vg_interactor_own_props[[interactor]], kind, interactor)
 }
 
+# A legend's options aren't split into plot attributes (vg_legend() takes
+# `type` and `for_plot` as its own arguments, so everything in `...` is an
+# option), and the same property set (.vg_legend_props) applies to all three
+# legend types.
+warn_unrecognized_legend_args <- function(args, type) {
+  warn_unrecognized_args(args, .vg_legend_props, "legend", type)
+}
+
 # A suggestion for one unrecognized argument, or NULL if there's nothing
 # useful to say. `color`/`colour` is by far the most common mistake --
 # mosaic (like Observable Plot) has no such channel, only `fill` (the

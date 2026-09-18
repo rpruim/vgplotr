@@ -320,6 +320,23 @@
   "table" = c("align", "as", "columns", "filterBy", "from", "height", "maxWidth", "rowBatch", "width")
 )
 
+# Every option a legend (vg_legend()/vg_legend_color()/etc.) accepts --
+# the same set for all three legend types. Used by
+# warn_unrecognized_legend_args() (R/utils.R).
+.vg_legend_props <- c(
+  "as",
+  "columns",
+  "field",
+  "height",
+  "label",
+  "marginBottom",
+  "marginLeft",
+  "marginRight",
+  "marginTop",
+  "tickSize",
+  "width"
+)
+
 # snake_case -> exact camelCase mosaic-spec key for every plot attribute,
 # e.g., x_domain -> xDomain. vg_plot()/vg_plot_defaults()/vg_attributes()/
 # vg_create() (and the mark/interactor "attribute riding along" path in

@@ -24,7 +24,11 @@ using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconca
 \item{type}{The legend type: \code{"color"}, \code{"opacity"}, or \code{"symbol"}.}
 
 \item{...}{Legend options, e.g., \code{as = param(brush)}, \code{label = "Species"},
-\verb{field =}, \verb{tickSize =}, \verb{columns =}, or margin/width/height settings.}
+\verb{field =}, \verb{tickSize =}, \verb{columns =}, or margin/width/height settings.
+Options are taken under mosaic-spec's own camelCase names
+(\verb{tickSize =}, \verb{marginLeft =}), unlike the snake_case of marks and
+interactors. An argument that isn't an option of a legend in
+mosaic-spec warns, since mosaic would silently ignore it.}
 
 \item{for_plot}{For a standalone legend: the \code{name} of the plot it
 decorates.}

@@ -15,11 +15,16 @@ NULL
 #' @param type The legend type: `"color"`, `"opacity"`, or `"symbol"`.
 #' @param ... Legend options, e.g., `as = param(brush)`, `label = "Species"`,
 #'   `field =`, `tickSize =`, `columns =`, or margin/width/height settings.
+#'   Options are taken under mosaic-spec's own camelCase names
+#'   (`tickSize =`, `marginLeft =`), unlike the snake_case of marks and
+#'   interactors. An argument that isn't an option of a legend in
+#'   mosaic-spec warns, since mosaic would silently ignore it.
 #' @param for_plot For a standalone legend: the `name` of the plot it
 #'   decorates.
 #' @family legend functions
 #' @export
 vg_legend <- function(spec = NULL, type, ..., for_plot = NULL) {
+  warn_unrecognized_legend_args(list(...), type)
   legend_obj <- structure(
     list(type = type, for_plot = for_plot, options = list(...)),
     class = "vg_legend"

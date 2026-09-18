@@ -179,6 +179,18 @@ plot_attrs <- sort(names(defs$PlotAttributes$properties))
 mark_own_props <- lapply(mark_defs, function(m) sort(names(m$properties)))
 interactor_own_props <- lapply(interactor_defs, function(m) sort(names(m$properties)))
 
+# A legend's properties (PlotLegend -- the same set for all three legend
+# types, color/opacity/symbol, which differ only in the `legend` value
+# itself). Excludes the `legend` discriminant, which vg_legend() takes as
+# its own `type` argument; the standalone form's extra `for` property (the
+# separate `Legend` def) is likewise vg_legend()'s own `for_plot` argument,
+# not an option. Used by warn_unrecognized_legend_args() (R/utils.R) to
+# catch an option mosaic would silently ignore. Legend *constructors* stay
+# hand-written (R/legend.R) -- only this property list is schema-derived,
+# so it can't go stale when MOSAIC_VERSION is bumped.
+stopifnot(!is.null(defs$PlotLegend$properties))
+legend_props <- sort(setdiff(names(defs$PlotLegend$properties), "legend"))
+
 cat(length(mark_defs), "marks,", length(interactor_types), "interactors,",
     length(input_types), "inputs,", length(plot_attrs), "plot attributes\n")
 
@@ -509,6 +521,13 @@ attr_lines <- c(
   "",
   ".vg_interactor_own_props <- list(",
   format_named_char_list(interactor_own_props),
+  ")",
+  "",
+  "# Every option a legend (vg_legend()/vg_legend_color()/etc.) accepts --",
+  "# the same set for all three legend types. Used by",
+  "# warn_unrecognized_legend_args() (R/utils.R).",
+  ".vg_legend_props <- c(",
+  paste0('  "', legend_props, '"', collapse = ",\n"),
   ")",
   "",
   "# snake_case -> exact camelCase mosaic-spec key for every plot attribute,",
