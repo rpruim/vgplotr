@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 if (!exists("vg_render_mode")) vg_render_mode <- "auto"
 ```
 
-# {vgplotr}: An R interface to Mosaic vgplot
+# vgplotr: An R interface to Mosaic vgplot
 
 ## What is Mosaic?
 
@@ -33,7 +33,7 @@ As the name suggests, vgplot combines concepts from existing tools such as Vega-
 
 ## Bringing Mosaic to R
 
-The goal of {vgplotr} is to bring Mosaic functionality to R
+The goal of vgplotr is to bring Mosaic functionality to R
 in a way that feels familiar to R users.
 
 ```{r}
@@ -46,7 +46,7 @@ Births2015 |>
 ```
 
 Here is an example that shows some of the interactive
-capabilities of {vgplotr}:
+capabilities of vgplotr:
 
 ```{r}
 #| label: stocks

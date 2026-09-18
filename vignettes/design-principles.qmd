@@ -1,7 +1,7 @@
 ---
-title: "{vgplotr} Design Principles"
+title: "vgplotr Design Principles"
 vignette: >
-  %\VignetteIndexEntry{{vgplotr} Design Principles}
+  %\VignetteIndexEntry{vgplotr Design Principles}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 knitr:
@@ -24,7 +24,7 @@ library(palmerpenguins)
 Part of learning a new graphics system is learning the 
 principles that were used in its design.  This
 vignette lays out some of the important vocabulary,
-concepts, and design principles used to create {vgplotr},
+concepts, and design principles used to create vgplotr,
 many of which are inherited either from mosaic or
 from the grammar of graphics more generally.
 
@@ -32,7 +32,7 @@ from the grammar of graphics more generally.
 
 A **graphic** is a visual^[Perhaps *sensory* would be 
 better than visual, since once could make tactile
-representations of data as well. But since {vgplotr}
+representations of data as well. But since vgplotr
 is concerned with *visual* representations, we will
 stick with visual here.] 
 display of data.  Leland Wilkerson proposed a 
@@ -48,7 +48,7 @@ Tableu (where Wilkinson lead the graphics team),
 ggplot2 for graphics in R, and 
 vega-lite, which is familiar to Python users via the altair package.
 In some of these systems, the code resembles the grammar
-especially closely.  Mosaic, and hence {vgplotr}, is
+especially closely.  Mosaic, and hence vgplotr, is
 one of those systems.
 
 Instead of focusing on providing 
@@ -66,7 +66,7 @@ marks.
 
 Below is a list of 
 important components of the grammar of graphics,
-using terminology to match {vgplotr} (with other commonly used
+using terminology to match vgplotr (with other commonly used
 terminology in parentheses).
 
 graphic
@@ -118,16 +118,16 @@ A **specification** describes the marks, attributes,
 scales, guides, transformations, etc. and how they are 
 to be combined to produce a graphic.  Mosaic specifications
 can be written in JSON, YAML, javascript, or Python.
-{vgplotr} proivdes a way to produce specifications in R.
+vgplotr proivdes a way to produce specifications in R.
 
 
-# Code conventions used in {vgplotr}
+# Code conventions used in vgplotr
 
 ## snake_case
 
 Various mosaic APIs use either camelCase or snake_case
 for names of elements of a mosaic specification.
-{vgplotr} adopts snake_case (as does the Python API).
+vgplotr adopts snake_case (as does the Python API).
 To translate camelCase to snake_case, simply insert
 an underscore before any block of capitals and then
 make all letters lower case as in the examples below.
@@ -147,7 +147,7 @@ tribble(
 This makes it easy to translate documentation written
 for one naming style into the other.
 
-Nearly all functions in {vgplotr} begin `vg_`.
+Nearly all functions in vgplotr begin `vg_`.
 Functions for specifying marks begin `vg_mark_`,
 for scales, `vg_scale_`, for guides `vg_guide_`, etc.
 Generally, the names resemble the names used 

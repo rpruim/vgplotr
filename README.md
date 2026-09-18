@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# {vgplotr}: An R interface to Mosaic vgplot
+# vgplotr: An R interface to Mosaic vgplot
 
 ## What is Mosaic?
 
@@ -28,8 +28,8 @@ Observable Plot to render SVG output.
 
 ## Bringing Mosaic to R
 
-The goal of {vgplotr} is to bring Mosaic functionality to R in a way
-that feels familiar to R users.
+The goal of vgplotr is to bring Mosaic functionality to R in a way that
+feels familiar to R users.
 
 ``` r
 library(vgplotr)
@@ -43,7 +43,7 @@ Births2015 |>
 <img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
 
 Here is an example that shows some of the interactive capabilities of
-{vgplotr}:
+vgplotr:
 
 ``` r
 library(vgplotr)

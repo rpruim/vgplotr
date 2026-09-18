@@ -1,5 +1,5 @@
 ---
-title: "{vgplotr} Examples"
+title: "vgplotr Examples"
 ---
 
 Worked examples recreating pages from mosaic/vgplot's own [example gallery](https://idl.uw.edu/mosaic/examples/), organized by topic.
