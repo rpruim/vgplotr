@@ -176,3 +176,46 @@ test_that("the vocabulary actually exercised by mosaic's examples is stable", {
   expect_snapshot(sort(unique(all_inputs)))
   expect_snapshot(sort(unique(all_selects)))
 })
+
+# Every key anywhere in a parsed spec, at any depth.
+collect_names <- function(x) {
+  out <- character(0)
+  if (is.list(x)) {
+    out <- c(out, names(x))
+    for (el in x) out <- c(out, collect_names(el))
+  }
+  out
+}
+
+test_that("no mosaic example parses to a key named TRUE/FALSE (an unquoted y/n read as a YAML 1.1 boolean)", {
+  # The vocabulary tests above only ever look at `mark:`/`select:`/`input:`
+  # *values*, so a key mangled to "TRUE" -- an unquoted `y` in a flow mapping
+  # like `{x: a, y: b}`, in `sort: {y: ...}`, or in `tip: {format: {y: ...}}`
+  # -- went unnoticed for seven of these files.
+  skip_if(length(fixture_files) == 0, "no vendored mosaic examples found")
+  for (path in fixture_files) {
+    spec <- parse_spec_string(paste(readLines(path, warn = FALSE), collapse = "\n"))
+    bad <- intersect(collect_names(spec), c("TRUE", "FALSE", "NA"))
+    expect_true(
+      length(bad) == 0,
+      info = sprintf("%s has a key parsed as %s -- a bool-like word read as a YAML 1.1 boolean", basename(path), paste(bad, collapse = ", "))
+    )
+  }
+})
+
+test_that("mosaic's own `y` keys survive in the examples that use them", {
+  # (each of these has an unquoted `y` in a flow mapping or a nested mapping)
+  for (name in c("splom", "pan-zoom", "mark-types", "athlete-height", "sorted-bars", "observable-latency", "wnba-shots")) {
+    path <- testthat::test_path("fixtures", "mosaic-examples", paste0(name, ".yaml"))
+    skip_if_not(file.exists(path), paste("missing fixture", name))
+    spec <- parse_spec_string(paste(readLines(path, warn = FALSE), collapse = "\n"))
+    expect_true("y" %in% collect_names(spec), info = paste(name, "lost its `y` key"))
+  }
+})
+
+test_that("an unquoted `Y` menu label in mosaic's symbols example is the string \"Y\", not TRUE", {
+  path <- testthat::test_path("fixtures", "mosaic-examples", "symbols.yaml")
+  skip_if_not(file.exists(path), "missing fixture symbols.yaml")
+  spec <- parse_spec_string(paste(readLines(path, warn = FALSE), collapse = "\n"))
+  expect_true("Y" %in% collect_type_refs(spec, "label"))
+})

@@ -96,7 +96,10 @@ parse_spec_string <- function(text) {
     if (is_json) {
       jsonlite::fromJSON(text, simplifyVector = FALSE)
     } else {
-      yaml::yaml.load(quote_yaml_bool_keys(text), handlers = list(int = yaml_int_handler))
+      yaml::yaml.load(
+        text,
+        handlers = list(int = yaml_int_handler, "bool#yes" = yaml_bool_handler, "bool#no" = yaml_bool_handler)
+      )
     },
     error = function(e) {
       stop(
@@ -118,33 +121,36 @@ parse_spec_string <- function(text) {
   parsed
 }
 
-# YAML 1.1 (what libyaml/the yaml package implements) resolves a handful of
-# short, unquoted words as booleans: y/n/on/off/yes/no (any case), on top of
-# the unambiguous true/false. That's a real hazard here specifically because
-# `y` -- as in the *x*/*y* encoding channel, one of the most common property
-# names in a mosaic spec -- silently becomes the logical TRUE if left
-# unquoted, which R then coerces to the list name "TRUE" (confirmed
-# directly: `yaml::yaml.load("y: b")` returns a list named "TRUE", not
-# "y"). The yaml package's own `handlers` argument can't fix this: it's
-# never invoked for *implicit* type resolution at all (confirmed directly
-# -- a custom "bool" handler simply never fires), only for explicit `!!tag`
-# annotations. So this quotes those specific bare words when they appear as
-# a mapping key, before parsing, leaving true/false (unambiguous, and what
-# to_yaml() itself always emits for real booleans) alone.
-quote_yaml_bool_keys <- function(text) {
-  bool_words <- c("y", "Y", "yes", "Yes", "YES", "n", "N", "no", "No", "NO",
-                   "on", "On", "ON", "off", "Off", "OFF")
-  pattern <- paste0(
-    "^(\\s*(?:-\\s+)?)(", paste(bool_words, collapse = "|"), ")(\\s*:)(\\s|$)"
-  )
-  lines <- strsplit(text, "\n", fixed = TRUE)[[1]]
-  lines <- vapply(
-    lines,
-    function(line) sub(pattern, "\\1'\\2'\\3\\4", line, perl = TRUE),
-    character(1),
-    USE.NAMES = FALSE
-  )
-  paste(lines, collapse = "\n")
+# The `yaml` package implements YAML 1.1, which resolves a handful of short,
+# unquoted words as booleans -- y/n/yes/no/on/off (any case) on top of
+# true/false -- but the JavaScript YAML parsers a mosaic spec is written for
+# (`yaml` and `js-yaml`, both checked directly on the same inputs, and both
+# agreeing exactly) follow YAML 1.2, where *only* true/True/TRUE and false/
+# False/FALSE are booleans and everything else is a plain string. That
+# matters for the very common `y` (as in the x/y encoding channel): an
+# unquoted `y` silently became the logical TRUE -- as a mapping key, R then
+# coerces it to the list name "TRUE" -- and equally as a *value* (`x: y`, a
+# column named y; a legend `label: Y`; `channels: [x, y]`). The two are the
+# same bug, so this fixes both at the parser: yaml.load()'s `bool#yes`/
+# `bool#no` handlers fire for every implicit boolean (keys and values, block
+# and flow style alike) and are given the original text, so resolving it the
+# 1.2 way is just: the six real spellings become logicals, and anything else
+# stays the string it was written as.
+#
+# (An earlier version of this file rewrote the *text* with a regex to quote
+# `y:` at the start of a line. That missed flow mappings (`{x: a, y: b}`) and
+# every value, and, being blind to context, even rewrote prose inside a `|`
+# block scalar. It had also concluded that handlers can't reach implicit
+# booleans -- true only of the handler name it tried, `bool`; the actual
+# names are `bool#yes` and `bool#no`.)
+yaml_bool_handler <- function(x) {
+  if (x %in% c("true", "True", "TRUE")) {
+    TRUE
+  } else if (x %in% c("false", "False", "FALSE")) {
+    FALSE
+  } else {
+    x
+  }
 }
 
 # yaml::yaml.load()'s default implicit-integer resolution parses a

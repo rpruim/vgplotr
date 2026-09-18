@@ -263,7 +263,7 @@ plot:
   expect_equal(payload$spec$plot[[1]]$y, "b")
 })
 
-test_that("as_spec_payload() leaves real YAML booleans (true/false) as logicals, keys and values alike", {
+test_that("as_spec_payload() leaves real YAML booleans (true/false, in all three YAML 1.2 casings) as logicals", {
   yml <- "
 plot:
   - mark: dot
@@ -271,13 +271,105 @@ plot:
     y: b
     tip: true
     no_border: false
-    label: yes
+    a: True
+    b: FALSE
+    c: TRUE
+    d: False
 "
   payload <- as_spec_payload(yml)
   mark <- payload$spec$plot[[1]]
   expect_identical(mark$tip, TRUE)
   expect_identical(mark$no_border, FALSE)
-  expect_identical(mark$label, TRUE) # unquoted `yes` as a *value* is legitimately boolean
+  expect_identical(mark$a, TRUE)
+  expect_identical(mark$b, FALSE)
+  expect_identical(mark$c, TRUE)
+  expect_identical(mark$d, FALSE)
+})
+
+# The JavaScript YAML parsers a mosaic spec is written for (`yaml`, `js-yaml`
+# -- both checked directly, and they agree) follow YAML 1.2, where only
+# true/false are booleans. R's `yaml` package is YAML 1.1, where y/n/yes/no/
+# on/off are too; parse_spec_string() undoes that with bool#yes/bool#no
+# handlers (yaml_bool_handler(), R/serialize.R). The tests below cover every
+# context a bare `y` can appear in, since each one used to fail separately.
+
+parsed_mark <- function(mark_yaml) {
+  parse_spec_string(paste0("plot:\n  - ", mark_yaml))$plot[[1]]
+}
+
+test_that("an unquoted `y` mapping key survives in every YAML context", {
+  block <- parse_spec_string("plot:\n  - mark: dot\n    x: a\n    y: b\n")$plot[[1]]
+  list_item <- parse_spec_string("plot:\n  - y: b\n")$plot[[1]]
+  flow <- parsed_mark("{mark: dot, x: a, y: b}\n")
+  flow_first <- parsed_mark("{y: b, mark: dot}\n")
+  flow_nested <- parsed_mark("{mark: dot, data: {from: d}, y: b}\n")
+  flow_multiline <- parsed_mark("{ mark: dot,\n      x: a, y: b }\n")
+  flow_in_flow <- parsed_mark("{mark: dot, tip: {format: {x: a, y: b}}}\n")
+
+  expect_named(block, c("mark", "x", "y"))
+  expect_named(list_item, "y")
+  expect_named(flow, c("mark", "x", "y"))
+  expect_named(flow_first, c("y", "mark"))
+  expect_named(flow_nested, c("mark", "data", "y"))
+  expect_named(flow_multiline, c("mark", "x", "y"))
+  expect_named(flow_in_flow$tip$format, c("x", "y"))
+  for (m in list(block, flow, flow_nested, flow_multiline)) expect_equal(m$y, "b")
+})
+
+test_that("the other YAML 1.1 boolean words are keys too, not just `y`", {
+  m <- parsed_mark("{mark: dot, n: 1, yes: 2, no: 3, on: 4, off: 5, Y: 6, N: 7}\n")
+  expect_named(m, c("mark", "n", "yes", "no", "on", "off", "Y", "N"))
+})
+
+test_that("an unquoted y/n/yes/on as a *value* is a string, e.g., a column literally named y", {
+  # `x: y` is a channel bound to a column called "y", not the boolean TRUE
+  m <- parse_spec_string("plot:\n  - mark: dot\n    x: y\n    label: yes\n    z: n\n    w: on\n    v: Y\n")$plot[[1]]
+  expect_identical(m$x, "y")
+  expect_identical(m$label, "yes")
+  expect_identical(m$z, "n")
+  expect_identical(m$w, "on")
+  expect_identical(m$v, "Y")   # e.g., a legend `label: Y` in mosaic's own symbols example
+})
+
+test_that("bool-like words inside a flow sequence stay strings", {
+  m <- parsed_mark("{mark: dot, channels: [x, y, n]}\n")
+  expect_identical(m$channels, c("x", "y", "n"))
+})
+
+test_that("prose inside a block scalar is never rewritten", {
+  # a regex over the raw text used to turn `y: ...` at the start of a line
+  # inside a `|` block into `'y': ...`
+  spec <- parse_spec_string("meta:\n  description: |\n    Notes:\n    y: is the vertical axis\n    n: count\nplot:\n  - mark: dot\n")
+  expect_identical(spec$meta$description, "Notes:\ny: is the vertical axis\nn: count\n")
+})
+
+test_that("quoted y/n stay exactly what they were written as, key or value", {
+  m <- parse_spec_string("plot:\n  - mark: dot\n    'y': b\n    x: 'y'\n    z: \"n\"\n")$plot[[1]]
+  expect_named(m, c("mark", "y", "x", "z"))
+  expect_identical(m$x, "y")
+  expect_identical(m$z, "n")
+})
+
+test_that("only the exact YAML 1.2 spellings are booleans; odd casings are strings", {
+  m <- parsed_mark("{mark: dot, a: tRuE, b: fALSE, c: Yes}\n")
+  expect_identical(m$a, "tRuE")
+  expect_identical(m$b, "fALSE")
+  expect_identical(m$c, "Yes")
+})
+
+test_that("yaml_bool_handler() resolves the six real booleans and leaves everything else alone", {
+  for (x in c("true", "True", "TRUE")) expect_identical(yaml_bool_handler(x), TRUE)
+  for (x in c("false", "False", "FALSE")) expect_identical(yaml_bool_handler(x), FALSE)
+  for (x in c("y", "Y", "yes", "Yes", "YES", "n", "N", "no", "No", "NO", "on", "On", "ON", "off", "Off", "OFF", "tRuE")) {
+    expect_identical(yaml_bool_handler(x), x)
+  }
+})
+
+test_that("a JSON string spec is unaffected (JSON never had the problem)", {
+  spec <- parse_spec_string('{"plot": [{"mark": "dot", "x": "y", "y": "b", "tip": true}]}')
+  expect_identical(spec$plot[[1]]$x, "y")
+  expect_identical(spec$plot[[1]]$y, "b")
+  expect_identical(spec$plot[[1]]$tip, TRUE)
 })
 
 test_that("as_spec_payload() preserves a large YAML integer instead of silently NA-ing it", {
