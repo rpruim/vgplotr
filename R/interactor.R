@@ -40,7 +40,13 @@ vg_interactor_placement <- function(interactor) {
 #' @param interactor The interactor/input type, e.g., `"intervalX"`, `"slider"`.
 #' @param ... Options for the interactor/input (e.g., `as = param(brush)`,
 #'   `label = "Bias"`, `min = 0`, `max = 100`), and/or, for plot-embedded
-#'   interactors, plot-level attributes.
+#'   interactors, plot-level attributes. Like [vg_mark()], `vg_interactor()`
+#'   itself takes each option under mosaic-spec's own camelCase name
+#'   (`filterBy =`), where the generated wrappers take snake_case
+#'   (`filter_by =`). An argument that is neither an option of this
+#'   interactor/input type in mosaic-spec nor (for a plot-embedded
+#'   interactor) a plot-level attribute warns, since mosaic would silently
+#'   ignore it.
 #' @family interactor functions
 #' @export
 vg_interactor <- function(spec = NULL, interactor, ...) {
@@ -48,6 +54,7 @@ vg_interactor <- function(spec = NULL, interactor, ...) {
 
   if (placement == "plot") {
     split <- split_plot_args(list(...), protect = .vg_interactor_own_props[[interactor]])
+    warn_unrecognized_interactor_args(split$local_args, interactor)
     warn_unrecognized_enum_values(list(...))
     interactor_obj <- structure(
       list(type = interactor, options = split$local_args),
@@ -66,6 +73,7 @@ vg_interactor <- function(spec = NULL, interactor, ...) {
         call. = FALSE
       )
     }
+    warn_unrecognized_interactor_args(list(...), interactor, kind = "input")
     warn_unrecognized_enum_values(list(...))
     structure(list(type = interactor, options = list(...)), class = "vg_input")
   }

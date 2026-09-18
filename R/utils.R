@@ -144,50 +144,65 @@ warn_unrecognized_enum_values <- function(args) {
   invisible(NULL)
 }
 
-# Warns on a mark argument that mosaic-spec doesn't list as a property of
-# that mark type (.vg_mark_own_props, R/attrs-generated.R) and that isn't
-# one of vgplotr's own data-source arguments -- it would otherwise pass
+# Warns on an argument that mosaic-spec doesn't list as a property of the
+# given mark/interactor/input type (`own`, from .vg_mark_own_props/
+# .vg_interactor_own_props in R/attrs-generated.R) and that isn't one of
+# vgplotr's own arguments (`extra_handled`) -- it would otherwise pass
 # straight through into the spec, where mosaic silently ignores it (the
 # classic case is `color =`: mosaic marks have `fill`/`stroke`, not
 # `color`, and a mark just quietly draws in its default color). `args` is
-# the mark's *local* arguments, i.e., after plot-level attributes have
+# the caller's *local* arguments, i.e., after plot-level attributes have
 # already been split off (split_plot_args()), so a plot attribute riding
-# along (`width =`, `x_domain =`, ...) is never flagged. A mark type with
-# no schema entry (nothing to check against) is skipped rather than
-# risking a false positive. One warning per call, listing every offender.
-warn_unrecognized_mark_args <- function(args, mark) {
-  own <- .vg_mark_own_props[[mark]]
+# along (`width =`, `x_domain =`, ...) is never flagged. A type with no
+# schema entry (`own` is NULL -- nothing to check against) is skipped
+# rather than risking a false positive. One warning per call, listing
+# every offender.
+warn_unrecognized_args <- function(args, own, kind, name, extra_handled = character(),
+                                   effect = "have any effect") {
   nms <- names(args)
   if (is.null(own) || is.null(nms)) return(invisible(NULL))
 
-  handled <- c(own, "data_from", "filter_by", "data_optimize")
-  unknown <- setdiff(nms[nzchar(nms)], handled)
+  unknown <- setdiff(nms[nzchar(nms)], c(own, extra_handled))
   if (length(unknown) == 0) return(invisible(NULL))
 
   names_str <- paste0("`", unknown, "`", collapse = ", ")
   subject <- if (length(unknown) == 1) {
-    paste0(names_str, " is not a property of the `", mark, "` mark in mosaic-spec, so it won't")
+    sprintf("%s is not a property of the `%s` %s in mosaic-spec, so it won't", names_str, name, kind)
   } else {
-    paste0(names_str, " are not properties of the `", mark, "` mark in mosaic-spec, so they won't")
+    sprintf("%s are not properties of the `%s` %s in mosaic-spec, so they won't", names_str, name, kind)
   }
-  hints <- Filter(Negate(is.null), lapply(unknown, mark_arg_hint, own = own))
+  hints <- Filter(Negate(is.null), lapply(unknown, unrecognized_arg_hint, own = own))
   warning(
-    paste(c(sprintf("In mark `%s`: %s affect the rendered graphic.", mark, subject), unlist(hints)), collapse = " "),
+    paste(c(sprintf("In %s `%s`: %s %s.", kind, name, subject, effect), unlist(hints)), collapse = " "),
     call. = FALSE
   )
   invisible(NULL)
 }
 
-# A suggestion for one unrecognized mark argument, or NULL if there's
-# nothing useful to say. `color`/`colour` is by far the most common
-# mistake -- mosaic (like Observable Plot) has no such channel, only
-# `fill` (the inside of a shape) and `stroke` (its outline/line) -- and
-# only suggests whichever of the two this mark actually has. Otherwise,
-# looks for a property that differs only by case/underscores/dots (e.g.
+warn_unrecognized_mark_args <- function(args, mark) {
+  warn_unrecognized_args(
+    args, .vg_mark_own_props[[mark]], "mark", mark,
+    extra_handled = c("data_from", "filter_by", "data_optimize"),
+    effect = "affect the rendered graphic"
+  )
+}
+
+# `kind` is "interactor" (embedded in a plot) or "input" (a standalone
+# layout widget) -- see vg_interactor_placement(), R/interactor.R.
+warn_unrecognized_interactor_args <- function(args, interactor, kind = "interactor") {
+  warn_unrecognized_args(args, .vg_interactor_own_props[[interactor]], kind, interactor)
+}
+
+# A suggestion for one unrecognized argument, or NULL if there's nothing
+# useful to say. `color`/`colour` is by far the most common mistake --
+# mosaic (like Observable Plot) has no such channel, only `fill` (the
+# inside of a shape) and `stroke` (its outline/line) -- and only suggests
+# whichever of the two this mark/interactor actually has. Otherwise, looks
+# for a property that differs only by case/underscores/dots (e.g.
 # `fill_opacity` or `fillopacity` for `fillOpacity`, which is what the
-# generic vg_mark() needs even though the vg_mark_*() wrappers take
-# snake_case).
-mark_arg_hint <- function(nm, own) {
+# generic vg_mark()/vg_interactor() need even though the generated
+# vg_mark_*()/vg_<interactor>() wrappers take snake_case).
+unrecognized_arg_hint <- function(nm, own) {
   if (tolower(nm) %in% c("color", "colour")) {
     choices <- intersect(c("fill", "stroke"), own)
     if (length(choices) == 0) return(NULL)

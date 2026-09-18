@@ -21,9 +21,9 @@ test_that("`color =` is fine on a mark that genuinely has a `color` property", {
 
 test_that("the color hint only suggests fill/stroke where the mark actually has them", {
   own <- c("stroke", "x")
-  expect_match(mark_arg_hint("color", own), "`stroke`")
-  expect_no_match(mark_arg_hint("color", own), "fill")
-  expect_null(mark_arg_hint("color", "x"))
+  expect_match(unrecognized_arg_hint("color", own), "`stroke`")
+  expect_no_match(unrecognized_arg_hint("color", own), "fill")
+  expect_null(unrecognized_arg_hint("color", "x"))
 })
 
 test_that("an unrecognized argument with no known fix still warns, just without a hint", {

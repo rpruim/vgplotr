@@ -17,7 +17,13 @@ them with plots using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hc
 
 \item{...}{Options for the interactor/input (e.g., \code{as = param(brush)},
 \code{label = "Bias"}, \code{min = 0}, \code{max = 100}), and/or, for plot-embedded
-interactors, plot-level attributes.}
+interactors, plot-level attributes. Like \code{\link[=vg_mark]{vg_mark()}}, \code{vg_interactor()}
+itself takes each option under mosaic-spec's own camelCase name
+(\verb{filterBy =}), where the generated wrappers take snake_case
+(\verb{filter_by =}). An argument that is neither an option of this
+interactor/input type in mosaic-spec nor (for a plot-embedded
+interactor) a plot-level attribute warns, since mosaic would silently
+ignore it.}
 }
 \description{
 Mosaic distinguishes interactors that live inside a plot, alongside its

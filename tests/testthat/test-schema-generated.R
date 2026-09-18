@@ -20,7 +20,9 @@ test_that("generated interactor/input wrappers exist for types beyond the origin
   expect_true(exists("vg_toggle_color"))
   expect_true(exists("vg_nearest_x"))
 
-  input <- vg_pan_zoom_x(NULL, as = param(brush))
+  # pan/zoom interactors are driven by x/y params (mosaic's own examples use
+  # `select: panZoom, x: $xs, y: $ys`); they have no `as`.
+  input <- vg_pan_zoom_x(NULL, x = param(xs))
   expect_equal(input$items[[1]]$type, "panZoomX")
 })
 
