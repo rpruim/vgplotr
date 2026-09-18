@@ -172,6 +172,37 @@ drop_factors <- function(df) {
   df
 }
 
+# duckdb_register() has no idea a double-classed column is actually a
+# bit64::integer64 (which stores each value as the raw bit pattern of a
+# 64-bit integer, reusing a plain R double vector as the container) -- it
+# registers the column as an ordinary DOUBLE and reinterprets those bits as
+# an IEEE-754 float, silently corrupting every value with no error
+# (confirmed directly: a real integer64 like 9223372036854775800 comes back
+# as NaN, and 1 comes back as 4.94e-324). A plain as.double() conversion
+# fixes the corruption, but -- unlike drop_factors()'s conversion, which is
+# lossless -- it's still lossy past 2^53, so this one warns too. Gated on
+# bit64 actually being installed/loaded: it's not a vgplotr dependency, and
+# a data.frame can't contain a real integer64 column without it anyway.
+convert_integer64_cols <- function(df, name) {
+  if (!requireNamespace("bit64", quietly = TRUE)) return(df)
+  is_int64 <- vapply(df, bit64::is.integer64, logical(1))
+  if (any(is_int64)) {
+    warning(
+      "Data source '", name, "' has integer64 column(s) (",
+      paste(names(df)[is_int64], collapse = ", "), ") -- converting to a ",
+      "plain double for the native DuckDB connector, which loses exact ",
+      "precision past 2^53. Convert to a regular integer or double column ",
+      "yourself first if exact large values matter.",
+      call. = FALSE
+    )
+    # bit64::as.double.integer64() emits its own "precision lost" warning on
+    # every call where it applies -- suppressed here since the warning()
+    # above already tells the caller the same thing, just once and by name.
+    df[is_int64] <- suppressWarnings(lapply(df[is_int64], as.double))
+  }
+  df
+}
+
 # Registers a spec's own data.frame/local-file sources (vg_data_source_kind(),
 # R/serialize.R) directly into a native DuckDB connection -- the native-mode
 # counterpart of as_spec_payload()'s embed-for-the-browser handling.
@@ -186,7 +217,12 @@ register_native_data_sources <- function(spec, con) {
     src <- spec$data[[nm]]
     kind <- vg_data_source_kind(src)
     if (kind == "table") {
-      duckdb::duckdb_register(con, nm, drop_factors(src$data), overwrite = TRUE)
+      # No warn_ordered_factor_cols() call here: vg_widget() always calls
+      # as_spec_payload() first, connector-independent, and its own "table"
+      # branch already fires this same warning once -- adding it here too
+      # would double-warn on every native-connector render.
+      data <- convert_integer64_cols(drop_factors(src$data), nm)
+      duckdb::duckdb_register(con, nm, data, overwrite = TRUE)
     } else if (kind == "local_file") {
       if (!file.exists(src$file)) {
         stop(

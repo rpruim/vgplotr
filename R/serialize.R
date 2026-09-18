@@ -38,13 +38,14 @@ as_spec_payload <- function(spec) {
     src <- spec$data[[nm]]
     kind <- vg_data_source_kind(src)
     if (kind == "table") {
+      warn_ordered_factor_cols(src$data, nm)
       tables[[nm]] <- src$data
     } else if (kind == "local_file") {
       file_info <- read_local_data_file(src$file)
       file_info$options <- src[setdiff(names(src), c("file", "type"))]
       files[[nm]] <- file_info
     } else {
-      data_entries[[nm]] <- serialize_data_source(src)
+      data_entries[[nm]] <- serialize_data_source(src, nm)
     }
   }
 
@@ -422,7 +423,7 @@ spec_to_list <- function(spec, suppress_data = FALSE) {
     if (length(spec$config)) out$config <- spec$config
     data_sources <- spec$data
     if (suppress_data) data_sources <- Filter(Negate(is_inline_data_source), data_sources)
-    if (length(data_sources)) out$data <- lapply(data_sources, serialize_data_source)
+    if (length(data_sources)) out$data <- Map(serialize_data_source, data_sources, names(data_sources))
     if (length(spec$params)) out$params <- serialize_params(spec$params)
     if (length(spec$plot_defaults)) out$plotDefaults <- lapply(spec$plot_defaults, serialize_value)
     out <- c(out, serialize_layout(spec$layout))
@@ -433,9 +434,17 @@ spec_to_list <- function(spec, suppress_data = FALSE) {
   }
 }
 
-serialize_data_source <- function(src) {
+serialize_data_source <- function(src, name = "?") {
   if (!is.null(src$data) && is.data.frame(src$data)) {
-    utils::modifyList(src, list(data = df_to_rows(src$data)))
+    # A plain `src$data <- ...; src` replacement, not utils::modifyList() --
+    # modifyList() recurses into any element where *both* the old and new
+    # values satisfy is.list(), and an R data.frame is itself a list, so
+    # modifyList(src, list(data = <rows>)) tries to recursively merge the
+    # original column-major data.frame with the new row-major list by name.
+    # df_to_rows()'s row list is unnamed, so that merge matches nothing and
+    # silently returns src$data completely unchanged (confirmed directly).
+    src$data <- df_to_rows(src$data, name)
+    src
   } else if (!is.null(src$query) && length(src) == 1) {
     # mosaic-spec's DataQuery is a bare SQL string ("name": "SELECT ..."),
     # not an object -- unlike DataFile/DataTable/etc., which really are
@@ -455,6 +464,28 @@ is_inline_data_source <- function(src) {
   !is.null(src$data) && is.data.frame(src$data)
 }
 
-df_to_rows <- function(df) {
+df_to_rows <- function(df, name = "?") {
+  warn_ordered_factor_cols(df, name)
+  df <- format_posixct_cols(df)
   lapply(seq_len(nrow(df)), function(i) as.list(df[i, , drop = FALSE]))
+}
+
+# to_json()/to_yaml() build their output by pre-converting a data frame to
+# a plain (row-major) list via df_to_rows(), then handing that plain list
+# to jsonlite::toJSON()/yaml::as.yaml() -- neither of which has any idea a
+# given scalar used to be a POSIXct, so a raw POSIXct value serializes as
+# whatever its own internal representation happens to print as (confirmed
+# directly: a naive local-clock-time string with no timezone marker at all
+# for JSON, a raw epoch-seconds number for YAML) -- silently the *wrong
+# instant* once re-parsed, unlike vg_widget()'s own separate path, which
+# goes through jsonlite's data.frame-aware serialization directly and
+# already formats POSIXct correctly. Formatting to an explicit ISO 8601 UTC
+# string here, before either serializer ever sees it, matches what that
+# already-correct path produces, so all three rendering surfaces agree.
+format_posixct_cols <- function(df) {
+  is_posixct <- vapply(df, inherits, logical(1), "POSIXct")
+  if (any(is_posixct)) {
+    df[is_posixct] <- lapply(df[is_posixct], format, tz = "UTC", format = "%Y-%m-%dT%H:%M:%OSZ")
+  }
+  df
 }

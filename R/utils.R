@@ -144,6 +144,31 @@ warn_unrecognized_enum_values <- function(args) {
   invisible(NULL)
 }
 
+# An ordered factor's level order (e.g. "low" < "medium" < "high") has no
+# equivalent in mosaic-spec's own data model -- every rendering path (live
+# wasm/native DuckDB registration, to_json()/to_yaml() export) only ever
+# sees the character labels, never the R-side ordering, so a scale that
+# should respect that order silently falls back to whatever order the
+# values happen to sort/appear in instead. Unlike drop_factors()/
+# convert_integer64_cols(), nothing here can safely auto-fix this --
+# preserving the order needs an explicit xDomain=/colorDomain=/etc.
+# attribute vgplotr can't infer on its own -- so this only warns, naming
+# the fix, checked once per data source rather than per mark.
+warn_ordered_factor_cols <- function(df, name) {
+  is_ordered_col <- vapply(df, is.ordered, logical(1))
+  if (any(is_ordered_col)) {
+    cols <- names(df)[is_ordered_col]
+    warning(
+      "Data source '", name, "' has ordered factor column(s) (",
+      paste(cols, collapse = ", "), ") -- their level order isn't ",
+      "preserved when rendered. Set the matching scale's domain explicitly ",
+      "(e.g., x_domain = levels(", name, "$", cols[1], ")) if the order matters.",
+      call. = FALSE
+    )
+  }
+  invisible(df)
+}
+
 # Like utils::modifyList(), but preserves an explicit NULL in `overrides`
 # (mosaic's way of unsetting/hiding something, e.g., `xAxis = NULL` to hide
 # an axis) instead of treating it as "remove this key" -- modifyList()'s

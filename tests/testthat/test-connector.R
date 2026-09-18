@@ -66,6 +66,39 @@ test_that("drop_factors() converts factor columns to character and leaves others
   expect_type(out$b, "integer")
 })
 
+test_that("convert_integer64_cols() converts integer64 columns to double, with a precision-loss warning", {
+  skip_if_not_installed("bit64")
+  df <- data.frame(a = bit64::as.integer64("9223372036854775800"), b = 1:1, stringsAsFactors = FALSE)
+
+  expect_warning(out <- convert_integer64_cols(df, "d"), "integer64.*[Pp]recision")
+  expect_type(out$a, "double")
+  expect_false(bit64::is.integer64(out$a))
+  expect_equal(out$a, 9223372036854775800, tolerance = 1e3)
+  expect_type(out$b, "integer")
+
+  # no integer64 columns -> no warning, data untouched
+  plain <- data.frame(a = 1:2, b = c("x", "y"), stringsAsFactors = FALSE)
+  expect_no_warning(out2 <- convert_integer64_cols(plain, "d"))
+  expect_identical(out2, plain)
+})
+
+test_that("register_native_data_sources() converts an integer64 column instead of corrupting it via duckdb_register()", {
+  skip_if_not_installed("bit64")
+  skip_if_not_installed("duckdb")
+  skip_if_not_installed("DBI")
+
+  con <- DBI::dbConnect(duckdb::duckdb())
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+
+  df <- data.frame(a = bit64::as.integer64(c("1", "9223372036854775800")))
+  spec <- vg_create() |> vg_data(name = "d", data = df)
+  expect_warning(register_native_data_sources(spec, con), "integer64")
+
+  vals <- DBI::dbGetQuery(con, "SELECT a FROM d ORDER BY a")$a
+  expect_false(any(is.nan(vals)))
+  expect_equal(sort(vals), sort(suppressWarnings(as.double(df$a))), tolerance = 1e3)
+})
+
 test_that("register_native_data_sources() registers tables and errors on an unsupported extension", {
   skip_if_not_installed("duckdb")
   skip_if_not_installed("DBI")

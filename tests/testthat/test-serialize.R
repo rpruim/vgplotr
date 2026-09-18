@@ -112,6 +112,51 @@ test_that("vg_data(name, query = ...) serializes as a bare SQL string, not an ob
   expect_equal(payload$spec$data$endpoint, "SELECT 1")
 })
 
+test_that("to_json()/to_yaml() serialize NA as a real null, not the string \"NA\" or a dropped field", {
+  df <- data.frame(a = c(1L, 2L), b = c(1.5, NA_real_), c = c("x", NA_character_))
+  spec <- vg_create() |> vg_data(name = "d", data = df) |> vg_mark_dot(data_from = "d", x = ~a, y = ~b)
+
+  json <- as.character(to_json(spec, pretty = FALSE))
+  expect_match(json, '"b":null', fixed = TRUE)
+  expect_match(json, '"c":null', fixed = TRUE)
+  expect_false(grepl('"NA"', json, fixed = TRUE))
+
+  yaml_text <- as.character(to_yaml(spec))
+  expect_match(yaml_text, "b: null", fixed = TRUE)
+  expect_match(yaml_text, "c: null", fixed = TRUE)
+  expect_false(grepl("\\.na", yaml_text))
+})
+
+test_that("warn_ordered_factor_cols() warns for an ordered factor column, naming a domain fix, and is silent otherwise", {
+  df <- data.frame(g = factor(c("lo", "hi"), levels = c("lo", "hi"), ordered = TRUE), v = 1:2)
+  expect_warning(warn_ordered_factor_cols(df, "d"), "ordered factor.*level order.*x_domain")
+
+  plain <- data.frame(g = factor(c("lo", "hi")), v = 1:2)
+  expect_no_warning(warn_ordered_factor_cols(plain, "d"))
+})
+
+test_that("to_json()/to_yaml() warn once on an ordered factor column (order isn't preserved)", {
+  df <- data.frame(g = factor(c("lo", "hi"), levels = c("lo", "hi"), ordered = TRUE), v = 1:2)
+  spec <- vg_create() |> vg_data(name = "d", data = df) |> vg_mark_dot(data_from = "d", x = ~g, y = ~v)
+
+  expect_warning(to_json(spec), "ordered factor")
+  expect_warning(to_yaml(spec), "ordered factor")
+})
+
+test_that("to_json()/to_yaml() serialize a POSIXct column as an ISO 8601 UTC string, not a naive local time or raw epoch seconds", {
+  df <- data.frame(
+    t = as.POSIXct("2024-01-15 07:00:00", tz = "America/Denver"),
+    v = 1
+  )
+  spec <- vg_create() |> vg_data(name = "d", data = df) |> vg_mark_dot(data_from = "d", x = ~t, y = ~v)
+
+  json <- as.character(to_json(spec, pretty = FALSE))
+  expect_match(json, '"t":"2024-01-15T14:00:00Z"', fixed = TRUE)
+
+  yaml_text <- as.character(to_yaml(spec))
+  expect_match(yaml_text, "2024-01-15T14:00:00Z", fixed = TRUE)
+})
+
 test_that("vg_params() already supports Selections, not just plain Params", {
   # A Selection is mosaic-spec's `{"select": "intersect"}` shape (vs. a
   # plain Param's bare value like `1`) -- vg_params() needs no special

@@ -34,10 +34,18 @@ to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, ...) {
   # arguments alongside `...`, so a caller who explicitly supplies one of
   # these defaults (e.g., `auto_unbox = FALSE`) overrides it cleanly instead
   # of colliding ("formal argument matched by multiple actual arguments").
+  #
+  # na = "null" is required, not just null = "null" (for R NULL): confirmed
+  # directly that jsonlite::toJSON()'s own default for `na` (unset here
+  # otherwise) resolves an NA data value to the literal string "NA" -- or,
+  # for a row where every remaining field happens to be NA, drops the key
+  # from that row's object entirely -- rather than JSON `null`. Either
+  # produces a row whose set of keys differs from its siblings, which
+  # mosaic's own JSON loading assumes never happens.
   args <- utils::modifyList(
     list(
       x = spec_to_list(spec, suppress_data = suppress_data),
-      auto_unbox = TRUE, dataframe = "rows", null = "null", pretty = pretty
+      auto_unbox = TRUE, dataframe = "rows", null = "null", na = "null", pretty = pretty
     ),
     list(...)
   )
@@ -72,8 +80,22 @@ to_yaml <- function(spec, suppress_data = FALSE, ...) {
   # is likely to use) reads back as the plain strings "yes"/"no", not
   # booleans -- so `view: true` would silently stop meaning what it says.
   # Rendering logicals as literal, unquoted "true"/"false" avoids that.
+  #
+  # Every handler is also NA-aware: yaml::as.yaml() has no na= option the
+  # way jsonlite::toJSON() does, and its own default NA representation is a
+  # non-standard `.na`/`.na.real`/`.na.integer` YAML tag (confirmed
+  # directly) that a plain YAML/JSON-schema parser like mosaic's own can't
+  # read as a missing value at all. na_null() checks is.na() first and
+  # falls back to an explicit, standard YAML null (~ via jsonlite-style
+  # verbatim "null") before deferring to the type's normal formatting.
+  na_null <- function(format = identity) {
+    function(x) if (length(x) == 1 && is.na(x)) structure("null", class = "verbatim") else format(x)
+  }
   handlers <- list(
-    logical = function(x) structure(if (isTRUE(x)) "true" else "false", class = "verbatim")
+    logical = na_null(function(x) structure(if (isTRUE(x)) "true" else "false", class = "verbatim")),
+    integer = na_null(),
+    numeric = na_null(),
+    character = na_null()
   )
   # column.major = FALSE: yaml::as.yaml() otherwise auto-detects a list of
   # same-shaped row objects (e.g., our inline data-frame rows) as "tabular"

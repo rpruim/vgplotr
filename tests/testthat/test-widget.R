@@ -42,3 +42,10 @@ test_that("vg_widget() silently ignores arguments meant for vg_snapshot()/vg_ifr
   spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
   expect_no_error(vg_widget(spec, delay = 5, file = "x.png", vwidth = 100))
 })
+
+test_that("vg_widget() warns once on an ordered factor column (order isn't preserved when rendered)", {
+  df <- data.frame(g = factor(c("lo", "hi"), levels = c("lo", "hi"), ordered = TRUE), v = 1:2)
+  spec <- vg_create() |> vg_data(name = "d", data = df) |> vg_mark_dot(data_from = "d", x = ~g, y = ~v)
+
+  expect_warning(vg_widget(spec), "ordered factor")
+})
