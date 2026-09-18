@@ -235,6 +235,24 @@ plot:
   expect_identical(mark$label, TRUE) # unquoted `yes` as a *value* is legitimately boolean
 })
 
+test_that("as_spec_payload() preserves a large YAML integer instead of silently NA-ing it", {
+  # yaml::yaml.load()'s default implicit-integer resolution goes through
+  # as.integer(), which silently overflows to NA past 32-bit range --
+  # confirmed directly against a real mosaic example (docs/public/specs/
+  # yaml/observable-latency.yaml's `xDomain: [1706227200000, 1706832000000]`,
+  # a plain millisecond epoch timestamp pair). A custom "int" handler
+  # (yaml_int_handler(), R/serialize.R) falls back to as.numeric() instead.
+  yml <- "
+plot:
+  - mark: dot
+    x: a
+    y: b
+xDomain: [1706227200000, 1706832000000]
+"
+  payload <- as_spec_payload(yml)
+  expect_equal(payload$spec$xDomain, c(1706227200000, 1706832000000))
+})
+
 test_that("as_spec_payload() round-trips a vgspec through to_yaml()", {
   spec <- vg_create() |>
     vg_mark_dot(x = ~a, y = ~b)

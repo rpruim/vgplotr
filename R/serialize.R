@@ -82,7 +82,11 @@ parse_spec_string <- function(text) {
   }
   is_json <- grepl("^[[{]", trimws(text))
   parsed <- tryCatch(
-    if (is_json) jsonlite::fromJSON(text, simplifyVector = FALSE) else yaml::yaml.load(quote_yaml_bool_keys(text)),
+    if (is_json) {
+      jsonlite::fromJSON(text, simplifyVector = FALSE)
+    } else {
+      yaml::yaml.load(quote_yaml_bool_keys(text), handlers = list(int = yaml_int_handler))
+    },
     error = function(e) {
       stop(
         "Couldn't parse `spec` as ", if (is_json) "JSON" else "YAML", ": ",
@@ -130,6 +134,21 @@ quote_yaml_bool_keys <- function(text) {
     USE.NAMES = FALSE
   )
   paste(lines, collapse = "\n")
+}
+
+# yaml::yaml.load()'s default implicit-integer resolution parses a
+# YAML-1.1 integer-looking scalar via R's as.integer(), which silently
+# overflows to NA for anything past 32-bit range (confirmed directly:
+# `yaml.load("x: 1706227200000")` -- a plain millisecond epoch timestamp,
+# e.g. a real xDomain value copied from one of mosaic's own example
+# specs -- returns `x = NA`, with only a warning easy to miss). Unlike
+# the bool-word hazard above (where a custom handler is documented as
+# never firing for *implicit* resolution), a custom "int" handler *does*
+# fire here -- confirmed directly -- so falling back to as.numeric() when
+# as.integer() overflows preserves the value instead of losing it.
+yaml_int_handler <- function(x) {
+  n <- suppressWarnings(as.integer(x))
+  if (is.na(n) && !is.na(x)) as.numeric(x) else n
 }
 
 # Classifies a spec's data source the way vg_render() needs to: "table" (an
