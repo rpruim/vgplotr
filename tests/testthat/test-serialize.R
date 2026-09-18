@@ -306,6 +306,116 @@ test_that("as_spec_payload() round-trips a vgspec through to_yaml()", {
   expect_equal(via_string$spec, direct$spec)
 })
 
+test_that("as_spec_payload() lifts a string spec's inline row data out of `data:` into tables", {
+  # The same shape to_json()/to_yaml() write a data frame as. Left in the
+  # spec, mosaic's own declarative loading races the marks' first queries
+  # (see as_spec_payload()'s header comment); it must be preloaded instead.
+  df <- data.frame(a = 1:3, b = c(10, 20, 15), g = c("x", "y", "x"))
+  spec <- vg_create() |> vg_data(name = "d", data = df) |> vg_mark_dot(data_from = "d", x = ~a, y = ~b)
+
+  for (text in list(to_json(spec), to_yaml(spec))) {
+    payload <- as_spec_payload(text)
+    expect_named(payload$tables, "d")
+    expect_length(payload$tables$d, 3)
+    expect_equal(payload$tables$d[[2]], list(a = 2L, b = 20, g = "y"))
+    expect_null(payload$spec$data)
+    expect_equal(payload$spec$plot[[1]]$data, list(from = "d"))
+    expect_equal(payload$files, list())
+  }
+})
+
+test_that("as_spec_payload() lifts both inline shapes (bare array, `type: json` object) and leaves other sources alone", {
+  yml <- "
+data:
+  bare:
+    - {a: 1, b: 2}
+    - {a: 3, b: 4}
+  typed:
+    type: json
+    data:
+      - {a: 5}
+  remote:
+    file: https://example.com/x.csv
+  q: SELECT 1 AS a
+plot:
+  - mark: dot
+    x: a
+    y: b
+"
+  payload <- as_spec_payload(yml)
+  expect_setequal(names(payload$tables), c("bare", "typed"))
+  expect_equal(payload$tables$typed, list(list(a = 5L)))
+  expect_named(payload$spec$data, c("remote", "q"))
+  expect_equal(payload$spec$data$remote, list(file = "https://example.com/x.csv"))
+  expect_equal(payload$spec$data$q, "SELECT 1 AS a")
+})
+
+test_that("as_spec_payload() leaves inline data with load-time options, or no usable rows, in the spec", {
+  # loadTables() can't apply `where`/`select`, so silently lifting these
+  # would change what the plot shows -- mosaic's own loader handles them.
+  yml <- "
+data:
+  filtered:
+    data:
+      - {a: 1}
+      - {a: 2}
+    where: a > 1
+  empty: []
+  scalars: [1, 2, 3]
+plot:
+  - mark: dot
+    x: a
+    y: b
+"
+  payload <- as_spec_payload(yml)
+  expect_equal(payload$tables, list())
+  expect_named(payload$spec$data, c("filtered", "empty", "scalars"))
+})
+
+test_that("as_spec_payload() leaves a spec with no data block alone", {
+  payload <- as_spec_payload('{"plot": [{"mark": "dot", "x": "a", "y": "b"}]}')
+  expect_false("data" %in% names(payload$spec))
+  expect_equal(payload$tables, list())
+})
+
+test_that("vg_widget() on a to_json()/to_yaml() string ships inline data as `tables`, same as the vgspec itself", {
+  df <- data.frame(a = 1:3, b = c(10, 20, 15))
+  spec <- vg_create() |> vg_data(name = "d", data = df) |> vg_mark_dot(data_from = "d", x = ~a, y = ~b)
+  wasm <- vg_wasm_connector()
+
+  from_object <- vg_widget(spec, connector = wasm, use_cache = FALSE)
+  for (text in list(to_json(spec), to_yaml(spec))) {
+    from_string <- vg_widget(text, connector = wasm, use_cache = FALSE)
+    expect_equal(from_string$x$spec, from_object$x$spec)
+    expect_named(from_string$x$tables, "d")
+
+    # what actually reaches the browser: identical JSON rows either way
+    rows <- function(w) jsonlite::fromJSON(
+      do.call(jsonlite::toJSON, c(list(w$x$tables$d), list(auto_unbox = TRUE, dataframe = "rows"))),
+      simplifyVector = FALSE
+    )
+    expect_equal(rows(from_string), rows(from_object))
+  }
+})
+
+test_that("register_native_inline_tables() loads a string spec's lifted rows into a native DuckDB", {
+  skip_if_not_installed("duckdb")
+  skip_if_not_installed("DBI")
+
+  con <- DBI::dbConnect(duckdb::duckdb())
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+
+  spec <- vg_create() |>
+    vg_data(name = "d", data = data.frame(a = 1:3, g = c("x", "y", "x"))) |>
+    vg_mark_dot(data_from = "d", x = ~a, y = ~a)
+  payload <- as_spec_payload(to_json(spec))
+  register_native_inline_tables(payload$tables, con)
+
+  out <- DBI::dbGetQuery(con, "SELECT a, g FROM d ORDER BY a")
+  expect_equal(out$a, 1:3)
+  expect_equal(out$g, c("x", "y", "x"))
+})
+
 test_that("as_spec_payload() gives a clear error on a non-length-1 string", {
   expect_error(as_spec_payload(character(0)), "single JSON/YAML string")
   expect_error(as_spec_payload(c("a", "b")), "single JSON/YAML string")

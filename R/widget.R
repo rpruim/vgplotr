@@ -36,12 +36,15 @@
 #'   [to_json()]/[to_yaml()] -- to render it directly without building it up
 #'   through `vg_*()` calls first. Format is auto-detected (JSON if the
 #'   trimmed text starts with an opening brace or bracket, YAML otherwise).
-#'   Data references in
-#'   such a spec are left exactly as given -- unlike a `vgspec`'s own local
-#'   `file =`/inline-data-frame sources, nothing here is read or embedded,
-#'   so a local file path needs to actually be fetchable (an http(s) URL,
-#'   or a path relative to wherever the rendered page is ultimately opened
-#'   from) for duckdb-wasm to load it in the browser.
+#'   Inline data -- a `data:` entry holding an array of row objects, the
+#'   form [to_json()]/[to_yaml()] write a data frame as -- is loaded
+#'   automatically. Any other data reference in such a spec is left exactly
+#'   as given -- unlike a `vgspec`'s own local `file =` sources, nothing
+#'   is read or embedded, so a local file path needs to actually be
+#'   fetchable (an http(s) URL, or a path relative to wherever the
+#'   rendered page is ultimately opened from) for duckdb-wasm to load it
+#'   in the browser. (An inline array that also has `where`/`select`
+#'   options is one of these: it's handed to mosaic as-is.)
 #' @param width,height Widget sizing, in CSS units (e.g., `"100%"`) or pixels.
 #' @param elementId Optional DOM element ID for the widget.
 #' @param use_cache Whether this graphic should use the local duckdb-wasm
@@ -84,7 +87,11 @@ vg_widget <- function(
 
   if (inherits(connector, "vg_duckdb_connector")) {
     server <- ensure_vg_duckdb_server(connector)
-    if (is_vgspec(spec)) register_native_data_sources(spec, server$con)
+    if (is_vgspec(spec)) {
+      register_native_data_sources(spec, server$con)
+    } else {
+      register_native_inline_tables(payload$tables, server$con)
+    }
     x <- list(spec = payload$spec, tables = list(), files = list(),
               connector = list(type = "rest", uri = server$uri))
     dep <- NULL

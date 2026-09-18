@@ -203,6 +203,34 @@ convert_integer64_cols <- function(df, name) {
   df
 }
 
+# The native-mode counterpart of loadTables() (inst/htmlwidgets/vgplotr.js)
+# for a JSON/YAML *string* spec: as_spec_payload() lifts such a spec's inline
+# row-object arrays out of its `data:` block into `tables` (see
+# lift_inline_data_sources(), R/serialize.R), so under a native connector --
+# which never ships `tables` to the browser -- they'd otherwise just vanish.
+# Rows are turned into a data.frame and registered directly, exactly like a
+# vgspec's own data-frame sources (register_native_data_sources()), rather
+# than round-tripped through DuckDB's `read_json_auto()` the way the wasm
+# side does: that needs DuckDB's `json` extension, which a native R DuckDB
+# may not have and can't always fetch (confirmed directly -- autoload fails
+# offline). One consequence: an ISO-8601 timestamp *string* stays a plain
+# VARCHAR here, where wasm's `read_json_auto()` would infer TIMESTAMP.
+register_native_inline_tables <- function(tables, con) {
+  for (nm in names(tables)) {
+    json <- jsonlite::toJSON(tables[[nm]], auto_unbox = TRUE, null = "null", digits = NA)
+    df <- jsonlite::fromJSON(json, simplifyDataFrame = TRUE)
+    if (!is.data.frame(df)) {
+      stop(
+        "Can't load inline data '", nm, "' into a native DuckDB: its rows ",
+        "aren't flat (every value needs to be a single scalar).",
+        call. = FALSE
+      )
+    }
+    duckdb::duckdb_register(con, nm, df, overwrite = TRUE)
+  }
+  invisible(NULL)
+}
+
 # Registers a spec's own data.frame/local-file sources (vg_data_source_kind(),
 # R/serialize.R) directly into a native DuckDB connection -- the native-mode
 # counterpart of as_spec_payload()'s embed-for-the-browser handling.

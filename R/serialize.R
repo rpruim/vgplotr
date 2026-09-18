@@ -21,10 +21,20 @@
 # left in the spec's `data:` block, since mosaic's own loading already
 # handles that reliably (tested directly) and fetching it eagerly here
 # would be wrong for a large or possibly-updated-later remote file.
+#
+# A JSON/YAML *string* spec gets the same treatment for inline row data: an
+# already-complete spec's own `data: {name: {data: [{...}, ...]}}` (or bare
+# `name: [{...}, ...]`) block is exactly the racy path described above, so
+# lift_inline_data_sources() pulls those out of the spec and into `tables`
+# (as the plain row-object lists they already are). Every other kind of data
+# source in a string spec (file=, query=, ...) is left exactly as given.
 #' @noRd
 as_spec_payload <- function(spec) {
   if (is.character(spec)) {
-    return(list(spec = parse_spec_string(spec), tables = list(), files = list()))
+    parsed <- parse_spec_string(spec)
+    lifted <- lift_inline_data_sources(parsed$data)
+    parsed$data <- if (length(lifted$remaining)) lifted$remaining
+    return(list(spec = parsed, tables = lifted$tables, files = list()))
   }
   stopifnot(is_vgspec(spec))
   if (is.null(spec$layout)) {
@@ -150,6 +160,49 @@ quote_yaml_bool_keys <- function(text) {
 yaml_int_handler <- function(x) {
   n <- suppressWarnings(as.integer(x))
   if (is.na(n) && !is.na(x)) as.numeric(x) else n
+}
+
+# Splits a parsed string spec's `data:` block into the sources vgplotr must
+# preload itself -- inline arrays of row objects, in either of mosaic-spec's
+# two shapes for them (a bare array, `DataArray`; or an object holding just
+# `data:` and optionally `type: json`, `DataJSONObjects`) -- and everything
+# else, which stays in the spec. Returns `tables` (name -> list of row
+# objects, ready for loadTables() in inst/htmlwidgets/vgplotr.js) and
+# `remaining` (the untouched other sources).
+#
+# An inline source that *also* carries load-time options (`where`, `select`,
+# `temp`, ...) is deliberately left in the spec too: loadTables() has no
+# way to apply them, and dropping them silently would change what the plot
+# shows. Same for an empty array or rows that aren't all objects -- there's
+# no reliable table to build from those, so mosaic's own loader is left to
+# deal with (or reject) them.
+lift_inline_data_sources <- function(data) {
+  tables <- list()
+  remaining <- list()
+  for (nm in names(data)) {
+    rows <- inline_data_rows(data[[nm]])
+    if (is.null(rows)) {
+      remaining[nm] <- list(data[[nm]])
+    } else {
+      tables[[nm]] <- rows
+    }
+  }
+  list(tables = tables, remaining = remaining)
+}
+
+# The row objects of an inline data source (see lift_inline_data_sources()),
+# or NULL if `src` isn't a plain one.
+inline_data_rows <- function(src) {
+  rows <- if (is.null(names(src))) {
+    src
+  } else if (all(names(src) %in% c("data", "type")) && !is.null(src$data) &&
+             (is.null(src$type) || identical(src$type, "json"))) {
+    src$data
+  }
+  is_row <- function(r) is.list(r) && length(r) > 0 && !is.null(names(r))
+  if (is.list(rows) && is.null(names(rows)) && length(rows) > 0 && all(vapply(rows, is_row, logical(1)))) {
+    rows
+  }
 }
 
 # Classifies a spec's data source the way vg_render() needs to: "table" (an
