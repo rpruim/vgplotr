@@ -252,51 +252,45 @@ test_that("vg_plot_level_arg_names() is every plot attribute's snake_case spelli
 
 # --- transforms ------------------------------------------------------------
 
-serialize_with <- function(...) {
-  spec <- vg_create() |>
-    vg_data(name = "d", data = data.frame(delay = 1:3)) |>
-    vg_mark_dot(data_from = "d", ...)
-  as_spec_payload(spec)
-}
 
 test_that("a misspelled option inside a formula names the transform and suggests the right one", {
   expect_error(
-    serialize_with(x = ~vg_bin(delay, stp = 10), y = ~vg_count()),
+    serialize_unchecked(x = ~vg_bin(delay, stp = 10), y = ~vg_count()),
     "In `vg_bin\\(\\)`: `stp` is not an argument of this transform\\. Did you perhaps mean `step`\\?"
   )
-  expect_error(serialize_with(x = ~vg_bin(delay, nce = TRUE), y = ~vg_count()), "Did you perhaps mean `nice`\\?")
+  expect_error(serialize_unchecked(x = ~vg_bin(delay, nce = TRUE), y = ~vg_count()), "Did you perhaps mean `nice`\\?")
 })
 
 test_that("a misspelled option in a transform nested inside another is caught, too", {
   expect_error(
-    serialize_with(x = ~delay, y = ~vg_avg(vg_bin(delay, stpe = 1))),
+    serialize_unchecked(x = ~delay, y = ~vg_avg(vg_bin(delay, stpe = 1))),
     "In `vg_bin\\(\\)`: `stpe` is not an argument.*`step`"
   )
 })
 
 test_that("several misspelled options each get their own suggestion", {
   expect_error(
-    serialize_with(x = ~vg_bin(delay, stp = 10, intrval = "day"), y = ~vg_count()),
+    serialize_unchecked(x = ~vg_bin(delay, stp = 10, intrval = "day"), y = ~vg_count()),
     "`stp`, `intrval` are not arguments of this transform\\. For `stp`, did you perhaps mean `step`\\? For `intrval`, did you perhaps mean `interval`\\?"
   )
 })
 
 test_that("with nothing similar, the error lists the transform's arguments instead", {
   expect_error(
-    serialize_with(x = ~vg_bin(delay, bogus = 10), y = ~vg_count()),
+    serialize_unchecked(x = ~vg_bin(delay, bogus = 10), y = ~vg_count()),
     "`bogus` is not an argument of this transform\\. Its arguments are `field`, `interval`, `step`, `steps`, `minstep`, `nice`, `offset`\\."
   )
 })
 
 test_that("an unrecognized transform name is offered the closest known one", {
-  expect_error(serialize_with(x = ~vg_bn(delay), y = ~vg_count()), "Got a call to `vg_bn\\(\\)`\\. Did you perhaps mean `vg_bin\\(\\)`\\?")
-  expect_error(serialize_with(x = ~vg_bin(delay), y = ~vg_cont()), "Did you perhaps mean `vg_count\\(\\)`\\?")
+  expect_error(serialize_unchecked(x = ~vg_bn(delay), y = ~vg_count()), "Got a call to `vg_bn\\(\\)`\\. Did you perhaps mean `vg_bin\\(\\)`\\?")
+  expect_error(serialize_unchecked(x = ~vg_bin(delay), y = ~vg_cont()), "Did you perhaps mean `vg_count\\(\\)`\\?")
   # sql()/agg()/param() are accepted in a formula too
-  expect_error(serialize_with(x = ~sqll("a"), y = ~vg_count()), "Did you perhaps mean `sql\\(\\)`\\?")
+  expect_error(serialize_unchecked(x = ~sqll("a"), y = ~vg_count()), "Did you perhaps mean `sql\\(\\)`\\?")
 })
 
 test_that("an unrecognized function that resembles no transform gets no suggestion (and keeps the full list)", {
-  err <- tryCatch(serialize_with(x = ~sqrt(delay), y = ~vg_count()), error = function(e) conditionMessage(e))
+  err <- tryCatch(serialize_unchecked(x = ~sqrt(delay), y = ~vg_count()), error = function(e) conditionMessage(e))
   expect_match(err, "Got a call to `sqrt\\(\\)`\\.$")
   expect_match(err, "known transform functions \\(vg_bin\\(\\)")
   expect_no_match(err, "perhaps")
@@ -363,7 +357,7 @@ test_that("similar_names() accepts an explicit distance limit", {
 })
 
 test_that("an unknown transform in a formula that is really a base-R function gets no misleading suggestion", {
-  err <- tryCatch(serialize_with(x = ~log(delay), y = ~vg_count()), error = function(e) conditionMessage(e))
+  err <- tryCatch(serialize_unchecked(x = ~log(delay), y = ~vg_count()), error = function(e) conditionMessage(e))
   expect_match(err, "Got a call to `log\\(\\)`\\.$")
   expect_no_match(err, "perhaps")
 })

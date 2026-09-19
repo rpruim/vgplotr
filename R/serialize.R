@@ -485,23 +485,16 @@ serialize_expr <- function(expr, env) {
     if (is_vg_param(val)) return(serialize_value(val))
     as.character(expr)
   } else if (is.call(expr)) {
-    fn_name <- as.character(expr[[1]])
-    if (fn_name %in% c("sql", "agg", "param")) {
+    # What a call inside a formula *is* -- sql()/agg()/param(), or which
+    # transform, with its arguments matched -- is decided by
+    # resolve_formula_call() (R/transforms.R), shared with the early check
+    # check_formula_expr() that runs when a mark is built, so the two can't
+    # drift apart. Only the evaluation happens here, at serialization.
+    resolved <- resolve_formula_call(expr)
+    if (resolved$kind == "eval") {
       return(serialize_value(eval(expr, envir = env)))
     }
-    spec <- vg_transform_specs[[fn_name]]
-    if (is.null(spec)) {
-      stop(
-        "Only simple column references (e.g., ~Date), sql()/agg(), or known ",
-        "transform functions (", paste(names(vg_transform_specs), collapse = "(), "), "()) ",
-        "can be used inside a mapping formula. Got a call to `", fn_name, "()`.",
-        transform_name_suggestion(fn_name),
-        call. = FALSE
-      )
-    }
-    fn <- get(fn_name, mode = "function")
-    mc <- match_transform_call(fn_name, fn, expr)
-    serialize_transform(build_vg_transform(spec, mc, env))
+    serialize_transform(build_vg_transform(resolved$spec, resolved$mc, env))
   } else if (is.numeric(expr) || is.character(expr) || is.logical(expr) || is.null(expr)) {
     expr
   } else {

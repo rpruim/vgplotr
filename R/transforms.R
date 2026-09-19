@@ -252,3 +252,90 @@ rm(.name, .spec)
 #' @export vg_last_value
 #' @export vg_nth_value
 NULL
+
+# The message for a call inside a mapping formula that is neither
+# sql()/agg()/param() nor a known transform. Also names the closest known
+# function (transform_name_suggestion(), above).
+unknown_formula_call_message <- function(fn_name) {
+  paste0(
+    "Only simple column references (e.g., ~Date), sql()/agg(), or known ",
+    "transform functions (", paste(names(vg_transform_specs), collapse = "(), "), "()) ",
+    "can be used inside a mapping formula. Got a call to `", fn_name, "()`.",
+    transform_name_suggestion(fn_name)
+  )
+}
+
+# Decides, syntactically and WITHOUT evaluating anything, what a call found
+# inside a mapping formula is: `kind = "eval"` for sql()/agg()/param() (which
+# serialize_expr() evaluates, and whose arguments are self-contained), or
+# `kind = "transform"` for a known transform, with its arguments matched
+# (`mc`, via match_transform_call()) and its `spec`. Errors for anything else,
+# exactly as serialization always did -- this is the one place that decides,
+# used both by serialize_expr() at render/export time and by
+# check_formula_expr() when the mark is built, so the early check accepts
+# precisely what serialization accepts.
+resolve_formula_call <- function(expr) {
+  head <- expr[[1]]
+  # `pkg::fn(x)` and the like have a call, not a name, in head position
+  if (!is.symbol(head)) stop(unknown_formula_call_message(paste(deparse(head), collapse = "")), call. = FALSE)
+  fn_name <- as.character(head)
+  if (fn_name %in% c("sql", "agg", "param")) return(list(kind = "eval"))
+
+  spec <- vg_transform_specs[[fn_name]]
+  if (is.null(spec)) stop(unknown_formula_call_message(fn_name), call. = FALSE)
+  fn <- get(fn_name, mode = "function")
+  list(kind = "transform", spec = spec, mc = match_transform_call(fn_name, fn, expr))
+}
+
+# Checks the *shape* of one mapping-formula expression, and of the transforms
+# nested inside it: known function names, valid argument names -- everything
+# that would otherwise only fail at render/export time. Deliberately never
+# evaluates anything (a symbol might name a variable, or a param, that is only
+# defined later; sql()/agg()/param() arguments may too), so it can only reject
+# what serialization is certain to reject. A transform's *option* arguments
+# (step = 10, ...) are evaluated normally there, not read as formulas, so only
+# its field arguments -- `delay` in `vg_bin(delay)`, or a nested transform --
+# are followed, exactly as serialize_transform() does.
+check_formula_expr <- function(expr) {
+  if (is.call(expr)) {
+    resolved <- resolve_formula_call(expr)
+    if (resolved$kind == "transform") {
+      supplied <- as.list(resolved$mc)[-1]
+      fields <- supplied[resolved$spec$field_names[resolved$spec$field_names %in% names(supplied)]]
+      for (field in fields) check_formula_expr(field)
+    }
+  } else if (!(is.symbol(expr) || is.numeric(expr) || is.character(expr) || is.logical(expr) || is.null(expr))) {
+    stop("Can't use this inside a mapping formula: ", paste(deparse(expr), collapse = ""), call. = FALSE)
+  }
+  invisible(NULL)
+}
+
+# Runs check_formula_expr() over every mapping formula (`x = ~vg_bin(delay,
+# step = 10)`) and every already-built transform object among a
+# mark/interactor/input/legend's arguments, so a misspelled transform option
+# or function name fails where it was written instead of at export/render
+# time (formulas aren't read until then). Such a spec could never have been
+# serialized, so this is an error, not a warning; the message is the one
+# serialization would have produced, plus which argument it was in. `where`
+# says what was being built, e.g. "mark `dot`".
+check_transform_calls <- function(args, where) {
+  nms <- names(args)
+  if (is.null(nms)) return(invisible(NULL))
+  for (nm in nms[nzchar(nms)]) {
+    value <- args[[nm]]
+    exprs <- if (inherits(value, "formula")) {
+      list(value[[2]])
+    } else if (is_vg_transform(value)) {
+      value$field
+    }
+    for (expr in exprs) {
+      tryCatch(
+        check_formula_expr(expr),
+        error = function(e) {
+          stop(paste0(conditionMessage(e), " (in the `", nm, "` argument of ", where, ")"), call. = FALSE)
+        }
+      )
+    }
+  }
+  invisible(NULL)
+}

@@ -25,6 +25,7 @@ NULL
 #' @export
 vg_legend <- function(spec = NULL, type, ..., for_plot = NULL) {
   warn_unrecognized_legend_args(list(...), type)
+  check_transform_calls(list(...), paste0("legend `", type, "`"))
   legend_obj <- structure(
     list(type = type, for_plot = for_plot, options = list(...)),
     class = "vg_legend"

@@ -34,9 +34,12 @@ test_that("as_spec_payload() serializes an interactor with a param() reference",
   expect_equal(payload$spec$plot[[2]], list(select = "intervalX", as = "$brush"))
 })
 
-test_that("as_spec_payload() rejects formulas with more than a bare column name", {
-  spec <- vg_create() |> vg_mark_dot(x = ~ log(a), y = ~b)
-  expect_error(as_spec_payload(spec), "transform functions")
+test_that("a formula with more than a bare column name is rejected when the mark is built", {
+  expect_error(vg_create() |> vg_mark_dot(x = ~ log(a), y = ~b), "transform functions")
+})
+
+test_that("as_spec_payload() still rejects such a formula (the safety net behind the early check)", {
+  expect_error(serialize_unchecked(x = ~ log(a)), "transform functions")
 })
 
 test_that("as_spec_payload() rejects a spec with no plots yet", {

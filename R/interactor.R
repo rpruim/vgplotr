@@ -56,6 +56,7 @@ vg_interactor <- function(spec = NULL, interactor, ...) {
     split <- split_plot_args(list(...), protect = .vg_interactor_own_props[[interactor]])
     warn_unrecognized_interactor_args(split$local_args, interactor)
     warn_unrecognized_enum_values(list(...))
+    check_transform_calls(list(...), paste0("interactor `", interactor, "`"))
     interactor_obj <- structure(
       list(type = interactor, options = split$local_args),
       class = "vg_interactor"
@@ -75,6 +76,7 @@ vg_interactor <- function(spec = NULL, interactor, ...) {
     }
     warn_unrecognized_interactor_args(list(...), interactor, kind = "input")
     warn_unrecognized_enum_values(list(...))
+    check_transform_calls(list(...), paste0("input `", interactor, "`"))
     structure(list(type = interactor, options = list(...)), class = "vg_input")
   }
 }
