@@ -1,5 +1,5 @@
 Package: vgplotr
-Title: An R Interface to Mosaic vgplot
+Title: An R Interface to Mosaic/vgplot from UW Interactive Data Lab
 Version: 0.0.0.9005
 Authors@R: c(
     person("Randall", "Pruim", , "rpruim@gmail.com", role = c("aut", "cre")),
@@ -17,6 +17,8 @@ URL: https://rpruim.github.io/vgplotr/, https://github.com/rpruim/vgplotr
 BugReports: https://github.com/rpruim/vgplotr/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.1.0)
 Imports:
     htmltools,
     htmlwidgets,
