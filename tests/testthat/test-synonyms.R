@@ -171,15 +171,15 @@ test_that("suggest_values() uses the argument's own synonyms, then edit distance
 
 test_that("the headline examples: color -> fill|stroke, alpha -> opacity|fill_opacity", {
   expect_warning(vg_mark_dot(x = ~a, y = ~b, color = "red"), "Did you perhaps mean `fill` or `stroke`\\?")
-  expect_warning(vg_mark_dot(x = ~a, y = ~b, alpha = 0.5), "Did you perhaps mean `opacity` or `fillOpacity`\\?")
+  expect_warning(vg_mark_dot(x = ~a, y = ~b, alpha = 0.5), "Did you perhaps mean `opacity` or `fill_opacity`\\?")
 })
 
 test_that("ggplot2 and base R names on a mark", {
   expect_warning(vg_mark_dot(x = ~a, y = ~b, size = 3), "Did you perhaps mean `r`\\?")
-  expect_warning(vg_mark_text(x = ~a, y = ~b, text = ~c, size = 3), "Did you perhaps mean `fontSize`\\?")
-  expect_warning(vg_mark_line(x = ~a, y = ~b, linewidth = 2), "Did you perhaps mean `strokeWidth`\\?")
-  expect_warning(vg_mark_line(x = ~a, y = ~b, lwd = 2), "Did you perhaps mean `strokeWidth`\\?")
-  expect_warning(vg_mark_line(x = ~a, y = ~b, linetype = "dashed"), "Did you perhaps mean `strokeDasharray`\\?")
+  expect_warning(vg_mark_text(x = ~a, y = ~b, text = ~c, size = 3), "Did you perhaps mean `font_size`\\?")
+  expect_warning(vg_mark_line(x = ~a, y = ~b, linewidth = 2), "Did you perhaps mean `stroke_width`\\?")
+  expect_warning(vg_mark_line(x = ~a, y = ~b, lwd = 2), "Did you perhaps mean `stroke_width`\\?")
+  expect_warning(vg_mark_line(x = ~a, y = ~b, linetype = "dashed"), "Did you perhaps mean `stroke_dasharray`\\?")
   expect_warning(vg_mark_line(x = ~a, y = ~b, group = ~g), "Did you perhaps mean `z`\\?")
   expect_warning(vg_mark_rect_y(x = ~a, ymin = ~b, ymax = ~c), "For `ymin`, did you perhaps mean `y1`\\?.*For `ymax`, did you perhaps mean `y2`\\?")
   expect_warning(vg_mark_dot(data = mtcars, x = ~a), "Did you perhaps mean `data_from`\\?")
@@ -239,7 +239,7 @@ test_that("transform options", {
 
 test_that("real misspellings of real names still get their spelling suggestion (the table doesn't get in the way)", {
   expect_warning(vg_mark_dot(x = ~a, y = ~b, strke = "red"), "Did you perhaps mean `stroke`\\?")
-  expect_warning(vg_mark_dot(x = ~a, y = ~b, fill_opacty = 0.5), "Did you perhaps mean `fillOpacity`\\?")
+  expect_warning(vg_mark_dot(x = ~a, y = ~b, fill_opacty = 0.5), "Did you perhaps mean `fill_opacity`\\?")
   expect_warning(vg_legend_color(lable = "L"), "Did you perhaps mean `label`\\?")
 })
 

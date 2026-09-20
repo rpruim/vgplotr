@@ -43,6 +43,6 @@ test_that("a layout-level input warns on an unrecognized enum value for its own 
   expect_warning(vg_slider(column = "a", select = "bogus"), "select")
   expect_no_warning(vg_slider(column = "a", select = "point"))
 
-  expect_warning(vg_menu(column = "a", list_match = "bogus"), "listMatch")
+  expect_warning(vg_menu(column = "a", list_match = "bogus"), "list_match")   # the wrapper's own spelling
   expect_no_warning(vg_menu(column = "a", list_match = "any"))
 })

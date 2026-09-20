@@ -59,3 +59,49 @@ accepts. Two rules worth knowing before adding one: an exact key never falls
 back to edit distance (so list a real name as a candidate when it is the right
 answer somewhere, as `labels` does with `label`), and a near-miss of a key is
 only a last resort -- a real name in the call always wins.
+
+## Open design questions
+
+Things deliberately left undecided, to revisit rather than forget.
+
+### Should `vg_mark()`, `vg_interactor()` and legends accept snake_case?
+
+*Noted 2026-09-19.* Today the spelling rule depends on which function you call:
+
+- The generated wrappers -- `vg_mark_*()`, the interactor and input functions
+  (`vg_toggle()`, `vg_slider()`, ...) -- take snake_case (`fill_opacity`,
+  `tick_size`), and also mosaic's exact camelCase key (`fillOpacity`) through
+  `...`. Scales, guides and attribute setters are snake_case too, and a plot
+  attribute (`x_domain`/`xDomain`) is accepted either way *everywhere*.
+- The generic `vg_mark()` / `vg_interactor()`, and **every legend**
+  (`vg_legend()`, `vg_legend_color()`, ...), accept **only** the exact camelCase
+  key for their own options; `vg_mark("dot", fill_opacity = 1)` and
+  `vg_legend_color(tick_size = 5)` warn "not a property".
+
+What that costs: warnings that suggest a name must spell it per caller (a
+suggestion is only useful if typing it doesn't warn again), which is why
+`build_mark()`/`build_interactor()` take a `style` ("snake" from a wrapper,
+"camel" from the generic) and `spell_names()` (`R/utils.R`) applies it. Legends
+are hand-written with `...` only, so they always suggest camelCase.
+
+The question: make snake_case work in the generic constructors and in legends
+too -- canonicalising snake_case to the exact key, as
+`canonicalize_plot_attr_names()` already does for plot attributes. The rule
+would become uniform ("snake_case everywhere; the exact camelCase key always
+works too"), and the `style` plumbing could be deleted, so suggestions would
+always be snake_case.
+
+Facts to start from:
+
+- Every property of every mark, interactor and input already has a snake_case
+  argument on its wrapper (all 3,558, verified by
+  `tests/testthat/test-suggest-style.R`), and the generator fails loudly if two
+  properties ever collide once snake_cased (`check_snake_collisions()` in
+  `data-raw/update-schema.R`; zero collisions in v0.31.0).
+- Legends already have a schema-derived property list (`.vg_legend_props`,
+  generated), so they could get real snake_case formals from the generator
+  instead of `...`.
+- Tests that pin today's behaviour and would change: `test-suggest-style.R`,
+  `test-legend-args.R`, `test-mark-args.R`, `test-interactor-args.R` (each has a
+  "the generic ... takes camelCase" test), and the `?vg_mark` / `?vg_legend`
+  documentation of `...`.

@@ -115,7 +115,7 @@ warn_unknown_attrs <- function(names, context) {
   valid <- unique(c(context_arg_names(context), vg_plot_level_arg_names()))
   suggestions <- lapply(unknown, function(nm) {
     format_suggestion(
-      suggest_names(nm, valid, present = names),
+      suggest_names(nm, valid, present = setdiff(names, unknown)),
       arg = if (length(unknown) > 1) nm
     )
   })
@@ -173,7 +173,7 @@ context_arg_names <- function(context) {
 # is just noise next to a confident suggestion. It uses suggest_values(), not
 # suggest_names(): the argument-name synonyms (color -> fill/stroke) have no
 # business rewriting a value.
-warn_unrecognized_enum_values <- function(args) {
+warn_unrecognized_enum_values <- function(args, style = "camel") {
   for (nm in names(args)) {
     allowed <- .vg_enum_props[[nm]]
     if (is.null(allowed)) next
@@ -188,12 +188,29 @@ warn_unrecognized_enum_values <- function(args) {
         sprintf("Check for a typo. Allowed values: %s.", paste0('"', allowed, '"', collapse = ", "))
       }
       warning(
-        sprintf('`%s = "%s"` is not a recognized value. %s', nm, v, detail),
+        sprintf('`%s = "%s"` is not a recognized value. %s', spell_names(nm, style), v, detail),
         call. = FALSE
       )
     }
   }
   invisible(NULL)
+}
+
+# mosaic's exact property name (`strokeWidth`) in the snake_case the vg_mark_*()
+# and interactor wrappers document (`stroke_width`) -- the same rule the schema
+# generator (data-raw/update-schema.R) uses to name their arguments, checked
+# collision-free over the whole schema. Every property of every mark,
+# interactor and input has such an argument (tests/testthat/test-suggest-style.R
+# verifies all of them), so the snake_case form is always safe to suggest there.
+camel_to_snake <- function(x) tolower(gsub("([a-z0-9])([A-Z])", "\\1_\\2", x))
+
+# How to spell mosaic property names in a message, given the `style` of the
+# function that was called: "snake" where it accepts snake_case (the generated
+# wrappers), "camel" -- the exact key -- where it doesn't (the generic
+# vg_mark()/vg_interactor(), and every legend). Suggesting a spelling that then
+# warns again would be worse than not suggesting it.
+spell_names <- function(names, style) {
+  if (identical(style, "snake")) camel_to_snake(names) else names
 }
 
 # Warns on an argument that mosaic-spec doesn't list as a property of the
@@ -216,7 +233,8 @@ warn_unrecognized_enum_values <- function(args) {
 # (the plot attributes a mark or plot-embedded interactor also accepts, so
 # `widht` can still be pointed at `width`).
 warn_unrecognized_args <- function(args, own, kind, name, extra_handled = character(),
-                                   suggest_extra = character(), effect = "have any effect") {
+                                   suggest_extra = character(), effect = "have any effect",
+                                   style = "camel") {
   nms <- names(args)
   if (is.null(own) || is.null(nms)) return(invisible(NULL))
 
@@ -229,10 +247,10 @@ warn_unrecognized_args <- function(args, own, kind, name, extra_handled = charac
   } else {
     sprintf("%s are not properties of the `%s` %s in mosaic-spec, so they won't", names_str, name, kind)
   }
-  valid <- unique(c(own, extra_handled, suggest_extra))
+  valid <- unique(c(spell_names(own, style), extra_handled, suggest_extra))
   suggestions <- lapply(unknown, function(nm) {
     format_suggestion(
-      suggest_names(nm, valid, present = nms),
+      suggest_names(nm, valid, present = setdiff(nms, unknown)),
       arg = if (length(unknown) > 1) nm
     )
   })
@@ -243,22 +261,24 @@ warn_unrecognized_args <- function(args, own, kind, name, extra_handled = charac
   invisible(NULL)
 }
 
-warn_unrecognized_mark_args <- function(args, mark) {
+warn_unrecognized_mark_args <- function(args, mark, style = "camel") {
   warn_unrecognized_args(
     args, .vg_mark_own_props[[mark]], "mark", mark,
     extra_handled = c("data_from", "filter_by", "data_optimize"),
     suggest_extra = vg_plot_level_arg_names(),
-    effect = "affect the rendered graphic"
+    effect = "affect the rendered graphic",
+    style = style
   )
 }
 
 # `kind` is "interactor" (embedded in a plot, so it also takes plot
 # attributes) or "input" (a standalone layout widget, which doesn't) -- see
 # vg_interactor_placement(), R/interactor.R.
-warn_unrecognized_interactor_args <- function(args, interactor, kind = "interactor") {
+warn_unrecognized_interactor_args <- function(args, interactor, kind = "interactor", style = "camel") {
   warn_unrecognized_args(
     args, .vg_interactor_own_props[[interactor]], kind, interactor,
-    suggest_extra = if (kind == "interactor") vg_plot_level_arg_names() else character()
+    suggest_extra = if (kind == "interactor") vg_plot_level_arg_names() else character(),
+    style = style
   )
 }
 

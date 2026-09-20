@@ -61,7 +61,7 @@ test_that("an already-built transform object is checked, including transforms ne
 test_that("interactors, inputs and legends check their formula options too", {
   expect_match(
     built_error(vg_interval_x(as = param(s), pixel_size = ~vg_bin(a, stp = 1))),
-    "`stp` is not an argument.*in the `pixelSize` argument of interactor `intervalX`"
+    "`stp` is not an argument.*in the `pixel_size` argument of interactor `intervalX`"
   )
   expect_match(
     built_error(vg_slider(column = "a", label = ~vg_bin(a, stp = 1))),

@@ -50,13 +50,19 @@ vg_interactor_placement <- function(interactor) {
 #' @family interactor functions
 #' @export
 vg_interactor <- function(spec = NULL, interactor, ...) {
+  build_interactor(spec, interactor, list(...), style = "camel")
+}
+
+# The body of vg_interactor(), shared with the generated wrappers (see
+# vg_interactor_() below); `style` is as for build_mark() (R/mark.R).
+build_interactor <- function(spec, interactor, args, style) {
   placement <- vg_interactor_placement(interactor)
 
   if (placement == "plot") {
-    split <- split_plot_args(list(...), protect = .vg_interactor_own_props[[interactor]])
-    warn_unrecognized_interactor_args(split$local_args, interactor)
-    warn_unrecognized_enum_values(list(...))
-    check_transform_calls(list(...), paste0("interactor `", interactor, "`"))
+    split <- split_plot_args(args, protect = .vg_interactor_own_props[[interactor]])
+    warn_unrecognized_interactor_args(split$local_args, interactor, style = style)
+    warn_unrecognized_enum_values(args, style)
+    check_transform_calls(args, paste0("interactor `", interactor, "`"), style)
     interactor_obj <- structure(
       list(type = interactor, options = split$local_args),
       class = "vg_interactor"
@@ -74,10 +80,10 @@ vg_interactor <- function(spec = NULL, interactor, ...) {
         call. = FALSE
       )
     }
-    warn_unrecognized_interactor_args(list(...), interactor, kind = "input")
-    warn_unrecognized_enum_values(list(...))
-    check_transform_calls(list(...), paste0("input `", interactor, "`"))
-    structure(list(type = interactor, options = list(...)), class = "vg_input")
+    warn_unrecognized_interactor_args(args, interactor, kind = "input", style = style)
+    warn_unrecognized_enum_values(args, style)
+    check_transform_calls(args, paste0("input `", interactor, "`"), style)
+    structure(list(type = interactor, options = args), class = "vg_input")
   }
 }
 
@@ -90,7 +96,7 @@ vg_interactor <- function(spec = NULL, interactor, ...) {
 # same-named real property (e.g., vg_search()'s `type`) now flows through
 # `...` untouched instead of being intercepted by exact-name matching.
 vg_interactor_ <- function(spec, interactor, ...) {
-  do.call(vg_interactor, c(list(spec = spec, interactor = interactor), drop_unset(list(...))))
+  build_interactor(spec, interactor, drop_unset(list(...)), style = "snake")
 }
 
 #' @export

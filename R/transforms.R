@@ -75,7 +75,7 @@ match_transform_call <- function(fn_name, fn, expr) {
       }
       suggestions <- lapply(unknown, function(nm) {
         format_suggestion(
-          suggest_names(nm, valid, present = supplied, table = synonym_section("transform_options")),
+          suggest_names(nm, valid, present = setdiff(supplied, unknown), table = synonym_section("transform_options")),
           arg = if (length(unknown) > 1) nm
         )
       })
@@ -326,7 +326,7 @@ check_formula_expr <- function(expr) {
 # serialized, so this is an error, not a warning; the message is the one
 # serialization would have produced, plus which argument it was in. `where`
 # says what was being built, e.g. "mark `dot`".
-check_transform_calls <- function(args, where) {
+check_transform_calls <- function(args, where, style = "camel") {
   nms <- names(args)
   if (is.null(nms)) return(invisible(NULL))
   for (nm in nms[nzchar(nms)]) {
@@ -340,7 +340,7 @@ check_transform_calls <- function(args, where) {
       tryCatch(
         check_formula_expr(expr),
         error = function(e) {
-          stop(paste0(conditionMessage(e), " (in the `", nm, "` argument of ", where, ")"), call. = FALSE)
+          stop(paste0(conditionMessage(e), " (in the `", spell_names(nm, style), "` argument of ", where, ")"), call. = FALSE)
         }
       )
     }

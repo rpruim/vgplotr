@@ -60,7 +60,18 @@
 #' @family mark functions
 #' @export
 vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
-  args <- list(...)
+  build_mark(spec, mark, formula, list(...), style = "camel")
+}
+
+# The body of vg_mark(), shared with the generated vg_mark_*() wrappers (see
+# vg_mark_() below). `style` is how a warning should spell an argument name when
+# it suggests one: "snake" for a wrapper, which accepts snake_case
+# (`stroke_width`, its documented spelling), "camel" for the generic vg_mark(),
+# which only accepts mosaic's exact key (`strokeWidth`) -- a suggestion is only
+# useful if typing it doesn't warn again. (Whether the generic constructor and
+# legends should accept snake_case too, which would make `style` unnecessary, is
+# an open question: see "Open design questions" in AGENTS.md.)
+build_mark <- function(spec, mark, formula, args, style) {
   if (!identical(formula, vg_unset)) {
     args <- merge_vg_formula(args, parse_vg_formula(formula, mark), mark)
   }
@@ -111,9 +122,9 @@ vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
   }
 
   split <- split_plot_args(args, protect = .vg_mark_own_props[[mark]])
-  warn_unrecognized_mark_args(split$local_args, mark)
-  warn_unrecognized_enum_values(args)
-  check_transform_calls(args, paste0("mark `", mark, "`"))
+  warn_unrecognized_mark_args(split$local_args, mark, style)
+  warn_unrecognized_enum_values(args, style)
+  check_transform_calls(args, paste0("mark `", mark, "`"), style)
 
   mark_obj <- structure(
     list(mark = mark, encodings = split$local_args),
@@ -152,7 +163,10 @@ args_reference_data <- function(args) {
 # the way vg_interactor_()'s equivalent parameter did (Search's own "type"
 # option) -- see vg_interactor()'s docs for that story.
 vg_mark_ <- function(spec, mark, ...) {
-  do.call(vg_mark, c(list(spec = spec, mark = mark), drop_unset(list(...))))
+  args <- drop_unset(list(...))
+  formula <- if (is.null(args[["formula"]])) vg_unset else args[["formula"]]
+  args[["formula"]] <- NULL
+  build_mark(spec, mark, formula, args, style = "snake")
 }
 
 #' @export

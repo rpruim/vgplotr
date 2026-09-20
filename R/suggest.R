@@ -166,13 +166,18 @@ suggest_with_synonyms <- function(name, valid, table, spelling) {
 # The suggestions for one unrecognized argument `name`, given the valid names
 # `candidates` for the function it was passed to (see suggest_with_synonyms()
 # for the order). `table` is the `arguments` synonym section unless the caller
-# says otherwise -- transform options have their own. `present` names (already
-# supplied alongside `name`) are never suggested: `fil =` next to a valid
-# `fill =` isn't a typo of it, and `color = , fill =` should only point at
-# `stroke`.
+# says otherwise -- transform options have their own. `present` names (valid
+# ones already supplied alongside `name`) are never suggested: `fil =` next to a
+# valid `fill =` isn't a typo of it, and `color = , fill =` should only point at
+# `stroke`. Callers must pass only the RECOGNISED supplied names, not the
+# unknown one being corrected: `pixelsize` normalises to the very name it should
+# be corrected to (`pixel_size`), so listing it as "already supplied" would
+# suppress its own suggestion.
 suggest_names <- function(name, candidates, present = character(),
                           table = synonym_section("arguments")) {
-  candidates <- setdiff(candidates, present)
+  # compared normalised: a user's `strokeWidth` already covers a candidate
+  # spelled `stroke_width`
+  candidates <- candidates[!(normalize_name(candidates) %in% normalize_name(present))]
   suggest_with_synonyms(name, candidates, table, function() similar_names(name, candidates))
 }
 

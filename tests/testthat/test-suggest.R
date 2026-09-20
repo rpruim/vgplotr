@@ -88,7 +88,7 @@ test_that("a warning suggests a close name, drawing on plot attributes and vgplo
   # a mark property
   expect_warning(vg_mark_dot(x = ~a, y = ~b, strke = "red"), "Did you perhaps mean `stroke`\\?")
   # snake_case + a swapped pair
-  expect_warning(vg_mark_dot(x = ~a, y = ~b, stroke_widht = 2), "Did you perhaps mean `strokeWidth`\\?")
+  expect_warning(vg_mark_dot(x = ~a, y = ~b, stroke_widht = 2), "Did you perhaps mean `stroke_width`\\?")
   # a plot attribute a mark also accepts
   expect_warning(vg_mark_dot(x = ~a, y = ~b, widht = 300), "Did you perhaps mean `width`\\?")
   # vgplotr's own data-source argument
@@ -429,10 +429,10 @@ test_that("the color -> fill/stroke rule is about argument names and never rewri
 
 test_that("an enum-value suggestion is made for marks, interactors and inputs alike", {
   expect_warning(vg_mark_line(x = ~a, y = ~b, curve = "cardinal_open"), "Did you perhaps mean `\"cardinal-open\"`\\?")
-  expect_warning(vg_mark_dot(x = ~a, y = ~b, frame_anchor = "top_left"), "`frameAnchor = \"top_left\"`.*`\"top-left\"`")
+  expect_warning(vg_mark_dot(x = ~a, y = ~b, frame_anchor = "top_left"), "`frame_anchor = \"top_left\"`.*`\"top-left\"`")
   expect_warning(vg_mark_dot(x = ~a, y = ~b, select = "nearstX"), "Did you perhaps mean `\"nearestX\"`\\?")
   expect_warning(vg_slider(column = "a", select = "pont"), "Did you perhaps mean `\"point\"`\\?")
-  expect_warning(vg_menu(column = "a", list_match = "al"), "`listMatch = \"al\"`.*`\"all\"`")
+  expect_warning(vg_menu(column = "a", list_match = "al"), "`list_match = \"al\"`.*`\"all\"`")
 })
 
 test_that("a valid enum value, a formula, or a param() never gets a suggestion", {
