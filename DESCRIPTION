@@ -27,6 +27,8 @@ Imports:
     stringdist,
     yaml
 Suggests:
+    bit64,
+    chromote,
     DBI (>= 1.3.0),
     dplyr,
     duckdb (>= 1.5.5),
