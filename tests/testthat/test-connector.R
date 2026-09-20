@@ -21,6 +21,12 @@ test_that("vg_set_default_connector() changes vg_widget()'s implicit connector",
   skip_if_not_installed("nanoarrow")
   skip_if_not_installed("DBI")
   skip_if_not_installed("httpuv")
+  # Not on CRAN: here vgplotr makes its OWN private DuckDB connection (that's
+  # the path under test), which uses duckdb's default home directory
+  # (~/.duckdb) for extensions and secrets, and starts a local server.
+  # default_connector_switches_with_an_explicit_connection() below covers the
+  # same switching logic hermetically, and runs everywhere.
+  skip_on_cran()
   on.exit(vg_set_default_connector(), add = TRUE)
   spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
 
@@ -34,6 +40,35 @@ test_that("vg_set_default_connector() changes vg_widget()'s implicit connector",
   expect_null(vg_widget(spec, connector = vg_wasm_connector())$x$connector)
 
   vg_duckdb_server_stop()
+  vg_set_default_connector()
+  expect_null(vg_widget(spec)$x$connector)
+})
+
+test_that("default_connector_switches_with_an_explicit_connection(): vg_set_default_connector() changes vg_widget()'s implicit connector, without vgplotr making a connection of its own", {
+  skip_if_not_installed("duckdb")
+  skip_if_not_installed("nanoarrow")
+  skip_if_not_installed("DBI")
+  skip_if_not_installed("httpuv")
+  con <- test_duckdb_connection()
+  on.exit({
+    vg_set_default_connector()
+    vg_duckdb_server_stop()
+    DBI::dbDisconnect(con, shutdown = TRUE)
+  }, add = TRUE)
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
+
+  expect_null(vg_widget(spec)$x$connector)
+
+  old <- vg_set_default_connector(vg_duckdb_connector(con))
+  expect_s3_class(old, "vg_wasm_connector")
+  expect_equal(vg_widget(spec)$x$connector$type, "rest")
+
+  # an explicit connector= on a single call still overrides the session default
+  expect_null(vg_widget(spec, connector = vg_wasm_connector())$x$connector)
+
+  vg_duckdb_server_stop()
+  # a connection you supply is yours: stopping the server must not close it
+  expect_true(DBI::dbIsValid(con))
   vg_set_default_connector()
   expect_null(vg_widget(spec)$x$connector)
 })
@@ -87,7 +122,7 @@ test_that("register_native_data_sources() converts an integer64 column instead o
   skip_if_not_installed("duckdb")
   skip_if_not_installed("DBI")
 
-  con <- DBI::dbConnect(duckdb::duckdb())
+  con <- test_duckdb_connection()
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
 
   df <- data.frame(a = bit64::as.integer64(c("1", "9223372036854775800")))
@@ -103,7 +138,7 @@ test_that("register_native_data_sources() registers tables and errors on an unsu
   skip_if_not_installed("duckdb")
   skip_if_not_installed("DBI")
 
-  con <- DBI::dbConnect(duckdb::duckdb())
+  con <- test_duckdb_connection()
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
 
   spec <- vg_create() |> vg_data(name = "d", data = data.frame(a = 1:3, g = factor(c("x", "y", "x"))))
@@ -119,7 +154,7 @@ test_that("vg_duckdb_app()'s handler implements mosaic's REST protocol", {
   skip_if_not_installed("nanoarrow")
   skip_if_not_installed("DBI")
 
-  con <- DBI::dbConnect(duckdb::duckdb())
+  con <- test_duckdb_connection()
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
   duckdb::duckdb_register(con, "t", data.frame(a = 1:3, b = c("x", "y", "z")))
 
@@ -170,8 +205,8 @@ test_that("ensure_vg_duckdb_server() refuses to switch connections without stopp
   skip_if_not_installed("DBI")
 
   vg_duckdb_server_stop()
-  con_a <- DBI::dbConnect(duckdb::duckdb())
-  con_b <- DBI::dbConnect(duckdb::duckdb())
+  con_a <- test_duckdb_connection()
+  con_b <- test_duckdb_connection()
   on.exit({
     vg_duckdb_server_stop()
     DBI::dbDisconnect(con_a, shutdown = TRUE)

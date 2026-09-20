@@ -1,9 +1,5 @@
 test_that("vg_snapshot() always captures a static screenshot, regardless of context", {
-  skip_if_not_installed("httpuv")
-  skip_if_not_installed("webshot2")
-  skip_if_not_installed("chromote")
-  chrome <- tryCatch(chromote:::find_chrome(), error = function(e) NA)
-  skip_if(is.na(chrome), "no local Chrome/Chromium found")
+  skip_if_no_chrome()
 
   spec <- vg_create() |>
     vg_data(name = "d", data = data.frame(a = 1:3, b = c(4, 5, 6))) |>
@@ -19,11 +15,7 @@ test_that("vg_snapshot() always captures a static screenshot, regardless of cont
 })
 
 test_that("vg_snapshot() accepts an already-built widget, not just a vgspec", {
-  skip_if_not_installed("httpuv")
-  skip_if_not_installed("webshot2")
-  skip_if_not_installed("chromote")
-  chrome <- tryCatch(chromote:::find_chrome(), error = function(e) NA)
-  skip_if(is.na(chrome), "no local Chrome/Chromium found")
+  skip_if_no_chrome()
 
   spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
   w <- vg_widget(spec)

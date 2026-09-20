@@ -497,7 +497,7 @@ test_that("register_native_inline_tables() loads a string spec's lifted rows int
   skip_if_not_installed("duckdb")
   skip_if_not_installed("DBI")
 
-  con <- DBI::dbConnect(duckdb::duckdb())
+  con <- test_duckdb_connection()
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
 
   spec <- vg_create() |>
