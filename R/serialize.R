@@ -96,7 +96,7 @@ parse_spec_string <- function(text) {
     if (is_json) {
       jsonlite::fromJSON(text, simplifyVector = FALSE)
     } else {
-      yaml::yaml.load(text, handlers = yaml_handlers(text))
+      parse_yaml12(text)
     },
     error = function(e) {
       stop(
@@ -172,46 +172,79 @@ yaml_bool_handler <- function(x) {
 #  * (Unchanged, and already agreeing with `yaml`: timestamps stay strings,
 #    `1:30` stays a string, `0x1F` is 31.)
 #
-# The exponent-float and `089` cases can only be caught in the `str` handler
-# (that's where an unrecognised plain scalar ends up), and that handler cannot
-# tell a plain `1e5` from a deliberately *quoted* "1e5" -- both arrive as the
-# same string. So it also refuses to convert any string whose quoted form
-# ("1e5" or '1e5') appears in the source text: a guard, not a rewrite, and the
-# safe direction to be wrong in (it keeps the old string behaviour). The set of
-# quoted number-like tokens is collected once per parse, so the guard costs one
-# pass over the text rather than one search per string.
-yaml_handlers <- function(text) {
-  quoted <- quoted_number_like_tokens(text)
+# yaml_handlers() holds the cheap ones. The exponent-float and `089` cases are
+# NOT a handler, though that is the only place the parser would let them be
+# caught (an unrecognised plain scalar ends up as a `str`): a `str` handler is
+# an R function called back for every string in the document, keys included --
+# 100,000 calls, and about seven of the ten seconds it took to parse a 20,000-
+# row inline data array. So they are a single pass over the finished tree
+# instead (convert_yaml_numbers(), below), which as a bonus never touches a
+# mapping *key* (a key `1e5:` stays the string "1e5"). Either way the parser has
+# already lost whether a scalar was quoted, so that pass also refuses to convert
+# any string whose quoted form ("1e5" or '1e5') appears in the source text -- a
+# guard, not a rewrite, and the safe direction to be wrong in (it keeps the old
+# string behaviour). The set of quoted number-like tokens is collected once per
+# parse, so the guard costs one pass over the text.
+yaml_handlers <- function() {
   list(
     int = yaml_int_handler,
     "int#oct" = yaml_int_handler,
     "bool#yes" = yaml_bool_handler,
     "bool#no" = yaml_bool_handler,
-    seq = function(x) x,
-    str = function(x) yaml_str_handler(x, quoted)
+    seq = function(x) x
+  )
+}
+
+# Parses YAML text the way the JavaScript YAML parsers do (YAML 1.2) -- the one
+# place that defines that. Used for a pasted spec (parse_spec_string()) and for
+# vgplotr's own synonym table (read_synonym_table(), R/suggest.R).
+parse_yaml12 <- function(text) {
+  convert_yaml_numbers(
+    yaml::yaml.load(text, handlers = yaml_handlers()),
+    quoted_number_like_tokens(text)
   )
 }
 
 # Every quoted scalar in `text` made only of characters a number can contain,
-# quotes stripped -- "1e5", '089', "2020", ... -- for yaml_str_handler()'s guard.
+# quotes stripped -- "1e5", '089', "2020", ... -- for convert_yaml_numbers()'s guard.
 quoted_number_like_tokens <- function(text) {
   m <- gregexpr("\"[-+.0-9eE]+\"|'[-+.0-9eE]+'", text)
   tokens <- regmatches(text, m)[[1]]
   unique(substr(tokens, 2L, nchar(tokens) - 1L))
 }
 
-# Resolves an unrecognised plain scalar the YAML 1.2 way: an exponent float
-# (`9.75e5`) or a leading-zero decimal integer (`089`) is a number. Anything
-# else -- and any string that was quoted somewhere in the source, `quoted` --
-# is left alone.
-yaml_str_handler <- function(x, quoted) {
-  is_exponent_float <- grepl("^[-+]?([0-9]+(\\.[0-9]*)?|\\.[0-9]+)[eE][-+]?[0-9]+$", x)
-  is_decimal_int <- grepl("^[-+]?[0-9]+$", x)
-  if ((is_exponent_float || is_decimal_int) && !(x %in% quoted)) {
-    if (is_decimal_int) yaml_int_handler(x) else as.numeric(x)
-  } else {
-    x
-  }
+# Resolves the string values in a parsed tree the YAML 1.2 way: an exponent
+# float (`9.75e5`) or a leading-zero decimal integer (`089`) is a number.
+# Anything else -- and any string that was quoted somewhere in the source,
+# `quoted` -- is left alone. It only ever looks at values, never at names.
+#
+# Built to be fast on a big inline data array, where there can be tens of
+# thousands of strings: the regular expressions run ONCE over all of them
+# (calling grepl() per string recompiles the pattern each time, which cost
+# several seconds), and rapply() -- which walks the tree in C -- is used only
+# to collect the strings and to put the few conversions back, in the same order.
+convert_yaml_numbers <- function(x, quoted) {
+  # a document that is a bare scalar (or empty) has no tree to walk, and
+  # rapply() only accepts a list; parse_spec_string() rejects it just after
+  if (!is.list(x)) return(x)
+  one_or_na <- function(s) if (length(s) == 1L) s else NA_character_
+  leaves <- rapply(x, one_or_na, classes = "character", how = "unlist")
+  if (length(leaves) == 0L) return(x)
+
+  is_exponent_float <- grepl("^[-+]?([0-9]+(\\.[0-9]*)?|\\.[0-9]+)[eE][-+]?[0-9]+$", leaves)
+  is_decimal_int <- grepl("^[-+]?[0-9]+$", leaves)
+  convert <- (is_exponent_float | is_decimal_int) & !(leaves %in% quoted)
+  if (!any(convert)) return(x)
+
+  numbers <- lapply(which(convert), function(i) {
+    if (is_decimal_int[[i]]) yaml_int_handler(leaves[[i]]) else as.numeric(leaves[[i]])
+  })
+  slot <- cumsum(convert)
+  seen <- 0L
+  rapply(x, function(s) {
+    seen <<- seen + 1L
+    if (convert[[seen]]) numbers[[slot[[seen]]]] else s
+  }, classes = "character", how = "replace")
 }
 
 # yaml::yaml.load()'s default implicit-integer resolution parses a

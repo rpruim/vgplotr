@@ -526,7 +526,7 @@ test_that("as_spec_payload() rejects a string that doesn't parse to an object", 
   expect_error(as_spec_payload("just a string"), "must parse to a JSON/YAML object")
 })
 
-# --- the rest of the YAML 1.1 vs 1.2 differences (see yaml_handlers()) -------
+# --- the rest of the YAML 1.1 vs 1.2 differences (see parse_yaml12()) -------
 
 json_of <- function(x) as.character(jsonlite::toJSON(x, auto_unbox = TRUE, digits = NA))
 
@@ -630,4 +630,34 @@ test_that("a large inline data array parses quickly (the quoted-token guard is o
   expect_lt(elapsed, 10)
   expect_identical(spec$data$d[[5]]$b, "5")   # quoted digits stay strings
   expect_true(is.numeric(spec$data$d[[5]]$c))
+})
+
+test_that("a mapping KEY that looks like a number stays a string (only values are converted)", {
+  spec <- parse_spec_string("1e5: a\n089: b\nplain: 1e5\n")
+  expect_named(spec, c("1e5", "089", "plain"))
+  expect_equal(spec$plain, 1e5)
+})
+
+test_that("number conversion keeps every value in its place across nesting, sequences and mixed types", {
+  spec <- parse_spec_string(paste0(
+    "a: 1e5\nb: [1e3, x, \"2e3\", 089]\nc: {d: 2.5e-3, e: '9e9', f: [[1e1], [text]]}\ng: keep\nh: ~\ni: true\nj: 7\n"
+  ))
+  expect_equal(spec$a, 1e5)
+  expect_identical(spec$b, list(1000, "x", "2e3", 89L))
+  expect_equal(spec$c$d, 0.0025)
+  expect_identical(spec$c$e, "9e9")
+  expect_identical(spec$c$f, list(list(10), list("text")))
+  expect_identical(spec$g, "keep")
+  expect_null(spec$h)
+  expect_identical(spec$i, TRUE)
+  expect_identical(spec$j, 7L)
+})
+
+test_that("convert_yaml_numbers() copes with trees that hold no strings, or none to convert, and with a non-list root", {
+  expect_identical(convert_yaml_numbers("just a string", character()), "just a string")
+  expect_identical(convert_yaml_numbers(NULL, character()), NULL)
+  expect_identical(convert_yaml_numbers(5L, character()), 5L)
+  expect_identical(convert_yaml_numbers(list(a = 1L, b = TRUE), character()), list(a = 1L, b = TRUE))
+  expect_identical(convert_yaml_numbers(list(), character()), list())
+  expect_identical(convert_yaml_numbers(list(a = "x", b = list("y")), character()), list(a = "x", b = list("y")))
 })
