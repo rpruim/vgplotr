@@ -61,10 +61,11 @@ test_that("suggest_names() sends color/colour (and near-misses) to fill/stroke",
   expect_equal(suggest_names("colors", pool), c("fill", "stroke"))
 })
 
-test_that("suggest_names() doesn't treat color as a mistake where `color` is a real property", {
+test_that("where `color` is a real property (the axis marks), `colour` is pointed at it first", {
   pool <- c("color", "fill", "stroke")
-  # (axis marks have `color`) -- so `colour` is just a near-miss of it
-  expect_equal(suggest_names("colour", pool), "color")
+  # the synonym table lists `color` first for `colour`, and only what is valid
+  # in the call is offered
+  expect_equal(suggest_names("colour", pool), c("color", "fill", "stroke"))
 })
 
 test_that("suggest_names() never suggests a name that was already supplied", {
@@ -337,14 +338,14 @@ test_that("a forgotten prefix is only recognised exactly, so base-R functions ar
   expect_equal(transform_name_suggestion("log"), "")     # not `vg_lag()`
   expect_equal(transform_name_suggestion("sqrt"), "")
   expect_equal(transform_name_suggestion("paste"), "")
-  expect_equal(transform_name_suggestion("mean"), "")    # there's no vg_mean()
+  expect_equal(transform_name_suggestion("average_of"), "")
 })
 
 test_that("the shared vg_ prefix doesn't make unrelated transform names look close", {
-  # `hist` is two edits from `first` and `last`: too far for a 4-letter name,
-  # even though the full names differ by the same two edits out of 8
-  expect_equal(transform_name_suggestion("vg_hist"), "")
-  expect_equal(transform_name_suggestion("vg_mean"), "")
+  # `hxst` is two edits from `last`: too far for a 4-letter name, even though
+  # the full names differ by the same two edits out of 8
+  expect_equal(transform_name_suggestion("vg_hxst"), "")
+  expect_equal(transform_name_suggestion("vg_mxdx"), "")   # two edits from `mode`
   # ...but a typo *in* the prefix still counts as an edit
   expect_equal(transform_name_suggestion("vh_bin"), " Did you perhaps mean `vg_bin()`?")
 })

@@ -167,11 +167,12 @@ context_arg_names <- function(context) {
 #
 # The warning offers the closest recognized value(s) (R/suggest.R) --
 # `cardinal_open`, `cardinalOpen` and `Cardinal-Open` are all one edit-free
-# step from `cardinal-open` -- and lists every allowed value only when none
-# is close, since a long list (`curve` has 21) is just noise next to a
-# confident suggestion. It deliberately uses similar_names(), not
-# suggest_names(): the color -> fill/stroke rule is about argument *names*
-# and has no business rewriting a value.
+# step from `cardinal-open`, and a synonym from the table's `values` section
+# (`textAnchor = "center"` -> "middle") is tried first -- and lists every
+# allowed value only when none is close, since a long list (`curve` has 21)
+# is just noise next to a confident suggestion. It uses suggest_values(), not
+# suggest_names(): the argument-name synonyms (color -> fill/stroke) have no
+# business rewriting a value.
 warn_unrecognized_enum_values <- function(args) {
   for (nm in names(args)) {
     allowed <- .vg_enum_props[[nm]]
@@ -180,7 +181,7 @@ warn_unrecognized_enum_values <- function(args) {
     if (inherits(v, "formula") || inherits(v, "vg_transform") || inherits(v, "vg_sql_expr") || is_vg_param(v)) next
     if (!is.character(v) || length(v) != 1 || is.na(v)) next
     if (!(v %in% allowed)) {
-      closest <- similar_names(v, allowed)
+      closest <- suggest_values(v, allowed, nm)
       detail <- if (length(closest) > 0) {
         format_suggestion(paste0('"', closest, '"'))
       } else {

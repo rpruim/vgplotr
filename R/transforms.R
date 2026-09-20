@@ -75,7 +75,7 @@ match_transform_call <- function(fn_name, fn, expr) {
       }
       suggestions <- lapply(unknown, function(nm) {
         format_suggestion(
-          suggest_names(nm, valid, present = supplied),
+          suggest_names(nm, valid, present = supplied, table = synonym_section("transform_options")),
           arg = if (length(unknown) > 1) nm
         )
       })
@@ -107,14 +107,22 @@ match_transform_call <- function(fn_name, fn, expr) {
 # match (`avg` is one edit from `agg`, but `vg_avg` is what was meant). Only
 # an exact match counts there: a fuzzy one on top would be guessing twice,
 # and would tell a base-R `log(x)` to use `vg_lag()`.
+#
+# Next comes the synonym table's `transform_names` section -- a different word
+# for a transform (`mean` for `vg_avg`, `n` for `vg_count`), looked up without
+# the `vg_` prefix on either side -- and only then the closest spelling.
 transform_name_suggestion <- function(fn_name) {
   known <- c(names(vg_transform_specs), "sql", "agg", "param")
   prefixed <- paste0("vg_", fn_name)
   hits <- if (!startsWith(fn_name, "vg_") && prefixed %in% known) {
     prefixed
   } else {
-    bare_length <- nchar(gsub("[_.]", "", sub("^vg_", "", fn_name)))
-    similar_names(fn_name, known, limit = max(1L, bare_length %/% 3L))
+    bare <- sub("^vg_", "", fn_name)
+    bare_length <- nchar(gsub("[_.]", "", bare))
+    suggest_with_synonyms(
+      bare, known, synonym_section("transform_names"),
+      function() similar_names(fn_name, known, limit = max(1L, bare_length %/% 3L))
+    )
   }
   if (length(hits) == 0) return("")
   paste0(" ", format_suggestion(paste0(hits, "()")))

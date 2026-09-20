@@ -40,3 +40,22 @@ Render-test both **http-served and file://** (opened directly) when
 verifying a browser-facing change -- a bug has slipped through before
 that only reproduced in one of the two. A passing spec-level/unit test is
 not sufficient verification for a rendering change; open a real browser.
+
+## Suggestion synonyms
+
+The "Did you perhaps mean ...?" suggestions in warnings and errors (`R/suggest.R`)
+use edit distance for *misspellings* and a **synonym table** for different
+*words* (`alpha` for `opacity`, `linewidth` for `stroke_width`, `mean` for
+`vg_avg` -- habits from ggplot2, base R, dplyr). The table is a plain YAML file,
+`inst/extdata/suggestion-synonyms.yaml`; its header comment explains the format.
+
+To add or change an entry, edit that file and run
+`devtools::test(filter = "synonyms")`. The tests check that every candidate
+still exists in the current schema, that no key is repeated, and that no entry
+can never fire, so a typo in the file (or a name a future mosaic version drops)
+fails a test instead of shipping a bad suggestion. Write candidates in
+snake_case; each is shown in whatever spelling the function being called
+accepts. Two rules worth knowing before adding one: an exact key never falls
+back to edit distance (so list a real name as a candidate when it is the right
+answer somewhere, as `labels` does with `label`), and a near-miss of a key is
+only a last resort -- a real name in the call always wins.

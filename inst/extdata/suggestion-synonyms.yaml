@@ -1,0 +1,233 @@
+# Synonyms for the "Did you perhaps mean ...?" suggestions in vgplotr's warnings
+# and errors (see R/suggest.R).
+#
+# Edit-distance matching catches TYPOS (`stoke` -> `stroke`), but not a
+# different WORD for the same thing -- most often one carried over from ggplot2,
+# base R graphics, dplyr, or Observable Plot. This table maps such a word to what
+# vgplotr / mosaic actually calls it.
+#
+# FORMAT
+#   <what the user wrote>: [<what they probably meant>, ...]
+#
+#   * Left side: the wrong word. Case, `_`, `.` and `-` are ignored when matching,
+#     so `line_width`, `linewidth` and `lineWidth` are one entry -- write it once.
+#   * A key matches when the word is exactly that key (ignoring the case/`_` above).
+#     A one-edit misspelling of a key at least 5 letters long is understood too
+#     (`colr` finds `color`) -- but only as a last resort, when no real name in
+#     the call is a closer match. A real name always beats a guess, so `ttle` is
+#     read as a typo of `title`, not as a slip for the key `title`. If a common
+#     misspelling matters, give it its own line (`colors`).
+#   * Right side: the candidates, in the order to suggest them. Write them in
+#     snake_case (the spelling the documentation uses); the warning shows each in
+#     whatever spelling the function being called accepts.
+#   * Only candidates that are actually valid in the call being made are shown,
+#     so it is fine to list every place a word could apply: `size: [r, font_size]`
+#     suggests `r` for a dot and `font_size` for text.
+#   * An exact key NEVER falls back to edit-distance matching. If none of its
+#     candidates apply to the call (`color` on a brush, say), no suggestion is
+#     made at all -- better silence than an unrelated guess. So list a real name
+#     as a candidate when it is the right answer somewhere: `labels` includes
+#     `label` because on a legend that is what was meant.
+#   * YAML 1.2 rules apply (as everywhere in vgplotr): `n`, `y`, `no`, `on` are
+#     plain strings and need no quotes. Quote a value only if it starts with
+#     a symbol, e.g. "-value".
+#
+# SECTIONS
+#   arguments          an argument name of a mark, interactor, input, legend, scale,
+#                      guide, or of vg_attributes()/vg_plot()
+#   values             a value of an argument that takes a fixed set of strings;
+#                      grouped by mosaic's own (camelCase) name for that argument
+#   transform_options  an option of a transform, e.g. vg_bin(delay, <option> = )
+#   transform_names    a function used where a transform belongs, e.g. ~mean(delay);
+#                      write the key WITHOUT the `vg_` prefix and the candidates WITH it
+#
+# CHECKING YOUR EDIT
+#   The test suite verifies this file (tests/testthat/test-synonyms.R): that it
+#   parses, that no key is repeated, and -- most usefully -- that every candidate
+#   really exists in the current schema, so a typo here (or a name a future mosaic
+#   version drops) fails a test instead of shipping a bad suggestion:
+#       devtools::test(filter = "synonyms")
+
+arguments:
+
+  # --- colour: mosaic has no `color`, only `fill` (inside) and `stroke` (outline) ---
+  color: [fill, stroke]
+  colour: [color, fill, stroke]        # `color` first: it is a real property of the axis marks
+  colors: [fill, stroke]
+  colours: [color, fill, stroke]
+  col: [fill, stroke]
+  fill_color: [fill]
+  bg: [fill]                           # base R: fill of a plotting symbol
+  border: [stroke]
+  border_color: [stroke]
+  edge_color: [stroke]
+  outline: [stroke]
+  outline_color: [stroke]
+  line_color: [stroke]
+
+  # --- transparency ---
+  alpha: [opacity, fill_opacity]
+  transparency: [opacity]
+  fill_alpha: [fill_opacity]
+  stroke_alpha: [stroke_opacity]
+  line_alpha: [stroke_opacity]
+
+  # --- size and line style ---
+  size: [r, font_size]
+  cex: [r]                             # base R
+  radius: [r]
+  point_size: [r]
+  text_size: [font_size]
+  linewidth: [stroke_width]            # ggplot2
+  lwd: [stroke_width]                  # base R
+  linetype: [stroke_dasharray]
+  lty: [stroke_dasharray]              # base R
+  dash: [stroke_dasharray]
+  dashes: [stroke_dasharray]
+  linejoin: [stroke_linejoin]
+  lineend: [stroke_linecap]
+
+  # --- shape, grouping, facets ---
+  shape: [symbol]
+  pch: [symbol]                        # base R
+  group: [z]
+  group_by: [z]
+  facet_by: [fx, fy]
+  facet_wrap: [fx, fy]
+
+  # --- positions of interval-like marks (ggplot2 geoms) ---
+  xmin: [x1]
+  xmax: [x2]
+  ymin: [y1]
+  ymax: [y2]
+  xend: [x2]
+  yend: [y2]
+  nudge_x: [dx]
+  nudge_y: [dy]
+
+  # --- text ---
+  angle: [rotate]
+  family: [font_family]
+  fontface: [font_weight, font_style]
+
+  # --- data ---
+  data: [data_from, from]              # marks take `data_from`; menus and tables take `from`
+  dataset: [data_from, from]
+  df: [data_from, from]
+
+  # --- scales and axes (ggplot2 / base R) ---
+  xlim: [domain, x_domain]
+  ylim: [domain, y_domain]
+  limits: [domain]
+  xlab: [x_label]
+  ylab: [y_label]
+  trans: [type]
+  transform: [type]
+  breaks: [ticks]
+  n_breaks: [ticks]
+  labels: [tick_format, label]        # `label` too: on a legend or input it is the right answer
+  palette: [scheme, range]
+  values: [options, value, range]      # a menu's choices, or scale_*_manual(values = )
+
+  # --- interactors, inputs, legends ---
+  selection: [as]
+  param: [as]
+  choices: [options]
+  items: [options]
+  levels: [options]
+  default: [value]
+  selected: [value]
+  initial: [value]
+  lower: [min]
+  upper: [max]
+  min_value: [min]
+  max_value: [max]
+  increment: [step]
+  title: [label]                       # legends and inputs; (a mark's `title` is a real channel)
+  ncol: [columns]
+  ncols: [columns]
+
+values:
+
+  textAnchor:
+    center: [middle]
+    centre: [middle]
+    left: [start]
+    right: [end]
+
+  lineAnchor:
+    center: [middle]
+    centre: [middle]
+
+  frameAnchor:
+    center: [middle]
+    centre: [middle]
+
+  curve:
+    straight: [linear]
+    stepped: [step]
+
+  symbol:
+    point: [circle]
+    dot: [circle]
+
+  offset:
+    fill: [normalize]                  # ggplot2 position = "fill"
+    percent: [normalize]
+    proportion: [normalize]
+
+  order:
+    ascending: [value]
+    asc: [value]
+    descending: ["-value"]
+    desc: ["-value"]
+
+  listMatch:
+    some: [any]
+    or: [any]
+    union: [any]
+    and: [all]
+    every: [all]
+    intersect: [all]
+
+  select:
+    single: [point]
+    one: [point]
+    range: [interval]
+    brush: [interval]
+
+  interval: &time_words
+    hourly: [hour]
+    daily: [day]
+    weekly: [week]
+    monthly: [month]
+    yearly: [year]
+    annual: [year]
+    annually: [year]
+
+  ticks: *time_words
+
+transform_options:
+  bins: [steps]
+  n_bins: [steps]
+  bin_width: [step]
+  group_by: [partitionby]
+  unique: [distinct]
+
+transform_names:
+  mean: [vg_avg]
+  average: [vg_avg]
+  n: [vg_count]
+  n_distinct: [vg_count]
+  sd: [vg_stddev]
+  stdev: [vg_stddev]
+  std: [vg_stddev]
+  var: [vg_variance]
+  cov: [vg_covariance]
+  prod: [vg_product]
+  hist: [vg_bin]
+  histogram: [vg_bin]
+  cut: [vg_bin]
+  cut_width: [vg_bin]
+  cut_interval: [vg_bin]
+  month: [vg_date_month]
