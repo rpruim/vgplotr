@@ -7,6 +7,11 @@
 ^data-raw/js/node_modules$
 ^data-raw$
 ^vignettes/\.quarto$
-^vignettes/*_files$
+^vignettes/.*_files$
 ^README\.Rmd$
 ^pkgdown$
+^AGENTS\.md$
+^_pkgdown\.yml$
+^README\.html$
+^man/figures/README-.*_files$
+^man/figures/README-.*\.html$
