@@ -28,3 +28,10 @@ docs/
 # rmarkdown::render()'s local HTML preview of README.Rmd -- README.md
 # (committed) is the real output; this is just a render byproduct.
 README.html
+
+# htmlwidget byproducts of knitting README.Rmd (a copy of each widget's HTML and of
+# its JS/CSS dependencies). README.md only uses the .png figures, so these are
+# neither tracked nor shipped. They are also in .Rbuildignore: a gitignored file
+# is still bundled by a build from a local directory.
+man/figures/README-*.html
+man/figures/README-*_files/
