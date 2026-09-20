@@ -2,6 +2,8 @@
 ^examples$
 ^vignettes/articles$
 ^\.github$
+^\.claude$
+^docs$
 ^data-raw/js/node_modules$
 ^data-raw$
 ^vignettes/\.quarto$
