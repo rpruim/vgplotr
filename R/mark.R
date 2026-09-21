@@ -72,6 +72,10 @@ vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
 # legends should accept snake_case too, which would make `style` unnecessary, is
 # an open question: see "Open design questions" in AGENTS.md.)
 build_mark <- function(spec, mark, formula, args, style) {
+  if (inherits(spec, "formula") && identical(formula, vg_unset)) {
+    formula <- spec
+  }
+
   if (!identical(formula, vg_unset)) {
     args <- merge_vg_formula(args, parse_vg_formula(formula, mark), mark)
   }
@@ -91,10 +95,16 @@ build_mark <- function(spec, mark, formula, args, style) {
   # source), so it's deliberately left alone here too, falling through to
   # that same literal-data handling -- data_from = 0L and data_from = 0
   # end up identical (mosaic-spec's "data": [0]).
-  if (is.integer(args$data_from) && length(args$data_from) == 1 && args$data_from != 0L) {
+  if (
+    is.integer(args$data_from) &&
+      length(args$data_from) == 1 &&
+      args$data_from != 0L
+  ) {
     if (!is_vgspec(spec) || length(spec$data) == 0) {
       stop(
-        "`data_from = ", args$data_from, "L` (a data source index) needs at least one ",
+        "`data_from = ",
+        args$data_from,
+        "L` (a data source index) needs at least one ",
         "data source already registered on the spec -- add one with vg_data() first.",
         call. = FALSE
       )
@@ -116,8 +126,13 @@ build_mark <- function(spec, mark, formula, args, style) {
   # values (e.g., vg_mark_rule_x(x = 0), a plain reference line) has nothing
   # to look up, and mosaic errors on an empty SELECT if data_from is
   # attached anyway -- confirmed directly, this used to happen.
-  if (is.null(args$data_from) && is_vgspec(spec) && length(spec$data) &&
-        isTRUE(unname(.vg_mark_has_data[mark])) && args_reference_data(args)) {
+  if (
+    is.null(args$data_from) &&
+      is_vgspec(spec) &&
+      length(spec$data) &&
+      isTRUE(unname(.vg_mark_has_data[mark])) &&
+      args_reference_data(args)
+  ) {
     args$data_from <- names(spec$data)[[1]]
   }
 
@@ -133,7 +148,11 @@ build_mark <- function(spec, mark, formula, args, style) {
 
   fragment <- as_vg_plot_fragment(spec)
   fragment$items <- c(fragment$items, list(mark_obj))
-  fragment$attrs <- merge_attrs(fragment$attrs, split$plot_attrs, context = paste0("mark `", mark, "`"))
+  fragment$attrs <- merge_attrs(
+    fragment$attrs,
+    split$plot_attrs,
+    context = paste0("mark `", mark, "`")
+  )
 
   update_layout(spec, fragment)
 }
