@@ -217,7 +217,12 @@ Every `vg_render()` call on the same page
 shares one DuckDB instance behind the scenes, so data sources only
 need to be registered once.  This also means that it is not
 possible to use the same name for different data sources
-in different specifications on the same page.
+in different specifications on the same page. This includes the
+implicit `"data"` name used when a data frame is piped directly into a
+mark (see "Some shortcuts" above) -- if more than one such plot appears
+on the same page, give each an explicit, distinct `data_from =` (or
+register the data yourself with `vg_data()`) so they don't overwrite
+each other.
 :::
 
 We can obtain a subset of the data contained in the file using
@@ -524,7 +529,7 @@ pts <- data.frame(
 )
 
 pts |>
-  vg_mark_dot(y ~ x, fill = ~group, r = ~size, fill_opacity = 0.6) |>
+  vg_mark_dot(y ~ x, fill = ~group, r = ~size, fill_opacity = 0.6, data_from = "pts") |>
   vg_scale_color(
     domain = c("A", "B", "C", "D"),
     range = c("red", "darkgreen", "steelblue", "orange")
@@ -556,7 +561,7 @@ per-axis attribute always wins over the default).
 
 ```{r}
 pts |>
-  vg_mark_dot(y ~ x, fill = ~group, fill_opacity = 0.6) |>
+  vg_mark_dot(y ~ x, fill = ~group, fill_opacity = 0.6, data_from = "pts") |>
   vg_scale_all(padding = 0.1) |>
   vg_guide_all(grid = TRUE) |>
   vg_plot(width = 400, height = 300) |>
@@ -583,7 +588,7 @@ here, the color mapping from `fill = ~group`.
 
 ```{r}
 pts |>
-  vg_mark_dot(y ~ x, fill = ~group, r = ~size, fill_opacity = 0.6) |>
+  vg_mark_dot(y ~ x, fill = ~group, r = ~size, fill_opacity = 0.6, data_from = "pts") |>
   vg_legend_color() |>
   vg_plot(width = 400, height = 300) |>
   vg_render()
