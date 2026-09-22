@@ -276,6 +276,7 @@ dots <-
 
 vg_create() |>
   vg_data(name = "aapl", aapl) |>
+  vg_attributes(width = 600, height = 300) |>
   vg_vconcat(lines, dots) |>
   vg_render()
 ```
@@ -338,8 +339,9 @@ detail <-
   )
 
 vg_create() |>
-  vg_vconcat(detail, overview) |>
   vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_attributes(width = 600, height = 400) |>
+  vg_vconcat(detail, overview) |>
   vg_render()
 ```
 

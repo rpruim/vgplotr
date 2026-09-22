@@ -31,7 +31,15 @@ rendered page is ultimately opened from) for duckdb-wasm to load it
 in the browser. (An inline array that also has \code{where}/\code{select}
 options is one of these: it's handed to mosaic as-is.)}
 
-\item{width, height}{Widget sizing, in CSS units (e.g., \code{"100\%"}) or pixels.}
+\item{width, height}{Widget sizing, in CSS units (e.g., \code{"100\%"}) or pixels.
+Left \code{NULL} (the default), this falls back to the spec's own top-level
+\code{width}/\code{height} -- set via \code{\link[=vg_attributes]{vg_attributes()}}, or already present as
+top-level keys in a JSON/YAML string spec -- when that's a plain
+number, so the widget's own size matches the graphic's by default
+instead of the two silently disagreeing. A \code{param()}-driven \code{width}/
+\code{height} (reactive, no fixed number) is left alone, the same as when
+the spec sets neither at all -- pass an explicit value here to size
+the widget in either case.}
 
 \item{elementId}{Optional DOM element ID for the widget.}
 

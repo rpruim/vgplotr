@@ -1,3 +1,15 @@
+# A top-level `width`/`height` (`payload$spec$width`/`$height` --
+# spec$attrs from vg_attributes(), or an already-complete string spec's own
+# top-level keys; see as_spec_payload()) becomes vg_widget()'s own default
+# container size only when it's a single plain number. mosaic-spec also
+# allows a ParamRef there (a reactive `param()`-driven value, deserialized
+# as a list, e.g. `list(param = "myWidth")`) -- not a fixed size to copy,
+# so that (and a missing key, NULL) both fall through to NULL here, leaving
+# htmlwidgets' own default sizing in charge exactly as before this existed.
+spec_top_level_size <- function(x) {
+  if (is.numeric(x) && length(x) == 1) x else NULL
+}
+
 #' Build a vgspec into a live mosaic vgplot widget
 #'
 #' Returns a live, interactive `htmlwidget` -- useful directly
@@ -48,6 +60,14 @@
 #'   in the browser. (An inline array that also has `where`/`select`
 #'   options is one of these: it's handed to mosaic as-is.)
 #' @param width,height Widget sizing, in CSS units (e.g., `"100%"`) or pixels.
+#'   Left `NULL` (the default), this falls back to the spec's own top-level
+#'   `width`/`height` -- set via [vg_attributes()], or already present as
+#'   top-level keys in a JSON/YAML string spec -- when that's a plain
+#'   number, so the widget's own size matches the graphic's by default
+#'   instead of the two silently disagreeing. A `param()`-driven `width`/
+#'   `height` (reactive, no fixed number) is left alone, the same as when
+#'   the spec sets neither at all -- pass an explicit value here to size
+#'   the widget in either case.
 #' @param elementId Optional DOM element ID for the widget.
 #' @param use_cache Whether this graphic should use the local duckdb-wasm
 #'   engine cache (see [vg_cache_duckdb()]) if one exists. Defaults to
@@ -86,6 +106,9 @@ vg_widget <- function(
   }
 
   payload <- as_spec_payload(spec)
+
+  if (is.null(width)) width <- spec_top_level_size(payload$spec$width)
+  if (is.null(height)) height <- spec_top_level_size(payload$spec$height)
 
   if (inherits(connector, "vg_duckdb_connector")) {
     server <- ensure_vg_duckdb_server(connector)

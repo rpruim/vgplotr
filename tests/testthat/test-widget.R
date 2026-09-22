@@ -49,3 +49,76 @@ test_that("vg_widget() warns once on an ordered factor column (order isn't prese
 
   expect_warning(vg_widget(spec), "ordered factor")
 })
+
+test_that("vg_widget() defaults width/height from a single plot's own size when the caller doesn't supply one", {
+  # For a single-plot spec, mosaic-spec itself serializes the plot's own
+  # attrs (from vg_mark_*()/vg_plot()) as top-level keys, sibling to
+  # `plot:` -- the same place vg_attributes() writes to -- so this covers
+  # the common case (no vg_attributes() call needed) as well as the
+  # explicit one below.
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b, width = 680, height = 200)
+  w <- vg_widget(spec)
+
+  expect_equal(w$width, 680)
+  expect_equal(w$height, 200)
+})
+
+test_that("vg_widget(width=, height=) explicitly overrides the spec's own size", {
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b, width = 680, height = 200)
+  w <- vg_widget(spec, width = 300, height = 100)
+
+  expect_equal(w$width, 300)
+  expect_equal(w$height, 100)
+})
+
+test_that("vg_widget() leaves width/height NULL for a multi-plot layout with no top-level size", {
+  # A vconcat/hconcat of several plots has no single size to default to,
+  # so this deliberately doesn't try to derive one from the children --
+  # htmlwidgets' own default sizing takes over, same as before this
+  # feature existed.
+  spec <- vg_create() |>
+    vg_vconcat(
+      vg_mark_dot(x = ~a, y = ~b, width = 680, height = 200),
+      vg_mark_line_y(x = ~a, y = ~b, width = 680, height = 200)
+    )
+  w <- vg_widget(spec)
+
+  expect_null(w$width)
+  expect_null(w$height)
+})
+
+test_that("vg_widget() picks up vg_attributes(width=, height=) on a multi-plot layout", {
+  spec <- vg_create() |>
+    vg_attributes(width = 680, height = 400) |>
+    vg_vconcat(
+      vg_mark_dot(x = ~a, y = ~b, width = 680, height = 200),
+      vg_mark_line_y(x = ~a, y = ~b, width = 680, height = 200)
+    )
+  w <- vg_widget(spec)
+
+  expect_equal(w$width, 680)
+  expect_equal(w$height, 400)
+})
+
+test_that("vg_widget() ignores a param()-driven width/height instead of erroring", {
+  spec <- vg_create() |> vg_attributes(width = param(w)) |> vg_mark_dot(x = ~a, y = ~b)
+
+  expect_no_error(w <- vg_widget(spec))
+  expect_null(w$width)
+})
+
+test_that("vg_widget() reads a top-level width/height off a raw YAML/JSON string spec", {
+  yaml_spec <- "
+width: 500
+height: 250
+plot:
+  - mark: dot
+    data: {from: pts}
+    x: a
+    y: b
+"
+  w <- vg_widget(yaml_spec)
+
+  expect_equal(w$width, 500)
+  expect_equal(w$height, 250)
+})
