@@ -21,15 +21,14 @@ set.seed(12345)
 
 vgplotr provides an R interface to UW Interactive Data Lab's Mosaic/vgplot,
 an implementation of a grammar of interactive graphics. To use interactive
-features, a graphic must be embedded in an environment that supports 
-interactive widgets, like an HTML file or a shiny app.  
-Non-interactive graphics are supported in other file formats
-(PDF, Word, etc.), are created by taking a snapshot of an underlying
-interactive graphic.
+features, a graphic must be embedded in an environment that supports
+interactive widgets, like an HTML file or a Shiny app.
+Non-interactive graphics, supported in other file formats (PDF, Word, etc.),
+are created by taking a snapshot of an underlying interactive graphic.
 
 ### Installation
 
-vgplotr is designed to that beginners can get up and running quickly by
+vgplotr is designed so that beginners can get up and running quickly by
 simply installing the R package and using it in a quarto document.
 For now, the package is only available via GitHub:
 
@@ -50,7 +49,7 @@ Mosaic graphics rely on a DuckDB database to store and query the
 underlying data. By default, vgplotr uses DuckDB-Wasm, which 
 runs DuckDB in a browser.
 DuckDB-Wasm's database engine is an ~35 MB compiled WebAssembly binary
--- too large large to include in the package -- so by default 
+-- too large to include in the package -- so by default
 `vg_render()` fetches DuckDB-Wasm
 from a CDN each time a graphic is *viewed*.
 To avoid this, you can call `vg_cache_duckdb()` once 
@@ -64,7 +63,7 @@ even when you are offline.
 vg_cache_duckdb()
 ```
 
-Use `vg_info()` provides information about the installation,
+`vg_info()` provides information about the installation,
 including whether DuckDB-Wasm has been cached locally.
 
 ```{r}
@@ -127,14 +126,14 @@ mosaic's plot attributes -- mosaic's own JS runtime never actually reads
 `meta$title` as a caption above the graphic as a vgplotr-level convenience: -->
 
 
-### Some short cuts
+### Some shortcuts
 
-We can obtain the same simple plot with less code by taking advantage 
-of some short cuts.
+We can obtain the same simple plot with less code by taking advantage
+of some shortcuts.
 
-* If we pipe a data frame into the `vg_` workflow, we can omit 
+* If we pipe a data frame into the `vg_` workflow, we can omit
 `vg_create()` and `vg_data()`: `aapl |> vg_mark_line()` is equivalent to
-`vg_create() |> vg_data(name = "data", aapl)`.
+`vg_create() |> vg_data(name = "data", aapl) |> vg_mark_line()`.
 
 * By default, mark functions use the first registered data source,
   so we can omit `data_from = "data"`.
@@ -151,8 +150,8 @@ aapl |>
 ### Multiple marks
 
 Later marks in the same chain don't need to repeat `data_from =` either:
-any mark that doesn't set its own `data_from` 
-(and whose mark type required data) defaults to the spec's
+any mark that doesn't set its own `data_from`
+(and whose mark type requires data) defaults to the spec's
 *first* registered data source. That makes simple multi-layer plots from
 one data source easy to build straight out of a pipe chain:
 
@@ -165,9 +164,9 @@ aapl |>
 ```
 
 To use different data sources for different marks,
-name each explicitly with `data_from =`.  The value can be 
-either a name (i.e., "aapl") or a non-zero integer (i.e., `1L`^[Note: the L here is required -- indices must be explicit integers.])
-specifying the registration index. 
+name each explicitly with `data_from =`.  The value can be
+either a name (e.g., "aapl") or a non-zero integer (e.g., `1L`^[Note: the L here is required -- indices must be explicit integers.])
+specifying the registration index.
 Negative numbers count from the most recently registered data source.
 
 
@@ -205,15 +204,15 @@ See `?vg_mark` for the full grammar.
 
 ## Loading data from a file
 
-`vg_data()` can be used to register data in a file instead of an 
-inline data frame. The file can be a file on file system or it
+`vg_data()` can be used to register data in a file instead of an
+inline data frame. The file can be a file on the file system or it
 can be specified as a URL.
-Relative paths resolve against wherever the rendered document itself 
-ends up, the same way a relative link or image would in an ordinary 
+Relative paths resolve against wherever the rendered document itself
+ends up, the same way a relative link or image would in an ordinary
 web page.
 
 :::{.callout-warning}
-#### Once DuckDB instance for an entire *page*.
+#### One DuckDB instance for an entire *page*.
 Every `vg_render()` call on the same page
 shares one DuckDB instance behind the scenes, so data sources only
 need to be registered once.  This also means that it is not
@@ -227,23 +226,21 @@ We can obtain a subset of the data contained in the file using
 
 ```{r}
 #| label: data-in-file
-spec1b <-
-  vg_create() |>
+vg_create() |>
   vg_data(
     name = "aapl_file",
     file = "data/stocks.csv",
     where = "Symbol = 'AAPL'"
   ) |>
   vg_mark_line_y(data_from = "aapl_file", x = ~Date, y = ~Close) |>
-  vg_attributes(width = 680, height = 200)
-
-spec1b |> vg_render()
+  vg_attributes(width = 680, height = 200) |>
+  vg_render()
 ```
 
 :::{.callout-tip}
 #### Accessing Mosaic example data sets
 
-`vg_data_url()` returns the URL for a Mosaic example data
+`vg_data_url()` returns the URL for a Mosaic example dataset
 from its name.
 
 :::
@@ -252,7 +249,7 @@ from its name.
 #| label: vg-data-url
 vg_create() |>
   vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
-  vg_mark_dot( temp_max ~ date, fill = "steelblue") |>
+  vg_mark_dot(temp_max ~ date, fill = "steelblue") |>
   vg_render()
 ```
 
@@ -278,6 +275,7 @@ dots <-
     width = 600, height = 150)
 
 vg_create() |>
+  vg_data(name = "aapl", aapl) |>
   vg_vconcat(lines, dots) |>
   vg_render()
 ```
@@ -467,8 +465,7 @@ vg_create() |>
   vg_scale_fy(padding = 0.1) |>
   vg_guide_fy(label = "Ticker Symbol") |>
   vg_plot(width = 680, height = 400) |>
-  to_yaml()
-vg_render()
+  vg_render()
 ```
 
 ### Other scales and their guides
@@ -635,7 +632,7 @@ raw SQL expression for encodings that transforms and plain column
 references can't express -- mosaic-spec's own `{sql: "..."}`/`{agg: "..."}`.
 Below, a slider-controlled "bias" parameter is added to a plotted value,
 computed live by DuckDB. A `param()` reference can be written directly in
-the SQL text (`sql("v + $bias")`) or built up from pieces, as below --
+the SQL text (`sql("temp_max + $bias")`) or built up from pieces, as below --
 both are equivalent.
 
 ```{r}
@@ -651,19 +648,17 @@ bias_picker <- vg_slider(
 
 biased_plot <-
   vg_mark_area_y(
-    data_from = "walk",
-    x = ~t,
-    y = sql("v + ", param(bias)),
+    data_from = "weather",
+    x = ~date,
+    y = sql("temp_max + ", param(bias)),
     fill = "steelblue"
   ) |>
-  vg_plot(width = 680, height = 200, y_domain = c(-30, 30))
+  vg_plot(width = 680, height = 200, y_domain = c(-20, 60))
 
-spec7 <-
-  vg_create() |>
-  vg_data(name = "walk", data = walk) |>
-  vg_vconcat(bias_picker, biased_plot)
-
-vg_render(spec7)
+vg_create() |>
+  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_vconcat(bias_picker, biased_plot) |>
+  vg_render()
 ```
 
 ## `to_json()`/`to_yaml()`: converting a spec to mosaic's own format
