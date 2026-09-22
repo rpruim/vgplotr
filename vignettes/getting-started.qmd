@@ -474,14 +474,14 @@ vg_create() |>
 :::{.callout-tip}
 #### vg_mark_frame()
 
-By default, Mosaic plots to not include a boundary rectangle. For faceted 
+By default, Mosaic plots do not include a boundary rectangle. For faceted
 graphics, such a frame can often make it easier to see the facets.
 :::
 
 :::{.callout-warning}
 #### Missing facet features
 
-Those familiar with `ggplot2` or `vega-lite` may wonder about 
+Those familiar with `ggplot2` or Vega-Lite may wonder about
 
 * wrapped facets,
 * independent scales in facets.
