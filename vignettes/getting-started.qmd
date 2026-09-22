@@ -466,9 +466,34 @@ vg_create() |>
   vg_mark_line(Close ~ Date | Symbol ~ ., data_from = "stocks") |>
   vg_scale_fy(padding = 0.1) |>
   vg_guide_fy(label = "Ticker Symbol") |>
+  vg_mark_frame() |>
   vg_plot(width = 680, height = 400) |>
   vg_render()
 ```
+
+:::{.callout-tip}
+#### vg_mark_frame()
+
+By default, Mosaic plots to not include a boundary rectangle. For faceted 
+graphics, such a frame can often make it easier to see the facets.
+:::
+
+:::{.callout-warning}
+#### Missing facet features
+
+Those familiar with `ggplot2` or `vega-lite` may wonder about 
+
+* wrapped facets,
+* independent scales in facets.
+
+Neither of these is currently available in Mosaic (and hence not in
+vgplotr). Independent scales can be emulated by manually filtering
+and concatenating.
+Facet wrapping can be emulated by manually creating 
+row and column variables and using those to facet.
+
+:::
+
 
 ### Other scales and their guides
 
@@ -632,36 +657,56 @@ conflicted_graphic$attrs$width
 `sql()` (and `agg()`, for expressions with an aggregate function) wraps a
 raw SQL expression for encodings that transforms and plain column
 references can't express -- mosaic-spec's own `{sql: "..."}`/`{agg: "..."}`.
-Below, a slider-controlled "bias" parameter is added to a plotted value,
-computed live by DuckDB. A `param()` reference can be written directly in
-the SQL text (`sql("temp_max + $bias")`) or built up from pieces, as below --
-both are equivalent.
+Below, a menu-controlled parameter chooses a temperature scale, and 
+an SQL expression is computed by DuckDB to convert the temperature from 
+Celsius to Fahrenheit as needed.
+
+Two things to note here:
+
+* In the SQL expression parameter names are preceded with `$`. 
+(`param(temp_unit)` does almost the same thing, returning `\`$temp_unit\``
+since R variable names cannot begin with `$` unless escaped.)
+
+* SQL expressions are not allowed everywhere in the Mosaic specification.
+In particular, they are not allowed in the `label =` of `vg_guide_y()`.
+We have worked around this by having the value of the parameter be the
+text we want, since a parameter value is allowed in this context.
 
 ```{r}
-#| label: bias-1
-bias_picker <- vg_slider(
-  label = "Bias",
-  as = param(bias),
-  min = -20,
-  max = 20,
-  step = 1,
-  value = 0
+#| label: sql
+#| 
+temp_unit_picker <- vg_menu(
+  label = "Temperature scale",
+  as = param(temp_unit),
+  options = c("Temperature (°C)", "Temperature (°F)"),
+  value = "Temperature (°C)"
 )
 
-biased_plot <-
-  vg_mark_area_y(
+bilingual_plot <-
+  vg_mark_dot(
     data_from = "weather",
     x = ~date,
-    y = sql("temp_max + ", param(bias)),
+    y = sql(
+      "CASE WHEN $temp_unit = 'Temperature (°C)' THEN temp_max ELSE (temp_max * 9.0/5.0 + 32) END"
+    ),
     fill = "steelblue"
   ) |>
-  vg_plot(width = 680, height = 200, y_domain = c(-20, 60))
+  vg_guide_y(label = param(temp_unit)) |>
+  vg_guide_x(label = NA) |>
+  vg_plot(width = 600, height = 200)
 
 vg_create() |>
   vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
-  vg_vconcat(bias_picker, biased_plot) |>
-  vg_render()
+  vg_vconcat(bilingual_plot, vg_vspace("1em"), temp_unit_picker) |>
+  vg_render(height = 250, width = 600)
 ```
+
+:::{.callout-tip}
+#### Adding space to the layout
+
+We can use `vg_hspace()` and `vg_vspace()` to add additional space between
+concatenated elements.
+:::
 
 ## `to_json()`/`to_yaml()`: converting a spec to mosaic's own format
 
