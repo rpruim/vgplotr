@@ -60,6 +60,13 @@
 #' @family mark functions
 #' @export
 vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
+  if (inherits(spec, "formula")) {
+    if (!identical(formula, vg_unset)) {
+      error("formula specified twice.")
+    }
+    formula <- spec
+    spec <- NULL
+  }
   build_mark(spec, mark, formula, list(...), style = "camel")
 }
 
@@ -72,9 +79,10 @@ vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
 # legends should accept snake_case too, which would make `style` unnecessary, is
 # an open question: see "Open design questions" in AGENTS.md.)
 build_mark <- function(spec, mark, formula, args, style) {
-  if (inherits(spec, "formula") && identical(formula, vg_unset)) {
-    formula <- spec
-  }
+  # if (inherits(spec, "formula") && identical(formula, vg_unset)) {
+  #   formula <- spec
+  #   spec <- NULL
+  # }
 
   if (!identical(formula, vg_unset)) {
     args <- merge_vg_formula(args, parse_vg_formula(formula, mark), mark)
@@ -181,10 +189,18 @@ args_reference_data <- function(args) {
 # a same-named option that could collide by exact-name argument matching
 # the way vg_interactor_()'s equivalent parameter did (Search's own "type"
 # option) -- see vg_interactor()'s docs for that story.
-vg_mark_ <- function(spec, mark, ...) {
+vg_mark_ <- function(spec, mark, formula, ...) {
   args <- drop_unset(list(...))
-  formula <- if (is.null(args[["formula"]])) vg_unset else args[["formula"]]
-  args[["formula"]] <- NULL
+  # formula <- if (is.null(args[["formula"]])) vg_unset else args[["formula"]]
+  # args[["formula"]] <- NULL
+
+  if (inherits(spec, "formula")) {
+    if (!identical(formula, vg_unset)) {
+      stop("formula specified twice.")
+    }
+    formula <- spec
+    spec <- NULL
+  }
   build_mark(spec, mark, formula, args, style = "snake")
 }
 

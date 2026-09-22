@@ -6,160 +6,227 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 format: html
 engine: knitr
+execute: 
+  error: true
 ---
 
-```{r setup}
+```{r}
+#| label: setup
+#| include: false
+library(vgplotr)
+set.seed(12345)
+```
+
+## A grammar of interactive graphics
+
+vgplotr provides an R interface to UW Interactive Data Lab's Mosaic/vgplot,
+an implementation of a grammar of interactive graphics. To use interactive
+features, a graphic must be embedded in an environment that supports 
+interactive widgets, like an HTML file or a shiny app.  
+Non-interactive graphics are supported in other file formats
+(PDF, Word, etc.), are created by taking a snapshot of an underlying
+interactive graphic.
+
+### Installation
+
+vgplotr is designed to that beginners can get up and running quickly by
+simply installing the R package and using it in a quarto document.
+For now, the package is only available via GitHub:
+
+```{r}
+#| eval: false
+pak::pak("rpruim/vgplotr")
+```
+
+```{r}
+#| label: load-vgplotr
 library(vgplotr)
 ```
 
-vgplotr is still very early, but it can now render a live mosaic vgplot:
-this vignette builds a couple of specs with the R-side object model --
-`vg_create()`, `vg_plot()`, marks, interactors, and `param()` -- prints
-their internal structure as a sanity check, and then renders them with
-`vg_render()`.
 
-**Rendering mostly works offline already.** The mosaic JS runtime itself
-ships with the package, so no CDN is needed for that. The one exception is
-DuckDB's actual database engine (a ~35 MB compiled WebAssembly binary, too
-large to include in the package) -- by default `vg_render()` fetches that
-one piece from a CDN each time a graphic is viewed, unless you run
-`vg_cache_duckdb()` once, which downloads it into a local, version-pinned
-cache and removes the CDN dependency entirely (`vg_render()` will offer to
-do this for you interactively the first time, if you don't already have it
-cached). `vg_render()`'s `use_cache` argument tracks the cache automatically,
-but can override it for a single graphic -- `use_cache = FALSE` forces that
-one graphic to use the CDN even if a cache exists.
-
-## A single mark
-
-This uses a small inline data frame passed directly to `vg_data()` --
-see the next section for the file-based version.
+No additional JavaScript libraries need to be installed by the user.
+The Mosaic JavaScript runtime ships with the package.
+Mosaic graphics rely on a DuckDB database to store and query the 
+underlying data. By default, vgplotr uses DuckDB-Wasm, which 
+runs DuckDB in a browser.
+DuckDB-Wasm's database engine is an ~35 MB compiled WebAssembly binary
+-- too large large to include in the package -- so by default 
+`vg_render()` fetches DuckDB-Wasm
+from a CDN each time a graphic is *viewed*.
+To avoid this, you can call `vg_cache_duckdb()` once 
+to create a local, version-pinned cache and remove the CDN dependency.
+Once DuckDB-Wasm has been cached, vgplotr graphics can be rendered
+even when you are offline.
 
 ```{r}
-aapl <- data.frame(
-  Date = c(
-    "2020-01-01",
-    "2020-02-01",
-    "2020-03-01",
-    "2020-04-01",
-    "2020-05-01",
-    "2020-06-01"
-  ),
-  Close = c(296.24, 313.05, 254.29, 293.80, 317.94, 364.80)
-)
+#| label: cache-duckdb
+#| eval: false
+vg_cache_duckdb()
+```
+
+Use `vg_info()` provides information about the installation,
+including whether DuckDB-Wasm has been cached locally.
+
+```{r}
+#| label: duckdb-info
+vg_info()
+```
+
+## Non-interactive graphics
+
+### A single mark
+
+vgplotr works by creating and then rendering a graphics specification.
+A piped workflow can add marks to the graphic and set various 
+graphic-level attributes.
+
+```{r}
+#| label: aapl-closes
+ 
+stocks <- read.csv("data/stocks.csv")
+aapl <- stocks |> dplyr::filter(Symbol == "AAPL")
 
 spec <-
   vg_create(title = "AAPL closing price") |>
-  vg_data(name = "aapl", data = aapl) |>
-  vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
-  vg_attributes(width = 680, height = 200)
+  vg_attributes(width = 680, height = 200) |>
+  vg_data(name = "aapl", aapl) |>
+  vg_mark_line_y(y = ~Close, x = ~Date, data_from = "aapl")
 
 spec
 ```
 
-`vg_attributes()` sets attributes directly on the spec's own top level --
-distinct from this plot's own attributes (`spec$layout$attrs`, accumulated
-from marks/interactors, e.g., via `width =` on `vg_mark_dot()`) and from
-mosaic-spec's `plotDefaults` (set via `vg_plot_defaults()`, applied to
-*every* plot in the spec -- see the two-plot example below):
+`vg_render()` inspects the enclosing environment to determine how the 
+graphic can be rendered.
 
 ```{r}
-spec$attrs
-spec$layout$attrs
-```
-
-`vg_create()`'s `title` went to `spec$meta` instead, since it isn't one of
-mosaic's plot attributes -- mosaic's own JS runtime never actually reads
-`meta` (it's inert, spec-level metadata), but `vg_render()` renders
-`meta$title` as a caption above the graphic as a vgplotr-level convenience:
-
-```{r}
-spec$meta
-```
-
-```{r}
+#| label: aapl-render
 vg_render(spec)
 ```
 
-### A shortcut: piping a data frame straight into a mark
-
-For a quick graphic -- especially at the end of a data-wrangling pipe chain,
-where there's no `vg_create() |> vg_data(...)` step to hang the data off
-of yet -- a data frame can be piped directly into a mark instead of
-`spec`. `some_data |> vg_mark_dot(...)` is shorthand for `vg_create() |>
-vg_data(data = some_data) |> vg_mark_dot(data_from = "data", ...)`: it
-starts a new spec, registers the data frame (named `"data"` by default --
-see [vg_data()] for the naming rule, and pass `data_from =` explicitly to
-choose the name yourself), and wires it up as the mark's own `data_from`
-automatically.
+vgplotr specs can also be converted to native Mosaic YAML or JSON.
 
 ```{r}
-aapl |> vg_mark_line_y(x = ~Date, y = ~Close, width = 680, height = 200)
+#| label: yaml-spec
+
+spec |> to_yaml(suppress_data = TRUE)
 ```
 
+<!-- `vg_attributes()` sets attributes directly on the spec's own top level --
+distinct from this plot's own attributes (`spec$layout$attrs`, accumulated
+from marks/interactors, e.g., via `width =` on `vg_mark_dot()`) and from
+mosaic-spec's `plotDefaults` (set via `vg_plot_defaults()`, applied to
+*every* plot in the spec -- see the two-plot example below): -->
+
+
+<!-- spec$attrs
+spec$layout$attrs -->
+
+<!-- `vg_create()`'s `title` went to `spec$meta` instead, since it isn't one of
+mosaic's plot attributes -- mosaic's own JS runtime never actually reads
+`meta` (it's inert, spec-level metadata), but `vg_render()` renders
+`meta$title` as a caption above the graphic as a vgplotr-level convenience: -->
+
+
+### Some short cuts
+
+We can obtain the same simple plot with less code by taking advantage 
+of some short cuts.
+
+* If we pipe a data frame into the `vg_` workflow, we can omit 
+`vg_create()` and `vg_data()`: `aapl |> vg_mark_line()` is equivalent to
+`vg_create() |> vg_data(name = "data", aapl)`.
+
+* By default, mark functions use the first registered data source,
+  so we can omit `data_from = "data"`.
+
+* We can set the height and width in `vg_mark_line_y()`.
+
+```{r}
+#| label: short-cuts
+aapl |>
+  vg_mark_line_y(y = ~Close, x = ~Date, width = 680, height = 200) |>
+  vg_render()
+```
+
+### Multiple marks
+
 Later marks in the same chain don't need to repeat `data_from =` either:
-any mark that doesn't set its own `data_from` (and whose mark type takes
-data at all -- a handful, like `vg_mark_frame()`/`vg_mark_sphere()`,
-compute their own geometry and never take one) defaults to the spec's
+any mark that doesn't set its own `data_from` 
+(and whose mark type required data) defaults to the spec's
 *first* registered data source. That makes simple multi-layer plots from
 one data source easy to build straight out of a pipe chain:
 
 ```{r}
+#| label: two-marks
 aapl |>
-  vg_mark_line_y(x = ~Date, y = ~Close) |>
-  vg_mark_dot(x = ~Date, y = ~Close, fill = "steelblue") |>
-  vg_plot(width = 680, height = 200)
+  vg_mark_line_y(y = ~Close, x = ~Date, width = 680, height = 200) |>
+  vg_mark_dot(y = ~Close, x = ~Date, fill = "steelblue") |>
+  vg_render()
 ```
 
-For more than one data source, name each explicitly with `data_from =`
-as usual -- the default only ever reaches for the *first* one registered.
-`data_from =` also accepts a nonzero 1-based integer *index* into the
-spec's data sources instead of a name, negative counting from the end
-(`data_from = -1L` for the most recently registered source) -- note the
-`L`: a plain number like `data_from = 0` keeps its existing meaning,
-mosaic's own literal inline-data shorthand (`"data": [0]`, e.g., for a
-reference line), so only a real R integer is read as an index --
-`data_from = 0L` included, since `0` is never a valid index anyway.
+To use different data sources for different marks,
+name each explicitly with `data_from =`.  The value can be 
+either a name (i.e., "aapl") or a non-zero integer (i.e., `1L`^[Note: the L here is required -- indices must be explicit integers.])
+specifying the registration index. 
+Negative numbers count from the most recently registered data source.
 
-## Formula shorthand for position channels
+
+### Formula shorthand for position channels
 
 Every mark also accepts a `formula` argument -- a shorthand for its position
 channels (`x`, `y`, `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`) in one
-formula instead of naming each channel separately. The part before an
-optional `| facet` sets `y ~ x`; the part after it sets faceting:
+formula instead of naming each channel separately. 
+The general format is `y ~ x | fy ~ fx`.
+The optional `| fy ~ fx` sets y- and x-faceting.
+For marks that require two x-values or two y-values, 
+replace `x` or `y` with `x1 + x2` or `y1 + y2`.
+Unused channels can be omitted, but since R formulas always require a 
+right hand side, use, for example, `fy ~ .` to specify `fy` without 
+specifying `fx`.
+
 
 ```{r}
+#| label: formula
 mtcars |> vg_mark_dot(mpg ~ hp | cyl, fill = "steelblue", width = 500)
 ```
 
 is equivalent to writing out every channel by hand:
 
 ```{r}
-mtcars |> vg_mark_dot(y = ~mpg, x = ~hp, fx = ~cyl, fill = "steelblue", width = 500)
+#| label: formula-expanded
+mtcars |>
+  vg_mark_dot(y = ~mpg, x = ~hp, fx = ~cyl, fill = "steelblue", width = 500)
 ```
 
-A two-sided facet formula sets `fy` and `fx` independently (`cyl ~ gear` for
-both, `cyl ~ .` for `fy` alone), and a `.` on the position side skips that
-channel (`mpg ~ .` sets only `y`). Marks with paired channels accept two
-terms per side, e.g., `vg_mark_rect(mpg + wt ~ hp + disp)` sets
-`y1`/`y2`/`x1`/`x2`; asymmetric term counts (`mpg ~ hp + disp`) map each
-side independently. An explicit `x =`/`y =`/etc. alongside `formula`
-overrides the value the formula implies for that channel, with a warning
-only if the two actually disagree. See `?vg_mark` for the full grammar.
+An explicit `x =`/`y =`/etc. alongside `formula`
+overrides the value the formula implies for that channel, 
+with a warning if the two definitions disagree. 
+See `?vg_mark` for the full grammar.
 
 ## Loading data from a file
 
-`vg_data()` can also point at a file instead of an inline data frame -- the
-fictional `data/stocks.parquet` from the original design doc, made real as
-a small `.csv` file shipped alongside this vignette. A relative path like
-this resolves against wherever the rendered document itself ends up, the
-same way a relative link or image would in an ordinary web page.
+`vg_data()` can be used to register data in a file instead of an 
+inline data frame. The file can be a file on file system or it
+can be specified as a URL.
+Relative paths resolve against wherever the rendered document itself 
+ends up, the same way a relative link or image would in an ordinary 
+web page.
 
-(Named `"aapl_file"` here, not `"aapl"` -- every `vg_render()` call on this
-page shares one DuckDB instance behind the scenes, so two different specs
-loading different data under the same name would collide.)
+:::{.callout-warning}
+#### Once DuckDB instance for an entire *page*.
+Every `vg_render()` call on the same page
+shares one DuckDB instance behind the scenes, so data sources only
+need to be registered once.  This also means that it is not
+possible to use the same name for different data sources
+in different specifications on the same page.
+:::
+
+We can obtain a subset of the data contained in the file using
+`where =` to declare the WHERE clause of an SQL query.
+
 
 ```{r}
+#| label: data-in-file
 spec1b <-
   vg_create() |>
   vg_data(
@@ -170,80 +237,114 @@ spec1b <-
   vg_mark_line_y(data_from = "aapl_file", x = ~Date, y = ~Close) |>
   vg_attributes(width = 680, height = 200)
 
-vg_render(spec1b)
+spec1b |> vg_render()
 ```
 
-## Combining marks and an interactor on one plot
+:::{.callout-tip}
+#### Accessing Mosaic example data sets
+
+`vg_data_url()` returns the URL for a Mosaic example data
+from its name.
+
+:::
+
+```{r}
+#| label: vg-data-url
+vg_create() |>
+  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_mark_dot( temp_max ~ date, fill = "steelblue") |>
+  vg_render()
+```
+
+
+## Graphics with multiple plots
+
+In the lingo of Mosaic/vgplot, a plot is a rectangular region 
+of a graphic that may contain one or more marks. In other graphics
+systems, these might be called panels or sub-plots. 
+We can use `vg_hconcat()` and `vg_vconcat()` to place plots 
+(and interactive elements) next to each other.
+
+```{r}
+#| label: concat
+
+lines <- 
+  vg_mark_line_y(
+    Close ~ Date, data_from = "aapl", 
+    width = 600, height = 150)
+dots <- 
+  vg_mark_dot(
+    Close ~ Date, data_from = "aapl", 
+    width = 600, height = 150)
+
+vg_create() |>
+  vg_vconcat(lines, dots) |>
+  vg_render()
+```
+
+## Interaction
 
 Piping one mark straight into another appends it to the *same* plot,
 without needing to wrap them in `vg_plot()` explicitly. Interactors
 (`vg_interval_x()` here) can be piped in the same way.
+If you brush over the graphic below, a rectangle will appear to show
+the area that has been brushed.  The selection interval of x-values from 
+the brush is stored in a parameter (`param(brush)`).
+For the moment, nothing responds to this parameter;
+we'll add that in a moment.
 
 ```{r}
-walk <- data.frame(t = 1:100, v = cumsum(rnorm(100)))
+#| label: interval
 
-spec2 <-
-  vg_create() |>
-  vg_data(name = "walk", data = walk) |>
-  vg_mark_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
-  vg_interval_x(as = param(brush)) |>
-  vg_plot(width = 680, height = 200, name = "focus")
+overview <-
+  vg_mark_area_y(
+    formula = temp_max ~ date,
+    data_from = "weather",
+    fill = "steelblue",
+    width = 600,
+    height = 100
+  ) |>
+  vg_interval_x(as = param(brush))
 
-spec2
+vg_create() |>
+  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_plot(overview) |>
+  vg_render()
 ```
 
-`param(brush)` is how a `$brush`-style reference to a Param/Selection gets
-written in valid R -- `$brush` alone isn't parseable:
+<!-- `param(brush)` is how a `$brush`-style reference to a Param/Selection gets
+written in valid R -- `$brush` alone isn't parseable: -->
 
 ```{r}
+#| label: param-brush
+#| include: false
 param(brush)
 ```
 
-```{r}
-vg_render(spec2)
-```
 
 ## Two linked plots with vg_vconcat()
 
-This reproduces mosaic's own `overview-detail.yaml` example: an "overview"
-plot with a brush interactor, stacked above a "detail" plot that's filtered
-by whatever the brush selects. Drag a selection on the top plot to see the
-bottom one update.
+Now we create another version of our plot that responds to
+the brush by filtering the data (and zooming in on that data).
 
-Passing separate mark/interactor chains to `vg_vconcat()` stacks them as
-*separate* plots -- unlike piping them together, which (as above) keeps them
-on one shared plot. `vg_plot_defaults()` sets mosaic-spec's `plotDefaults`,
-applied to *every* plot in the spec -- here, both `overview` and `detail`
-get `width`/`height` without repeating them on each `vg_plot()` call:
 
 ```{r}
-overview <-
-  vg_mark_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
-  vg_interval_x(as = param(brush)) |>
-  vg_plot()
-
 detail <-
   vg_mark_area_y(
-    data_from = "walk",
+    temp_max ~ date,
+    data_from = "weather",
+    fill = "steelblue",
     filter_by = param(brush),
-    x = ~t,
-    y = ~v,
-    fill = "steelblue"
-  ) |>
-  vg_plot()
+    width = 600,
+    height = 300
+  )
 
-spec3 <-
-  vg_create() |>
-  vg_data(name = "walk", data = walk) |>
-  vg_vconcat(overview, detail) |>
-  vg_plot_defaults(width = 680, height = 150)
-
-spec3
+vg_create() |>
+  vg_vconcat(detail, overview) |>
+  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_render()
 ```
 
-```{r}
-vg_render(spec3)
-```
 
 ## Transform functions: binning and aggregation
 
@@ -284,28 +385,20 @@ vg_bin(delay, step = 2)
 vg_render(spec4)
 ```
 
-## Generated marks and attributes
+## More marks
 
-vgplotr now has a wrapper for every mark type mosaic supports (65, generated
-from mosaic's own JSON schema by `data-raw/update-schema.R` -- see
-`vg_mark_hexbin()`, `vg_mark_text()`, `vg_mark_rule_x()`, ... alongside the marks used
-above), and correctly recognizes every plot-level attribute (215) as
-belonging to the plot, not the mark -- even when a mark has a same-named
-property of its own (e.g., a mark's own `inset` vs. the plot-wide default
-`inset`, told apart by `vg_mark_*()`'s generated list of each mark's real
-properties).
+vgplotr includes a `vg_mark_*()` function for each of the 65
+marks supported by Mosaic.
+Each of these functions recognizes every plot-level attribute 
+(215) as belonging to the plot, not the mark -- 
+even when a mark has a same-named property of its own 
+(e.g., a mark's own `inset` vs. the plot-wide default
+`inset`, told apart by `vg_mark_*()`'s generated list of each 
+mark's real properties).
 
-Every mark/interactor argument is snake_case (`stroke_width =`, not
-`strokeWidth =`, above), and so is every plot-level attribute passed to
-`vg_plot()`/`vg_attributes()`/`vg_plot_defaults()`/`vg_create()`
-(`margin_left =`, not `marginLeft =`, below) -- all generated straight from
-mosaic's schema and forwarded under the exact camelCase key mosaic's JSON
-spec needs (`strokeWidth`, `marginLeft`) under the hood, so this is purely
-a naming convention on the R side.
 
 ```{r}
-spec4b <-
-  vg_create() |>
+vg_create() |>
   vg_data(name = "delays", data = delays) |>
   vg_mark_rect_y(
     data_from = "delays",
@@ -315,29 +408,36 @@ spec4b <-
     inset = 0.5
   ) |>
   vg_mark_rule_x(x = 0, stroke = "firebrick", stroke_width = 2) |>
-  vg_plot(width = 680, height = 200, margin_left = 60, aspect_ratio = 1)
-
-vg_render(spec4b)
+  vg_plot(
+    width = 680,
+    height = 200,
+    margin_left = 60,
+    aspect_ratio = 1
+  ) |>
+  vg_render()
 ```
 
-## Scales and axis guides
+## Scales and guides
 
-`vg_scale_x()`/`vg_scale_y()` and `vg_guide_x()`/`vg_guide_y()` are
-discoverable, per-channel wrappers around the same plot-level attributes
-already set above (`x_domain`, `margin_left`, ...) -- e.g.,
-`vg_scale_y(type = "sqrt")` is `vg_plot(y_scale = "sqrt")`. Like
-`vg_plot()`, they can be piped in anywhere alongside marks and
-interactors, since they only ever set attributes on the current plot.
+**Scales** determine how data values are converted into plot values.
+For example, if we use color to indicate species, it is the job of a 
+scale to determine which color is used for which species, and we modify
+the scale to get a different color scheme.
 
-(Note the names: `vg_guide_x()`/`vg_guide_y()`, not `vg_axis_x()`/
-`vg_axis_y()` -- those names are used by `vg_mark_axis_x()`/
-`vg_mark_axis_y()`, mosaic's `axisX`/`axisY` *mark* (a separately drawn,
-independently-styled axis), a different thing from the plain axis-guide
-attributes set here.)
+**Guides** (axes and legends) indicate to the viewer of the graphic
+how to reverse the scale and convert plot values back into data values.
+So a guide (legend) for species color, shows how to convert a displayed 
+color back into a species.
+
+The graphic below modifies the default scales and guides to provide
+
+* a logarithmic scale for y;
+* custom labels for the x- and y-axes;
+* grid lines for x.
+
 
 ```{r}
-spec4c <-
-  vg_create() |>
+vg_create() |>
   vg_data(name = "delays", data = delays) |>
   vg_mark_rect_y(
     data_from = "delays",
@@ -346,79 +446,79 @@ spec4c <-
     fill = "steelblue",
     inset = 0.5
   ) |>
-  vg_scale_y(type = "sqrt") |>
+  vg_scale_y(type = "symlog") |>
   vg_guide_x(label = "Delay (minutes)", grid = TRUE) |>
   vg_guide_y(label = "Count") |>
-  vg_plot(width = 680, height = 200)
-
-vg_render(spec4c)
+  vg_plot(width = 680, height = 200) |>
+  vg_render()
 ```
 
 `vg_scale_fx()`/`vg_scale_fy()` and `vg_guide_fx()`/`vg_guide_fy()` do the
-same for the facet axes (`fxDomain`, `fxAxis`, ...) -- one plot faceted
-into subplots by a grouping column, encoded via `fx =`/`fy =` on a mark.
+same for facets. 
 Facet scales are always band scales, so `vg_scale_fx()`/`vg_scale_fy()`
 expose a smaller set of properties than `vg_scale_x()`/`vg_scale_y()` (no
 `type`, `nice`, `zero`, or `clamp`).
 
+
 ```{r}
-pts2 <- data.frame(
-  x = rnorm(120),
-  y = rnorm(120),
-  group = sample(c("a", "b", "c"), 120, replace = TRUE)
-)
-
-spec4d <-
-  vg_create() |>
-  vg_data(name = "pts2", data = pts2) |>
-  vg_mark_dot(data_from = "pts2", x = ~x, y = ~y, fx = ~group) |>
-  vg_scale_fx(padding = 0.1) |>
-  vg_guide_fx(label = "Group") |>
-  vg_plot(width = 680, height = 200)
-
-vg_render(spec4d)
+vg_create() |>
+  vg_data(name = "stocks", file = vg_data_url("stocks.csv")) |>
+  vg_mark_line(Close ~ Date | Symbol ~ ., data_from = "stocks") |>
+  vg_scale_fy(padding = 0.1) |>
+  vg_guide_fy(label = "Ticker Symbol") |>
+  vg_plot(width = 680, height = 400) |>
+  to_yaml()
+vg_render()
 ```
+
+### Other scales and their guides
 
 `vg_scale_color()`/`vg_scale_opacity()`/`vg_scale_r()` (aliased
 `vg_scale_radius()`) and `vg_guide_color()`/`vg_guide_opacity()`/
 `vg_guide_r()` (aliased `vg_guide_radius()`) do the same for the `color`,
 `opacity`, and `r` (radius) channels -- the scales that `fill`/`stroke`,
-`opacity`, and `r` encodings are bound to. These three
-channels aren't a symmetric family the way `x`/`y` are, so each gets its
-own dedicated argument list rather than a shared `which =` generic --
-e.g., `vg_scale_color()` has palette-specific arguments
-(`scheme =`, `interpolate =`, `pivot =`, `symmetric =`) that
-`vg_scale_opacity()`/`vg_scale_r()` don't, and `vg_scale_r()` has no
-`reverse =` (mosaic doesn't define `rReverse`).
+`opacity`, and `r` encodings are bound to. 
+
+### Domain and range
+
+The domain and range of a scale specify the inputs and outputs of the scale.
+So 
+```r
+  vg_scale_color(
+    domain = c("A", "B", "C", "D"), 
+    range = c("red", "darkgreen", "steelblue", "orange")
+```
+
+below instructs that scale to show group A as red, group B as green, etc.
 
 ```{r}
-pts3 <- data.frame(
+pts <- data.frame(
   x = rnorm(90),
   y = rnorm(90),
-  group = rnorm(90),
+  group = sample(LETTERS[1:4], 90, replace = TRUE),
   size = runif(90, 1, 10)
 )
 
-spec4e <-
-  vg_create() |>
-  vg_data(name = "pts3", data = pts3) |>
-  vg_mark_dot(data_from = "pts3", x = ~x, y = ~y, fill = ~group, r = ~size) |>
-  vg_scale_color(scheme = "Viridis") |>
+pts |>
+  vg_mark_dot(y ~ x, fill = ~group, r = ~size, fill_opacity = 0.6) |>
+  vg_scale_color(
+    domain = c("A", "B", "C", "D"),
+    range = c("red", "darkgreen", "steelblue", "orange")
+  ) |>
   vg_scale_r(range = c(2, 12)) |>
   vg_guide_color(label = "Group") |>
   vg_guide_r(label = "Size") |>
-  vg_plot(width = 400, height = 300)
-
-vg_render(spec4e)
+  vg_plot(width = 400, height = 300) |>
+  vg_render()
 ```
 
-These are deliberately named `vg_guide_*()` rather than `vg_legend_*()`:
+<!-- These are deliberately named `vg_guide_*()` rather than `vg_legend_*()`:
 `vg_legend_color()`/`vg_legend_opacity()` already exist (next section) and
 mean something different -- adding an actual rendered legend mark to the
 spec. `vg_guide_color()`/`vg_guide_opacity()`/`vg_guide_r()` only set the
 `colorLabel`/`opacityLabel`/`rLabel` (and `colorTickFormat`/
 `opacityTickFormat`) plot attributes; they neither add nor require a
-legend.
+legend. -->
 
 `vg_scale_all()`/`vg_guide_all()` set mosaic's plot-wide *default* scale/
 guide properties -- `align`/`inset`/`padding` and `axis`/`grid`/
@@ -431,34 +531,63 @@ axes at once, without repeating the call per axis (a later
 per-axis attribute always wins over the default).
 
 ```{r}
-vg_mark_dot(x = ~a, y = ~b) |>
+pts |>
+  vg_mark_dot(y ~ x, fill = ~group, fill_opacity = 0.6) |>
   vg_scale_all(padding = 0.1) |>
   vg_guide_all(grid = TRUE) |>
-  vg_plot(width = 400, height = 300)
+  vg_plot(width = 400, height = 300) |>
+  vg_render()
 ```
 
-## Legends
+:::{.callout-warning}
+#### Axis marks
 
+In addition to axis scales and guides, Mosaic provides axis *marks*.
+These are available as 
+`vg_mark_axis_x()`/ `vg_mark_axis_y()` and allow the user to 
+create separately drawn, independently-styled axes.
+:::
+
+
+### Legends
+
+By default, axes appear for the x- and y-axes and for facets.
+Legends, on the other hand, must be inserted manually.
 A legend embedded in a plot (piped in alongside its marks, with no
-`for_plot`) picks up a matching encoding automatically -- here, the color
-mapping from `fill = ~group`.
+`for_plot`) picks up a matching encoding automatically -- 
+here, the color mapping from `fill = ~group`.
 
 ```{r}
-pts <- data.frame(
-  x = rnorm(90),
-  y = rnorm(90),
-  group = sample(c("a", "b", "c"), 90, replace = TRUE)
-)
-
-spec5 <-
-  vg_create() |>
-  vg_data(name = "pts", data = pts) |>
-  vg_mark_dot(data_from = "pts", x = ~x, y = ~y, fill = ~group) |>
-  vg_legend(type = "color") |>
-  vg_plot(width = 400, height = 300)
-
-vg_render(spec5)
+pts |>
+  vg_mark_dot(y ~ x, fill = ~group, r = ~size, fill_opacity = 0.6) |>
+  vg_legend_color() |>
+  vg_plot(width = 400, height = 300) |>
+  vg_render()
 ```
+
+Alternatively, we can place legends with `vg_hconcat()` or `vg_vconcat()`.
+
+```{r}
+vg_create() |>
+  vg_data(data = pts, name = "points") |>
+  vg_vconcat(
+    vg_mark_dot(
+      name = "dots",
+      data_from = "points",
+      y ~ x,
+      fill = ~group,
+      r = ~size,
+      fill_opacity = 0.6
+    ),
+    vg_legend_color(for_plot = "dots")
+  ) |>
+  vg_render()
+```
+
+For guides that appear as legends, `vg_guide_*()` controls *how* the
+legend appears and `vg_legend_*()` controls *where* (and *whether*) 
+the legend appears.
+
 
 ## Layout-level inputs
 
@@ -476,15 +605,13 @@ color_picker <- vg_menu(
 )
 
 colored_plot <-
-  vg_mark_dot(data_from = "pts", x = ~x, y = ~y, fill = param(dotcolor)) |>
+  vg_mark_dot(data_from = "pts", y ~ x, fill = param(dotcolor)) |>
   vg_plot(width = 400, height = 300)
 
-spec6 <-
-  vg_create() |>
+vg_create() |>
   vg_data(name = "pts", data = pts) |>
-  vg_vconcat(color_picker, colored_plot)
-
-vg_render(spec6)
+  vg_vconcat(color_picker, colored_plot) |>
+  vg_render()
 ```
 
 ## What happens when two marks disagree
@@ -494,11 +621,11 @@ they agree, but a genuine conflict is not resolved silently -- the later
 value wins, and you get a warning so it doesn't happen by surprise.
 
 ```{r}
-plot3 <-
+conflicted_graphic <-
   vg_mark_dot(x = ~a, y = ~b, width = 400) |>
   vg_mark_line_y(x = ~a, y = ~c, width = 680)
 
-plot3$attrs$width
+conflicted_graphic$attrs$width
 ```
 
 ## `sql()`/`agg()`: raw SQL expressions
@@ -512,6 +639,7 @@ the SQL text (`sql("v + $bias")`) or built up from pieces, as below --
 both are equivalent.
 
 ```{r}
+#| label: bias-1
 bias_picker <- vg_slider(
   label = "Bias",
   as = param(bias),
@@ -566,6 +694,7 @@ objects (mosaic-spec's own `{data: [...]}` form), matching how mosaic's
 own example specs represent small inline datasets:
 
 ```{r}
+#| label: bias-2
 vg_create() |>
   vg_data(name = "aapl", data = aapl) |>
   vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
