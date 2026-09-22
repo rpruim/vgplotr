@@ -59,7 +59,9 @@ vg_vconcat <- function(spec = NULL, ...) vg_concat_("vconcat", spec, ...)
 vg_hconcat <- function(spec = NULL, ...) vg_concat_("hconcat", spec, ...)
 
 #' Fixed-size spacers for use inside `vg_vconcat()`/`vg_hconcat()`
-#' @param amount Spacer size in pixels.
+#' @param amount Spacer size: a bare number, taken as pixels, or a string
+#'   giving any CSS length (e.g., `"1em"`, `"2rem"`, `"10%"`), passed
+#'   through to the DOM as-is.
 #' @family layout functions
 #' @export
 vg_hspace <- function(amount) new_vg_space("hspace", amount)

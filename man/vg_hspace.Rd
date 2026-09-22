@@ -10,7 +10,9 @@ vg_hspace(amount)
 vg_vspace(amount)
 }
 \arguments{
-\item{amount}{Spacer size in pixels.}
+\item{amount}{Spacer size: a bare number, taken as pixels, or a string
+giving any CSS length (e.g., \code{"1em"}, \code{"2rem"}, \code{"10\%"}), passed
+through to the DOM as-is.}
 }
 \description{
 Fixed-size spacers for use inside \code{vg_vconcat()}/\code{vg_hconcat()}
