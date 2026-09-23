@@ -122,6 +122,13 @@ reference:
   contents:
   - has_concept("info functions")
 
+- title: Reference
+  desc: >
+    Shared vocabulary for the `<option | option | ...>` notation shown in
+    every generated mark/interactor/scale/guide argument's documentation.
+  contents:
+  - vg_value_types
+
 articles:
 - title: Get Started
   contents:
