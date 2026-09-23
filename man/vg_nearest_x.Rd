@@ -16,18 +16,18 @@ vg_nearest_x(
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this interactor to, or \code{NULL} to start a new plot with just this interactor.}
 
-\item{as}{The output selection.}
+\item{as}{\verb{<param()>} The output selection.}
 
-\item{channels}{The encoding channels whose domain values should be selected.}
+\item{channels}{\verb{<character vector>} The encoding channels whose domain values should be selected.}
 
-\item{fields}{The fields (database column names) to use in generated selection clause predicates.}
+\item{fields}{\verb{<character vector>} The fields (database column names) to use in generated selection clause predicates.}
 
-\item{max_radius}{The maximum radius of a nearest selection (default 40).}
+\item{max_radius}{\verb{<number>} The maximum radius of a nearest selection (default 40).}
 
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
-A nearestX interactor.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other interactor functions:

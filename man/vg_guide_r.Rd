@@ -13,7 +13,7 @@ vg_guide_radius(spec = NULL, label = vg_unset, ...)
 \item{spec}{A plot fragment or \code{vgspec} to set this guide on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{label}{A textual label to show on the axis or legend; if null, show no label. (\code{rLabel}).}
+\item{label}{\verb{<string | NULL | param()>} A textual label to show on the axis or legend; if null, show no label. (\code{rLabel}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -33,6 +33,8 @@ See \code{\link[=vg_guide_color]{vg_guide_color()}} for why this is \code{vg_gui
 with here (radius/size is usually shown via \code{\link[=vg_legend_symbol]{vg_legend_symbol()}}
 instead), but the naming stays consistent with \code{\link[=vg_guide_color]{vg_guide_color()}}/
 \code{\link[=vg_guide_opacity]{vg_guide_opacity()}}.
+
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b, r = ~g) |>

@@ -23,25 +23,25 @@ vg_scale_length(
 \item{spec}{A plot fragment or \code{vgspec} to set this scale on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{type}{The \emph{length} scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{lengthScale}).}
+\item{type}{\verb{<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>} The \emph{length} scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{lengthScale}).}
 
-\item{domain}{The extent of the scale’s inputs (abstract values). (\code{lengthDomain}).}
+\item{domain}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s inputs (abstract values). (\code{lengthDomain}).}
 
-\item{range}{The extent of the scale’s outputs (visual values). (\code{lengthRange}).}
+\item{range}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s outputs (visual values). (\code{lengthRange}).}
 
-\item{nice}{If true, or a tick count or interval, extend the domain to nice round values. (\code{lengthNice}).}
+\item{nice}{\verb{<boolean | number | "day"/"week"/"month"/... | param()>} If true, or a tick count or interval, extend the domain to nice round values. (\code{lengthNice}).}
 
-\item{zero}{Whether the \strong{domain} must include zero. (\code{lengthZero}).}
+\item{zero}{\verb{<boolean | param()>} Whether the \strong{domain} must include zero. (\code{lengthZero}).}
 
-\item{clamp}{If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{lengthClamp}).}
+\item{clamp}{\verb{<any>} If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{lengthClamp}).}
 
-\item{base}{A log scale’s base; defaults to 10. (\code{lengthBase}).}
+\item{base}{\verb{<number | param()>} A log scale’s base; defaults to 10. (\code{lengthBase}).}
 
-\item{exponent}{A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{lengthExponent}).}
+\item{exponent}{\verb{<number | param()>} A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{lengthExponent}).}
 
-\item{constant}{A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{lengthConstant}).}
+\item{constant}{\verb{<number | param()>} A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{lengthConstant}).}
 
-\item{percent}{If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{lengthPercent}).}
+\item{percent}{\verb{<boolean | param()>} If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{lengthPercent}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -53,6 +53,9 @@ scale that a \code{vector}/\code{spike} mark's \code{length} encoding is bound t
 unless it's a literal constant). Mosaic doesn't define a length
 axis-guide or legend, so there's no \code{vg_guide_length()}/
 \code{vg_legend_length()} to pair with this.
+}
+\details{
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_vector(x = ~a, y = ~b, length = ~g) |>

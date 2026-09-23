@@ -16,18 +16,18 @@ vg_pan_y(
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this interactor to, or \code{NULL} to start a new plot with just this interactor.}
 
-\item{x}{The output selection for the \code{x} domain.}
+\item{x}{\verb{<param()>} The output selection for the \code{x} domain.}
 
-\item{xfield}{The name of the field (database column) over which the \code{x}-component of the interval selection should be defined.}
+\item{xfield}{\verb{<string>} The name of the field (database column) over which the \code{x}-component of the interval selection should be defined.}
 
-\item{y}{The output selection for the \code{y} domain.}
+\item{y}{\verb{<param()>} The output selection for the \code{y} domain.}
 
-\item{yfield}{The name of the field (database column) over which the \code{y}-component of the interval selection should be defined.}
+\item{yfield}{\verb{<string>} The name of the field (database column) over which the \code{y}-component of the interval selection should be defined.}
 
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
-A panY interactor.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other interactor functions:

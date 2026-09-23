@@ -63,27 +63,27 @@ start a new plot fragment with just these attributes.}
 
 \item{which}{Which facet scale this sets: \code{"fx"} or \code{"fy"}.}
 
-\item{domain}{The extent of the scale’s inputs (abstract values). (\code{fxDomain}/\code{fyDomain}).}
+\item{domain}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s inputs (abstract values). (\code{fxDomain}/\code{fyDomain}).}
 
-\item{range}{The extent of the scale’s outputs (visual values). (\code{fxRange}/\code{fyRange}).}
+\item{range}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s outputs (visual values). (\code{fxRange}/\code{fyRange}).}
 
-\item{reverse}{Whether to reverse the scale’s encoding; equivalent to reversing either the \strong{domain} or \strong{range}. (\code{fxReverse}/\code{fyReverse}).}
+\item{reverse}{\verb{<boolean | param()>} Whether to reverse the scale’s encoding; equivalent to reversing either the \strong{domain} or \strong{range}. (\code{fxReverse}/\code{fyReverse}).}
 
-\item{round}{If true, round the output value to the nearest integer (pixel); useful for crisp edges when rendering. (\code{fxRound}/\code{fyRound}).}
+\item{round}{\verb{<boolean | param()>} If true, round the output value to the nearest integer (pixel); useful for crisp edges when rendering. (\code{fxRound}/\code{fyRound}).}
 
-\item{padding}{For \emph{band} scales, how much of the \strong{range} to reserve to separate adjacent bands; defaults to 0.1 (10\%). (\code{fxPadding}/\code{fyPadding}).}
+\item{padding}{\verb{<number | param()>} For \emph{band} scales, how much of the \strong{range} to reserve to separate adjacent bands; defaults to 0.1 (10\%). (\code{fxPadding}/\code{fyPadding}).}
 
-\item{padding_inner}{For a \emph{band} scale, how much of the range to reserve to separate adjacent bands. (\code{fxPaddingInner}/\code{fyPaddingInner}).}
+\item{padding_inner}{\verb{<number | param()>} For a \emph{band} scale, how much of the range to reserve to separate adjacent bands. (\code{fxPaddingInner}/\code{fyPaddingInner}).}
 
-\item{padding_outer}{For a \emph{band} scale, how much of the range to reserve to inset first and last bands. (\code{fxPaddingOuter}/\code{fyPaddingOuter}).}
+\item{padding_outer}{\verb{<number | param()>} For a \emph{band} scale, how much of the range to reserve to inset first and last bands. (\code{fxPaddingOuter}/\code{fyPaddingOuter}).}
 
-\item{align}{How to distribute unused space in the \strong{range} for \emph{point} and \emph{band} scales. (\code{fxAlign}/\code{fyAlign}).}
+\item{align}{\verb{<number | param()>} How to distribute unused space in the \strong{range} for \emph{point} and \emph{band} scales. (\code{fxAlign}/\code{fyAlign}).}
 
-\item{inset}{Shorthand to set the same default for all four insets: \strong{insetTop}, \strong{insetRight}, \strong{insetBottom}, and \strong{insetLeft}. (\code{fxInset}/\code{fyInset}).}
+\item{inset}{\verb{<number | param()>} Shorthand to set the same default for all four insets: \strong{insetTop}, \strong{insetRight}, \strong{insetBottom}, and \strong{insetLeft}. (\code{fxInset}/\code{fyInset}).}
 
-\item{inset_left, inset_right}{Pixel inset at the left/right end of the range; only meaningful for \code{which = "fx"} (\code{fxInsetLeft}/\code{fxInsetRight}).}
+\item{inset_left, inset_right}{\verb{<number | param()>} Pixel inset at the left/right end of the range; only meaningful for \code{which = "fx"} (\code{fxInsetLeft}/\code{fxInsetRight}).}
 
-\item{inset_top, inset_bottom}{Pixel inset at the top/bottom end of the range; only meaningful for \code{which = "fy"} (\code{fyInsetTop}/\code{fyInsetBottom}).}
+\item{inset_top, inset_bottom}{\verb{<number | param()>} Pixel inset at the top/bottom end of the range; only meaningful for \code{which = "fy"} (\code{fyInsetTop}/\code{fyInsetBottom}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -97,6 +97,9 @@ so this covers fewer properties than \code{\link[=vg_scale_position]{vg_scale_po
 properties) -- exactly which ones is derived from the schema, not
 hand-picked. \code{vg_scale_fx()} and \code{vg_scale_fy()} are thin wrappers
 around the generic \code{vg_scale_facet()}.
+}
+\details{
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>

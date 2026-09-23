@@ -18,22 +18,22 @@ vg_interval_xy(
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this interactor to, or \code{NULL} to start a new plot with just this interactor.}
 
-\item{as}{The output selection.}
+\item{as}{\verb{<param()>} The output selection.}
 
-\item{brush}{CSS styles for the brush (SVG \code{rect}) element.}
+\item{brush}{\verb{<list>} CSS styles for the brush (SVG \code{rect}) element.}
 
-\item{peers}{A flag indicating if peer (sibling) marks are excluded when cross-filtering (default \code{true}).}
+\item{peers}{\verb{<boolean>} A flag indicating if peer (sibling) marks are excluded when cross-filtering (default \code{true}).}
 
-\item{pixel_size}{The size of an interactive pixel (default \code{1}).}
+\item{pixel_size}{\verb{<number>} The size of an interactive pixel (default \code{1}).}
 
-\item{xfield}{The name of the field (database column) over which the \code{x}-component of the interval selection should be defined.}
+\item{xfield}{\verb{<string>} The name of the field (database column) over which the \code{x}-component of the interval selection should be defined.}
 
-\item{yfield}{The name of the field (database column) over which the \code{y}-component of the interval selection should be defined.}
+\item{yfield}{\verb{<string>} The name of the field (database column) over which the \code{y}-component of the interval selection should be defined.}
 
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
-An intervalXY interactor.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other interactor functions:

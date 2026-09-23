@@ -40,13 +40,15 @@
 
 #' A highlight interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param by The input selection.
-#' @param fill The fill color of deemphasized marks.
-#' @param fill_opacity The fill opacity of deemphasized marks.
-#' @param opacity The overall opacity of deemphasized marks.
-#' @param stroke The stroke color of deemphasized marks.
-#' @param stroke_opacity The stroke opacity of deemphasized marks.
+#' @param by `<param()>` The input selection.
+#' @param fill `<string>` The fill color of deemphasized marks.
+#' @param fill_opacity `<number>` The fill opacity of deemphasized marks.
+#' @param opacity `<number>` The overall opacity of deemphasized marks.
+#' @param stroke `<string>` The stroke color of deemphasized marks.
+#' @param stroke_opacity `<number>` The stroke opacity of deemphasized marks.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -56,12 +58,14 @@ vg_highlight <- function(spec = NULL, by = vg_unset, fill = vg_unset, fill_opaci
 
 #' An intervalX interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as The output selection.
-#' @param brush CSS styles for the brush (SVG `rect`) element.
-#' @param field The name of the field (database column) over which the interval selection should be defined.
-#' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param pixel_size The size of an interactive pixel (default `1`).
+#' @param as `<param()>` The output selection.
+#' @param brush `<list>` CSS styles for the brush (SVG `rect`) element.
+#' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
+#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
+#' @param pixel_size `<number>` The size of an interactive pixel (default `1`).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -71,12 +75,14 @@ vg_interval_x <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = 
 
 #' An intervalY interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as The output selection.
-#' @param brush CSS styles for the brush (SVG `rect`) element.
-#' @param field The name of the field (database column) over which the interval selection should be defined.
-#' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param pixel_size The size of an interactive pixel (default `1`).
+#' @param as `<param()>` The output selection.
+#' @param brush `<list>` CSS styles for the brush (SVG `rect`) element.
+#' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
+#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
+#' @param pixel_size `<number>` The size of an interactive pixel (default `1`).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -86,13 +92,15 @@ vg_interval_y <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = 
 
 #' An intervalXY interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as The output selection.
-#' @param brush CSS styles for the brush (SVG `rect`) element.
-#' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param pixel_size The size of an interactive pixel (default `1`).
-#' @param xfield The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
+#' @param as `<param()>` The output selection.
+#' @param brush `<list>` CSS styles for the brush (SVG `rect`) element.
+#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
+#' @param pixel_size `<number>` The size of an interactive pixel (default `1`).
+#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
+#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -102,11 +110,13 @@ vg_interval_xy <- function(spec = NULL, as = vg_unset, brush = vg_unset, peers =
 
 #' A nearestX interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as The output selection.
-#' @param channels The encoding channels whose domain values should be selected.
-#' @param fields The fields (database column names) to use in generated selection clause predicates.
-#' @param max_radius The maximum radius of a nearest selection (default 40).
+#' @param as `<param()>` The output selection.
+#' @param channels `<character vector>` The encoding channels whose domain values should be selected.
+#' @param fields `<character vector>` The fields (database column names) to use in generated selection clause predicates.
+#' @param max_radius `<number>` The maximum radius of a nearest selection (default 40).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -116,11 +126,13 @@ vg_nearest_x <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields
 
 #' A nearestY interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as The output selection.
-#' @param channels The encoding channels whose domain values should be selected.
-#' @param fields The fields (database column names) to use in generated selection clause predicates.
-#' @param max_radius The maximum radius of a nearest selection (default 40).
+#' @param as `<param()>` The output selection.
+#' @param channels `<character vector>` The encoding channels whose domain values should be selected.
+#' @param fields `<character vector>` The fields (database column names) to use in generated selection clause predicates.
+#' @param max_radius `<number>` The maximum radius of a nearest selection (default 40).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -130,11 +142,13 @@ vg_nearest_y <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields
 
 #' A pan interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x The output selection for the `x` domain.
-#' @param xfield The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y The output selection for the `y` domain.
-#' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
+#' @param x `<param()>` The output selection for the `x` domain.
+#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
+#' @param y `<param()>` The output selection for the `y` domain.
+#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -144,11 +158,13 @@ vg_pan <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, y
 
 #' A panX interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x The output selection for the `x` domain.
-#' @param xfield The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y The output selection for the `y` domain.
-#' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
+#' @param x `<param()>` The output selection for the `x` domain.
+#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
+#' @param y `<param()>` The output selection for the `y` domain.
+#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -158,11 +174,13 @@ vg_pan_x <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset,
 
 #' A panY interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x The output selection for the `x` domain.
-#' @param xfield The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y The output selection for the `y` domain.
-#' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
+#' @param x `<param()>` The output selection for the `x` domain.
+#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
+#' @param y `<param()>` The output selection for the `y` domain.
+#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -172,11 +190,13 @@ vg_pan_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset,
 
 #' A panZoom interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x The output selection for the `x` domain.
-#' @param xfield The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y The output selection for the `y` domain.
-#' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
+#' @param x `<param()>` The output selection for the `x` domain.
+#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
+#' @param y `<param()>` The output selection for the `y` domain.
+#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -186,11 +206,13 @@ vg_pan_zoom <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_uns
 
 #' A panZoomX interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x The output selection for the `x` domain.
-#' @param xfield The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y The output selection for the `y` domain.
-#' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
+#' @param x `<param()>` The output selection for the `x` domain.
+#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
+#' @param y `<param()>` The output selection for the `y` domain.
+#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -200,11 +222,13 @@ vg_pan_zoom_x <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_u
 
 #' A panZoomY interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x The output selection for the `x` domain.
-#' @param xfield The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y The output selection for the `y` domain.
-#' @param yfield The name of the field (database column) over which the `y`-component of the interval selection should be defined.
+#' @param x `<param()>` The output selection for the `x` domain.
+#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
+#' @param y `<param()>` The output selection for the `y` domain.
+#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -214,11 +238,13 @@ vg_pan_zoom_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_u
 
 #' A rectangular region interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as The output selection.
-#' @param brush CSS styles for the brush (SVG `rect`) element.
-#' @param channels The encoding channels whose domain values should be selected.
-#' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
+#' @param as `<param()>` The output selection.
+#' @param brush `<list>` CSS styles for the brush (SVG `rect`) element.
+#' @param channels `<character vector>` The encoding channels whose domain values should be selected.
+#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -228,10 +254,12 @@ vg_region <- function(spec = NULL, as = vg_unset, brush = vg_unset, channels = v
 
 #' A toggle interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as The output selection.
-#' @param channels The encoding channels whose domain values should be selected.
-#' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
+#' @param as `<param()>` The output selection.
+#' @param channels `<character vector>` The encoding channels whose domain values should be selected.
+#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -241,9 +269,11 @@ vg_toggle <- function(spec = NULL, as = vg_unset, channels = vg_unset, peers = v
 
 #' A toggleX interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as The output selection.
-#' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
+#' @param as `<param()>` The output selection.
+#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -253,9 +283,11 @@ vg_toggle_x <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 
 #' A toggleY interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as The output selection.
-#' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
+#' @param as `<param()>` The output selection.
+#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -265,9 +297,11 @@ vg_toggle_y <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 
 #' A toggleColor interactor.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as The output selection.
-#' @param peers A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
+#' @param as `<param()>` The output selection.
+#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -277,15 +311,17 @@ vg_toggle_color <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 
 #' A menu input component.
 #'
-#' @param as The output selection.
-#' @param column The name of a database column from which to pull menu options.
-#' @param field The name of the field (database column) over which the interval selection should be defined.
-#' @param filter_by A selection to filter the database table indicated by the `from` property.
-#' @param from The name of a database table to use as a data source for this widget.
-#' @param label A text label for this input.
-#' @param list_match Required if the database column is an list, this property determines how to match the selected menu option against the list values.
-#' @param options An array of menu options, as literal values or option objects.
-#' @param value The initial selected menu value.
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
+#' @param as `<param()>` The output selection.
+#' @param column `<string>` The name of a database column from which to pull menu options.
+#' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
+#' @param filter_by `<param()>` A selection to filter the database table indicated by the `from` property.
+#' @param from `<string>` The name of a database table to use as a data source for this widget.
+#' @param label `<string>` A text label for this input.
+#' @param list_match `<"any" | "all">` Required if the database column is an list, this property determines how to match the selected menu option against the list values.
+#' @param options `<vector>` An array of menu options, as literal values or option objects.
+#' @param value `<any>` The initial selected menu value.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -295,13 +331,15 @@ vg_menu <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter_b
 
 #' A search input component.
 #'
-#' @param as The output selection.
-#' @param column The name of a database column from which to pull menu options.
-#' @param field The name of the field (database column) over which the interval selection should be defined.
-#' @param filter_by A selection to filter the database table indicated by the `from` property.
-#' @param from The name of a database table to use as a data source for this widget.
-#' @param label A text label for this input.
-#' @param type The type of text search query to perform.
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
+#' @param as `<param()>` The output selection.
+#' @param column `<string>` The name of a database column from which to pull menu options.
+#' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
+#' @param filter_by `<param()>` A selection to filter the database table indicated by the `from` property.
+#' @param from `<string>` The name of a database table to use as a data source for this widget.
+#' @param label `<string>` A text label for this input.
+#' @param type `<"contains" | "prefix" | "suffix" | "regexp">` The type of text search query to perform.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -311,18 +349,20 @@ vg_search <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter
 
 #' A slider input component.
 #'
-#' @param as The output selection.
-#' @param column The name of a database column from which to pull menu options.
-#' @param field The name of the field (database column) over which the interval selection should be defined.
-#' @param filter_by A selection to filter the database table indicated by the `from` property.
-#' @param from The name of a database table to use as a data source for this widget.
-#' @param label A text label for this input.
-#' @param max The maximum slider value.
-#' @param min The minimum slider value.
-#' @param select The type of selection clause predicate to generate if the **as** option is a Selection.
-#' @param step The slider step, the amount to increment between consecutive values.
-#' @param value The initial selected menu value.
-#' @param width The width of the slider in screen pixels.
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
+#' @param as `<param()>` The output selection.
+#' @param column `<string>` The name of a database column from which to pull menu options.
+#' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
+#' @param filter_by `<param()>` A selection to filter the database table indicated by the `from` property.
+#' @param from `<string>` The name of a database table to use as a data source for this widget.
+#' @param label `<string>` A text label for this input.
+#' @param max `<number>` The maximum slider value.
+#' @param min `<number>` The minimum slider value.
+#' @param select `<"point" | "interval">` The type of selection clause predicate to generate if the **as** option is a Selection.
+#' @param step `<number>` The slider step, the amount to increment between consecutive values.
+#' @param value `<any>` The initial selected menu value.
+#' @param width `<number>` The width of the slider in screen pixels.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
@@ -332,15 +372,17 @@ vg_slider <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter
 
 #' A table grid view component.
 #'
-#' @param align An object of per-column alignment values.
-#' @param as The output selection.
-#' @param columns A list of column names to include in the table grid.
-#' @param filter_by A selection to filter the database table indicated by the `from` property.
-#' @param from The name of a database table to use as a data source for this widget.
-#' @param height The height of the table widget, in pixels.
-#' @param max_width The maximum width of the table widget, in pixels.
-#' @param row_batch The number of rows load in a new batch upon table scroll.
-#' @param width The width of the slider in screen pixels.
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
+#' @param align `<list>` An object of per-column alignment values.
+#' @param as `<param()>` The output selection.
+#' @param columns `<character vector>` A list of column names to include in the table grid.
+#' @param filter_by `<param()>` A selection to filter the database table indicated by the `from` property.
+#' @param from `<string>` The name of a database table to use as a data source for this widget.
+#' @param height `<number>` The height of the table widget, in pixels.
+#' @param max_width `<number>` The maximum width of the table widget, in pixels.
+#' @param row_batch `<number>` The number of rows load in a new batch upon table scroll.
+#' @param width `<number>` The width of the slider in screen pixels.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export

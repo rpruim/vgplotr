@@ -16,11 +16,11 @@ vg_scale_symbol(
 \item{spec}{A plot fragment or \code{vgspec} to set this scale on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{type}{The \emph{symbol} scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{symbolScale}).}
+\item{type}{\verb{<"ordinal" | "identity" | NULL | param()>} The \emph{symbol} scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{symbolScale}).}
 
-\item{domain}{The extent of the scale’s inputs (abstract values). (\code{symbolDomain}).}
+\item{domain}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s inputs (abstract values). (\code{symbolDomain}).}
 
-\item{range}{The extent of the scale’s outputs (visual values). (\code{symbolRange}).}
+\item{range}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s outputs (visual values). (\code{symbolRange}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -32,6 +32,9 @@ for the \code{symbol} channel (\code{symbolScale}, \code{symbolDomain},
 to unless it's a literal constant). Mosaic doesn't define a symbol
 axis-guide, but does have a dedicated legend type -- see
 \code{\link[=vg_legend_symbol]{vg_legend_symbol()}}.
+}
+\details{
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b, symbol = ~g) |>

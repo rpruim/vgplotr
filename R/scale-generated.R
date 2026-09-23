@@ -34,28 +34,30 @@ vg_position_counterpart <- c(x = "y", y = "x", fx = "fy", fy = "fx")
 #' never needs to come last in a chain. For the analogous facet scales
 #' (`fx`/`fy`), see [vg_scale_facet()].
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
 #' @param which Which position scale this sets: `"x"` or `"y"`.
-#' @param type The *x* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`xScale`/`yScale`).
-#' @param domain The extent of the scale’s inputs (abstract values). (`xDomain`/`yDomain`).
-#' @param range The extent of the scale’s outputs (visual values). (`xRange`/`yRange`).
-#' @param nice If true, or a tick count or interval, extend the domain to nice round values. (`xNice`/`yNice`).
-#' @param zero Whether the **domain** must include zero. (`xZero`/`yZero`).
-#' @param reverse Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`xReverse`/`yReverse`).
-#' @param clamp If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`xClamp`/`yClamp`).
-#' @param round If true, round the output value to the nearest integer (pixel); useful for crisp edges when rendering. (`xRound`/`yRound`).
-#' @param padding For *band* scales, how much of the **range** to reserve to separate adjacent bands; defaults to 0.1 (10%). (`xPadding`/`yPadding`).
-#' @param padding_inner For a *band* scale, how much of the range to reserve to separate adjacent bands. (`xPaddingInner`/`yPaddingInner`).
-#' @param padding_outer For a *band* scale, how much of the range to reserve to inset first and last bands. (`xPaddingOuter`/`yPaddingOuter`).
-#' @param align How to distribute unused space in the **range** for *point* and *band* scales. (`xAlign`/`yAlign`).
-#' @param inset Shorthand to set the same default for all four insets: **insetTop**, **insetRight**, **insetBottom**, and **insetLeft**. (`xInset`/`yInset`).
-#' @param base A log scale’s base; defaults to 10. (`xBase`/`yBase`).
-#' @param exponent A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`xExponent`/`yExponent`).
-#' @param constant A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`xConstant`/`yConstant`).
-#' @param percent If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`xPercent`/`yPercent`).
-#' @param inset_left,inset_right Pixel inset at the left/right end of the range; only meaningful for `which = "x"` (`xInsetLeft`/`xInsetRight`).
-#' @param inset_top,inset_bottom Pixel inset at the top/bottom end of the range; only meaningful for `which = "y"` (`yInsetTop`/`yInsetBottom`).
+#' @param type `<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "point" | "band" | "threshold" | ... | NULL | param()>` The *x* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`xScale`/`yScale`).
+#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`xDomain`/`yDomain`).
+#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`xRange`/`yRange`).
+#' @param nice `<boolean | number | "day"/"week"/"month"/... | param()>` If true, or a tick count or interval, extend the domain to nice round values. (`xNice`/`yNice`).
+#' @param zero `<boolean | param()>` Whether the **domain** must include zero. (`xZero`/`yZero`).
+#' @param reverse `<boolean | param()>` Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`xReverse`/`yReverse`).
+#' @param clamp `<boolean | param()>` If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`xClamp`/`yClamp`).
+#' @param round `<boolean | param()>` If true, round the output value to the nearest integer (pixel); useful for crisp edges when rendering. (`xRound`/`yRound`).
+#' @param padding `<number | param()>` For *band* scales, how much of the **range** to reserve to separate adjacent bands; defaults to 0.1 (10%). (`xPadding`/`yPadding`).
+#' @param padding_inner `<number | param()>` For a *band* scale, how much of the range to reserve to separate adjacent bands. (`xPaddingInner`/`yPaddingInner`).
+#' @param padding_outer `<number | param()>` For a *band* scale, how much of the range to reserve to inset first and last bands. (`xPaddingOuter`/`yPaddingOuter`).
+#' @param align `<number | param()>` How to distribute unused space in the **range** for *point* and *band* scales. (`xAlign`/`yAlign`).
+#' @param inset `<number | param()>` Shorthand to set the same default for all four insets: **insetTop**, **insetRight**, **insetBottom**, and **insetLeft**. (`xInset`/`yInset`).
+#' @param base `<number | param()>` A log scale’s base; defaults to 10. (`xBase`/`yBase`).
+#' @param exponent `<number | param()>` A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`xExponent`/`yExponent`).
+#' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`xConstant`/`yConstant`).
+#' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`xPercent`/`yPercent`).
+#' @param inset_left,inset_right `<number | param()>` Pixel inset at the left/right end of the range; only meaningful for `which = "x"` (`xInsetLeft`/`xInsetRight`).
+#' @param inset_top,inset_bottom `<number | param()>` Pixel inset at the top/bottom end of the range; only meaningful for `which = "y"` (`yInsetTop`/`yInsetBottom`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
@@ -92,20 +94,22 @@ vg_scale_y <- wrapper_function(vg_scale_position, which = "y", drop = c("inset_l
 #' hand-picked. `vg_scale_fx()` and `vg_scale_fy()` are thin wrappers
 #' around the generic `vg_scale_facet()`.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
 #' @param which Which facet scale this sets: `"fx"` or `"fy"`.
-#' @param domain The extent of the scale’s inputs (abstract values). (`fxDomain`/`fyDomain`).
-#' @param range The extent of the scale’s outputs (visual values). (`fxRange`/`fyRange`).
-#' @param reverse Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`fxReverse`/`fyReverse`).
-#' @param round If true, round the output value to the nearest integer (pixel); useful for crisp edges when rendering. (`fxRound`/`fyRound`).
-#' @param padding For *band* scales, how much of the **range** to reserve to separate adjacent bands; defaults to 0.1 (10%). (`fxPadding`/`fyPadding`).
-#' @param padding_inner For a *band* scale, how much of the range to reserve to separate adjacent bands. (`fxPaddingInner`/`fyPaddingInner`).
-#' @param padding_outer For a *band* scale, how much of the range to reserve to inset first and last bands. (`fxPaddingOuter`/`fyPaddingOuter`).
-#' @param align How to distribute unused space in the **range** for *point* and *band* scales. (`fxAlign`/`fyAlign`).
-#' @param inset Shorthand to set the same default for all four insets: **insetTop**, **insetRight**, **insetBottom**, and **insetLeft**. (`fxInset`/`fyInset`).
-#' @param inset_left,inset_right Pixel inset at the left/right end of the range; only meaningful for `which = "fx"` (`fxInsetLeft`/`fxInsetRight`).
-#' @param inset_top,inset_bottom Pixel inset at the top/bottom end of the range; only meaningful for `which = "fy"` (`fyInsetTop`/`fyInsetBottom`).
+#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`fxDomain`/`fyDomain`).
+#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`fxRange`/`fyRange`).
+#' @param reverse `<boolean | param()>` Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`fxReverse`/`fyReverse`).
+#' @param round `<boolean | param()>` If true, round the output value to the nearest integer (pixel); useful for crisp edges when rendering. (`fxRound`/`fyRound`).
+#' @param padding `<number | param()>` For *band* scales, how much of the **range** to reserve to separate adjacent bands; defaults to 0.1 (10%). (`fxPadding`/`fyPadding`).
+#' @param padding_inner `<number | param()>` For a *band* scale, how much of the range to reserve to separate adjacent bands. (`fxPaddingInner`/`fyPaddingInner`).
+#' @param padding_outer `<number | param()>` For a *band* scale, how much of the range to reserve to inset first and last bands. (`fxPaddingOuter`/`fyPaddingOuter`).
+#' @param align `<number | param()>` How to distribute unused space in the **range** for *point* and *band* scales. (`fxAlign`/`fyAlign`).
+#' @param inset `<number | param()>` Shorthand to set the same default for all four insets: **insetTop**, **insetRight**, **insetBottom**, and **insetLeft**. (`fxInset`/`fyInset`).
+#' @param inset_left,inset_right `<number | param()>` Pixel inset at the left/right end of the range; only meaningful for `which = "fx"` (`fxInsetLeft`/`fxInsetRight`).
+#' @param inset_top,inset_bottom `<number | param()>` Pixel inset at the top/bottom end of the range; only meaningful for `which = "fy"` (`fyInsetTop`/`fyInsetBottom`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
@@ -143,24 +147,26 @@ vg_scale_fy <- wrapper_function(vg_scale_facet, which = "fy", drop = c("inset_le
 #' different (if related) thing, a standalone/embedded legend mark
 #' rather than a plot attribute.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param type The *color* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`colorScale`).
-#' @param domain The extent of the scale’s inputs (abstract values). (`colorDomain`).
-#' @param range The extent of the scale’s outputs (visual values). (`colorRange`).
-#' @param scheme If specified, shorthand for setting the **colorRange** or **colorInterpolate** option of a *color* scale. (`colorScheme`).
-#' @param interpolate How to interpolate color range values. (`colorInterpolate`).
-#' @param pivot For a diverging color scale, the input value (abstract value) that divides the domain into two parts; defaults to 0 for *diverging* scales, dividing the domain into negative and positive parts; defaults to 1 for *diverging-log* scales. (`colorPivot`).
-#' @param symmetric For a diverging color scale, if true (the default), extend the domain to ensure that the lower part of the domain (below the **pivot**) is commensurate with the upper part of the domain (above the **pivot**). (`colorSymmetric`).
-#' @param nice If true, or a tick count or interval, extend the domain to nice round values. (`colorNice`).
-#' @param zero Whether the **domain** must include zero. (`colorZero`).
-#' @param reverse Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`colorReverse`).
-#' @param clamp If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`colorClamp`).
-#' @param base A log scale’s base; defaults to 10. (`colorBase`).
-#' @param exponent A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`colorExponent`).
-#' @param constant A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`colorConstant`).
-#' @param percent If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`colorPercent`).
-#' @param n For a *quantile* scale, the number of quantiles (creates *n* - 1 thresholds); for a *quantize* scale, the approximate number of thresholds; defaults to 5. (`colorN`).
+#' @param type `<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "point" | "band" | "ordinal" | ... | NULL | param()>` The *color* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`colorScale`).
+#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`colorDomain`).
+#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`colorRange`).
+#' @param scheme `<"Accent" | "Category10" | "Dark2" | "Observable10" | "Paired" | "Pastel1" | "Pastel2" | "Set1" | "Set2" | "Set3" | ... | param()>` If specified, shorthand for setting the **colorRange** or **colorInterpolate** option of a *color* scale. (`colorScheme`).
+#' @param interpolate `<"number" | "rgb" | "hsl" | "hcl" | "lab" | param()>` How to interpolate color range values. (`colorInterpolate`).
+#' @param pivot `<any | param()>` For a diverging color scale, the input value (abstract value) that divides the domain into two parts; defaults to 0 for *diverging* scales, dividing the domain into negative and positive parts; defaults to 1 for *diverging-log* scales. (`colorPivot`).
+#' @param symmetric `<boolean | param()>` For a diverging color scale, if true (the default), extend the domain to ensure that the lower part of the domain (below the **pivot**) is commensurate with the upper part of the domain (above the **pivot**). (`colorSymmetric`).
+#' @param nice `<boolean | number | "day"/"week"/"month"/... | param()>` If true, or a tick count or interval, extend the domain to nice round values. (`colorNice`).
+#' @param zero `<boolean | param()>` Whether the **domain** must include zero. (`colorZero`).
+#' @param reverse `<boolean | param()>` Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`colorReverse`).
+#' @param clamp `<boolean | param()>` If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`colorClamp`).
+#' @param base `<number | param()>` A log scale’s base; defaults to 10. (`colorBase`).
+#' @param exponent `<number | param()>` A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`colorExponent`).
+#' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`colorConstant`).
+#' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`colorPercent`).
+#' @param n `<number | param()>` For a *quantile* scale, the number of quantiles (creates *n* - 1 thresholds); for a *quantize* scale, the approximate number of thresholds; defaults to 5. (`colorN`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
@@ -184,19 +190,21 @@ vg_scale_color <- function(spec = NULL, type = vg_unset, domain = vg_unset, rang
 #' properties, see [vg_guide_opacity()]; for an actual rendered opacity
 #' legend, see [vg_legend_opacity()].
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param type The *opacity* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`opacityScale`).
-#' @param domain The extent of the scale’s inputs (abstract values). (`opacityDomain`).
-#' @param range The extent of the scale’s outputs (visual values). (`opacityRange`).
-#' @param nice If true, or a tick count or interval, extend the domain to nice round values. (`opacityNice`).
-#' @param zero Whether the **domain** must include zero. (`opacityZero`).
-#' @param reverse Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`opacityReverse`).
-#' @param clamp If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`opacityClamp`).
-#' @param base A log scale’s base; defaults to 10. (`opacityBase`).
-#' @param exponent A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`opacityExponent`).
-#' @param constant A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`opacityConstant`).
-#' @param percent If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`opacityPercent`).
+#' @param type `<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>` The *opacity* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`opacityScale`).
+#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`opacityDomain`).
+#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`opacityRange`).
+#' @param nice `<boolean | number | "day"/"week"/"month"/... | param()>` If true, or a tick count or interval, extend the domain to nice round values. (`opacityNice`).
+#' @param zero `<boolean | param()>` Whether the **domain** must include zero. (`opacityZero`).
+#' @param reverse `<boolean | param()>` Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`opacityReverse`).
+#' @param clamp `<boolean | param()>` If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`opacityClamp`).
+#' @param base `<number | param()>` A log scale’s base; defaults to 10. (`opacityBase`).
+#' @param exponent `<number | param()>` A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`opacityExponent`).
+#' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`opacityConstant`).
+#' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`opacityPercent`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
@@ -223,18 +231,20 @@ vg_scale_opacity <- function(spec = NULL, type = vg_unset, domain = vg_unset, ra
 #' actual rendered radius/size legend, see [vg_legend_symbol()]
 #' (mosaic doesn't have a dedicated `r`-typed legend).
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param type The *r* (radius) scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`rScale`).
-#' @param domain The extent of the scale’s inputs (abstract values). (`rDomain`).
-#' @param range The extent of the scale’s outputs (visual values). (`rRange`).
-#' @param nice If true, or a tick count or interval, extend the domain to nice round values. (`rNice`).
-#' @param zero Whether the **domain** must include zero. (`rZero`).
-#' @param clamp If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`rClamp`).
-#' @param base A log scale’s base; defaults to 10. (`rBase`).
-#' @param exponent A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`rExponent`).
-#' @param constant A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`rConstant`).
-#' @param percent If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`rPercent`).
+#' @param type `<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>` The *r* (radius) scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`rScale`).
+#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`rDomain`).
+#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`rRange`).
+#' @param nice `<boolean | number | "day"/"week"/"month"/... | param()>` If true, or a tick count or interval, extend the domain to nice round values. (`rNice`).
+#' @param zero `<boolean | param()>` Whether the **domain** must include zero. (`rZero`).
+#' @param clamp `<any>` If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`rClamp`).
+#' @param base `<number | param()>` A log scale’s base; defaults to 10. (`rBase`).
+#' @param exponent `<number | param()>` A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`rExponent`).
+#' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`rConstant`).
+#' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`rPercent`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
@@ -262,18 +272,20 @@ vg_scale_radius <- vg_scale_r
 #' axis-guide or legend, so there's no `vg_guide_length()`/
 #' `vg_legend_length()` to pair with this.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param type The *length* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`lengthScale`).
-#' @param domain The extent of the scale’s inputs (abstract values). (`lengthDomain`).
-#' @param range The extent of the scale’s outputs (visual values). (`lengthRange`).
-#' @param nice If true, or a tick count or interval, extend the domain to nice round values. (`lengthNice`).
-#' @param zero Whether the **domain** must include zero. (`lengthZero`).
-#' @param clamp If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`lengthClamp`).
-#' @param base A log scale’s base; defaults to 10. (`lengthBase`).
-#' @param exponent A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`lengthExponent`).
-#' @param constant A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`lengthConstant`).
-#' @param percent If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`lengthPercent`).
+#' @param type `<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>` The *length* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`lengthScale`).
+#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`lengthDomain`).
+#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`lengthRange`).
+#' @param nice `<boolean | number | "day"/"week"/"month"/... | param()>` If true, or a tick count or interval, extend the domain to nice round values. (`lengthNice`).
+#' @param zero `<boolean | param()>` Whether the **domain** must include zero. (`lengthZero`).
+#' @param clamp `<any>` If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`lengthClamp`).
+#' @param base `<number | param()>` A log scale’s base; defaults to 10. (`lengthBase`).
+#' @param exponent `<number | param()>` A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`lengthExponent`).
+#' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`lengthConstant`).
+#' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`lengthPercent`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
@@ -297,11 +309,13 @@ vg_scale_length <- function(spec = NULL, type = vg_unset, domain = vg_unset, ran
 #' axis-guide, but does have a dedicated legend type -- see
 #' [vg_legend_symbol()].
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param type The *symbol* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`symbolScale`).
-#' @param domain The extent of the scale’s inputs (abstract values). (`symbolDomain`).
-#' @param range The extent of the scale’s outputs (visual values). (`symbolRange`).
+#' @param type `<"ordinal" | "identity" | NULL | param()>` The *symbol* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`symbolScale`).
+#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`symbolDomain`).
+#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`symbolRange`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
@@ -326,11 +340,13 @@ vg_scale_symbol <- function(spec = NULL, type = vg_unset, domain = vg_unset, ran
 #' own value. For the analogous axis-guide defaults, see
 #' [vg_guide_all()].
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param padding For *band* scales, how much of the **range** to reserve to separate adjacent bands; defaults to 0.1 (10%). (`padding`).
-#' @param align How to distribute unused space in the **range** for *point* and *band* scales. (`align`).
-#' @param inset Shorthand to set the same default for all four insets: **insetTop**, **insetRight**, **insetBottom**, and **insetLeft**. (`inset`).
+#' @param padding `<number | param()>` For *band* scales, how much of the **range** to reserve to separate adjacent bands; defaults to 0.1 (10%). (`padding`).
+#' @param align `<number | param()>` How to distribute unused space in the **range** for *point* and *band* scales. (`align`).
+#' @param inset `<number | param()>` Shorthand to set the same default for all four insets: **insetTop**, **insetRight**, **insetBottom**, and **insetLeft**. (`inset`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions

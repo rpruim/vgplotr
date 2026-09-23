@@ -17,13 +17,13 @@ vg_guide_all(
 \item{spec}{A plot fragment or \code{vgspec} to set this guide on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{position}{The side of the frame on which to place the implicit axis: \emph{top} or \emph{bottom} for \emph{x} or \emph{fx}, or \emph{left} or \emph{right} for \emph{y} or \emph{fy}. (\code{axis}).}
+\item{position}{\verb{<"top" | "right" | "bottom" | "left" | "both" | boolean | NULL | param()>} The side of the frame on which to place the implicit axis: \emph{top} or \emph{bottom} for \emph{x} or \emph{fx}, or \emph{left} or \emph{right} for \emph{y} or \emph{fy}. (\code{axis}).}
 
-\item{grid}{Whether to show a grid aligned with the scale’s ticks. (\code{grid}).}
+\item{grid}{\verb{<boolean | string | param()>} Whether to show a grid aligned with the scale’s ticks. (\code{grid}).}
 
-\item{aria_label}{The aria-label attribute on the SVG root. (\code{ariaLabel}).}
+\item{aria_label}{\verb{<string | NULL>} The aria-label attribute on the SVG root. (\code{ariaLabel}).}
 
-\item{aria_description}{The aria-description attribute on the SVG root. (\code{ariaDescription}).}
+\item{aria_description}{\verb{<string | NULL>} The aria-description attribute on the SVG root. (\code{ariaDescription}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -36,6 +36,9 @@ which only affect one axis, these bare attributes are mosaic's own
 defaults applied to \emph{every} position axis (\code{x}, \code{y}, \code{fx}, \code{fy})
 that doesn't set its own value. For the analogous scale defaults,
 see \code{\link[=vg_scale_all]{vg_scale_all()}}.
+}
+\details{
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b) |>

@@ -16,11 +16,11 @@ vg_scale_all(
 \item{spec}{A plot fragment or \code{vgspec} to set this scale on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{padding}{For \emph{band} scales, how much of the \strong{range} to reserve to separate adjacent bands; defaults to 0.1 (10\%). (\code{padding}).}
+\item{padding}{\verb{<number | param()>} For \emph{band} scales, how much of the \strong{range} to reserve to separate adjacent bands; defaults to 0.1 (10\%). (\code{padding}).}
 
-\item{align}{How to distribute unused space in the \strong{range} for \emph{point} and \emph{band} scales. (\code{align}).}
+\item{align}{\verb{<number | param()>} How to distribute unused space in the \strong{range} for \emph{point} and \emph{band} scales. (\code{align}).}
 
-\item{inset}{Shorthand to set the same default for all four insets: \strong{insetTop}, \strong{insetRight}, \strong{insetBottom}, and \strong{insetLeft}. (\code{inset}).}
+\item{inset}{\verb{<number | param()>} Shorthand to set the same default for all four insets: \strong{insetTop}, \strong{insetRight}, \strong{insetBottom}, and \strong{insetLeft}. (\code{inset}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -33,6 +33,9 @@ these bare attributes are mosaic's own defaults applied to \emph{every}
 ordinal position scale (\code{x}, \code{y}, \code{fx}, \code{fy}) that doesn't set its
 own value. For the analogous axis-guide defaults, see
 \code{\link[=vg_guide_all]{vg_guide_all()}}.
+}
+\details{
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b) |>

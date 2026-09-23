@@ -98,165 +98,165 @@ vg_mark_axis_fy(
 
 \item{formula}{A shorthand for this mark's position channels (\code{x}, \code{y}, \code{fx}, \code{fy}, and paired \code{x1}/\code{x2} or \code{y1}/\code{y2}), e.g., \code{Sepal.Length ~ Sepal.Width | ~ Species} for \verb{y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species}. See \code{\link[=vg_mark]{vg_mark()}} for the full grammar.}
 
-\item{anchor}{The side of the frame on which to place the axis: \emph{top} or \emph{bottom} for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or \emph{left} or \emph{right} for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).}
+\item{anchor}{\verb{<"top" | "right" | "bottom" | "left" | param()>} The side of the frame on which to place the axis: \emph{top} or \emph{bottom} for horizontal axes (axisX and axisFx) and their associated vertical grids (gridX and gridFx), or \emph{left} or \emph{right} for vertical axes (axisY and axisFY) and their associated horizontal grids (gridY and gridFy).}
 
-\item{aria_description}{The aria-description; a constant textual description.}
+\item{aria_description}{\verb{<string | param()>} The aria-description; a constant textual description.}
 
-\item{aria_hidden}{The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.}
+\item{aria_hidden}{\verb{<string | param()>} The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.}
 
-\item{aria_label}{The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.}
+\item{aria_label}{\verb{<column | literal | transform() | sql()/agg()>} The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.}
 
-\item{channels}{Additional named channels, for example to include in a tooltip.}
+\item{channels}{\verb{<list>} Additional named channels, for example to include in a tooltip.}
 
-\item{clip}{How to clip the mark; one of: - \emph{frame} or true - clip to the plot’s frame (inner area) - \emph{sphere} - clip to the projected sphere (\emph{e.g.}, front hemisphere) - null or false - do not clip The \emph{sphere} clip option requires a geographic projection.}
+\item{clip}{\verb{<"frame" | "sphere" | boolean | NULL | param()>} How to clip the mark; one of: - \emph{frame} or true - clip to the plot’s frame (inner area) - \emph{sphere} - clip to the projected sphere (\emph{e.g.}, front hemisphere) - null or false - do not clip The \emph{sphere} clip option requires a geographic projection.}
 
-\item{color}{A shorthand for setting both \strong{fill} and \strong{stroke}; affects the stroke of tick vectors and grid rules, and the fill of tick texts and axis label texts; defaults to \emph{currentColor}.}
+\item{color}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} A shorthand for setting both \strong{fill} and \strong{stroke}; affects the stroke of tick vectors and grid rules, and the fill of tick texts and axis label texts; defaults to \emph{currentColor}.}
 
-\item{dx}{The horizontal offset in pixels; a constant option.}
+\item{dx}{\verb{<number | param()>} The horizontal offset in pixels; a constant option.}
 
-\item{dy}{The vertical offset in pixels; a constant option.}
+\item{dy}{\verb{<number | param()>} The vertical offset in pixels; a constant option.}
 
-\item{facet}{Whether to enable or disable faceting; one of: - \emph{auto} (default) - automatically determine if this mark should be faceted - \emph{include} (or true) - draw the subset of the mark’s data in the current facet - \emph{exclude} - draw the subset of the mark’s data \emph{not} in the current facet - \emph{super} - draw this mark in a single frame that covers all facets - null (or false) - repeat this mark’s data across all facets (\emph{i.e.}, no faceting) When a mark uses \emph{super} faceting, it is not allowed to use position scales (\emph{x}, \emph{y}, \emph{fx}, or \emph{fy}); \emph{super} faceting is intended for decorations, such as labels and legends.}
+\item{facet}{\verb{<"auto" | "include" | "exclude" | "super" | boolean | NULL | param()>} Whether to enable or disable faceting; one of: - \emph{auto} (default) - automatically determine if this mark should be faceted - \emph{include} (or true) - draw the subset of the mark’s data in the current facet - \emph{exclude} - draw the subset of the mark’s data \emph{not} in the current facet - \emph{super} - draw this mark in a single frame that covers all facets - null (or false) - repeat this mark’s data across all facets (\emph{i.e.}, no faceting) When a mark uses \emph{super} faceting, it is not allowed to use position scales (\emph{x}, \emph{y}, \emph{fx}, or \emph{fy}); \emph{super} faceting is intended for decorations, such as labels and legends.}
 
-\item{facet_anchor}{How to place the mark with respect to facets; one of: - null (default for most marks) - display the mark in each non-empty facet - \emph{top}, \emph{right}, \emph{bottom}, or \emph{left} - display the mark only in facets on the given side - \emph{top-empty}, \emph{right-empty}, \emph{bottom-empty}, or \emph{left-empty} (default for axis marks) - display the mark only in facets that have empty space on the given side: either the margin, or an empty facet - \emph{empty} - display the mark in empty facets only}
+\item{facet_anchor}{\verb{<"top" | "right" | "bottom" | "left" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | "top-empty" | "right-empty" | "bottom-empty" | "left-empty" | "empty" | NULL | param()>} How to place the mark with respect to facets; one of: - null (default for most marks) - display the mark in each non-empty facet - \emph{top}, \emph{right}, \emph{bottom}, or \emph{left} - display the mark only in facets on the given side - \emph{top-empty}, \emph{right-empty}, \emph{bottom-empty}, or \emph{left-empty} (default for axis marks) - display the mark only in facets that have empty space on the given side: either the margin, or an empty facet - \emph{empty} - display the mark in empty facets only}
 
-\item{fill}{The fill; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
+\item{fill}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The fill; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
 
-\item{fill_opacity}{The fill-opacity; a constant number between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{fill_opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The fill-opacity; a constant number between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{filter}{Applies a transform to filter the mark’s index according to the given channel values; only truthy values are retained.}
+\item{filter}{\verb{<column | literal | transform() | sql()/agg()>} Applies a transform to filter the mark’s index according to the given channel values; only truthy values are retained.}
 
-\item{font_family}{The font-family; a constant; defaults to the plot’s font family, which is typically \emph{system-ui}.}
+\item{font_family}{\verb{<string | param()>} The font-family; a constant; defaults to the plot’s font family, which is typically \emph{system-ui}.}
 
-\item{font_size}{The font size in pixels; either a constant or a channel; defaults to the plot’s font size, which is typically 10.}
+\item{font_size}{\verb{<column | literal | transform() | sql()/agg() | param()>} The font size in pixels; either a constant or a channel; defaults to the plot’s font size, which is typically 10.}
 
-\item{font_style}{The font style; a constant; defaults to the plot’s font style, which is typically \emph{normal}.}
+\item{font_style}{\verb{<string | param()>} The font style; a constant; defaults to the plot’s font style, which is typically \emph{normal}.}
 
-\item{font_variant}{The font variant; a constant; if the \strong{text} channel contains numbers or dates, defaults to \emph{tabular-nums} to facilitate comparing numbers; otherwise defaults to the plot’s font style, which is typically \emph{normal}.}
+\item{font_variant}{\verb{<string | param()>} The font variant; a constant; if the \strong{text} channel contains numbers or dates, defaults to \emph{tabular-nums} to facilitate comparing numbers; otherwise defaults to the plot’s font style, which is typically \emph{normal}.}
 
-\item{font_weight}{The font weight; a constant; defaults to the plot’s font weight, which is typically \emph{normal}.}
+\item{font_weight}{\verb{<string | number | param()>} The font weight; a constant; defaults to the plot’s font weight, which is typically \emph{normal}.}
 
-\item{frame_anchor}{The frame anchor specifies defaults for \strong{x} and \strong{y}, along with \strong{textAnchor} and \strong{lineAnchor}, based on the plot’s frame; it may be one of the four sides (\emph{top}, \emph{right}, \emph{bottom}, \emph{left}), one of the four corners (\emph{top-left}, \emph{top-right}, \emph{bottom-right}, \emph{bottom-left}), or the \emph{middle} of the frame.}
+\item{frame_anchor}{\verb{<"middle" | "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "left" | param()>} The frame anchor specifies defaults for \strong{x} and \strong{y}, along with \strong{textAnchor} and \strong{lineAnchor}, based on the plot’s frame; it may be one of the four sides (\emph{top}, \emph{right}, \emph{bottom}, \emph{left}), one of the four corners (\emph{top-left}, \emph{top-right}, \emph{bottom-right}, \emph{bottom-left}), or the \emph{middle} of the frame.}
 
-\item{fx}{The horizontal facet position channel, for mark-level faceting, bound to the \emph{fx} scale.}
+\item{fx}{\verb{<column | literal | transform() | sql()/agg()>} The horizontal facet position channel, for mark-level faceting, bound to the \emph{fx} scale.}
 
-\item{fy}{The vertical facet position channel, for mark-level faceting, bound to the \emph{fy} scale.}
+\item{fy}{\verb{<column | literal | transform() | sql()/agg()>} The vertical facet position channel, for mark-level faceting, bound to the \emph{fy} scale.}
 
-\item{href}{The href; a channel specifying URLs for clickable links.}
+\item{href}{\verb{<column | literal | transform() | sql()/agg()>} The href; a channel specifying URLs for clickable links.}
 
-\item{image_filter}{A CSS filter; a constant string used to adjust the rendering of images, such as \emph{blur(5px)}.}
+\item{image_filter}{\verb{<string | param()>} A CSS filter; a constant string used to adjust the rendering of images, such as \emph{blur(5px)}.}
 
-\item{inset}{Shorthand to set the same default for \strong{insetStart} and \strong{insetEnd}.}
+\item{inset}{\verb{<number | param()>} Shorthand to set the same default for \strong{insetStart} and \strong{insetEnd}.}
 
-\item{inset_left}{Insets the left edge by the specified number of pixels.}
+\item{inset_left}{\verb{<number | param()>} Insets the left edge by the specified number of pixels.}
 
-\item{inset_right}{Insets the right edge by the specified number of pixels.}
+\item{inset_right}{\verb{<number | param()>} Insets the right edge by the specified number of pixels.}
 
-\item{interval}{Enforces uniformity for data at regular intervals, such as integer values or daily samples.}
+\item{interval}{\verb{<"day"/"week"/"month"/... | number | param()>} Enforces uniformity for data at regular intervals, such as integer values or daily samples.}
 
-\item{label}{A textual label to show on the axis or legend; if null, show no label.}
+\item{label}{\verb{<string | NULL | param()>} A textual label to show on the axis or legend; if null, show no label.}
 
-\item{label_anchor}{Where to place the axis \strong{label} relative to the plot’s frame.}
+\item{label_anchor}{\verb{<"top" | "right" | "bottom" | "left" | "center" | param()>} Where to place the axis \strong{label} relative to the plot’s frame.}
 
-\item{label_arrow}{Whether to apply a directional arrow such as → or ↑ to the scale label.}
+\item{label_arrow}{\verb{<"auto" | "up" | "right" | "down" | "left" | "none" | TRUE | FALSE | NULL | param()>} Whether to apply a directional arrow such as → or ↑ to the scale label.}
 
-\item{label_offset}{The axis \strong{label} position offset (in pixels); default depends on margins and orientation.}
+\item{label_offset}{\verb{<number | param()>} The axis \strong{label} position offset (in pixels); default depends on margins and orientation.}
 
-\item{line_anchor}{The line anchor controls how text is aligned (typically vertically) relative to its anchor point; it is one of \emph{top}, \emph{bottom}, or \emph{middle}.}
+\item{line_anchor}{\verb{<"top" | "middle" | "bottom" | param()>} The line anchor controls how text is aligned (typically vertically) relative to its anchor point; it is one of \emph{top}, \emph{bottom}, or \emph{middle}.}
 
-\item{line_height}{The line height in ems; defaults to 1.}
+\item{line_height}{\verb{<number | param()>} The line height in ems; defaults to 1.}
 
-\item{line_width}{The line width in ems (e.g., 10 for about 20 characters); defaults to infinity, disabling wrapping and clipping.}
+\item{line_width}{\verb{<number | param()>} The line width in ems (e.g., 10 for about 20 characters); defaults to infinity, disabling wrapping and clipping.}
 
-\item{margin}{Shorthand to set the same default for all four mark margins: \strong{marginTop}, \strong{marginRight}, \strong{marginBottom}, and \strong{marginLeft}; typically defaults to 0, except for axis marks.}
+\item{margin}{\verb{<number | param()>} Shorthand to set the same default for all four mark margins: \strong{marginTop}, \strong{marginRight}, \strong{marginBottom}, and \strong{marginLeft}; typically defaults to 0, except for axis marks.}
 
-\item{margin_bottom}{The mark’s bottom margin; the minimum distance in pixels between the bottom edges of the inner and outer plot area.}
+\item{margin_bottom}{\verb{<number | param()>} The mark’s bottom margin; the minimum distance in pixels between the bottom edges of the inner and outer plot area.}
 
-\item{margin_left}{The mark’s left margin; the minimum distance in pixels between the left edges of the inner and outer plot area.}
+\item{margin_left}{\verb{<number | param()>} The mark’s left margin; the minimum distance in pixels between the left edges of the inner and outer plot area.}
 
-\item{margin_right}{The mark’s right margin; the minimum distance in pixels between the right edges of the mark’s inner and outer plot area.}
+\item{margin_right}{\verb{<number | param()>} The mark’s right margin; the minimum distance in pixels between the right edges of the mark’s inner and outer plot area.}
 
-\item{margin_top}{The mark’s top margin; the minimum distance in pixels between the top edges of the inner and outer plot area.}
+\item{margin_top}{\verb{<number | param()>} The mark’s top margin; the minimum distance in pixels between the top edges of the inner and outer plot area.}
 
-\item{marker}{Shorthand to set the same default for markerStart, markerMid, and markerEnd; one of: - a marker name such as \emph{arrow} or \emph{circle} - \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
+\item{marker}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} Shorthand to set the same default for markerStart, markerMid, and markerEnd; one of: - a marker name such as \emph{arrow} or \emph{circle} - \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
 
-\item{marker_end}{The marker for the ending point of a line segment; one of: - a marker name such as \emph{arrow} or \emph{circle} * \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
+\item{marker_end}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} The marker for the ending point of a line segment; one of: - a marker name such as \emph{arrow} or \emph{circle} * \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
 
-\item{marker_mid}{The marker for any middle (interior) points of a line segment.}
+\item{marker_mid}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} The marker for any middle (interior) points of a line segment.}
 
-\item{marker_start}{The marker for the starting point of a line segment; one of: - a marker name such as \emph{arrow} or \emph{circle} * \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
+\item{marker_start}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} The marker for the starting point of a line segment; one of: - a marker name such as \emph{arrow} or \emph{circle} * \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
 
-\item{mix_blend_mode}{The mix-blend-mode; a constant string specifying how to blend content such as \emph{multiply}.}
+\item{mix_blend_mode}{\verb{<string | param()>} The mix-blend-mode; a constant string specifying how to blend content such as \emph{multiply}.}
 
-\item{monospace}{If true, changes the default \strong{fontFamily} to \emph{monospace}, and uses simplified monospaced text metrics calculations.}
+\item{monospace}{\verb{<boolean | param()>} If true, changes the default \strong{fontFamily} to \emph{monospace}, and uses simplified monospaced text metrics calculations.}
 
-\item{opacity}{The opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{paint_order}{The paint-order; a constant string specifying the order in which the \strong{fill}, \strong{stroke}, and any markers are drawn; defaults to \emph{normal}, which draws the fill, then stroke, then markers; defaults to \emph{stroke} for the text mark to create a “halo” around text to improve legibility.}
+\item{paint_order}{\verb{<string | param()>} The paint-order; a constant string specifying the order in which the \strong{fill}, \strong{stroke}, and any markers are drawn; defaults to \emph{normal}, which draws the fill, then stroke, then markers; defaults to \emph{stroke} for the text mark to create a “halo” around text to improve legibility.}
 
-\item{pointer_events}{The pointer-events property; a constant string such as \emph{none}.}
+\item{pointer_events}{\verb{<string | param()>} The pointer-events property; a constant string such as \emph{none}.}
 
-\item{reverse}{Applies a transform to reverse the order of the mark’s index, say for reverse input order.}
+\item{reverse}{\verb{<boolean | param()>} Applies a transform to reverse the order of the mark’s index, say for reverse input order.}
 
-\item{rotate}{The rotation angle in degrees clockwise; a constant or a channel; defaults to 0°.}
+\item{rotate}{\verb{<column | literal | transform() | sql()/agg() | param()>} The rotation angle in degrees clockwise; a constant or a channel; defaults to 0°.}
 
-\item{select}{Applies a filter transform after data is loaded to highlight selected values only.}
+\item{select}{\verb{<"first" | "last" | "maxX" | "maxY" | "minX" | "minY" | "nearest" | "nearestX" | "nearestY">} Applies a filter transform after data is loaded to highlight selected values only.}
 
-\item{shape_rendering}{The shape-rendering; a constant string such as \emph{crispEdges}.}
+\item{shape_rendering}{\verb{<string | param()>} The shape-rendering; a constant string such as \emph{crispEdges}.}
 
-\item{sort}{Either applies a transform to sort the mark’s index by the specified channel values, or imputes ordinal scale domains from this mark’s channels.}
+\item{sort}{\verb{<column | literal | transform() | sql()/agg() | list>} Either applies a transform to sort the mark’s index by the specified channel values, or imputes ordinal scale domains from this mark’s channels.}
 
-\item{stroke}{The stroke; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
+\item{stroke}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The stroke; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
 
-\item{stroke_dasharray}{The stroke-dasharray; a constant number indicating the length in pixels of alternating dashes and gaps, or a constant string of numbers separated by spaces or commas (\emph{e.g.}, \emph{10 2} for dashes of 10 pixels separated by gaps of 2 pixels), or \emph{none} (the default) for no dashing : https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray}
+\item{stroke_dasharray}{\verb{<string | number | param()>} The stroke-dasharray; a constant number indicating the length in pixels of alternating dashes and gaps, or a constant string of numbers separated by spaces or commas (\emph{e.g.}, \emph{10 2} for dashes of 10 pixels separated by gaps of 2 pixels), or \emph{none} (the default) for no dashing : https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray}
 
-\item{stroke_dashoffset}{The stroke-dashoffset; a constant indicating the offset in pixels of the first dash along the stroke; defaults to zero.}
+\item{stroke_dashoffset}{\verb{<string | number | param()>} The stroke-dashoffset; a constant indicating the offset in pixels of the first dash along the stroke; defaults to zero.}
 
-\item{stroke_linecap}{The stroke-linecap; a constant specifying how to cap stroked paths, such as \emph{butt}, \emph{round}, or \emph{square}.}
+\item{stroke_linecap}{\verb{<string | param()>} The stroke-linecap; a constant specifying how to cap stroked paths, such as \emph{butt}, \emph{round}, or \emph{square}.}
 
-\item{stroke_linejoin}{The stroke-linejoin; a constant specifying how to join stroked paths, such as \emph{bevel}, \emph{miter}, \emph{miter-clip}, or \emph{round}.}
+\item{stroke_linejoin}{\verb{<string | param()>} The stroke-linejoin; a constant specifying how to join stroked paths, such as \emph{bevel}, \emph{miter}, \emph{miter-clip}, or \emph{round}.}
 
-\item{stroke_miterlimit}{The stroke-miterlimit; a constant number specifying how to limit the length of \emph{miter} joins on stroked paths.}
+\item{stroke_miterlimit}{\verb{<number | param()>} The stroke-miterlimit; a constant number specifying how to limit the length of \emph{miter} joins on stroked paths.}
 
-\item{stroke_opacity}{The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{stroke_opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{stroke_width}{The stroke-width; a constant number in pixels, or a channel.}
+\item{stroke_width}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The stroke-width; a constant number in pixels, or a channel.}
 
-\item{target}{The target; a constant string specifying the target window (\emph{e.g.}, \emph{_blank}) for clickable links; used in conjunction with the \strong{href} option.}
+\item{target}{\verb{<string | param()>} The target; a constant string specifying the target window (\emph{e.g.}, \emph{_blank}) for clickable links; used in conjunction with the \strong{href} option.}
 
-\item{text}{The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).}
+\item{text}{\verb{<column | literal | transform() | sql()/agg()>} The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r).}
 
-\item{text_anchor}{The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of \emph{start}, \emph{end}, or \emph{middle}.}
+\item{text_anchor}{\verb{<"start" | "middle" | "end" | param()>} The text anchor controls how text is aligned (typically horizontally) relative to its anchor point; it is one of \emph{start}, \emph{end}, or \emph{middle}.}
 
-\item{text_overflow}{How truncate (or wrap) lines of text longer than the given \strong{lineWidth}; one of: - null (default) - preserve overflowing characters (and wrap if needed) - \emph{clip} or \emph{clip-end} - remove characters from the end - \emph{clip-start} - remove characters from the start - \emph{ellipsis} or \emph{ellipsis-end} - replace characters from the end with an ellipsis (…) - \emph{ellipsis-start} - replace characters from the start with an ellipsis (…) - \emph{ellipsis-middle} - replace characters from the middle with an ellipsis (…) If no \strong{title} was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.}
+\item{text_overflow}{\verb{<NULL | "clip" | "ellipsis" | "clip-start" | "clip-end" | "ellipsis-start" | "ellipsis-middle" | "ellipsis-end" | param()>} How truncate (or wrap) lines of text longer than the given \strong{lineWidth}; one of: - null (default) - preserve overflowing characters (and wrap if needed) - \emph{clip} or \emph{clip-end} - remove characters from the end - \emph{clip-start} - remove characters from the start - \emph{ellipsis} or \emph{ellipsis-end} - replace characters from the end with an ellipsis (…) - \emph{ellipsis-start} - replace characters from the start with an ellipsis (…) - \emph{ellipsis-middle} - replace characters from the middle with an ellipsis (…) If no \strong{title} was specified, if text requires truncation, a title containing the non-truncated text will be implicitly added.}
 
-\item{text_stroke}{The tick text \strong{stroke}, say for a \emph{white} outline to improve legibility; defaults to null.}
+\item{text_stroke}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The tick text \strong{stroke}, say for a \emph{white} outline to improve legibility; defaults to null.}
 
-\item{text_stroke_opacity}{The tick text \strong{strokeOpacity}; defaults to 1; has no effect unless \strong{textStroke} is set.}
+\item{text_stroke_opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The tick text \strong{strokeOpacity}; defaults to 1; has no effect unless \strong{textStroke} is set.}
 
-\item{text_stroke_width}{The tick text \strong{strokeWidth}; defaults to 4; has no effect unless \strong{textStroke} is set.}
+\item{text_stroke_width}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The tick text \strong{strokeWidth}; defaults to 4; has no effect unless \strong{textStroke} is set.}
 
-\item{tick_format}{How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format}
+\item{tick_format}{\verb{<string | NULL | param()>} How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format}
 
-\item{tick_padding}{The distance between an axis tick mark and its associated text label (in pixels); often defaults to 3, but may be affected by \strong{xTickSize} and \strong{xTickRotate}.}
+\item{tick_padding}{\verb{<number | param()>} The distance between an axis tick mark and its associated text label (in pixels); often defaults to 3, but may be affected by \strong{xTickSize} and \strong{xTickRotate}.}
 
-\item{tick_rotate}{The rotation angle of axis tick labels in degrees clocksize; defaults to 0.}
+\item{tick_rotate}{\verb{<number | param()>} The rotation angle of axis tick labels in degrees clocksize; defaults to 0.}
 
-\item{tick_size}{The length of axis tick marks in pixels; negative values extend in the opposite direction.}
+\item{tick_size}{\verb{<number | param()>} The length of axis tick marks in pixels; negative values extend in the opposite direction.}
 
-\item{tick_spacing}{The desired approximate spacing between adjacent axis ticks, affecting the default \strong{ticks}; defaults to 80 pixels for \emph{x} and \emph{fx}, and 35 pixels for \emph{y} and \emph{fy}.}
+\item{tick_spacing}{\verb{<number | param()>} The desired approximate spacing between adjacent axis ticks, affecting the default \strong{ticks}; defaults to 80 pixels for \emph{x} and \emph{fx}, and 35 pixels for \emph{y} and \emph{fy}.}
 
-\item{ticks}{The desired approximate number of axis ticks, or an explicit array of tick values, or an interval such as \emph{day} or \emph{month}.}
+\item{ticks}{\verb{<number | "day"/"week"/"month"/... | vector | param()>} The desired approximate number of axis ticks, or an explicit array of tick values, or an interval such as \emph{day} or \emph{month}.}
 
-\item{tip}{Whether to generate a tooltip for this mark, and any tip options.}
+\item{tip}{\verb{<boolean | "x" | "y" | "xy" | list | param()>} Whether to generate a tooltip for this mark, and any tip options.}
 
-\item{title}{The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).}
+\item{title}{\verb{<column | literal | transform() | sql()/agg()>} The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).}
 
-\item{x}{The horizontal position (or length) channel, typically bound to the \emph{x} scale.}
+\item{x}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The horizontal position (or length) channel, typically bound to the \emph{x} scale.}
 
-\item{y}{The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, ….}
+\item{y}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, ….}
 
-\item{z}{An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to \strong{fill} if a channel, or \strong{stroke} if a channel.}
+\item{z}{\verb{<column | literal | transform() | sql()/agg()>} An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to \strong{fill} if a channel, or \strong{stroke} if a channel.}
 
 \item{...}{Additional options or plot-level attributes.}
 
@@ -267,7 +267,7 @@ vg_mark_axis_fy(
 \item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
 }
 \description{
-The axisFy mark.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other mark functions:

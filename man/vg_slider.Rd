@@ -21,34 +21,34 @@ vg_slider(
 )
 }
 \arguments{
-\item{as}{The output selection.}
+\item{as}{\verb{<param()>} The output selection.}
 
-\item{column}{The name of a database column from which to pull menu options.}
+\item{column}{\verb{<string>} The name of a database column from which to pull menu options.}
 
-\item{field}{The name of the field (database column) over which the interval selection should be defined.}
+\item{field}{\verb{<string>} The name of the field (database column) over which the interval selection should be defined.}
 
-\item{filter_by}{A selection to filter the database table indicated by the \code{from} property.}
+\item{filter_by}{\verb{<param()>} A selection to filter the database table indicated by the \code{from} property.}
 
-\item{from}{The name of a database table to use as a data source for this widget.}
+\item{from}{\verb{<string>} The name of a database table to use as a data source for this widget.}
 
-\item{label}{A text label for this input.}
+\item{label}{\verb{<string>} A text label for this input.}
 
-\item{max}{The maximum slider value.}
+\item{max}{\verb{<number>} The maximum slider value.}
 
-\item{min}{The minimum slider value.}
+\item{min}{\verb{<number>} The minimum slider value.}
 
-\item{select}{The type of selection clause predicate to generate if the \strong{as} option is a Selection.}
+\item{select}{\verb{<"point" | "interval">} The type of selection clause predicate to generate if the \strong{as} option is a Selection.}
 
-\item{step}{The slider step, the amount to increment between consecutive values.}
+\item{step}{\verb{<number>} The slider step, the amount to increment between consecutive values.}
 
-\item{value}{The initial selected menu value.}
+\item{value}{\verb{<any>} The initial selected menu value.}
 
-\item{width}{The width of the slider in screen pixels.}
+\item{width}{\verb{<number>} The width of the slider in screen pixels.}
 
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
-A slider input component.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other interactor functions:

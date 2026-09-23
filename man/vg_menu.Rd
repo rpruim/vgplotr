@@ -18,28 +18,28 @@ vg_menu(
 )
 }
 \arguments{
-\item{as}{The output selection.}
+\item{as}{\verb{<param()>} The output selection.}
 
-\item{column}{The name of a database column from which to pull menu options.}
+\item{column}{\verb{<string>} The name of a database column from which to pull menu options.}
 
-\item{field}{The name of the field (database column) over which the interval selection should be defined.}
+\item{field}{\verb{<string>} The name of the field (database column) over which the interval selection should be defined.}
 
-\item{filter_by}{A selection to filter the database table indicated by the \code{from} property.}
+\item{filter_by}{\verb{<param()>} A selection to filter the database table indicated by the \code{from} property.}
 
-\item{from}{The name of a database table to use as a data source for this widget.}
+\item{from}{\verb{<string>} The name of a database table to use as a data source for this widget.}
 
-\item{label}{A text label for this input.}
+\item{label}{\verb{<string>} A text label for this input.}
 
-\item{list_match}{Required if the database column is an list, this property determines how to match the selected menu option against the list values.}
+\item{list_match}{\verb{<"any" | "all">} Required if the database column is an list, this property determines how to match the selected menu option against the list values.}
 
-\item{options}{An array of menu options, as literal values or option objects.}
+\item{options}{\verb{<vector>} An array of menu options, as literal values or option objects.}
 
-\item{value}{The initial selected menu value.}
+\item{value}{\verb{<any>} The initial selected menu value.}
 
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
-A menu input component.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other interactor functions:

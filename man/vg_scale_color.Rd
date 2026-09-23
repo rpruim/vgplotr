@@ -29,37 +29,37 @@ vg_scale_color(
 \item{spec}{A plot fragment or \code{vgspec} to set this scale on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{type}{The \emph{color} scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{colorScale}).}
+\item{type}{\verb{<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "point" | "band" | "ordinal" | ... | NULL | param()>} The \emph{color} scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{colorScale}).}
 
-\item{domain}{The extent of the scale’s inputs (abstract values). (\code{colorDomain}).}
+\item{domain}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s inputs (abstract values). (\code{colorDomain}).}
 
-\item{range}{The extent of the scale’s outputs (visual values). (\code{colorRange}).}
+\item{range}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s outputs (visual values). (\code{colorRange}).}
 
-\item{scheme}{If specified, shorthand for setting the \strong{colorRange} or \strong{colorInterpolate} option of a \emph{color} scale. (\code{colorScheme}).}
+\item{scheme}{\verb{<"Accent" | "Category10" | "Dark2" | "Observable10" | "Paired" | "Pastel1" | "Pastel2" | "Set1" | "Set2" | "Set3" | ... | param()>} If specified, shorthand for setting the \strong{colorRange} or \strong{colorInterpolate} option of a \emph{color} scale. (\code{colorScheme}).}
 
-\item{interpolate}{How to interpolate color range values. (\code{colorInterpolate}).}
+\item{interpolate}{\verb{<"number" | "rgb" | "hsl" | "hcl" | "lab" | param()>} How to interpolate color range values. (\code{colorInterpolate}).}
 
-\item{pivot}{For a diverging color scale, the input value (abstract value) that divides the domain into two parts; defaults to 0 for \emph{diverging} scales, dividing the domain into negative and positive parts; defaults to 1 for \emph{diverging-log} scales. (\code{colorPivot}).}
+\item{pivot}{\verb{<any | param()>} For a diverging color scale, the input value (abstract value) that divides the domain into two parts; defaults to 0 for \emph{diverging} scales, dividing the domain into negative and positive parts; defaults to 1 for \emph{diverging-log} scales. (\code{colorPivot}).}
 
-\item{symmetric}{For a diverging color scale, if true (the default), extend the domain to ensure that the lower part of the domain (below the \strong{pivot}) is commensurate with the upper part of the domain (above the \strong{pivot}). (\code{colorSymmetric}).}
+\item{symmetric}{\verb{<boolean | param()>} For a diverging color scale, if true (the default), extend the domain to ensure that the lower part of the domain (below the \strong{pivot}) is commensurate with the upper part of the domain (above the \strong{pivot}). (\code{colorSymmetric}).}
 
-\item{nice}{If true, or a tick count or interval, extend the domain to nice round values. (\code{colorNice}).}
+\item{nice}{\verb{<boolean | number | "day"/"week"/"month"/... | param()>} If true, or a tick count or interval, extend the domain to nice round values. (\code{colorNice}).}
 
-\item{zero}{Whether the \strong{domain} must include zero. (\code{colorZero}).}
+\item{zero}{\verb{<boolean | param()>} Whether the \strong{domain} must include zero. (\code{colorZero}).}
 
-\item{reverse}{Whether to reverse the scale’s encoding; equivalent to reversing either the \strong{domain} or \strong{range}. (\code{colorReverse}).}
+\item{reverse}{\verb{<boolean | param()>} Whether to reverse the scale’s encoding; equivalent to reversing either the \strong{domain} or \strong{range}. (\code{colorReverse}).}
 
-\item{clamp}{If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{colorClamp}).}
+\item{clamp}{\verb{<boolean | param()>} If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{colorClamp}).}
 
-\item{base}{A log scale’s base; defaults to 10. (\code{colorBase}).}
+\item{base}{\verb{<number | param()>} A log scale’s base; defaults to 10. (\code{colorBase}).}
 
-\item{exponent}{A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{colorExponent}).}
+\item{exponent}{\verb{<number | param()>} A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{colorExponent}).}
 
-\item{constant}{A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{colorConstant}).}
+\item{constant}{\verb{<number | param()>} A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{colorConstant}).}
 
-\item{percent}{If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{colorPercent}).}
+\item{percent}{\verb{<boolean | param()>} If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{colorPercent}).}
 
-\item{n}{For a \emph{quantile} scale, the number of quantiles (creates \emph{n} - 1 thresholds); for a \emph{quantize} scale, the approximate number of thresholds; defaults to 5. (\code{colorN}).}
+\item{n}{\verb{<number | param()>} For a \emph{quantile} scale, the number of quantiles (creates \emph{n} - 1 thresholds); for a \emph{quantize} scale, the approximate number of thresholds; defaults to 5. (\code{colorN}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -75,6 +75,9 @@ properties (\code{colorLabel}/\code{colorTickFormat}), see \code{\link[=vg_guide
 for an actual rendered color legend, see \code{\link[=vg_legend_color]{vg_legend_color()}} -- a
 different (if related) thing, a standalone/embedded legend mark
 rather than a plot attribute.
+}
+\details{
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>

@@ -39,25 +39,25 @@ vg_scale_radius(
 \item{spec}{A plot fragment or \code{vgspec} to set this scale on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{type}{The \emph{r} (radius) scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{rScale}).}
+\item{type}{\verb{<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>} The \emph{r} (radius) scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{rScale}).}
 
-\item{domain}{The extent of the scale’s inputs (abstract values). (\code{rDomain}).}
+\item{domain}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s inputs (abstract values). (\code{rDomain}).}
 
-\item{range}{The extent of the scale’s outputs (visual values). (\code{rRange}).}
+\item{range}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s outputs (visual values). (\code{rRange}).}
 
-\item{nice}{If true, or a tick count or interval, extend the domain to nice round values. (\code{rNice}).}
+\item{nice}{\verb{<boolean | number | "day"/"week"/"month"/... | param()>} If true, or a tick count or interval, extend the domain to nice round values. (\code{rNice}).}
 
-\item{zero}{Whether the \strong{domain} must include zero. (\code{rZero}).}
+\item{zero}{\verb{<boolean | param()>} Whether the \strong{domain} must include zero. (\code{rZero}).}
 
-\item{clamp}{If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{rClamp}).}
+\item{clamp}{\verb{<any>} If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{rClamp}).}
 
-\item{base}{A log scale’s base; defaults to 10. (\code{rBase}).}
+\item{base}{\verb{<number | param()>} A log scale’s base; defaults to 10. (\code{rBase}).}
 
-\item{exponent}{A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{rExponent}).}
+\item{exponent}{\verb{<number | param()>} A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{rExponent}).}
 
-\item{constant}{A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{rConstant}).}
+\item{constant}{\verb{<number | param()>} A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{rConstant}).}
 
-\item{percent}{If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{rPercent}).}
+\item{percent}{\verb{<boolean | param()>} If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{rPercent}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -72,6 +72,9 @@ properties exist here (e.g., no \code{reverse} -- mosaic doesn't define
 axis-guide property, see \code{\link[=vg_guide_r]{vg_guide_r()}}/\code{\link[=vg_guide_radius]{vg_guide_radius()}}; for an
 actual rendered radius/size legend, see \code{\link[=vg_legend_symbol]{vg_legend_symbol()}}
 (mosaic doesn't have a dedicated \code{r}-typed legend).
+}
+\details{
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b, r = ~g) |>

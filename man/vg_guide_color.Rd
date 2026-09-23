@@ -10,9 +10,9 @@ vg_guide_color(spec = NULL, tick_format = vg_unset, label = vg_unset, ...)
 \item{spec}{A plot fragment or \code{vgspec} to set this guide on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{tick_format}{How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (\code{colorTickFormat}).}
+\item{tick_format}{\verb{<string | NULL | param()>} How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (\code{colorTickFormat}).}
 
-\item{label}{A textual label to show on the axis or legend; if null, show no label. (\code{colorLabel}).}
+\item{label}{\verb{<string | NULL | param()>} A textual label to show on the axis or legend; if null, show no label. (\code{colorLabel}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -30,6 +30,8 @@ different: it adds an actual rendered color legend (a
 standalone/embedded legend mark, \code{\link[=vg_legend]{vg_legend()}}) to the spec.
 \code{vg_guide_color()} only sets these plot attributes -- it neither
 shows nor requires a legend to be present.
+
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>

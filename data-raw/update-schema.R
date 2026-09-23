@@ -270,6 +270,160 @@ property_docs <- function(type_defs) {
 mark_prop_docs <- property_docs(mark_defs)
 interactor_prop_docs <- property_docs(interactor_defs)
 
+# --- Value-type notation (e.g. "<number | param()>") -----------------------
+#
+# Prepended to each generated @param line, right after the argument name,
+# so `?vg_mark_dot` shows what a property actually *accepts* -- not just a
+# prose description -- without anyone having to read mosaic-spec's own
+# TypeScript. The handful of short tokens this produces (column, literal,
+# transform(), sql()/agg(), param(), list, any, ...) are shared across
+# every mark/interactor/attribute and documented once in ?vg_value_types
+# rather than re-explained per property.
+
+# The literal value of a JSON const/enum entry, ready to display: a
+# quoted string, bare TRUE/FALSE/NULL for a boolean/null literal (mosaic's
+# schema really does mix these into one enum sometimes, e.g. LabelArrow's
+# `["auto", ..., true, false, null]` -- naively coercing the whole enum
+# through as.character() before inspecting each element, the way
+# collect_enum_values() below deliberately doesn't need to, would
+# silently turn TRUE into the misleading string "TRUE").
+literal_token <- function(v) {
+  if (is.character(v)) sprintf('"%s"', v)
+  else if (is.logical(v) && !is.na(v)) if (v) "TRUE" else "FALSE"
+  else if (is.null(v)) "NULL"
+  else as.character(v)
+}
+
+# A sibling of collect_enum_values() below, for the same const/enum/$ref/
+# anyOf/oneOf/allOf shape, but collecting *every* literal (including
+# boolean/null, not just strings) as a display-ready token -- this one
+# feeds the type notation, where a non-string literal still needs to be
+# shown; collect_enum_values() feeds typo-suggestion matching, where only
+# strings are ever a plausible typo target.
+collect_enum_tokens <- function(node, defs, seen = character(), depth = 0) {
+  if (depth > 8 || is.null(node)) return(character())
+  vals <- character()
+  if (!is.null(node$const)) vals <- c(vals, literal_token(node$const))
+  if (!is.null(node$enum)) for (v in node$enum) vals <- c(vals, literal_token(v))
+  if (!is.null(node$`$ref`)) {
+    rn <- ref_name(node)
+    if (!(rn %in% seen)) vals <- c(vals, collect_enum_tokens(defs[[rn]], defs, c(seen, rn), depth + 1))
+  }
+  for (key in c("anyOf", "oneOf", "allOf")) {
+    for (b in node[[key]]) vals <- c(vals, collect_enum_tokens(b, defs, seen, depth + 1))
+  }
+  vals
+}
+
+# A property schema node with none of these keys is JSON Schema's `{}` --
+# "any value", unconstrained -- e.g. Menu's own `value` (its initial
+# selection, whatever type the menu's own options happen to be) or
+# PlotAttributes' `colorPivot` (compared against arbitrary domain values).
+is_empty_schema <- function(node) {
+  keys <- c("type", "const", "enum", "$ref", "anyOf", "oneOf", "allOf", "items", "properties")
+  !any(keys %in% names(node))
+}
+
+# More than this many literal options and the notation abbreviates to a
+# handful + "..." instead of spelling all of them out (ColorScheme alone
+# has 51) -- the property's own description (already part of the same
+# @param line) and mosaic's own docs cover the rest.
+ENUM_INLINE_LIMIT <- 10
+
+# The notation token(s) for a schema property node -- recurses the same
+# const/enum/$ref/anyOf/oneOf/allOf shape collect_enum_values() does, but
+# returns a vocabulary meant to be *read*, not validated against. A
+# handful of named schema types get a fixed, hand-picked token set instead
+# of being recursed into (ChannelValue, ChannelValueSpec, ParamRef, Fixed,
+# Interval) -- either because their real shape is far more detail than is
+# useful inline (ChannelValueSpec's full object form), or because the
+# R-facing spelling differs from the JSON one (ParamRef -> `param()`, the
+# actual vgplotr constructor, not the `{type: "string"}` it serializes
+# to).
+type_tokens <- function(node, defs, depth = 0) {
+  if (depth > 8 || is.null(node)) return(character())
+  if (is_empty_schema(node)) return("any")
+  if (!is.null(node$`$ref`)) {
+    rn <- ref_name(node)
+    if (rn == "ParamRef") return("param()")
+    if (rn == "ChannelValue") return(c("column", "literal", "transform()", "sql()/agg()"))
+    if (rn %in% c("ChannelValueSpec", "ChannelValueIntervalSpec")) {
+      return(c("column", "literal", "transform()", "sql()/agg()", "list(value=, ...)"))
+    }
+    if (rn == "Fixed") return('"Fixed"')
+    if (rn %in% c("Interval", "LiteralTimeInterval")) return(c('"day"/"week"/"month"/...', "number"))
+    vals <- unique(collect_enum_tokens(defs[[rn]], defs))
+    if (length(vals)) {
+      return(if (length(vals) > ENUM_INLINE_LIMIT) c(vals[seq_len(ENUM_INLINE_LIMIT)], "...") else vals)
+    }
+    return(type_tokens(defs[[rn]], defs, depth + 1))
+  }
+  if (!is.null(node$const)) return(literal_token(node$const))
+  if (!is.null(node$enum)) {
+    vals <- unique(vapply(node$enum, literal_token, character(1)))
+    return(if (length(vals) > ENUM_INLINE_LIMIT) c(vals[seq_len(ENUM_INLINE_LIMIT)], "...") else vals)
+  }
+  for (key in c("anyOf", "oneOf", "allOf")) {
+    if (!is.null(node[[key]])) {
+      return(unique(unlist(lapply(node[[key]], type_tokens, defs = defs, depth = depth + 1))))
+    }
+  }
+  ty <- node$type
+  if (is.list(ty)) ty <- unlist(ty)
+  if (length(ty) > 1) {
+    return(unique(unlist(lapply(ty, function(t) type_tokens(list(type = t), defs, depth + 1)))))
+  }
+  switch(or_else(ty, "unknown"),
+    number = "number",
+    integer = "number",
+    string = "string",
+    boolean = "boolean",
+    "null" = "NULL",
+    array = {
+      items <- node$items
+      if (is.null(items) || is.null(items$type)) "vector"
+      else if (identical(items$type, "number")) "numeric vector"
+      else if (identical(items$type, "string")) "character vector"
+      else "vector"
+    },
+    object = "list",
+    "unknown"
+  )
+}
+
+# "`<option1 | option2 | ...>`" for one schema property node -- "" if the
+# node contributes no tokens at all (shouldn't happen for a real
+# property, but a defensive fallback rather than an empty `<>` in the
+# docs). Backtick-wrapped (-> \verb{} in the generated .Rd, not raw text)
+# deliberately: roxygen2's markdown parser treats a *single bare word*
+# between angle brackets (no space/pipe inside, e.g. the unadorned
+# "<string>" a plain string-only property produces) as a raw HTML tag and
+# silently drops it from plain-text help (`?vg_mark_dot` at the console)
+# -- it only survives in HTML output, wrapped in \if{html}{\out{...}}.
+# Confirmed directly: every multi-token notation ("<number | param()>")
+# rendered fine either way, but a bare one vanished in Rd2txt() output.
+# \verb{} renders identically (and correctly) in both text and HTML.
+type_notation <- function(node, defs) {
+  toks <- unique(type_tokens(node, defs))
+  if (!length(toks)) return("")
+  paste0("`<", paste(toks, collapse = " | "), ">`")
+}
+
+# First-seen type notation for a given property name -- same "global by
+# name, not per-mark" reasoning as property_docs()/property_enums() below.
+property_types <- function(type_defs, defs) {
+  types <- list()
+  for (nm in names(type_defs)) {
+    props <- type_defs[[nm]]$properties
+    for (p in names(props)) {
+      if (is.null(types[[p]])) types[[p]] <- type_notation(props[[p]], defs)
+    }
+  }
+  types
+}
+mark_prop_types <- property_types(mark_defs, defs)
+interactor_prop_types <- property_types(interactor_defs, defs)
+
 # Every string literal a property schema node accepts, found by walking
 # enum/const/$ref/anyOf/oneOf/allOf recursively -- covers both of mosaic's
 # two enum encodings (a real `enum: [...]` array, e.g. CurveName, and an
@@ -351,7 +505,7 @@ enum_props <- property_enums(c(mark_defs, interactor_defs), defs)
   "for the full grammar."
 )
 
-generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, extra_formals = character(),
+generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, prop_types, extra_formals = character(),
                               extra_docs = character(), title, spec_doc, family, required = character(),
                               formula_arg = FALSE) {
   props <- names(properties)
@@ -377,9 +531,11 @@ generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, extra_
   c(
     paste0("#' ", title),
     "#'",
+    if (length(props)) "#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.",
+    "#'",
     if (!is.null(spec_doc)) sprintf("#' @param spec %s", spec_doc),
     if (formula_arg) sprintf("#' @param formula %s", .vg_formula_doc),
-    sprintf("#' @param %s %s", snake_props, unlist(prop_docs[props])),
+    sprintf("#' @param %s %s %s", snake_props, unlist(prop_types[props]), unlist(prop_docs[props])),
     "#' @param ... Additional options or plot-level attributes.",
     extra_docs,
     sprintf("#' @family %s", family),
@@ -416,6 +572,7 @@ for (name in sort(names(mark_defs))) {
     type_arg = name,
     properties = mark_defs[[name]]$properties,
     prop_docs = mark_prop_docs,
+    prop_types = mark_prop_types,
     extra_formals = c("data_from", "filter_by", "data_optimize"),
     extra_docs = c(
       "#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `\"data\": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.",
@@ -464,6 +621,7 @@ for (type in interactor_types) {
     type_arg = type,
     properties = interactor_defs[[type]]$properties,
     prop_docs = interactor_prop_docs,
+    prop_types = interactor_prop_types,
     title = docline(interactor_defs[[type]]$description, paste0("A `", type, "` interactor.")),
     spec_doc = "A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.",
     family = "interactor functions"
@@ -477,6 +635,7 @@ for (type in input_types) {
     type_arg = type,
     properties = interactor_defs[[type]]$properties,
     prop_docs = interactor_prop_docs,
+    prop_types = interactor_prop_types,
     title = docline(interactor_defs[[type]]$description, paste0("A `", type, "` input.")),
     spec_doc = NULL,
     family = "interactor functions"
@@ -590,6 +749,12 @@ plot_attr_docs <- vapply(
   character(1)
 )
 names(plot_attr_docs) <- names(plot_attr_props)
+plot_attr_types <- vapply(
+  names(plot_attr_props),
+  function(nm) type_notation(plot_attr_props[[nm]], defs),
+  character(1)
+)
+names(plot_attr_types) <- names(plot_attr_props)
 
 # Deliberate semantic renames where a literal snake_case translation of the
 # suffix would be confusing: `Scale` -> `type` (not `scale`, an argument to
@@ -671,7 +836,8 @@ generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, 
 
   arg_docs <- if (length(common)) {
     sprintf(
-      "#' @param %s %s (%s).", args,
+      "#' @param %s %s %s (%s).", args,
+      plot_attr_types[plot_attr_name(which_values[1], common)],
       plot_attr_docs[plot_attr_name(which_values[1], common)],
       vapply(common, function(s) attr_names_doc(which_values, s), character(1))
     )
@@ -687,12 +853,12 @@ generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, 
     inset_formals <- c("inset_left = vg_unset", "inset_right = vg_unset", "inset_top = vg_unset", "inset_bottom = vg_unset")
     inset_docs <- c(
       sprintf(
-        "#' @param inset_left,inset_right Pixel inset at the left/right end of the range; only meaningful for `which = \"%s\"` (`%s`/`%s`).",
-        lr_which, plot_attr_name(lr_which, "InsetLeft"), plot_attr_name(lr_which, "InsetRight")
+        "#' @param inset_left,inset_right %s Pixel inset at the left/right end of the range; only meaningful for `which = \"%s\"` (`%s`/`%s`).",
+        plot_attr_types[plot_attr_name(lr_which, "InsetLeft")], lr_which, plot_attr_name(lr_which, "InsetLeft"), plot_attr_name(lr_which, "InsetRight")
       ),
       sprintf(
-        "#' @param inset_top,inset_bottom Pixel inset at the top/bottom end of the range; only meaningful for `which = \"%s\"` (`%s`/`%s`).",
-        tb_which, plot_attr_name(tb_which, "InsetTop"), plot_attr_name(tb_which, "InsetBottom")
+        "#' @param inset_top,inset_bottom %s Pixel inset at the top/bottom end of the range; only meaningful for `which = \"%s\"` (`%s`/`%s`).",
+        plot_attr_types[plot_attr_name(tb_which, "InsetTop")], tb_which, plot_attr_name(tb_which, "InsetTop"), plot_attr_name(tb_which, "InsetBottom")
       )
     )
   }
@@ -733,6 +899,10 @@ generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, 
     "#'",
     description,
     "#'",
+    if (length(arg_docs) || length(inset_docs)) c(
+      "#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.",
+      "#'"
+    ),
     spec_doc,
     which_doc,
     arg_docs,

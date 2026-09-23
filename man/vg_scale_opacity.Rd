@@ -24,27 +24,27 @@ vg_scale_opacity(
 \item{spec}{A plot fragment or \code{vgspec} to set this scale on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{type}{The \emph{opacity} scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{opacityScale}).}
+\item{type}{\verb{<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>} The \emph{opacity} scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{opacityScale}).}
 
-\item{domain}{The extent of the scale’s inputs (abstract values). (\code{opacityDomain}).}
+\item{domain}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s inputs (abstract values). (\code{opacityDomain}).}
 
-\item{range}{The extent of the scale’s outputs (visual values). (\code{opacityRange}).}
+\item{range}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s outputs (visual values). (\code{opacityRange}).}
 
-\item{nice}{If true, or a tick count or interval, extend the domain to nice round values. (\code{opacityNice}).}
+\item{nice}{\verb{<boolean | number | "day"/"week"/"month"/... | param()>} If true, or a tick count or interval, extend the domain to nice round values. (\code{opacityNice}).}
 
-\item{zero}{Whether the \strong{domain} must include zero. (\code{opacityZero}).}
+\item{zero}{\verb{<boolean | param()>} Whether the \strong{domain} must include zero. (\code{opacityZero}).}
 
-\item{reverse}{Whether to reverse the scale’s encoding; equivalent to reversing either the \strong{domain} or \strong{range}. (\code{opacityReverse}).}
+\item{reverse}{\verb{<boolean | param()>} Whether to reverse the scale’s encoding; equivalent to reversing either the \strong{domain} or \strong{range}. (\code{opacityReverse}).}
 
-\item{clamp}{If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{opacityClamp}).}
+\item{clamp}{\verb{<boolean | param()>} If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{opacityClamp}).}
 
-\item{base}{A log scale’s base; defaults to 10. (\code{opacityBase}).}
+\item{base}{\verb{<number | param()>} A log scale’s base; defaults to 10. (\code{opacityBase}).}
 
-\item{exponent}{A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{opacityExponent}).}
+\item{exponent}{\verb{<number | param()>} A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{opacityExponent}).}
 
-\item{constant}{A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{opacityConstant}).}
+\item{constant}{\verb{<number | param()>} A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{opacityConstant}).}
 
-\item{percent}{If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{opacityPercent}).}
+\item{percent}{\verb{<boolean | param()>} If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{opacityPercent}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -56,6 +56,9 @@ the scale that \code{opacity}/\code{fillOpacity}/\code{strokeOpacity} encodings 
 bound to unless they're a literal constant). For the axis-guide
 properties, see \code{\link[=vg_guide_opacity]{vg_guide_opacity()}}; for an actual rendered opacity
 legend, see \code{\link[=vg_legend_opacity]{vg_legend_opacity()}}.
+}
+\details{
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>

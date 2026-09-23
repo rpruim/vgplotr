@@ -67,103 +67,103 @@ vg_mark_delaunay_link(
 
 \item{formula}{A shorthand for this mark's position channels (\code{x}, \code{y}, \code{fx}, \code{fy}, and paired \code{x1}/\code{x2} or \code{y1}/\code{y2}), e.g., \code{Sepal.Length ~ Sepal.Width | ~ Species} for \verb{y = ~Sepal.Length, x = ~Sepal.Width, fx = ~Species}. See \code{\link[=vg_mark]{vg_mark()}} for the full grammar.}
 
-\item{aria_description}{The aria-description; a constant textual description.}
+\item{aria_description}{\verb{<string | param()>} The aria-description; a constant textual description.}
 
-\item{aria_hidden}{The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.}
+\item{aria_hidden}{\verb{<string | param()>} The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.}
 
-\item{aria_label}{The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.}
+\item{aria_label}{\verb{<column | literal | transform() | sql()/agg()>} The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.}
 
-\item{channels}{Additional named channels, for example to include in a tooltip.}
+\item{channels}{\verb{<list>} Additional named channels, for example to include in a tooltip.}
 
-\item{clip}{How to clip the mark; one of: - \emph{frame} or true - clip to the plot’s frame (inner area) - \emph{sphere} - clip to the projected sphere (\emph{e.g.}, front hemisphere) - null or false - do not clip The \emph{sphere} clip option requires a geographic projection.}
+\item{clip}{\verb{<"frame" | "sphere" | boolean | NULL | param()>} How to clip the mark; one of: - \emph{frame} or true - clip to the plot’s frame (inner area) - \emph{sphere} - clip to the projected sphere (\emph{e.g.}, front hemisphere) - null or false - do not clip The \emph{sphere} clip option requires a geographic projection.}
 
-\item{curve}{The curve (interpolation) method for connecting adjacent points.}
+\item{curve}{\verb{<"basis" | "basis-closed" | "basis-open" | "bundle" | "bump-x" | "bump-y" | "cardinal" | "cardinal-closed" | "cardinal-open" | "catmull-rom" | ... | param()>} The curve (interpolation) method for connecting adjacent points.}
 
-\item{dx}{The horizontal offset in pixels; a constant option.}
+\item{dx}{\verb{<number | param()>} The horizontal offset in pixels; a constant option.}
 
-\item{dy}{The vertical offset in pixels; a constant option.}
+\item{dy}{\verb{<number | param()>} The vertical offset in pixels; a constant option.}
 
-\item{facet}{Whether to enable or disable faceting; one of: - \emph{auto} (default) - automatically determine if this mark should be faceted - \emph{include} (or true) - draw the subset of the mark’s data in the current facet - \emph{exclude} - draw the subset of the mark’s data \emph{not} in the current facet - \emph{super} - draw this mark in a single frame that covers all facets - null (or false) - repeat this mark’s data across all facets (\emph{i.e.}, no faceting) When a mark uses \emph{super} faceting, it is not allowed to use position scales (\emph{x}, \emph{y}, \emph{fx}, or \emph{fy}); \emph{super} faceting is intended for decorations, such as labels and legends.}
+\item{facet}{\verb{<"auto" | "include" | "exclude" | "super" | boolean | NULL | param()>} Whether to enable or disable faceting; one of: - \emph{auto} (default) - automatically determine if this mark should be faceted - \emph{include} (or true) - draw the subset of the mark’s data in the current facet - \emph{exclude} - draw the subset of the mark’s data \emph{not} in the current facet - \emph{super} - draw this mark in a single frame that covers all facets - null (or false) - repeat this mark’s data across all facets (\emph{i.e.}, no faceting) When a mark uses \emph{super} faceting, it is not allowed to use position scales (\emph{x}, \emph{y}, \emph{fx}, or \emph{fy}); \emph{super} faceting is intended for decorations, such as labels and legends.}
 
-\item{facet_anchor}{How to place the mark with respect to facets; one of: - null (default for most marks) - display the mark in each non-empty facet - \emph{top}, \emph{right}, \emph{bottom}, or \emph{left} - display the mark only in facets on the given side - \emph{top-empty}, \emph{right-empty}, \emph{bottom-empty}, or \emph{left-empty} (default for axis marks) - display the mark only in facets that have empty space on the given side: either the margin, or an empty facet - \emph{empty} - display the mark in empty facets only}
+\item{facet_anchor}{\verb{<"top" | "right" | "bottom" | "left" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | "top-empty" | "right-empty" | "bottom-empty" | "left-empty" | "empty" | NULL | param()>} How to place the mark with respect to facets; one of: - null (default for most marks) - display the mark in each non-empty facet - \emph{top}, \emph{right}, \emph{bottom}, or \emph{left} - display the mark only in facets on the given side - \emph{top-empty}, \emph{right-empty}, \emph{bottom-empty}, or \emph{left-empty} (default for axis marks) - display the mark only in facets that have empty space on the given side: either the margin, or an empty facet - \emph{empty} - display the mark in empty facets only}
 
-\item{fill}{The fill; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
+\item{fill}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The fill; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
 
-\item{fill_opacity}{The fill-opacity; a constant number between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{fill_opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The fill-opacity; a constant number between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{filter}{Applies a transform to filter the mark’s index according to the given channel values; only truthy values are retained.}
+\item{filter}{\verb{<column | literal | transform() | sql()/agg()>} Applies a transform to filter the mark’s index according to the given channel values; only truthy values are retained.}
 
-\item{fx}{The horizontal facet position channel, for mark-level faceting, bound to the \emph{fx} scale.}
+\item{fx}{\verb{<column | literal | transform() | sql()/agg()>} The horizontal facet position channel, for mark-level faceting, bound to the \emph{fx} scale.}
 
-\item{fy}{The vertical facet position channel, for mark-level faceting, bound to the \emph{fy} scale.}
+\item{fy}{\verb{<column | literal | transform() | sql()/agg()>} The vertical facet position channel, for mark-level faceting, bound to the \emph{fy} scale.}
 
-\item{href}{The href; a channel specifying URLs for clickable links.}
+\item{href}{\verb{<column | literal | transform() | sql()/agg()>} The href; a channel specifying URLs for clickable links.}
 
-\item{image_filter}{A CSS filter; a constant string used to adjust the rendering of images, such as \emph{blur(5px)}.}
+\item{image_filter}{\verb{<string | param()>} A CSS filter; a constant string used to adjust the rendering of images, such as \emph{blur(5px)}.}
 
-\item{margin}{Shorthand to set the same default for all four mark margins: \strong{marginTop}, \strong{marginRight}, \strong{marginBottom}, and \strong{marginLeft}; typically defaults to 0, except for axis marks.}
+\item{margin}{\verb{<number | param()>} Shorthand to set the same default for all four mark margins: \strong{marginTop}, \strong{marginRight}, \strong{marginBottom}, and \strong{marginLeft}; typically defaults to 0, except for axis marks.}
 
-\item{margin_bottom}{The mark’s bottom margin; the minimum distance in pixels between the bottom edges of the inner and outer plot area.}
+\item{margin_bottom}{\verb{<number | param()>} The mark’s bottom margin; the minimum distance in pixels between the bottom edges of the inner and outer plot area.}
 
-\item{margin_left}{The mark’s left margin; the minimum distance in pixels between the left edges of the inner and outer plot area.}
+\item{margin_left}{\verb{<number | param()>} The mark’s left margin; the minimum distance in pixels between the left edges of the inner and outer plot area.}
 
-\item{margin_right}{The mark’s right margin; the minimum distance in pixels between the right edges of the mark’s inner and outer plot area.}
+\item{margin_right}{\verb{<number | param()>} The mark’s right margin; the minimum distance in pixels between the right edges of the mark’s inner and outer plot area.}
 
-\item{margin_top}{The mark’s top margin; the minimum distance in pixels between the top edges of the inner and outer plot area.}
+\item{margin_top}{\verb{<number | param()>} The mark’s top margin; the minimum distance in pixels between the top edges of the inner and outer plot area.}
 
-\item{marker}{Shorthand to set the same default for markerStart, markerMid, and markerEnd; one of: - a marker name such as \emph{arrow} or \emph{circle} - \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
+\item{marker}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} Shorthand to set the same default for markerStart, markerMid, and markerEnd; one of: - a marker name such as \emph{arrow} or \emph{circle} - \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
 
-\item{marker_end}{The marker for the ending point of a line segment; one of: - a marker name such as \emph{arrow} or \emph{circle} * \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
+\item{marker_end}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} The marker for the ending point of a line segment; one of: - a marker name such as \emph{arrow} or \emph{circle} * \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
 
-\item{marker_mid}{The marker for any middle (interior) points of a line segment.}
+\item{marker_mid}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} The marker for any middle (interior) points of a line segment.}
 
-\item{marker_start}{The marker for the starting point of a line segment; one of: - a marker name such as \emph{arrow} or \emph{circle} * \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
+\item{marker_start}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} The marker for the starting point of a line segment; one of: - a marker name such as \emph{arrow} or \emph{circle} * \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none}}
 
-\item{mix_blend_mode}{The mix-blend-mode; a constant string specifying how to blend content such as \emph{multiply}.}
+\item{mix_blend_mode}{\verb{<string | param()>} The mix-blend-mode; a constant string specifying how to blend content such as \emph{multiply}.}
 
-\item{opacity}{The opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{paint_order}{The paint-order; a constant string specifying the order in which the \strong{fill}, \strong{stroke}, and any markers are drawn; defaults to \emph{normal}, which draws the fill, then stroke, then markers; defaults to \emph{stroke} for the text mark to create a “halo” around text to improve legibility.}
+\item{paint_order}{\verb{<string | param()>} The paint-order; a constant string specifying the order in which the \strong{fill}, \strong{stroke}, and any markers are drawn; defaults to \emph{normal}, which draws the fill, then stroke, then markers; defaults to \emph{stroke} for the text mark to create a “halo” around text to improve legibility.}
 
-\item{pointer_events}{The pointer-events property; a constant string such as \emph{none}.}
+\item{pointer_events}{\verb{<string | param()>} The pointer-events property; a constant string such as \emph{none}.}
 
-\item{reverse}{Applies a transform to reverse the order of the mark’s index, say for reverse input order.}
+\item{reverse}{\verb{<boolean | param()>} Applies a transform to reverse the order of the mark’s index, say for reverse input order.}
 
-\item{select}{Applies a filter transform after data is loaded to highlight selected values only.}
+\item{select}{\verb{<"first" | "last" | "maxX" | "maxY" | "minX" | "minY" | "nearest" | "nearestX" | "nearestY">} Applies a filter transform after data is loaded to highlight selected values only.}
 
-\item{shape_rendering}{The shape-rendering; a constant string such as \emph{crispEdges}.}
+\item{shape_rendering}{\verb{<string | param()>} The shape-rendering; a constant string such as \emph{crispEdges}.}
 
-\item{sort}{Either applies a transform to sort the mark’s index by the specified channel values, or imputes ordinal scale domains from this mark’s channels.}
+\item{sort}{\verb{<column | literal | transform() | sql()/agg() | list>} Either applies a transform to sort the mark’s index by the specified channel values, or imputes ordinal scale domains from this mark’s channels.}
 
-\item{stroke}{The stroke; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
+\item{stroke}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The stroke; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
 
-\item{stroke_dasharray}{The stroke-dasharray; a constant number indicating the length in pixels of alternating dashes and gaps, or a constant string of numbers separated by spaces or commas (\emph{e.g.}, \emph{10 2} for dashes of 10 pixels separated by gaps of 2 pixels), or \emph{none} (the default) for no dashing : https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray}
+\item{stroke_dasharray}{\verb{<string | number | param()>} The stroke-dasharray; a constant number indicating the length in pixels of alternating dashes and gaps, or a constant string of numbers separated by spaces or commas (\emph{e.g.}, \emph{10 2} for dashes of 10 pixels separated by gaps of 2 pixels), or \emph{none} (the default) for no dashing : https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray}
 
-\item{stroke_dashoffset}{The stroke-dashoffset; a constant indicating the offset in pixels of the first dash along the stroke; defaults to zero.}
+\item{stroke_dashoffset}{\verb{<string | number | param()>} The stroke-dashoffset; a constant indicating the offset in pixels of the first dash along the stroke; defaults to zero.}
 
-\item{stroke_linecap}{The stroke-linecap; a constant specifying how to cap stroked paths, such as \emph{butt}, \emph{round}, or \emph{square}.}
+\item{stroke_linecap}{\verb{<string | param()>} The stroke-linecap; a constant specifying how to cap stroked paths, such as \emph{butt}, \emph{round}, or \emph{square}.}
 
-\item{stroke_linejoin}{The stroke-linejoin; a constant specifying how to join stroked paths, such as \emph{bevel}, \emph{miter}, \emph{miter-clip}, or \emph{round}.}
+\item{stroke_linejoin}{\verb{<string | param()>} The stroke-linejoin; a constant specifying how to join stroked paths, such as \emph{bevel}, \emph{miter}, \emph{miter-clip}, or \emph{round}.}
 
-\item{stroke_miterlimit}{The stroke-miterlimit; a constant number specifying how to limit the length of \emph{miter} joins on stroked paths.}
+\item{stroke_miterlimit}{\verb{<number | param()>} The stroke-miterlimit; a constant number specifying how to limit the length of \emph{miter} joins on stroked paths.}
 
-\item{stroke_opacity}{The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{stroke_opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{stroke_width}{The stroke-width; a constant number in pixels, or a channel.}
+\item{stroke_width}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The stroke-width; a constant number in pixels, or a channel.}
 
-\item{target}{The target; a constant string specifying the target window (\emph{e.g.}, \emph{_blank}) for clickable links; used in conjunction with the \strong{href} option.}
+\item{target}{\verb{<string | param()>} The target; a constant string specifying the target window (\emph{e.g.}, \emph{_blank}) for clickable links; used in conjunction with the \strong{href} option.}
 
-\item{tension}{The tension option only has an effect on bundle, cardinal and Catmull–Rom splines (\emph{bundle}, \emph{cardinal}, \emph{cardinal-open}, \emph{cardinal-closed}, \emph{catmull-rom}, \emph{catmull-rom-open}, and \emph{catmull-rom-closed}).}
+\item{tension}{\verb{<number | param()>} The tension option only has an effect on bundle, cardinal and Catmull–Rom splines (\emph{bundle}, \emph{cardinal}, \emph{cardinal-open}, \emph{cardinal-closed}, \emph{catmull-rom}, \emph{catmull-rom-open}, and \emph{catmull-rom-closed}).}
 
-\item{tip}{Whether to generate a tooltip for this mark, and any tip options.}
+\item{tip}{\verb{<boolean | "x" | "y" | "xy" | list | param()>} Whether to generate a tooltip for this mark, and any tip options.}
 
-\item{title}{The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).}
+\item{title}{\verb{<column | literal | transform() | sql()/agg()>} The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).}
 
-\item{x}{The horizontal position (or length) channel, typically bound to the \emph{x} scale.}
+\item{x}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The horizontal position (or length) channel, typically bound to the \emph{x} scale.}
 
-\item{y}{The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, ….}
+\item{y}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, ….}
 
-\item{z}{An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to \strong{fill} if a channel, or \strong{stroke} if a channel.}
+\item{z}{\verb{<column | literal | transform() | sql()/agg()>} An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to \strong{fill} if a channel, or \strong{stroke} if a channel.}
 
 \item{...}{Additional options or plot-level attributes.}
 
@@ -174,7 +174,7 @@ vg_mark_delaunay_link(
 \item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
 }
 \description{
-The delaunayLink mark.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other mark functions:

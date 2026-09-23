@@ -73,4 +73,5 @@ Collate:
     'sql.R'
     'suggest.R'
     'transforms.R'
+    'value-types.R'
     'widget.R'

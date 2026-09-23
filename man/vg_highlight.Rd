@@ -18,22 +18,22 @@ vg_highlight(
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this interactor to, or \code{NULL} to start a new plot with just this interactor.}
 
-\item{by}{The input selection.}
+\item{by}{\verb{<param()>} The input selection.}
 
-\item{fill}{The fill color of deemphasized marks.}
+\item{fill}{\verb{<string>} The fill color of deemphasized marks.}
 
-\item{fill_opacity}{The fill opacity of deemphasized marks.}
+\item{fill_opacity}{\verb{<number>} The fill opacity of deemphasized marks.}
 
-\item{opacity}{The overall opacity of deemphasized marks.}
+\item{opacity}{\verb{<number>} The overall opacity of deemphasized marks.}
 
-\item{stroke}{The stroke color of deemphasized marks.}
+\item{stroke}{\verb{<string>} The stroke color of deemphasized marks.}
 
-\item{stroke_opacity}{The stroke opacity of deemphasized marks.}
+\item{stroke_opacity}{\verb{<number>} The stroke opacity of deemphasized marks.}
 
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
-A highlight interactor.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other interactor functions:

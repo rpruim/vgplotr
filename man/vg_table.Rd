@@ -18,28 +18,28 @@ vg_table(
 )
 }
 \arguments{
-\item{align}{An object of per-column alignment values.}
+\item{align}{\verb{<list>} An object of per-column alignment values.}
 
-\item{as}{The output selection.}
+\item{as}{\verb{<param()>} The output selection.}
 
-\item{columns}{A list of column names to include in the table grid.}
+\item{columns}{\verb{<character vector>} A list of column names to include in the table grid.}
 
-\item{filter_by}{A selection to filter the database table indicated by the \code{from} property.}
+\item{filter_by}{\verb{<param()>} A selection to filter the database table indicated by the \code{from} property.}
 
-\item{from}{The name of a database table to use as a data source for this widget.}
+\item{from}{\verb{<string>} The name of a database table to use as a data source for this widget.}
 
-\item{height}{The height of the table widget, in pixels.}
+\item{height}{\verb{<number>} The height of the table widget, in pixels.}
 
-\item{max_width}{The maximum width of the table widget, in pixels.}
+\item{max_width}{\verb{<number>} The maximum width of the table widget, in pixels.}
 
-\item{row_batch}{The number of rows load in a new batch upon table scroll.}
+\item{row_batch}{\verb{<number>} The number of rows load in a new batch upon table scroll.}
 
-\item{width}{The width of the slider in screen pixels.}
+\item{width}{\verb{<number>} The width of the slider in screen pixels.}
 
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
-A table grid view component.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other interactor functions:

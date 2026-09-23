@@ -76,37 +76,37 @@ start a new plot fragment with just these attributes.}
 
 \item{which}{Which axis this sets: \code{"x"} or \code{"y"}.}
 
-\item{position}{The side of the frame on which to place the implicit axis: \emph{top} or \emph{bottom} for \emph{x}. (\code{xAxis}/\code{yAxis}).}
+\item{position}{\verb{<"top" | "bottom" | "both" | boolean | NULL | param()>} The side of the frame on which to place the implicit axis: \emph{top} or \emph{bottom} for \emph{x}. (\code{xAxis}/\code{yAxis}).}
 
-\item{ticks}{The desired approximate number of axis ticks, or an explicit array of tick values, or an interval such as \emph{day} or \emph{month}. (\code{xTicks}/\code{yTicks}).}
+\item{ticks}{\verb{<number | "day"/"week"/"month"/... | vector | param()>} The desired approximate number of axis ticks, or an explicit array of tick values, or an interval such as \emph{day} or \emph{month}. (\code{xTicks}/\code{yTicks}).}
 
-\item{tick_spacing}{The desired approximate spacing between adjacent axis ticks, affecting the default \strong{ticks}; defaults to 80 pixels for \emph{x} and \emph{fx}, and 35 pixels for \emph{y} and \emph{fy}. (\code{xTickSpacing}/\code{yTickSpacing}).}
+\item{tick_spacing}{\verb{<number | param()>} The desired approximate spacing between adjacent axis ticks, affecting the default \strong{ticks}; defaults to 80 pixels for \emph{x} and \emph{fx}, and 35 pixels for \emph{y} and \emph{fy}. (\code{xTickSpacing}/\code{yTickSpacing}).}
 
-\item{tick_size}{The length of axis tick marks in pixels; negative values extend in the opposite direction. (\code{xTickSize}/\code{yTickSize}).}
+\item{tick_size}{\verb{<number | param()>} The length of axis tick marks in pixels; negative values extend in the opposite direction. (\code{xTickSize}/\code{yTickSize}).}
 
-\item{tick_padding}{The distance between an axis tick mark and its associated text label (in pixels); often defaults to 3, but may be affected by \strong{xTickSize} and \strong{xTickRotate}. (\code{xTickPadding}/\code{yTickPadding}).}
+\item{tick_padding}{\verb{<number | param()>} The distance between an axis tick mark and its associated text label (in pixels); often defaults to 3, but may be affected by \strong{xTickSize} and \strong{xTickRotate}. (\code{xTickPadding}/\code{yTickPadding}).}
 
-\item{tick_format}{How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (\code{xTickFormat}/\code{yTickFormat}).}
+\item{tick_format}{\verb{<string | NULL | param()>} How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (\code{xTickFormat}/\code{yTickFormat}).}
 
-\item{tick_rotate}{The rotation angle of axis tick labels in degrees clocksize; defaults to 0. (\code{xTickRotate}/\code{yTickRotate}).}
+\item{tick_rotate}{\verb{<number | param()>} The rotation angle of axis tick labels in degrees clocksize; defaults to 0. (\code{xTickRotate}/\code{yTickRotate}).}
 
-\item{grid}{Whether to show a grid aligned with the scale’s ticks. (\code{xGrid}/\code{yGrid}).}
+\item{grid}{\verb{<boolean | string | "day"/"week"/"month"/... | number | vector | param()>} Whether to show a grid aligned with the scale’s ticks. (\code{xGrid}/\code{yGrid}).}
 
-\item{line}{If true, draw a line along the axis; if false (default), do not. (\code{xLine}/\code{yLine}).}
+\item{line}{\verb{<boolean | param()>} If true, draw a line along the axis; if false (default), do not. (\code{xLine}/\code{yLine}).}
 
-\item{label}{A textual label to show on the axis or legend; if null, show no label. (\code{xLabel}/\code{yLabel}).}
+\item{label}{\verb{<string | NULL | param()>} A textual label to show on the axis or legend; if null, show no label. (\code{xLabel}/\code{yLabel}).}
 
-\item{label_anchor}{Where to place the axis \strong{label} relative to the plot’s frame. (\code{xLabelAnchor}/\code{yLabelAnchor}).}
+\item{label_anchor}{\verb{<"top" | "right" | "bottom" | "left" | "center" | param()>} Where to place the axis \strong{label} relative to the plot’s frame. (\code{xLabelAnchor}/\code{yLabelAnchor}).}
 
-\item{label_offset}{The axis \strong{label} position offset (in pixels); default depends on margins and orientation. (\code{xLabelOffset}/\code{yLabelOffset}).}
+\item{label_offset}{\verb{<number | param()>} The axis \strong{label} position offset (in pixels); default depends on margins and orientation. (\code{xLabelOffset}/\code{yLabelOffset}).}
 
-\item{label_arrow}{Whether to apply a directional arrow such as → or ↑ to the x-axis scale label. (\code{xLabelArrow}/\code{yLabelArrow}).}
+\item{label_arrow}{\verb{<"auto" | "up" | "right" | "down" | "left" | "none" | TRUE | FALSE | NULL | param()>} Whether to apply a directional arrow such as → or ↑ to the x-axis scale label. (\code{xLabelArrow}/\code{yLabelArrow}).}
 
-\item{font_variant}{The font-variant attribute for axis ticks; defaults to \emph{tabular-nums} for quantitative axes. (\code{xFontVariant}/\code{yFontVariant}).}
+\item{font_variant}{\verb{<string | param()>} The font-variant attribute for axis ticks; defaults to \emph{tabular-nums} for quantitative axes. (\code{xFontVariant}/\code{yFontVariant}).}
 
-\item{aria_label}{A short label representing the axis in the accessibility tree. (\code{xAriaLabel}/\code{yAriaLabel}).}
+\item{aria_label}{\verb{<string | param()>} A short label representing the axis in the accessibility tree. (\code{xAriaLabel}/\code{yAriaLabel}).}
 
-\item{aria_description}{A textual description for the axis in the accessibility tree. (\code{xAriaDescription}/\code{yAriaDescription}).}
+\item{aria_description}{\verb{<string | param()>} A textual description for the axis in the accessibility tree. (\code{xAriaDescription}/\code{yAriaDescription}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -129,6 +129,8 @@ automatically alongside a plot's marks. Same story for the
 analogous facet guides, \code{\link[=vg_guide_facet]{vg_guide_facet()}} (vs.
 \code{vg_mark_axis_fx()}/\code{vg_mark_axis_fy()}, mosaic's \code{axisFx}/\code{axisFy}
 marks).
+
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b) |>

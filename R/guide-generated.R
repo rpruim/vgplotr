@@ -27,25 +27,27 @@ NULL
 #' `vg_mark_axis_fx()`/`vg_mark_axis_fy()`, mosaic's `axisFx`/`axisFy`
 #' marks).
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
 #' @param which Which axis this sets: `"x"` or `"y"`.
-#' @param position The side of the frame on which to place the implicit axis: *top* or *bottom* for *x*. (`xAxis`/`yAxis`).
-#' @param ticks The desired approximate number of axis ticks, or an explicit array of tick values, or an interval such as *day* or *month*. (`xTicks`/`yTicks`).
-#' @param tick_spacing The desired approximate spacing between adjacent axis ticks, affecting the default **ticks**; defaults to 80 pixels for *x* and *fx*, and 35 pixels for *y* and *fy*. (`xTickSpacing`/`yTickSpacing`).
-#' @param tick_size The length of axis tick marks in pixels; negative values extend in the opposite direction. (`xTickSize`/`yTickSize`).
-#' @param tick_padding The distance between an axis tick mark and its associated text label (in pixels); often defaults to 3, but may be affected by **xTickSize** and **xTickRotate**. (`xTickPadding`/`yTickPadding`).
-#' @param tick_format How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`xTickFormat`/`yTickFormat`).
-#' @param tick_rotate The rotation angle of axis tick labels in degrees clocksize; defaults to 0. (`xTickRotate`/`yTickRotate`).
-#' @param grid Whether to show a grid aligned with the scale’s ticks. (`xGrid`/`yGrid`).
-#' @param line If true, draw a line along the axis; if false (default), do not. (`xLine`/`yLine`).
-#' @param label A textual label to show on the axis or legend; if null, show no label. (`xLabel`/`yLabel`).
-#' @param label_anchor Where to place the axis **label** relative to the plot’s frame. (`xLabelAnchor`/`yLabelAnchor`).
-#' @param label_offset The axis **label** position offset (in pixels); default depends on margins and orientation. (`xLabelOffset`/`yLabelOffset`).
-#' @param label_arrow Whether to apply a directional arrow such as → or ↑ to the x-axis scale label. (`xLabelArrow`/`yLabelArrow`).
-#' @param font_variant The font-variant attribute for axis ticks; defaults to *tabular-nums* for quantitative axes. (`xFontVariant`/`yFontVariant`).
-#' @param aria_label A short label representing the axis in the accessibility tree. (`xAriaLabel`/`yAriaLabel`).
-#' @param aria_description A textual description for the axis in the accessibility tree. (`xAriaDescription`/`yAriaDescription`).
+#' @param position `<"top" | "bottom" | "both" | boolean | NULL | param()>` The side of the frame on which to place the implicit axis: *top* or *bottom* for *x*. (`xAxis`/`yAxis`).
+#' @param ticks `<number | "day"/"week"/"month"/... | vector | param()>` The desired approximate number of axis ticks, or an explicit array of tick values, or an interval such as *day* or *month*. (`xTicks`/`yTicks`).
+#' @param tick_spacing `<number | param()>` The desired approximate spacing between adjacent axis ticks, affecting the default **ticks**; defaults to 80 pixels for *x* and *fx*, and 35 pixels for *y* and *fy*. (`xTickSpacing`/`yTickSpacing`).
+#' @param tick_size `<number | param()>` The length of axis tick marks in pixels; negative values extend in the opposite direction. (`xTickSize`/`yTickSize`).
+#' @param tick_padding `<number | param()>` The distance between an axis tick mark and its associated text label (in pixels); often defaults to 3, but may be affected by **xTickSize** and **xTickRotate**. (`xTickPadding`/`yTickPadding`).
+#' @param tick_format `<string | NULL | param()>` How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`xTickFormat`/`yTickFormat`).
+#' @param tick_rotate `<number | param()>` The rotation angle of axis tick labels in degrees clocksize; defaults to 0. (`xTickRotate`/`yTickRotate`).
+#' @param grid `<boolean | string | "day"/"week"/"month"/... | number | vector | param()>` Whether to show a grid aligned with the scale’s ticks. (`xGrid`/`yGrid`).
+#' @param line `<boolean | param()>` If true, draw a line along the axis; if false (default), do not. (`xLine`/`yLine`).
+#' @param label `<string | NULL | param()>` A textual label to show on the axis or legend; if null, show no label. (`xLabel`/`yLabel`).
+#' @param label_anchor `<"top" | "right" | "bottom" | "left" | "center" | param()>` Where to place the axis **label** relative to the plot’s frame. (`xLabelAnchor`/`yLabelAnchor`).
+#' @param label_offset `<number | param()>` The axis **label** position offset (in pixels); default depends on margins and orientation. (`xLabelOffset`/`yLabelOffset`).
+#' @param label_arrow `<"auto" | "up" | "right" | "down" | "left" | "none" | TRUE | FALSE | NULL | param()>` Whether to apply a directional arrow such as → or ↑ to the x-axis scale label. (`xLabelArrow`/`yLabelArrow`).
+#' @param font_variant `<string | param()>` The font-variant attribute for axis ticks; defaults to *tabular-nums* for quantitative axes. (`xFontVariant`/`yFontVariant`).
+#' @param aria_label `<string | param()>` A short label representing the axis in the accessibility tree. (`xAriaLabel`/`yAriaLabel`).
+#' @param aria_description `<string | param()>` A textual description for the axis in the accessibility tree. (`xAriaDescription`/`yAriaDescription`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
@@ -83,24 +85,26 @@ vg_guide_y <- wrapper_function(vg_guide_position, which = "y")
 #' than `vg_axis_*()` (to avoid colliding with `vg_mark_axis_fx()`/
 #' `vg_mark_axis_fy()`, mosaic's `axisFx`/`axisFy` marks).
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
 #' @param which Which facet axis this sets: `"fx"` or `"fy"`.
-#' @param position The side of the frame on which to place the implicit axis: *top* or *bottom* for *fx*. (`fxAxis`/`fyAxis`).
-#' @param ticks The desired approximate number of axis ticks, or an explicit array of tick values, or an interval such as *day* or *month*. (`fxTicks`/`fyTicks`).
-#' @param tick_spacing The desired approximate spacing between adjacent axis ticks, affecting the default **ticks**; defaults to 80 pixels for *x* and *fx*, and 35 pixels for *y* and *fy*. (`fxTickSpacing`/`fyTickSpacing`).
-#' @param tick_size The length of axis tick marks in pixels; negative values extend in the opposite direction. (`fxTickSize`/`fyTickSize`).
-#' @param tick_padding The distance between an axis tick mark and its associated text label (in pixels); often defaults to 3, but may be affected by **fxTickSize** and **fxTickRotate**. (`fxTickPadding`/`fyTickPadding`).
-#' @param tick_format How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`fxTickFormat`/`fyTickFormat`).
-#' @param tick_rotate The rotation angle of axis tick labels in degrees clocksize; defaults to 0. (`fxTickRotate`/`fyTickRotate`).
-#' @param grid Whether to show a grid aligned with the scale’s ticks. (`fxGrid`/`fyGrid`).
-#' @param line If true, draw a line along the axis; if false (default), do not. (`fxLine`/`fyLine`).
-#' @param label A textual label to show on the axis or legend; if null, show no label. (`fxLabel`/`fyLabel`).
-#' @param label_anchor Where to place the axis **label** relative to the plot’s frame. (`fxLabelAnchor`/`fyLabelAnchor`).
-#' @param label_offset The axis **label** position offset (in pixels); default depends on margins and orientation. (`fxLabelOffset`/`fyLabelOffset`).
-#' @param font_variant The font-variant attribute for axis ticks; defaults to *tabular-nums* for quantitative axes. (`fxFontVariant`/`fyFontVariant`).
-#' @param aria_label A short label representing the axis in the accessibility tree. (`fxAriaLabel`/`fyAriaLabel`).
-#' @param aria_description A textual description for the axis in the accessibility tree. (`fxAriaDescription`/`fyAriaDescription`).
+#' @param position `<"top" | "bottom" | "both" | boolean | NULL | param()>` The side of the frame on which to place the implicit axis: *top* or *bottom* for *fx*. (`fxAxis`/`fyAxis`).
+#' @param ticks `<number | "day"/"week"/"month"/... | vector | param()>` The desired approximate number of axis ticks, or an explicit array of tick values, or an interval such as *day* or *month*. (`fxTicks`/`fyTicks`).
+#' @param tick_spacing `<number | param()>` The desired approximate spacing between adjacent axis ticks, affecting the default **ticks**; defaults to 80 pixels for *x* and *fx*, and 35 pixels for *y* and *fy*. (`fxTickSpacing`/`fyTickSpacing`).
+#' @param tick_size `<number | param()>` The length of axis tick marks in pixels; negative values extend in the opposite direction. (`fxTickSize`/`fyTickSize`).
+#' @param tick_padding `<number | param()>` The distance between an axis tick mark and its associated text label (in pixels); often defaults to 3, but may be affected by **fxTickSize** and **fxTickRotate**. (`fxTickPadding`/`fyTickPadding`).
+#' @param tick_format `<string | NULL | param()>` How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`fxTickFormat`/`fyTickFormat`).
+#' @param tick_rotate `<number | param()>` The rotation angle of axis tick labels in degrees clocksize; defaults to 0. (`fxTickRotate`/`fyTickRotate`).
+#' @param grid `<boolean | string | "day"/"week"/"month"/... | number | vector | param()>` Whether to show a grid aligned with the scale’s ticks. (`fxGrid`/`fyGrid`).
+#' @param line `<boolean | param()>` If true, draw a line along the axis; if false (default), do not. (`fxLine`/`fyLine`).
+#' @param label `<string | NULL | param()>` A textual label to show on the axis or legend; if null, show no label. (`fxLabel`/`fyLabel`).
+#' @param label_anchor `<"top" | "right" | "bottom" | "left" | "center" | param()>` Where to place the axis **label** relative to the plot’s frame. (`fxLabelAnchor`/`fyLabelAnchor`).
+#' @param label_offset `<number | param()>` The axis **label** position offset (in pixels); default depends on margins and orientation. (`fxLabelOffset`/`fyLabelOffset`).
+#' @param font_variant `<string | param()>` The font-variant attribute for axis ticks; defaults to *tabular-nums* for quantitative axes. (`fxFontVariant`/`fyFontVariant`).
+#' @param aria_label `<string | param()>` A short label representing the axis in the accessibility tree. (`fxAriaLabel`/`fyAriaLabel`).
+#' @param aria_description `<string | param()>` A textual description for the axis in the accessibility tree. (`fxAriaDescription`/`fyAriaDescription`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
@@ -138,10 +142,12 @@ vg_guide_fy <- wrapper_function(vg_guide_facet, which = "fy")
 #' `vg_guide_color()` only sets these plot attributes -- it neither
 #' shows nor requires a legend to be present.
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param tick_format How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`colorTickFormat`).
-#' @param label A textual label to show on the axis or legend; if null, show no label. (`colorLabel`).
+#' @param tick_format `<string | NULL | param()>` How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`colorTickFormat`).
+#' @param label `<string | NULL | param()>` A textual label to show on the axis or legend; if null, show no label. (`colorLabel`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
@@ -167,10 +173,12 @@ vg_guide_color <- function(spec = NULL, tick_format = vg_unset, label = vg_unset
 #' than `vg_legend_opacity()` (already taken by [vg_legend()]'s actual
 #' rendered legend).
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param tick_format How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`opacityTickFormat`).
-#' @param label A textual label to show on the axis or legend; if null, show no label. (`opacityLabel`).
+#' @param tick_format `<string | NULL | param()>` How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`opacityTickFormat`).
+#' @param label `<string | NULL | param()>` A textual label to show on the axis or legend; if null, show no label. (`opacityLabel`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
@@ -201,9 +209,11 @@ vg_guide_opacity <- function(spec = NULL, tick_format = vg_unset, label = vg_uns
 #' instead), but the naming stays consistent with [vg_guide_color()]/
 #' [vg_guide_opacity()].
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param label A textual label to show on the axis or legend; if null, show no label. (`rLabel`).
+#' @param label `<string | NULL | param()>` A textual label to show on the axis or legend; if null, show no label. (`rLabel`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
@@ -232,12 +242,14 @@ vg_guide_radius <- vg_guide_r
 #' that doesn't set its own value. For the analogous scale defaults,
 #' see [vg_scale_all()].
 #'
+#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
+#'
 #' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param position The side of the frame on which to place the implicit axis: *top* or *bottom* for *x* or *fx*, or *left* or *right* for *y* or *fy*. (`axis`).
-#' @param grid Whether to show a grid aligned with the scale’s ticks. (`grid`).
-#' @param aria_label The aria-label attribute on the SVG root. (`ariaLabel`).
-#' @param aria_description The aria-description attribute on the SVG root. (`ariaDescription`).
+#' @param position `<"top" | "right" | "bottom" | "left" | "both" | boolean | NULL | param()>` The side of the frame on which to place the implicit axis: *top* or *bottom* for *x* or *fx*, or *left* or *right* for *y* or *fy*. (`axis`).
+#' @param grid `<boolean | string | param()>` Whether to show a grid aligned with the scale’s ticks. (`grid`).
+#' @param aria_label `<string | NULL>` The aria-label attribute on the SVG root. (`ariaLabel`).
+#' @param aria_description `<string | NULL>` The aria-description attribute on the SVG root. (`ariaDescription`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions

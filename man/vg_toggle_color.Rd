@@ -9,14 +9,14 @@ vg_toggle_color(spec = NULL, as = vg_unset, peers = vg_unset, ...)
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this interactor to, or \code{NULL} to start a new plot with just this interactor.}
 
-\item{as}{The output selection.}
+\item{as}{\verb{<param()>} The output selection.}
 
-\item{peers}{A flag indicating if peer (sibling) marks are excluded when cross-filtering (default \code{true}).}
+\item{peers}{\verb{<boolean>} A flag indicating if peer (sibling) marks are excluded when cross-filtering (default \code{true}).}
 
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
-A toggleColor interactor.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other interactor functions:

@@ -10,9 +10,9 @@ vg_guide_opacity(spec = NULL, tick_format = vg_unset, label = vg_unset, ...)
 \item{spec}{A plot fragment or \code{vgspec} to set this guide on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{tick_format}{How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (\code{opacityTickFormat}).}
+\item{tick_format}{\verb{<string | NULL | param()>} How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (\code{opacityTickFormat}).}
 
-\item{label}{A textual label to show on the axis or legend; if null, show no label. (\code{opacityLabel}).}
+\item{label}{\verb{<string | NULL | param()>} A textual label to show on the axis or legend; if null, show no label. (\code{opacityLabel}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -27,6 +27,8 @@ formatting rather than its domain/range.
 See \code{\link[=vg_guide_color]{vg_guide_color()}} for why this is \code{vg_guide_opacity()} rather
 than \code{vg_legend_opacity()} (already taken by \code{\link[=vg_legend]{vg_legend()}}'s actual
 rendered legend).
+
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>

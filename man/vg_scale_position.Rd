@@ -87,43 +87,43 @@ start a new plot fragment with just these attributes.}
 
 \item{which}{Which position scale this sets: \code{"x"} or \code{"y"}.}
 
-\item{type}{The \emph{x} scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{xScale}/\code{yScale}).}
+\item{type}{\verb{<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "point" | "band" | "threshold" | ... | NULL | param()>} The \emph{x} scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{xScale}/\code{yScale}).}
 
-\item{domain}{The extent of the scale’s inputs (abstract values). (\code{xDomain}/\code{yDomain}).}
+\item{domain}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s inputs (abstract values). (\code{xDomain}/\code{yDomain}).}
 
-\item{range}{The extent of the scale’s outputs (visual values). (\code{xRange}/\code{yRange}).}
+\item{range}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s outputs (visual values). (\code{xRange}/\code{yRange}).}
 
-\item{nice}{If true, or a tick count or interval, extend the domain to nice round values. (\code{xNice}/\code{yNice}).}
+\item{nice}{\verb{<boolean | number | "day"/"week"/"month"/... | param()>} If true, or a tick count or interval, extend the domain to nice round values. (\code{xNice}/\code{yNice}).}
 
-\item{zero}{Whether the \strong{domain} must include zero. (\code{xZero}/\code{yZero}).}
+\item{zero}{\verb{<boolean | param()>} Whether the \strong{domain} must include zero. (\code{xZero}/\code{yZero}).}
 
-\item{reverse}{Whether to reverse the scale’s encoding; equivalent to reversing either the \strong{domain} or \strong{range}. (\code{xReverse}/\code{yReverse}).}
+\item{reverse}{\verb{<boolean | param()>} Whether to reverse the scale’s encoding; equivalent to reversing either the \strong{domain} or \strong{range}. (\code{xReverse}/\code{yReverse}).}
 
-\item{clamp}{If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{xClamp}/\code{yClamp}).}
+\item{clamp}{\verb{<boolean | param()>} If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{xClamp}/\code{yClamp}).}
 
-\item{round}{If true, round the output value to the nearest integer (pixel); useful for crisp edges when rendering. (\code{xRound}/\code{yRound}).}
+\item{round}{\verb{<boolean | param()>} If true, round the output value to the nearest integer (pixel); useful for crisp edges when rendering. (\code{xRound}/\code{yRound}).}
 
-\item{padding}{For \emph{band} scales, how much of the \strong{range} to reserve to separate adjacent bands; defaults to 0.1 (10\%). (\code{xPadding}/\code{yPadding}).}
+\item{padding}{\verb{<number | param()>} For \emph{band} scales, how much of the \strong{range} to reserve to separate adjacent bands; defaults to 0.1 (10\%). (\code{xPadding}/\code{yPadding}).}
 
-\item{padding_inner}{For a \emph{band} scale, how much of the range to reserve to separate adjacent bands. (\code{xPaddingInner}/\code{yPaddingInner}).}
+\item{padding_inner}{\verb{<number | param()>} For a \emph{band} scale, how much of the range to reserve to separate adjacent bands. (\code{xPaddingInner}/\code{yPaddingInner}).}
 
-\item{padding_outer}{For a \emph{band} scale, how much of the range to reserve to inset first and last bands. (\code{xPaddingOuter}/\code{yPaddingOuter}).}
+\item{padding_outer}{\verb{<number | param()>} For a \emph{band} scale, how much of the range to reserve to inset first and last bands. (\code{xPaddingOuter}/\code{yPaddingOuter}).}
 
-\item{align}{How to distribute unused space in the \strong{range} for \emph{point} and \emph{band} scales. (\code{xAlign}/\code{yAlign}).}
+\item{align}{\verb{<number | param()>} How to distribute unused space in the \strong{range} for \emph{point} and \emph{band} scales. (\code{xAlign}/\code{yAlign}).}
 
-\item{inset}{Shorthand to set the same default for all four insets: \strong{insetTop}, \strong{insetRight}, \strong{insetBottom}, and \strong{insetLeft}. (\code{xInset}/\code{yInset}).}
+\item{inset}{\verb{<number | param()>} Shorthand to set the same default for all four insets: \strong{insetTop}, \strong{insetRight}, \strong{insetBottom}, and \strong{insetLeft}. (\code{xInset}/\code{yInset}).}
 
-\item{base}{A log scale’s base; defaults to 10. (\code{xBase}/\code{yBase}).}
+\item{base}{\verb{<number | param()>} A log scale’s base; defaults to 10. (\code{xBase}/\code{yBase}).}
 
-\item{exponent}{A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{xExponent}/\code{yExponent}).}
+\item{exponent}{\verb{<number | param()>} A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{xExponent}/\code{yExponent}).}
 
-\item{constant}{A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{xConstant}/\code{yConstant}).}
+\item{constant}{\verb{<number | param()>} A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{xConstant}/\code{yConstant}).}
 
-\item{percent}{If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{xPercent}/\code{yPercent}).}
+\item{percent}{\verb{<boolean | param()>} If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{xPercent}/\code{yPercent}).}
 
-\item{inset_left, inset_right}{Pixel inset at the left/right end of the range; only meaningful for \code{which = "x"} (\code{xInsetLeft}/\code{xInsetRight}).}
+\item{inset_left, inset_right}{\verb{<number | param()>} Pixel inset at the left/right end of the range; only meaningful for \code{which = "x"} (\code{xInsetLeft}/\code{xInsetRight}).}
 
-\item{inset_top, inset_bottom}{Pixel inset at the top/bottom end of the range; only meaningful for \code{which = "y"} (\code{yInsetTop}/\code{yInsetBottom}).}
+\item{inset_top, inset_bottom}{\verb{<number | param()>} Pixel inset at the top/bottom end of the range; only meaningful for \code{which = "y"} (\code{yInsetTop}/\code{yInsetBottom}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
@@ -142,6 +142,8 @@ Like \code{\link[=vg_plot]{vg_plot()}}, this can be piped in alongside marks/int
 it only ever sets attributes on the current plot fragment, so it
 never needs to come last in a chain. For the analogous facet scales
 (\code{fx}/\code{fy}), see \code{\link[=vg_scale_facet]{vg_scale_facet()}}.
+
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b) |>

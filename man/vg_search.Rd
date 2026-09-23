@@ -16,24 +16,24 @@ vg_search(
 )
 }
 \arguments{
-\item{as}{The output selection.}
+\item{as}{\verb{<param()>} The output selection.}
 
-\item{column}{The name of a database column from which to pull menu options.}
+\item{column}{\verb{<string>} The name of a database column from which to pull menu options.}
 
-\item{field}{The name of the field (database column) over which the interval selection should be defined.}
+\item{field}{\verb{<string>} The name of the field (database column) over which the interval selection should be defined.}
 
-\item{filter_by}{A selection to filter the database table indicated by the \code{from} property.}
+\item{filter_by}{\verb{<param()>} A selection to filter the database table indicated by the \code{from} property.}
 
-\item{from}{The name of a database table to use as a data source for this widget.}
+\item{from}{\verb{<string>} The name of a database table to use as a data source for this widget.}
 
-\item{label}{A text label for this input.}
+\item{label}{\verb{<string>} A text label for this input.}
 
-\item{type}{The type of text search query to perform.}
+\item{type}{\verb{<"contains" | "prefix" | "suffix" | "regexp">} The type of text search query to perform.}
 
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
-A search input component.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
 Other interactor functions:
