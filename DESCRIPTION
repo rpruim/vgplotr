@@ -1,6 +1,6 @@
 Package: vgplotr
 Title: An R Interface to 'Mosaic/vgplot' from the University of Washington Interactive Data Lab
-Version: 0.0.0.9009
+Version: 0.0.0.9010
 Authors@R: c(
     person("Randall", "Pruim", , "rpruim@gmail.com", role = c("aut", "cre")),
     person("UW Interactive Data Lab", role = "cph",
