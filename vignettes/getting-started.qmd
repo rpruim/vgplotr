@@ -133,10 +133,10 @@ of some shortcuts.
 
 * If we pipe a data frame into the `vg_` workflow, we can omit
 `vg_create()` and `vg_data()`: `aapl |> vg_mark_line()` is equivalent to
-`vg_create() |> vg_data(name = "data", aapl) |> vg_mark_line()`.
+`vg_create() |> vg_data(name = "data1", aapl) |> vg_mark_line()`.
 
 * By default, mark functions use the first registered data source,
-  so we can omit `data_from = "data"`.
+  so we can omit `data_from = "data1"`.
 
 * We can set the height and width in `vg_mark_line_y()`.
 
@@ -218,13 +218,14 @@ shares one DuckDB instance behind the scenes, so data sources only
 need to be registered once.  This also means that it is not
 possible to use the same name for different data sources
 in different specifications on the same page. This includes the
-implicit `"data"` name used when a data frame is piped directly into a
-mark (see "Some shortcuts" above) -- if more than one such plot appears
-on the same page, give each an explicit, distinct `data_from =` (or
-register the data yourself with `vg_data()`) so they don't overwrite
-each other. `vg_data_registry()` lists every name registered so far this
-session and what it currently refers to -- a quick way to check for this
-before rendering, since nothing else will point out the mistake.
+implicit `"data1"`/`"data2"`/... names used when a data frame is piped
+directly into a mark (see "Some shortcuts" above) -- if more than one
+such plot appears on the same page, give each an explicit, distinct
+`data_from =` (or register the data yourself with `vg_data()`) so they
+don't overwrite each other. `vg_data_registry()` lists every name
+registered so far this session and what it currently refers to -- a
+quick way to check for this before rendering, since nothing else will
+point out the mistake.
 :::
 
 We can obtain a subset of the data contained in the file using

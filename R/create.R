@@ -106,9 +106,9 @@ vg_config <- function(spec, ...) {
 #' @param spec A `vgspec`.
 #' @param name The name other parts of the spec use to refer to this data
 #'   (via `data_from =`/`filter_by =` on marks and interactors). Optional --
-#'   if omitted, an unused name is generated (`"data"`, then `"data1"`,
-#'   `"data2"`, ...), e.g., for the shorthand described in [vg_mark()]. This
-#'   is unique across the whole R session, not just within this spec: every
+#'   if omitted, an unused name is generated (`"data1"`, `"data2"`, ...),
+#'   e.g., for the shorthand described in [vg_mark()]. This is unique
+#'   across the whole R session, not just within this spec: every
 #'   `vg_render()` call on the same page shares one DuckDB instance (see
 #'   `vignette("getting-started")`), so two *separate* specs that both
 #'   omit `name` -- e.g., two `some_df |> vg_mark_dot(...)` shortcuts in one
@@ -140,23 +140,28 @@ vg_data <- function(spec, name = NULL, data = NULL, ...) {
 .vgplotr_data_registry$entries <- list()
 
 # Test-only: clears the registry so a test can assert the naming sequence
-# restarts at "data" without leaking state from a test that ran earlier in
+# restarts at "data1" without leaking state from a test that ran earlier in
 # the same session. @noRd
 reset_auto_data_names <- function() {
   assign("entries", list(), envir = .vgplotr_data_registry)
 }
 
-# The first name, from "data", "data1", "data2", ..., that is unused both
+# The first name, from "data1", "data2", "data3", ..., that is unused both
 # in `spec$data` (this spec's own already-registered sources -- what lets
-# vg_data() called several times on one evolving spec still get "data",
-# "data1", "data2", ...) and in the session-wide registry (every name
-# handed out so far this session, regardless of spec).
+# vg_data() called several times on one evolving spec still get "data1",
+# "data2", "data3", ...) and in the session-wide registry (every name
+# handed out so far this session, regardless of spec). Deliberately starts
+# at "data1", not "data" -- every auto-generated name then has the exact
+# same "data<N>" shape, with no unsuffixed "data" as a special case a
+# caller could off-by-one on (e.g., assuming the *second* source is always
+# "data1", which was only true when a spec's first two sources were both
+# auto-named).
 #
-# The second check is what actually matters for build_mark()'s
+# The session-wide check is what actually matters for build_mark()'s
 # `some_df |> vg_mark_dot(...)` shortcut (see vg_mark()): that path always
 # starts from a brand-new, empty vg_create(), so spec$data alone is always
 # empty there -- without a session-wide registry too, every such shortcut
-# would always get named "data", no matter how many others already exist.
+# would always get named "data1", no matter how many others already exist.
 # That's harmless for one plot on a page, but once a *different* data
 # frame's shortcut plot ends up on the same page (mosaic-spec's `data:`
 # names are shared across every `vg_render()` call on a page -- see
@@ -167,9 +172,9 @@ reset_auto_data_names <- function() {
 auto_data_name <- function(spec) {
   existing <- names(spec$data)
   used <- names(.vgplotr_data_registry$entries)
-  i <- 0
+  i <- 1
   repeat {
-    candidate <- if (i == 0) "data" else paste0("data", i)
+    candidate <- paste0("data", i)
     if (!(candidate %in% existing) && !(candidate %in% used)) break
     i <- i + 1
   }

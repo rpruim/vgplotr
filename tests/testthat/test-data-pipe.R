@@ -2,21 +2,21 @@ test_that("vg_data() auto-generates a name when omitted", {
   reset_auto_data_names()
   df <- data.frame(a = 1:3)
   spec <- vg_create() |> vg_data(data = df)
-  expect_equal(names(spec$data), "data")
+  expect_equal(names(spec$data), "data1")
 
   spec <- spec |> vg_data(data = df)
-  expect_equal(names(spec$data), c("data", "data1"))
+  expect_equal(names(spec$data), c("data1", "data2"))
 
   spec <- spec |> vg_data(data = df)
-  expect_equal(names(spec$data), c("data", "data1", "data2"))
+  expect_equal(names(spec$data), c("data1", "data2", "data3"))
 })
 
 test_that("vg_create(data =) registers a data frame as the spec's first data source", {
   reset_auto_data_names()
   df <- data.frame(a = 1:3)
   spec <- vg_create(data = df)
-  expect_equal(names(spec$data), "data")
-  expect_equal(spec$data$data$data, df)
+  expect_equal(names(spec$data), "data1")
+  expect_equal(spec$data$data1$data, df)
 })
 
 test_that("a data frame piped as spec into a mark auto-registers it and sets data_from", {
@@ -25,12 +25,12 @@ test_that("a data frame piped as spec into a mark auto-registers it and sets dat
   spec <- df |> vg_mark_dot(x = ~a, y = ~b)
 
   expect_true(is_vgspec(spec))
-  expect_equal(names(spec$data), "data")
-  expect_equal(spec$data$data$data, df)
-  expect_equal(spec$layout$items[[1]]$encodings$data_from, "data")
+  expect_equal(names(spec$data), "data1")
+  expect_equal(spec$data$data1$data, df)
+  expect_equal(spec$layout$items[[1]]$encodings$data_from, "data1")
 
   payload <- as_spec_payload(spec)
-  expect_equal(payload$spec$plot[[1]]$data$from, "data")
+  expect_equal(payload$spec$plot[[1]]$data$from, "data1")
 })
 
 test_that("an explicit data_from string on the data-frame shorthand names the registered source", {
@@ -47,19 +47,19 @@ test_that("a second mark can reference the auto-registered data source by name",
   df <- data.frame(a = 1:3, b = c(4, 5, 6))
   spec <- df |>
     vg_mark_dot(x = ~a, y = ~b) |>
-    vg_mark_line_y(data_from = "data", x = ~a, y = ~b)
+    vg_mark_line_y(data_from = "data1", x = ~a, y = ~b)
 
-  expect_equal(names(spec$data), "data")
+  expect_equal(names(spec$data), "data1")
   expect_length(spec$layout$items, 2)
-  expect_equal(spec$layout$items[[2]]$encodings$data_from, "data")
+  expect_equal(spec$layout$items[[2]]$encodings$data_from, "data1")
 })
 
 test_that("the data-frame shorthand is equivalent to vg_create() |> vg_data(data = df) |> vg_mark_*()", {
   reset_auto_data_names()
   df <- data.frame(a = 1:3, b = c(4, 5, 6))
   via_shorthand <- df |> vg_mark_dot(x = ~a, y = ~b)
-  reset_auto_data_names() # each construction starts fresh, so both land on "data"
-  via_explicit <- vg_create() |> vg_data(data = df) |> vg_mark_dot(data_from = "data", x = ~a, y = ~b)
+  reset_auto_data_names() # each construction starts fresh, so both land on "data1"
+  via_explicit <- vg_create() |> vg_data(data = df) |> vg_mark_dot(data_from = "data1", x = ~a, y = ~b)
 
   expect_equal(via_shorthand, via_explicit)
 })
@@ -70,7 +70,7 @@ test_that("a mark with no data_from defaults to the spec's first registered data
 
   # data-frame-piped first mark, then a second mark with no data_from at all
   spec <- df |> vg_mark_dot(x = ~a, y = ~b) |> vg_mark_line_y(x = ~a, y = ~b)
-  expect_equal(spec$layout$items[[2]]$encodings$data_from, "data")
+  expect_equal(spec$layout$items[[2]]$encodings$data_from, "data1")
 
   # same default via the explicit vg_create()/vg_data() path
   spec2 <- vg_create() |> vg_data(name = "d1", data = df) |> vg_mark_dot(x = ~a, y = ~b) |> vg_mark_line_y(x = ~a, y = ~b)
@@ -137,14 +137,14 @@ test_that("a mark using sql()/agg() unwrapped still gets a default data_from", {
   reset_auto_data_names()
   df <- data.frame(a = 1:3, b = c(4, 5, 6))
   spec <- df |> vg_mark_dot(x = sql("a + 1"), y = ~b)
-  expect_equal(spec$layout$items[[1]]$encodings$data_from, "data")
+  expect_equal(spec$layout$items[[1]]$encodings$data_from, "data1")
 })
 
 test_that("a mark using a transform function unwrapped still gets a default data_from", {
   reset_auto_data_names()
   df <- data.frame(a = 1:3, b = c(4, 5, 6))
   spec <- df |> vg_mark_rect_y(x = vg_bin(a, step = 1), y = vg_count())
-  expect_equal(spec$layout$items[[1]]$encodings$data_from, "data")
+  expect_equal(spec$layout$items[[1]]$encodings$data_from, "data1")
 })
 
 test_that("a mark using only param() references doesn't get a default data_from", {
@@ -233,7 +233,7 @@ test_that("auto_data_name() never repeats a name across independent specs in the
   # starts from a brand-new, empty vg_create(), so spec$data alone can
   # never tell two *separate* specs apart. Without a session-wide registry,
   # two unrelated `df |> vg_mark_dot(...)` shortcuts always both got named
-  # "data" -- harmless on their own, but once both specs are rendered onto
+  # "data1" -- harmless on their own, but once both specs are rendered onto
   # the same page (every vg_render() call shares one DuckDB instance), the
   # second one's table silently overwrites the first's, and whichever plot
   # queries afterward gets a confusing "column not found" error that
@@ -247,12 +247,12 @@ test_that("auto_data_name() never repeats a name across independent specs in the
   spec2 <- df2 |> vg_mark_dot(x = ~x, y = ~y)
 
   expect_false(identical(names(spec1$data), names(spec2$data)))
-  expect_equal(names(spec1$data), "data")
-  expect_equal(names(spec2$data), "data1")
+  expect_equal(names(spec1$data), "data1")
+  expect_equal(names(spec2$data), "data2")
   # each spec's own mark still correctly points at its own (correctly
-  # renamed) source, not the literal "data" the shortcut always used to
+  # renamed) source, not the literal "data1" the shortcut always used to
   # produce
-  expect_equal(spec2$layout$items[[1]]$encodings$data_from, "data1")
+  expect_equal(spec2$layout$items[[1]]$encodings$data_from, "data2")
 })
 
 test_that("auto_data_name() session-wide uniqueness also covers vg_data(name = NULL) directly, not just the mark shortcut", {
@@ -261,18 +261,18 @@ test_that("auto_data_name() session-wide uniqueness also covers vg_data(name = N
   spec1 <- vg_create() |> vg_data(data = df)
   spec2 <- vg_create() |> vg_data(data = df) # a separate spec, also unnamed
 
-  expect_equal(names(spec1$data), "data")
-  expect_equal(names(spec2$data), "data1")
+  expect_equal(names(spec1$data), "data1")
+  expect_equal(names(spec2$data), "data2")
 })
 
 test_that("reset_auto_data_names() clears the session-wide registry", {
   reset_auto_data_names()
   df <- data.frame(a = 1:3)
-  vg_create() |> vg_data(data = df) # claims "data"
+  vg_create() |> vg_data(data = df) # claims "data1"
 
   reset_auto_data_names()
   spec <- vg_create() |> vg_data(data = df)
-  expect_equal(names(spec$data), "data") # "data" is available again
+  expect_equal(names(spec$data), "data1") # "data1" is available again
 })
 
 test_that("vg_data_registry() is an empty 3-column data frame when nothing has been registered yet", {
@@ -306,10 +306,10 @@ test_that("vg_data_registry() records name/kind/source for every source kind", {
 test_that("vg_data_registry() picks up both auto-generated and explicit names", {
   reset_auto_data_names()
   df <- data.frame(a = 1:3)
-  df |> vg_mark_dot(x = ~a) # auto-named "data"
+  df |> vg_mark_dot(x = ~a) # auto-named "data1"
   vg_create() |> vg_data(name = "explicit", data = df)
 
-  expect_setequal(vg_data_registry()$name, c("data", "explicit"))
+  expect_setequal(vg_data_registry()$name, c("data1", "explicit"))
 })
 
 test_that("vg_data_registry() reflects only the most recent registration when a name is reused", {
