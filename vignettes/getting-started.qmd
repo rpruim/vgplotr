@@ -741,12 +741,28 @@ objects (mosaic-spec's own `{data: [...]}` form), matching how mosaic's
 own example specs represent small inline datasets:
 
 ```{r}
-#| label: bias-2
+#| label: to-yaml
 vg_create() |>
   vg_data(name = "aapl", data = aapl) |>
   vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
   to_yaml()
 ```
+
+:::{.callout-tip}
+#### Hiding the data
+
+If you don't want to include the inline definition of the data,
+use `suppress_data = TRUE`:
+
+```{r}
+#| label: to-yaml-no-data
+vg_create() |>
+  vg_data(name = "aapl", data = aapl) |>
+  vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
+  to_yaml(suppress_data = TRUE)
+```
+
+:::
 
 ## Rendering a spec from elsewhere
 
