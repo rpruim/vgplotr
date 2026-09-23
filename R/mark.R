@@ -62,7 +62,7 @@
 vg_mark <- function(spec = NULL, mark, formula = vg_unset, ...) {
   if (inherits(spec, "formula")) {
     if (!identical(formula, vg_unset)) {
-      error("formula specified twice.")
+      stop("formula specified twice.", call. = FALSE)
     }
     formula <- spec
     spec <- NULL
@@ -196,7 +196,7 @@ vg_mark_ <- function(spec, mark, formula, ...) {
 
   if (inherits(spec, "formula")) {
     if (!identical(formula, vg_unset)) {
-      stop("formula specified twice.")
+      stop("formula specified twice.", call. = FALSE)
     }
     formula <- spec
     spec <- NULL
