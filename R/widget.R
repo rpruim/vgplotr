@@ -81,13 +81,11 @@ spec_top_level_size <- function(x) {
 #'
 #'   The `vgplotr.use_cache` option is meant for a whole document rather
 #'   than one call -- e.g., a vignette's setup chunk setting
-#'   `options(vgplotr.use_cache = FALSE)` so its *built, shipped* output
+#'   `options(vgplotr.use_cache = FALSE)` so its *built* output
 #'   always references the CDN, regardless of whether the machine that
 #'   happens to build it has a local cache. That matters because
-#'   self-contained HTML embeds a cache directly as base64: confirmed
-#'   directly, one vignette with a cache present at build time went from
-#'   1.3 MB to 48 MB, purely depending on the building machine's own,
-#'   otherwise-invisible cache state.
+#'   self-contained HTML embeds a cache directly as base64, increasing
+#'   the size of file substantially.
 #' @param connector Which database this graphic's SQL actually runs against:
 #'   [vg_wasm_connector()] (the default -- DuckDB-Wasm in the browser, fully
 #'   self-contained) or [vg_duckdb_connector()] (a real, native DuckDB,

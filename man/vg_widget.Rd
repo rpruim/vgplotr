@@ -55,13 +55,11 @@ when no cache exists -- it just falls back to the CDN). Ignored when
 
 The \code{vgplotr.use_cache} option is meant for a whole document rather
 than one call -- e.g., a vignette's setup chunk setting
-\code{options(vgplotr.use_cache = FALSE)} so its \emph{built, shipped} output
+\code{options(vgplotr.use_cache = FALSE)} so its \emph{built} output
 always references the CDN, regardless of whether the machine that
 happens to build it has a local cache. That matters because
-self-contained HTML embeds a cache directly as base64: confirmed
-directly, one vignette with a cache present at build time went from
-1.3 MB to 48 MB, purely depending on the building machine's own,
-otherwise-invisible cache state.}
+self-contained HTML embeds a cache directly as base64, increasing
+the size of file substantially.}
 
 \item{connector}{Which database this graphic's SQL actually runs against:
 \code{\link[=vg_wasm_connector]{vg_wasm_connector()}} (the default -- DuckDB-Wasm in the browser, fully
