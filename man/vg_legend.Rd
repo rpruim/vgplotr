@@ -23,12 +23,23 @@ using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconca
 
 \item{type}{The legend type: \code{"color"}, \code{"opacity"}, or \code{"symbol"}.}
 
-\item{...}{Legend options, e.g., \code{as = param(brush)}, \code{label = "Species"},
-\verb{field =}, \verb{tickSize =}, \verb{columns =}, or margin/width/height settings.
-Options are taken under mosaic-spec's own camelCase names
-(\verb{tickSize =}, \verb{marginLeft =}), unlike the snake_case of marks and
-interactors. An argument that isn't an option of a legend in
-mosaic-spec warns, since mosaic would silently ignore it.}
+\item{...}{Legend options, e.g., \code{as = param(brush)}, \code{label = "Species"}. Taken under mosaic-spec's own camelCase names, unlike
+the snake_case of marks and interactors. An argument that isn't an
+option of a legend in mosaic-spec warns, since mosaic would silently
+ignore it. Accepted options:
+\itemize{
+\item \code{as} \verb{<param()>}
+\item \code{columns} \verb{<number>}
+\item \code{field} \verb{<string>}
+\item \code{height} \verb{<number>}
+\item \code{label} \verb{<string>}
+\item \code{marginBottom} \verb{<number>}
+\item \code{marginLeft} \verb{<number>}
+\item \code{marginRight} \verb{<number>}
+\item \code{marginTop} \verb{<number>}
+\item \code{tickSize} \verb{<number>}
+\item \code{width} \verb{<number>}
+}}
 
 \item{for_plot}{For a standalone legend: the \code{name} of the plot it
 decorates.}

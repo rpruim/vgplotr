@@ -1,6 +1,22 @@
 #' @include utils.R
 NULL
 
+# Builds vg_legend()'s `@param ...` roxygen block via `@eval`, so its
+# per-option `<...>` value-type notation (see ?vg_value_types) stays in
+# sync with .vg_legend_prop_types (R/attrs-generated.R, schema-derived)
+# instead of a hand-copied snapshot that drifts out of date.
+legend_options_doc <- function() {
+  opts <- paste0("  - `", names(.vg_legend_prop_types), "` ", .vg_legend_prop_types)
+  c(
+    "@param ... Legend options, e.g., `as = param(brush)`, `label =",
+    "  \"Species\"`. Taken under mosaic-spec's own camelCase names, unlike",
+    "  the snake_case of marks and interactors. An argument that isn't an",
+    "  option of a legend in mosaic-spec warns, since mosaic would silently",
+    "  ignore it. Accepted options:",
+    opts
+  )
+}
+
 #' Add a legend
 #'
 #' A legend can be embedded in a plot (added alongside its marks, picking up
@@ -13,12 +29,7 @@ NULL
 #'   for a standalone legend with `for_plot` set -- combine that with plots
 #'   using [vg_vconcat()]/[vg_hconcat()] instead.
 #' @param type The legend type: `"color"`, `"opacity"`, or `"symbol"`.
-#' @param ... Legend options, e.g., `as = param(brush)`, `label = "Species"`,
-#'   `field =`, `tickSize =`, `columns =`, or margin/width/height settings.
-#'   Options are taken under mosaic-spec's own camelCase names
-#'   (`tickSize =`, `marginLeft =`), unlike the snake_case of marks and
-#'   interactors. An argument that isn't an option of a legend in
-#'   mosaic-spec warns, since mosaic would silently ignore it.
+#' @eval legend_options_doc()
 #' @param for_plot For a standalone legend: the `name` of the plot it
 #'   decorates.
 #' @family legend functions

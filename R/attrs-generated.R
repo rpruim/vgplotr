@@ -337,6 +337,23 @@
   "width"
 )
 
+# camelCase legend-property name -> `<...>` value-type notation, for the
+# same properties as .vg_legend_props above. Used by legend_options_doc()
+# (R/legend.R) to build vg_legend()'s `@eval`'d @param ... documentation.
+.vg_legend_prop_types <- c(
+  as = "`<param()>`",
+  columns = "`<number>`",
+  field = "`<string>`",
+  height = "`<number>`",
+  label = "`<string>`",
+  marginBottom = "`<number>`",
+  marginLeft = "`<number>`",
+  marginRight = "`<number>`",
+  marginTop = "`<number>`",
+  tickSize = "`<number>`",
+  width = "`<number>`"
+)
+
 # snake_case -> exact camelCase mosaic-spec key for every plot attribute,
 # e.g., x_domain -> xDomain. vg_plot()/vg_plot_defaults()/vg_attributes()/
 # vg_create() (and the mark/interactor "attribute riding along" path in

@@ -424,6 +424,18 @@ property_types <- function(type_defs, defs) {
 mark_prop_types <- property_types(mark_defs, defs)
 interactor_prop_types <- property_types(interactor_defs, defs)
 
+# `<...>` value-type notation (see ?vg_value_types) for each of
+# legend_props above -- used by vg_legend()'s `@eval`'d roxygen
+# (legend_options_doc(), R/legend.R) so its per-option documentation stays
+# schema-derived instead of a hand-copied snapshot that drifts, like every
+# other constructor family's argument notation.
+legend_prop_types <- vapply(
+  legend_props,
+  function(nm) type_notation(defs$PlotLegend$properties[[nm]], defs),
+  character(1)
+)
+names(legend_prop_types) <- legend_props
+
 # Every string literal a property schema node accepts, found by walking
 # enum/const/$ref/anyOf/oneOf/allOf recursively -- covers both of mosaic's
 # two enum encodings (a real `enum: [...]` array, e.g. CurveName, and an
@@ -687,6 +699,13 @@ attr_lines <- c(
   "# warn_unrecognized_legend_args() (R/utils.R).",
   ".vg_legend_props <- c(",
   paste0('  "', legend_props, '"', collapse = ",\n"),
+  ")",
+  "",
+  "# camelCase legend-property name -> `<...>` value-type notation, for the",
+  "# same properties as .vg_legend_props above. Used by legend_options_doc()",
+  "# (R/legend.R) to build vg_legend()'s `@eval`'d @param ... documentation.",
+  ".vg_legend_prop_types <- c(",
+  paste0("  ", names(legend_prop_types), " = ", vapply(legend_prop_types, deparse, character(1)), collapse = ",\n"),
   ")",
   "",
   "# snake_case -> exact camelCase mosaic-spec key for every plot attribute,",
