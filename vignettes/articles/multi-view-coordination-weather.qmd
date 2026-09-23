@@ -63,7 +63,7 @@ spec <-
     ),
     credit = "Based on a [Vega-Lite/Altair example](https://vega.github.io/vega-lite/examples/interactive_seattle_weather.html) by Jake Vanderplas."
   ) |>
-  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_data(name = "weather", file = vg_example_url("seattle-weather.parquet")) |>
   vg_params(
     click = list(select = "single"),
     domain = c("sun", "fog", "drizzle", "rain", "snow"),
@@ -83,6 +83,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/weather.html) exactly, aside
-from `data.weather.file` (`vg_data_url()` vs. a relative path) and
+from `data.weather.file` (`vg_example_url()` vs. a relative path) and
 object key order.
 </details>

@@ -33,7 +33,7 @@ spec <-
     ),
     credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-voronoi-scatterplot)."
   ) |>
-  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_data(name = "penguins", file = vg_example_url("penguins.parquet")) |>
   vg_params(mesh = 0, hull = 0) |>
   vg_vconcat(
     vg_mark_voronoi(
@@ -105,6 +105,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/voronoi.html) exactly, aside
-from `data.penguins.file` (`vg_data_url()` vs. a relative path) and
+from `data.penguins.file` (`vg_example_url()` vs. a relative path) and
 object key order.
 </details>

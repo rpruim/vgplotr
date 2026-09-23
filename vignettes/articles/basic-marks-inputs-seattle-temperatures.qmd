@@ -25,7 +25,7 @@ spec <-
       "and maximum recorded temperatures. The blue range shows the average lows and highs."
     )
   ) |>
-  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_data(name = "weather", file = vg_example_url("seattle-weather.parquet")) |>
   vg_mark_area_y(
     data_from = "weather",
     x = ~ vg_date_month(date),
@@ -65,6 +65,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/seattle-temp.html) exactly,
-aside from `data.weather.file` (`vg_data_url()` vs. a relative path) and
+aside from `data.weather.file` (`vg_example_url()` vs. a relative path) and
 object key order.
 </details>

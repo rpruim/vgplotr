@@ -36,12 +36,12 @@ spec <-
   vg_data(
     name = "feed",
     type = "spatial",
-    file = vg_data_url("usgs-feed.geojson")
+    file = vg_example_url("usgs-feed.geojson")
   ) |>
   vg_data(
     name = "world",
     type = "spatial",
-    file = vg_data_url("countries-110m.json"),
+    file = vg_example_url("countries-110m.json"),
     layer = "land"
   ) |>
   vg_mark_geo(data_from = "world", fill = "currentColor", fill_opacity = 0.2) |>
@@ -70,6 +70,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/earthquakes-feed.html)
-exactly, aside from `data.feed.file`/`data.world.file` (`vg_data_url()`
+exactly, aside from `data.feed.file`/`data.world.file` (`vg_example_url()`
 vs. a relative path) and object key order.
 </details>

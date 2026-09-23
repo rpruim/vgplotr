@@ -35,7 +35,7 @@ spec <-
       "for a data subset."
     )
   ) |>
-  vg_data(name = "athletes", file = vg_data_url("athletes.parquet")) |>
+  vg_data(name = "athletes", file = vg_example_url("athletes.parquet")) |>
   vg_mark_dot(data_from = "athletes", x = ~weight, y = ~height, fill = ~sex, r = 2, opacity = 0.05) |>
   vg_mark_regression_y(data_from = "athletes", filter_by = query, x = ~weight, y = ~height, stroke = ~sex) |>
   vg_interval_xy(as = query, brush = list(fillOpacity = 0, stroke = "currentColor")) |>
@@ -53,6 +53,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/linear-regression.html)
-exactly, aside from `data.athletes.file` (`vg_data_url()` vs. a relative
+exactly, aside from `data.athletes.file` (`vg_example_url()` vs. a relative
 path) and object key order.
 </details>

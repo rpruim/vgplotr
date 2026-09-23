@@ -105,6 +105,6 @@ cat(to_json(spec))
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/nyc-taxi-rides.html) exactly
 (this example's data is already a fully-qualified external URL, not
-under mosaic's own `data/` directory, so no `vg_data_url()` difference
+under mosaic's own `data/` directory, so no `vg_example_url()` difference
 here), aside from object key order.
 </details>

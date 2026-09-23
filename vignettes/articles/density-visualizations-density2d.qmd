@@ -34,7 +34,7 @@ spec <-
       "smoothing, use the slider to set the kernel bandwidth."
     )
   ) |>
-  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_data(name = "penguins", file = vg_example_url("penguins.parquet")) |>
   vg_params(bandwidth = 20, bins = 20) |>
   vg_vconcat(
     vg_hconcat(
@@ -65,6 +65,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/density2d.html) exactly,
-aside from `data.penguins.file` (`vg_data_url()` vs. a relative path)
+aside from `data.penguins.file` (`vg_example_url()` vs. a relative path)
 and object key order.
 </details>

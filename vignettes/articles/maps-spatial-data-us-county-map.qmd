@@ -27,13 +27,13 @@ spec <-
   vg_data(
     name = "counties",
     type = "spatial",
-    file = vg_data_url("us-counties-10m.json"),
+    file = vg_example_url("us-counties-10m.json"),
     layer = "counties"
   ) |>
   vg_data(
     name = "states",
     type = "spatial",
-    file = vg_data_url("us-counties-10m.json"),
+    file = vg_example_url("us-counties-10m.json"),
     layer = "states"
   ) |>
   vg_mark_geo(
@@ -69,6 +69,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/us-county-map.html) exactly,
-aside from `data.counties.file`/`data.states.file` (`vg_data_url()`
+aside from `data.counties.file`/`data.states.file` (`vg_example_url()`
 vs. a relative path) and object key order.
 </details>

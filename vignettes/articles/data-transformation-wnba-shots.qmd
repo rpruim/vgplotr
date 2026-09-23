@@ -43,10 +43,10 @@ spec <-
     )
   ) |>
   vg_data(
-    name = "shots", file = vg_data_url("wnba-shots-2023.parquet"),
+    name = "shots", file = vg_example_url("wnba-shots-2023.parquet"),
     where = "NOT starts_with(type, 'Free Throw') AND season_type = 2"
   ) |>
-  vg_data(name = "court", file = vg_data_url("wnba-half-court.parquet")) |>
+  vg_data(name = "court", file = vg_example_url("wnba-half-court.parquet")) |>
   vg_params(filter = list(select = "crossfilter"), binWidth = 18) |>
   vg_vconcat(
     vg_hconcat(
@@ -83,6 +83,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/wnba-shots.html) exactly,
-aside from `data.shots.file`/`data.court.file` (`vg_data_url()` vs. a
+aside from `data.shots.file`/`data.court.file` (`vg_example_url()` vs. a
 relative path) and object key order.
 </details>

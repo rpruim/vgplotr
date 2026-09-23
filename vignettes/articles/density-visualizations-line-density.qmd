@@ -60,7 +60,7 @@ spec <-
     )
   ) |>
   vg_data(
-    name = "stocks_after_2006", file = vg_data_url("stocks_after_2006.parquet"),
+    name = "stocks_after_2006", file = vg_example_url("stocks_after_2006.parquet"),
     select = c("Symbol", "Close", "Date"), where = "Close < 100"
   ) |>
   vg_params(
@@ -88,6 +88,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/line-density.html) exactly,
-aside from `data.stocks_after_2006.file` (`vg_data_url()` vs. a
+aside from `data.stocks_after_2006.file` (`vg_example_url()` vs. a
 relative path) and object key order.
 </details>

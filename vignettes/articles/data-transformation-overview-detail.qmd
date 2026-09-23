@@ -32,7 +32,7 @@ spec <-
       "these area charts."
     )
   ) |>
-  vg_data(name = "walk", file = vg_data_url("random-walk.parquet")) |>
+  vg_data(name = "walk", file = vg_example_url("random-walk.parquet")) |>
   vg_vconcat(
     vg_mark_area_y(data_from = "walk", x = ~t, y = ~v, fill = "steelblue") |>
       vg_interval_x(as = brush) |>
@@ -53,6 +53,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/overview-detail.html) exactly,
-aside from `data.walk.file` (`vg_data_url()` vs. a relative path) and
+aside from `data.walk.file` (`vg_example_url()` vs. a relative path) and
 object key order.
 </details>

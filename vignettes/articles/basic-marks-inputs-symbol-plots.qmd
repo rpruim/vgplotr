@@ -56,7 +56,7 @@ spec <-
     title = "Symbol Plots",
     description = "Two scatter plots with `dot` marks: one with stroked symbols, the other filled. Drop-down menus control which data table columns are plotted."
   ) |>
-  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_data(name = "penguins", file = vg_example_url("penguins.parquet")) |>
   vg_params(x = "body_mass", y = "flipper_length") |>
   vg_vconcat(
     menus,
@@ -78,6 +78,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/symbol-plots.html) apart from
-`data.penguins.file` (a full URL from `vg_data_url()` here, vs. mosaic's
+`data.penguins.file` (a full URL from `vg_example_url()` here, vs. mosaic's
 own relative `data/penguins.parquet` path) and object key order.
 </details>

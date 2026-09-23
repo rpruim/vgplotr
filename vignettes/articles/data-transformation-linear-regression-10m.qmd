@@ -16,7 +16,7 @@ results for a data subset.
 Note: the underlying `flights-10m.parquet` file is ~10 million rows,
 hosted outside mosaic's usual `data/` directory (a Cloudflare R2
 bucket, referenced directly inside the SQL query text below rather than
-via `vg_data_url()`, which only covers files under mosaic's own GitHub
+via `vg_example_url()`, which only covers files under mosaic's own GitHub
 `data/` directory). Rendering this one may be slow.
 
 ```{r setup}

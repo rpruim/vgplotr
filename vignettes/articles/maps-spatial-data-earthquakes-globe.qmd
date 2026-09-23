@@ -36,11 +36,11 @@ spec <-
     ),
     credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-earthquake-globe)."
   ) |>
-  vg_data(name = "earthquakes", file = vg_data_url("earthquakes.parquet")) |>
+  vg_data(name = "earthquakes", file = vg_example_url("earthquakes.parquet")) |>
   vg_data(
     name = "land",
     type = "spatial",
-    file = vg_data_url("countries-110m.json"),
+    file = vg_example_url("countries-110m.json"),
     layer = "land"
   ) |>
   vg_params(longitude = -180, latitude = -30, rotate = list(lon, lat)) |>
@@ -86,5 +86,5 @@ cat(to_json(spec))
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/earthquakes-globe.html)
 exactly, aside from `data.earthquakes.file`/`data.land.file`
-(`vg_data_url()` vs. a relative path) and object key order.
+(`vg_example_url()` vs. a relative path) and object key order.
 </details>

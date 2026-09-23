@@ -33,7 +33,7 @@ spec <-
   ) |>
   vg_data(
     name = "athletesBatched",
-    file = vg_data_url("athletes.parquet"),
+    file = vg_example_url("athletes.parquet"),
     select = c(
       "*",
       "10 * CEIL(ROW_NUMBER() OVER (PARTITION BY sport) / 10) AS batch"
@@ -108,6 +108,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/athlete-height.html) exactly,
-aside from `data.athletesBatched.file` (`vg_data_url()` vs. a relative
+aside from `data.athletesBatched.file` (`vg_example_url()` vs. a relative
 path) and object key order.
 </details>

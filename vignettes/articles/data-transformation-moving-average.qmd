@@ -29,7 +29,7 @@ spec <-
     ),
     credit = "Adapted from the [Arquero window query tutorial](https://observablehq.com/@uwdata/working-with-window-queries)."
   ) |>
-  vg_data(name = "cases", file = vg_data_url("berlin-covid.parquet")) |>
+  vg_data(name = "cases", file = vg_example_url("berlin-covid.parquet")) |>
   vg_params(frame = c(-6, 0)) |>
   vg_vconcat(
     vg_mark_rect_y(
@@ -64,6 +64,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/moving-average.html) exactly,
-aside from `data.cases.file` (`vg_data_url()` vs. a relative path) and
+aside from `data.cases.file` (`vg_example_url()` vs. a relative path) and
 object key order.
 </details>

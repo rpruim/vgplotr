@@ -57,7 +57,7 @@ spec <-
       "delay. Select regions in the marginal histograms to filter the density display."
     )
   ) |>
-  vg_data(name = "flights", file = vg_data_url("flights-200k.parquet")) |>
+  vg_data(name = "flights", file = vg_example_url("flights-200k.parquet")) |>
   vg_params(scale = list(value = "log"), query = list(select = "intersect")) |>
   vg_vconcat(
     vg_hconcat(
@@ -81,6 +81,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/flights-hexbin.html) exactly,
-aside from `data.flights.file` (`vg_data_url()` vs. a relative path)
+aside from `data.flights.file` (`vg_example_url()` vs. a relative path)
 and object key order.
 </details>

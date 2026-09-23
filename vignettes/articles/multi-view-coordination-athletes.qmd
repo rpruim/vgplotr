@@ -66,7 +66,7 @@ spec <-
       "display and are automatically populated by backing data columns."
     )
   ) |>
-  vg_data(name = "athletes", file = vg_data_url("athletes.parquet")) |>
+  vg_data(name = "athletes", file = vg_example_url("athletes.parquet")) |>
   vg_params(
     category = list(select = "intersect"),
     query = list(select = "intersect", include = category),
@@ -88,6 +88,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/athletes.html) exactly, aside
-from `data.athletes.file` (`vg_data_url()` vs. a relative path) and
+from `data.athletes.file` (`vg_example_url()` vs. a relative path) and
 object key order.
 </details>

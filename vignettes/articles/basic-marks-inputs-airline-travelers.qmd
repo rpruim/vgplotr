@@ -29,7 +29,7 @@ spec <-
     description = "A labeled line chart comparing airport travelers in 2019 and 2020.",
     credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-labeled-line-chart)."
   ) |>
-  vg_data(name = "travelers", file = vg_data_url("travelers.parquet")) |>
+  vg_data(name = "travelers", file = vg_example_url("travelers.parquet")) |>
   vg_data(
     name = "endpoint",
     query = "SELECT * FROM travelers ORDER BY date DESC LIMIT 1\n"
@@ -73,6 +73,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/airline-travelers.html) exactly,
-aside from `data.travelers.file` (a full URL from `vg_data_url()` vs.
+aside from `data.travelers.file` (a full URL from `vg_example_url()` vs.
 mosaic's relative `data/travelers.parquet`) and object key order.
 </details>

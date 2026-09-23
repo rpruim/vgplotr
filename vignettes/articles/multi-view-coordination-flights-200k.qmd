@@ -56,7 +56,7 @@ spec <-
       "resolution."
     )
   ) |>
-  vg_data(name = "flights", file = vg_data_url("flights-200k.parquet")) |>
+  vg_data(name = "flights", file = vg_example_url("flights-200k.parquet")) |>
   vg_params(brush = list(select = "crossfilter")) |>
   vg_vconcat(delay_plot, time_plot, distance_plot)
 
@@ -72,6 +72,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/flights-200k.html) exactly,
-aside from `data.flights.file` (`vg_data_url()` vs. a relative path)
+aside from `data.flights.file` (`vg_example_url()` vs. a relative path)
 and object key order.
 </details>

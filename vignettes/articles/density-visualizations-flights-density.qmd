@@ -27,7 +27,7 @@ spec <-
       "thresholds."
     )
   ) |>
-  vg_data(name = "flights", file = vg_data_url("flights-200k.parquet")) |>
+  vg_data(name = "flights", file = vg_example_url("flights-200k.parquet")) |>
   vg_params(bandwidth = 7, thresholds = 10) |>
   vg_vconcat(
     vg_hconcat(
@@ -59,6 +59,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/flights-density.html)
-exactly, aside from `data.flights.file` (`vg_data_url()` vs. a
+exactly, aside from `data.flights.file` (`vg_example_url()` vs. a
 relative path) and object key order.
 </details>

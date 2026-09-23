@@ -26,16 +26,16 @@ spec <-
   vg_data(
     name = "states",
     type = "spatial",
-    file = vg_data_url("us-counties-10m.json"),
+    file = vg_example_url("us-counties-10m.json"),
     layer = "states"
   ) |>
   vg_data(
     name = "nation",
     type = "spatial",
-    file = vg_data_url("us-counties-10m.json"),
+    file = vg_example_url("us-counties-10m.json"),
     layer = "nation"
   ) |>
-  vg_data(name = "walmarts", file = vg_data_url("walmarts.parquet")) |>
+  vg_data(name = "walmarts", file = vg_example_url("walmarts.parquet")) |>
   vg_mark_geo(data_from = "states", stroke = "#aaa", stroke_width = 1) |>
   vg_mark_geo(data_from = "nation", stroke = "currentColor") |>
   vg_mark_dot(
@@ -62,6 +62,6 @@ cat(to_json(spec))
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/walmart-openings.html)
 exactly, aside from `data.states.file`/`data.nation.file`/
-`data.walmarts.file` (`vg_data_url()` vs. a relative path) and object
+`data.walmarts.file` (`vg_example_url()` vs. a relative path) and object
 key order.
 </details>

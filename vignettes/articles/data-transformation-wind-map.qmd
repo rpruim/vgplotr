@@ -31,7 +31,7 @@ spec <-
     ),
     credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-wind-map)."
   ) |>
-  vg_data(name = "wind", file = vg_data_url("wind.parquet"), select = c("*", "row_number() over () as id")) |>
+  vg_data(name = "wind", file = vg_example_url("wind.parquet"), select = c("*", "row_number() over () as id")) |>
   vg_params(selected = list(select = "union"), length = 2) |>
   vg_vconcat(
     vg_legend_color(for_plot = "wind-map", label = "Speed (m/s)", as = selected),
@@ -63,6 +63,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/wind-map.html) exactly, aside
-from `data.wind.file` (`vg_data_url()` vs. a relative path) and object
+from `data.wind.file` (`vg_example_url()` vs. a relative path) and object
 key order.
 </details>

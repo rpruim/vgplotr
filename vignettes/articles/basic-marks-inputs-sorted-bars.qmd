@@ -27,7 +27,7 @@ spec <-
     title = "Sorted Bars",
     description = "Sort and limit an aggregate bar chart of gold medals by country."
   ) |>
-  vg_data(name = "athletes", file = vg_data_url("athletes.parquet")) |>
+  vg_data(name = "athletes", file = vg_example_url("athletes.parquet")) |>
   vg_params(query = list(select = "intersect")) |>
   vg_vconcat(
     vg_menu(
@@ -66,6 +66,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/sorted-bars.html) exactly, aside
-from `data.athletes.file` (`vg_data_url()` vs. a relative path) and object
+from `data.athletes.file` (`vg_example_url()` vs. a relative path) and object
 key order.
 </details>

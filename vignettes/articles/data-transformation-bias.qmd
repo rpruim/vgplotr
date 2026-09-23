@@ -25,7 +25,7 @@ spec <-
       "re-computed in the database upon updates."
     )
   ) |>
-  vg_data(name = "walk", file = vg_data_url("random-walk.parquet")) |>
+  vg_data(name = "walk", file = vg_example_url("random-walk.parquet")) |>
   vg_params(point = 0) |>
   vg_vconcat(
     vg_slider(label = "Bias", as = point, min = 0, max = 1000, step = 1),
@@ -45,6 +45,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/bias.html) exactly, aside from
-`data.walk.file` (`vg_data_url()` vs. a relative path) and object key
+`data.walk.file` (`vg_example_url()` vs. a relative path) and object key
 order.
 </details>

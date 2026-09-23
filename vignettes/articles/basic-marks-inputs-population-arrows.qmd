@@ -52,7 +52,7 @@ spec <-
     description = "An `arrow` connects the positions in 1980 and 2015 of each city on this population x inequality chart. Color encodes variation.",
     credit = "Adapted from an [Observable Plot example](https://observablehq.com/@observablehq/plot-arrow-variation-chart)."
   ) |>
-  vg_data(name = "metros", file = vg_data_url("metros.parquet")) |>
+  vg_data(name = "metros", file = vg_example_url("metros.parquet")) |>
   vg_params(bend = TRUE) |>
   vg_vconcat(
     vg_legend_color(
@@ -75,6 +75,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/population-arrows.html) exactly,
-aside from `data.metros.file` (`vg_data_url()` vs. a relative path) and
+aside from `data.metros.file` (`vg_example_url()` vs. a relative path) and
 object key order.
 </details>

@@ -34,7 +34,7 @@ spec <-
   ) |>
   vg_data(
     name = "presidents",
-    file = vg_data_url("us-president-favorability.parquet")
+    file = vg_example_url("us-president-favorability.parquet")
   ) |>
   vg_params(sign = 1) |>
   vg_vconcat(
@@ -82,6 +82,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/presidential-opinion.html)
-exactly, aside from `data.presidents.file` (`vg_data_url()` vs. a relative
+exactly, aside from `data.presidents.file` (`vg_example_url()` vs. a relative
 path) and object key order.
 </details>

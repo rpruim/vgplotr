@@ -106,7 +106,7 @@ spec <-
       "[UW Institute for Protein Design](https://www.ipd.uw.edu/)."
     )
   ) |>
-  vg_data(name = "proteins", file = vg_data_url("protein-design.parquet")) |>
+  vg_data(name = "proteins", file = vg_example_url("protein-design.parquet")) |>
   vg_params(
     query = list(select = "crossfilter"),
     point = list(select = "intersect", empty = TRUE),
@@ -128,6 +128,6 @@ Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/protein-design.html) exactly
 (the full multi-paragraph description was abbreviated above for
 readability, so `meta.description` text differs, though its structure
-is identical), aside from `data.proteins.file` (`vg_data_url()` vs. a
+is identical), aside from `data.proteins.file` (`vg_example_url()` vs. a
 relative path) and object key order.
 </details>

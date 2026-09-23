@@ -58,7 +58,7 @@ spec <-
       "`panZoom` interactors update a set of bound selections, one per unique axis."
     )
   ) |>
-  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_data(name = "penguins", file = vg_example_url("penguins.parquet")) |>
   vg_hconcat(
     vg_vconcat(plot1, vg_vspace(10), plot2),
     vg_hspace(10),
@@ -77,6 +77,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/pan-zoom.html) exactly, aside
-from `data.penguins.file` (`vg_data_url()` vs. a relative path) and
+from `data.penguins.file` (`vg_example_url()` vs. a relative path) and
 object key order.
 </details>

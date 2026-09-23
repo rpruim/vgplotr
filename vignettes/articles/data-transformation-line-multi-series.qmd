@@ -35,7 +35,7 @@ spec <-
       "from the [Bureau of Labor Statistics](https://www.bls.gov/)."
     )
   ) |>
-  vg_data(name = "bls_unemp", file = vg_data_url("bls-metro-unemployment.parquet")) |>
+  vg_data(name = "bls_unemp", file = vg_example_url("bls-metro-unemployment.parquet")) |>
   vg_mark_rule_y(data_from = c(0)) |>
   vg_mark_line_y(
     data_from = "bls_unemp", data_optimize = FALSE,
@@ -69,6 +69,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/line-multi-series.html)
-exactly, aside from `data.bls_unemp.file` (`vg_data_url()` vs. a
+exactly, aside from `data.bls_unemp.file` (`vg_example_url()` vs. a
 relative path) and object key order.
 </details>

@@ -35,7 +35,7 @@ spec <-
       "in response."
     )
   ) |>
-  vg_data(name = "stocks", file = vg_data_url("stocks.parquet")) |>
+  vg_data(name = "stocks", file = vg_example_url("stocks.parquet")) |>
   vg_data(
     name = "labels",
     query = "SELECT MAX(Date) as Date, ARGMAX(Close, Date) AS Close, Symbol FROM stocks GROUP BY Symbol"
@@ -71,6 +71,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/normalize.html) exactly, aside
-from `data.stocks.file` (`vg_data_url()` vs. a relative path) and
+from `data.stocks.file` (`vg_example_url()` vs. a relative path) and
 object key order.
 </details>

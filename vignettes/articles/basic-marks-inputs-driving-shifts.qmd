@@ -28,7 +28,7 @@ spec <-
       "[New York Times article](http://www.nytimes.com/imagepages/2010/05/02/business/02metrics.html)."
     )
   ) |>
-  vg_data(name = "driving", file = vg_data_url("driving.parquet")) |>
+  vg_data(name = "driving", file = vg_example_url("driving.parquet")) |>
   vg_mark_line(
     data_from = "driving",
     x = ~miles,
@@ -63,6 +63,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/driving-shifts.html) exactly,
-aside from `data.driving.file` (`vg_data_url()` vs. a relative path) and
+aside from `data.driving.file` (`vg_example_url()` vs. a relative path) and
 object key order.
 </details>

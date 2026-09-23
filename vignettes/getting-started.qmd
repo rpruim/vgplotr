@@ -253,7 +253,7 @@ web page.
 :::{.callout-tip}
 #### Accessing Mosaic example data sets
 
-`vg_data_url()` returns the URL for a Mosaic example dataset
+`vg_example_url()` returns the URL for a Mosaic example dataset
 from its name.
 
 :::
@@ -261,7 +261,7 @@ from its name.
 ```{r}
 #| label: vg-data-url
 vg_create() |>
-  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_data(name = "weather", file = vg_example_url("seattle-weather.parquet")) |>
   vg_mark_dot(temp_max ~ date, fill = "steelblue") |>
   vg_render()
 ```
@@ -365,7 +365,7 @@ overview <-
   vg_interval_x(as = param(brush))
 
 vg_create() |>
-  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_data(name = "weather", file = vg_example_url("seattle-weather.parquet")) |>
   vg_plot(overview) |>
   vg_render()
 ```
@@ -398,7 +398,7 @@ detail <-
   )
 
 vg_create() |>
-  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_data(name = "weather", file = vg_example_url("seattle-weather.parquet")) |>
   vg_attributes(width = 600, height = 400) |>
   vg_vconcat(detail, overview) |>
   vg_render()
@@ -524,7 +524,7 @@ expose a smaller set of properties than `vg_scale_x()`/`vg_scale_y()` (no
 
 ```{r}
 vg_create() |>
-  vg_data(name = "stocks", file = vg_data_url("stocks.csv")) |>
+  vg_data(name = "stocks", file = vg_example_url("stocks.csv")) |>
   vg_mark_line(Close ~ Date | Symbol ~ ., data_from = "stocks") |>
   vg_scale_fy(padding = 0.1) |>
   vg_guide_fy(label = "Ticker Symbol") |>
@@ -770,7 +770,7 @@ bilingual_plot <-
   vg_plot(width = 600, height = 200)
 
 vg_create() |>
-  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_data(name = "weather", file = vg_example_url("seattle-weather.parquet")) |>
   vg_vconcat(bilingual_plot, vg_vspace("1em"), temp_unit_picker) |>
   vg_render(height = 250, width = 600)
 ```

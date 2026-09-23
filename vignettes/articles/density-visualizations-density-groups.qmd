@@ -36,7 +36,7 @@ spec <-
       "stack and offset parameters control stacking of density areas."
     )
   ) |>
-  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_data(name = "penguins", file = vg_example_url("penguins.parquet")) |>
   vg_params(bandwidth = 20, normalize = "none", stack = FALSE, offset = NULL) |>
   vg_vconcat(
     vg_hconcat(
@@ -70,6 +70,6 @@ cat(to_json(spec))
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/density-groups.html) exactly,
-aside from `data.penguins.file` (`vg_data_url()` vs. a relative path)
+aside from `data.penguins.file` (`vg_example_url()` vs. a relative path)
 and object key order.
 </details>

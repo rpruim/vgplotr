@@ -58,7 +58,7 @@ spec <-
       "highlight corresponding points across all plots."
     )
   ) |>
-  vg_data(name = "penguins", file = vg_data_url("penguins.parquet")) |>
+  vg_data(name = "penguins", file = vg_example_url("penguins.parquet")) |>
   vg_params(brush = list(select = "single")) |>
   vg_plot_defaults(
     x_ticks = 3, y_ticks = 4, x_domain = "Fixed", y_domain = "Fixed", color_domain = "Fixed",
@@ -81,6 +81,6 @@ cat(to_json(spec))
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/splom.html) exactly (verified
 cell-by-cell, including the leftmost-column and bottom-row attribute
-overrides), aside from `data.penguins.file` (`vg_data_url()` vs. a
+overrides), aside from `data.penguins.file` (`vg_example_url()` vs. a
 relative path) and object key order.
 </details>
