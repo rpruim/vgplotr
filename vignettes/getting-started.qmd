@@ -5,6 +5,8 @@ vignette: >
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 format: html
+toc-depth: 3
+toc: true
 engine: knitr
 execute: 
   error: true
@@ -448,7 +450,7 @@ vg_create() |>
 ```
 
 Transform functions call also be called directly, 
-useful for inspecting what it builds:
+useful for inspecting what they build:
 
 ```{r}
 vg_bin(delay, step = 2)
@@ -790,56 +792,6 @@ concatenated elements.  Without the extra space in the example above,
 the menu is uncomfortably close to the plot.
 :::
 
-## `to_json()`/`to_yaml()`: converting a spec to mosaic's own format
-
-`vg_render(spec)` renders a spec directly, but sometimes what's wanted is
-the underlying mosaic-spec JSON or YAML itself -- to inspect exactly what
-an R-side spec translates to, or to save/share it independent of R (e.g.,
-to feed to mosaic's own JS `parseSpec()`, or as a `.json`/`.yaml` file
-alongside other mosaic examples). `to_json()`/`to_yaml()` work on a full
-`vgspec` or, as here, on a bare fragment that was never wrapped in
-`vg_create()` -- note that `param(brush)` becomes mosaic's own `"$brush"`
-string:
-
-```{r}
-frag <-
-  vg_mark_dot(x = ~x, y = ~y, fill = "steelblue") |>
-  vg_interval_x(as = param(brush))
-
-to_json(frag)
-```
-
-```{r}
-to_yaml(frag)
-```
-
-A data frame passed to `vg_data()` becomes an inline array of row
-objects (mosaic-spec's own `{data: [...]}` form), matching how mosaic's
-own example specs represent small inline datasets:
-
-```{r}
-#| label: to-yaml
-vg_create() |>
-  vg_data(name = "aapl", data = aapl) |>
-  vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
-  to_yaml()
-```
-
-:::{.callout-tip}
-#### Hiding the data
-
-If you don't want to include the inline definition of the data,
-use `suppress_data = TRUE`:
-
-```{r}
-#| label: to-yaml-no-data
-vg_create() |>
-  vg_data(name = "aapl", data = aapl) |>
-  vg_mark_line_y(data_from = "aapl", x = ~Date, y = ~Close) |>
-  to_yaml(suppress_data = TRUE)
-```
-
-:::
 
 ## Rendering a spec from elsewhere
 
