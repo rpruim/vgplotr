@@ -6,13 +6,14 @@ NULL
 # sync with .vg_legend_prop_types (R/attrs-generated.R, schema-derived)
 # instead of a hand-copied snapshot that drifts out of date.
 legend_options_doc <- function() {
-  opts <- paste0("  - `", names(.vg_legend_prop_types), "` ", .vg_legend_prop_types)
+  snake_names <- camel_to_snake(names(.vg_legend_prop_types))
+  opts <- paste0("  - `", snake_names, "` ", .vg_legend_prop_types)
   c(
     "@param ... Legend options, e.g., `as = param(brush)`, `label =",
-    "  \"Species\"`. Taken under mosaic-spec's own camelCase names, unlike",
-    "  the snake_case of marks and interactors. An argument that isn't an",
-    "  option of a legend in mosaic-spec warns, since mosaic would silently",
-    "  ignore it. Accepted options:",
+    "  \"Species\"`. Snake_case (matching marks/interactors) or mosaic-spec's",
+    "  own exact camelCase key (`tickSize =`) both work. An argument that",
+    "  isn't an option of a legend in mosaic-spec warns, since mosaic would",
+    "  silently ignore it. Accepted options:",
     opts
   )
 }
@@ -35,10 +36,11 @@ legend_options_doc <- function() {
 #' @family legend functions
 #' @export
 vg_legend <- function(spec = NULL, type, ..., for_plot = NULL) {
-  warn_unrecognized_legend_args(list(...), type)
-  check_transform_calls(list(...), paste0("legend `", type, "`"))
+  args <- canonicalize_legend_prop_names(list(...))
+  warn_unrecognized_legend_args(args, type)
+  check_transform_calls(args, paste0("legend `", type, "`"), style = "snake")
   legend_obj <- structure(
-    list(type = type, for_plot = for_plot, options = list(...)),
+    list(type = type, for_plot = for_plot, options = args),
     class = "vg_legend"
   )
 

@@ -26,20 +26,34 @@ test_that("several unrecognized options produce a single warning naming all of t
   expect_match(w, "`bogus`, `nope` are not properties of the `opacity` legend")
 })
 
-test_that("legends take camelCase options; a snake_case name warns and points at the real one", {
-  expect_warning(vg_legend_symbol(tick_size = 5), "`tick_size` is not a property.*Did you perhaps mean `tickSize`\\?")
-  expect_warning(vg_legend_color(margin_left = 5), "Did you perhaps mean `marginLeft`\\?")
+test_that("legends take snake_case options (matching marks/interactors); a typo suggests the real one", {
+  expect_warning(vg_legend_symbol(tick_siz = 5), "`tick_siz` is not a property.*Did you perhaps mean `tick_size`\\?")
+  expect_warning(vg_legend_color(marginleft = 5), "Did you perhaps mean `margin_left`\\?")
+  expect_no_warning(vg_legend_symbol(tick_size = 5, margin_left = 5))
+})
+
+test_that("mosaic-spec's exact camelCase key still works too, and can be mixed with snake_case", {
   expect_no_warning(vg_legend_symbol(tickSize = 5, marginLeft = 5))
+  expect_no_warning(vg_legend_symbol(tick_size = 5, marginLeft = 5))
 })
 
 test_that("every real legend option, and for_plot, is accepted without a warning", {
   expect_no_warning(vg_legend_color(
     as = param(sel), columns = 2, field = "species", height = 40, label = "Species",
-    marginBottom = 1, marginLeft = 2, marginRight = 3, marginTop = 4, tickSize = 5, width = 100
+    margin_bottom = 1, margin_left = 2, margin_right = 3, margin_top = 4, tick_size = 5, width = 100
+  ))
+  # exact camelCase keys still work too
+  expect_no_warning(vg_legend_color(
+    marginBottom = 1, marginLeft = 2, marginRight = 3, marginTop = 4, tickSize = 5
   ))
   # `for_plot` is vg_legend()'s own argument (mosaic's `for`), not an option
   expect_no_warning(vg_legend_color(for_plot = "p", label = "L"))
   expect_no_warning(vg_legend_color())
+})
+
+test_that("a legend's options are stored under mosaic-spec's exact camelCase key regardless of input spelling", {
+  frag <- vg_legend_color(tick_size = 5, marginLeft = 2)
+  expect_equal(frag$items[[1]]$options, list(tickSize = 5, marginLeft = 2))
 })
 
 test_that(".vg_legend_props is the schema's option set, without the legend/for discriminants", {

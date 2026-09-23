@@ -253,6 +253,22 @@ check_snake_collisions(interactor_defs, "interactor/input")
   }
 }
 
+# Same check for legend properties -- vg_legend()/vg_legend_color()/etc.
+# accept these under a snake_case translation too (.vg_legend_props_snake
+# below), which depends on camel_to_snake() being collision-free across
+# all of them.
+{
+  legend_prop_dupes <- unique(legend_props[duplicated(camel_to_snake(legend_props))])
+  if (length(legend_prop_dupes)) {
+    stop(
+      "camel_to_snake() collision among PlotLegend properties: ",
+      paste(legend_prop_dupes, collapse = ", "),
+      " -- add a manual rename before regenerating.",
+      call. = FALSE
+    )
+  }
+}
+
 # First-seen description for a given property name, reused across every
 # mark/interactor/input that has a property of that name (these mean the
 # same thing everywhere in mosaic's grammar, so one description per name is
@@ -706,6 +722,16 @@ attr_lines <- c(
   "# (R/legend.R) to build vg_legend()'s `@eval`'d @param ... documentation.",
   ".vg_legend_prop_types <- c(",
   paste0("  ", names(legend_prop_types), " = ", vapply(legend_prop_types, deparse, character(1)), collapse = ",\n"),
+  ")",
+  "",
+  "# snake_case -> exact camelCase mosaic-spec key, for the same properties",
+  "# as .vg_legend_props above (e.g. tick_size -> tickSize) -- the legend",
+  "# equivalent of .vg_plot_attrs_snake below. vg_legend()/vg_legend_color()/",
+  "# etc. accept snake_case (matching marks/interactors) or the exact",
+  "# camelCase key; canonicalize_legend_prop_names() (R/utils.R) does the",
+  "# translation.",
+  ".vg_legend_props_snake <- c(",
+  paste0('  ', camel_to_snake(legend_props), ' = "', legend_props, '"', collapse = ",\n"),
   ")",
   "",
   "# snake_case -> exact camelCase mosaic-spec key for every plot attribute,",

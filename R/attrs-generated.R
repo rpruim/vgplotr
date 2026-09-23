@@ -354,6 +354,26 @@
   width = "`<number>`"
 )
 
+# snake_case -> exact camelCase mosaic-spec key, for the same properties
+# as .vg_legend_props above (e.g. tick_size -> tickSize) -- the legend
+# equivalent of .vg_plot_attrs_snake below. vg_legend()/vg_legend_color()/
+# etc. accept snake_case (matching marks/interactors) or the exact
+# camelCase key; canonicalize_legend_prop_names() (R/utils.R) does the
+# translation.
+.vg_legend_props_snake <- c(
+  as = "as",
+  columns = "columns",
+  field = "field",
+  height = "height",
+  label = "label",
+  margin_bottom = "marginBottom",
+  margin_left = "marginLeft",
+  margin_right = "marginRight",
+  margin_top = "marginTop",
+  tick_size = "tickSize",
+  width = "width"
+)
+
 # snake_case -> exact camelCase mosaic-spec key for every plot attribute,
 # e.g., x_domain -> xDomain. vg_plot()/vg_plot_defaults()/vg_attributes()/
 # vg_create() (and the mark/interactor "attribute riding along" path in

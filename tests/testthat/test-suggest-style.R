@@ -1,9 +1,11 @@
 # A suggested argument name is spelled the way the function that was called
 # accepts it: snake_case (`fill_opacity`) for the generated vg_mark_*() and
-# interactor/input wrappers, which document snake_case; mosaic's exact key
-# (`fillOpacity`) for the generic vg_mark()/vg_interactor() and for legends,
-# which accept only that. See build_mark() in R/mark.R and spell_names() in
-# R/utils.R.
+# interactor/input wrappers, which document snake_case, and for legends
+# (`vg_legend()`/`vg_legend_color()`/etc.), which also accept snake_case
+# (translated to mosaic's exact key via canonicalize_legend_prop_names());
+# mosaic's exact key (`fillOpacity`) for the generic vg_mark()/
+# vg_interactor(), which accept only that. See build_mark() in R/mark.R and
+# spell_names() in R/utils.R.
 
 unrecognized_warnings <- function(expr) {
   w <- character()
@@ -57,9 +59,10 @@ test_that("every property of every interactor and input has a snake_case argumen
   }
 })
 
-test_that("legends do NOT accept snake_case, which is why they suggest the exact key", {
-  expect_false("tick_size" %in% names(formals(vg_legend_color)))
-  expect_true(any(is_unrecognized_warning(unrecognized_warnings(vg_legend_color(tick_size = 5)))))
+test_that("legends accept snake_case, translated to mosaic's exact key before checking", {
+  expect_false("tick_size" %in% names(formals(vg_legend_color))) # still `...`, not a real formal
+  expect_false(any(is_unrecognized_warning(unrecognized_warnings(vg_legend_color(tick_size = 5)))))
+  expect_equal(.vg_legend_props_snake[["tick_size"]], "tickSize")
 })
 
 # --- wrapper versus generic ---------------------------------------------------
@@ -79,10 +82,10 @@ test_that("the generic constructors suggest mosaic's exact key, since that is al
   expect_warning(vg_interactor(interactor = "menu", column = "a", filter_by = param(s)), "Did you perhaps mean `filterBy`\\?")
 })
 
-test_that("legends suggest the exact key", {
-  expect_warning(vg_legend_color(tick_size = 5), "Did you perhaps mean `tickSize`\\?")
-  expect_warning(vg_legend_color(margin_left = 5), "Did you perhaps mean `marginLeft`\\?")
-  expect_warning(vg_legend(type = "color", ticksize = 5), "Did you perhaps mean `tickSize`\\?")
+test_that("legends suggest snake_case", {
+  expect_warning(vg_legend_color(tick_siz = 5), "Did you perhaps mean `tick_size`\\?")
+  expect_warning(vg_legend_color(margin_lft = 5), "Did you perhaps mean `margin_left`\\?")
+  expect_warning(vg_legend(type = "color", ticksize = 5), "Did you perhaps mean `tick_size`\\?")
 })
 
 test_that("scales, guides and attribute setters were already snake_case, and still are", {
@@ -95,6 +98,8 @@ test_that("accepting either spelling: typing the exact key through a wrapper is 
   expect_no_warning(vg_mark_dot(x = ~a, y = ~b, fillOpacity = 0.5))
   expect_no_warning(vg_mark_dot(x = ~a, y = ~b, fill_opacity = 0.5))
   expect_no_warning(vg_interval_x(as = param(s), pixelSize = 2))
+  expect_no_warning(vg_legend_color(tickSize = 5))
+  expect_no_warning(vg_legend_color(tick_size = 5))
 })
 
 # --- the argument named in the rest of a message uses the same spelling -------
@@ -173,5 +178,5 @@ test_that("every suggestion the generic vg_mark() and legends make is accepted w
   }
   # (each loop must really have checked something: an empty loop proves nothing)
   expect_gt(loop(generic, c("alpha", "linewidth", "size", "color", "fill_opacity", "stroke_width", "frame_anchor"), "vg_mark"), 8)
-  expect_gt(loop(legend, c("tick_size", "margin_left", "lable", "title", "ncol"), "legend"), 3)
+  expect_gt(loop(legend, c("tick_siz", "margin_lft", "lable", "title", "ncol"), "legend"), 3)
 })

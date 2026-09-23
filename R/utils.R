@@ -282,12 +282,32 @@ warn_unrecognized_interactor_args <- function(args, interactor, kind = "interact
   )
 }
 
+# Renames any snake_case legend-option name in `args` (e.g., `tick_size`) to
+# its real camelCase mosaic-spec key (`tickSize`), via
+# `.vg_legend_props_snake` (R/attrs-generated.R) -- the legend equivalent of
+# `canonicalize_plot_attr_names()` above / what the generated
+# vg_mark_*()/vg_*() wrappers already do for their own declared formals. A
+# name that isn't a recognized legend property under either spelling (a
+# typo, `for_plot`, ...) passes through unchanged, so it still surfaces via
+# warn_unrecognized_legend_args() same as before.
+canonicalize_legend_prop_names <- function(args) {
+  nms <- names(args)
+  if (is.null(nms)) return(args)
+  mapped <- .vg_legend_props_snake[nms]
+  hit <- !is.na(mapped)
+  names(args)[hit] <- unname(mapped[hit])
+  args
+}
+
 # A legend's options aren't split into plot attributes (vg_legend() takes
 # `type` and `for_plot` as its own arguments, so everything in `...` is an
 # option), and the same property set (.vg_legend_props) applies to all three
-# legend types.
+# legend types. `args` has already been through
+# canonicalize_legend_prop_names(), so suggestions are spelled snake_case
+# (matching what vg_legend()'s roxygen documents) rather than mosaic's exact
+# key.
 warn_unrecognized_legend_args <- function(args, type) {
-  warn_unrecognized_args(args, .vg_legend_props, "legend", type)
+  warn_unrecognized_args(args, .vg_legend_props, "legend", type, style = "snake")
 }
 
 # An ordered factor's level order (e.g. "low" < "medium" < "high") has no

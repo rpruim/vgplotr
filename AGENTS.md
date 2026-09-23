@@ -64,32 +64,41 @@ only a last resort -- a real name in the call always wins.
 
 Things deliberately left undecided, to revisit rather than forget.
 
-### Should `vg_mark()`, `vg_interactor()` and legends accept snake_case?
+### Should `vg_mark()` and `vg_interactor()` (the generic constructors) accept snake_case?
 
-*Noted 2026-09-19.* Today the spelling rule depends on which function you call:
+*Noted 2026-09-19. Legends resolved 2026-09-23 -- see below; the generic
+constructors are still open.* Today the spelling rule depends on which
+function you call:
 
 - The generated wrappers -- `vg_mark_*()`, the interactor and input functions
   (`vg_toggle()`, `vg_slider()`, ...) -- take snake_case (`fill_opacity`,
   `tick_size`), and also mosaic's exact camelCase key (`fillOpacity`) through
-  `...`. Scales, guides and attribute setters are snake_case too, and a plot
-  attribute (`x_domain`/`xDomain`) is accepted either way *everywhere*.
-- The generic `vg_mark()` / `vg_interactor()`, and **every legend**
-  (`vg_legend()`, `vg_legend_color()`, ...), accept **only** the exact camelCase
-  key for their own options; `vg_mark("dot", fill_opacity = 1)` and
-  `vg_legend_color(tick_size = 5)` warn "not a property".
+  `...`. Scales, guides and attribute setters are snake_case too, a plot
+  attribute (`x_domain`/`xDomain`) is accepted either way *everywhere*, and
+  now **every legend** (`vg_legend()`, `vg_legend_color()`, ...) is too --
+  `vg_legend_color(tick_size = 5)` and `vg_legend_color(tickSize = 5)` both
+  work, via `canonicalize_legend_prop_names()`/`.vg_legend_props_snake`
+  (R/utils.R, R/attrs-generated.R), mirroring `canonicalize_plot_attr_names()`.
+- The generic `vg_mark()` / `vg_interactor()` still accept **only** the exact
+  camelCase key for their own options; `vg_mark("dot", fill_opacity = 1)`
+  warns "not a property".
 
-What that costs: warnings that suggest a name must spell it per caller (a
-suggestion is only useful if typing it doesn't warn again), which is why
-`build_mark()`/`build_interactor()` take a `style` ("snake" from a wrapper,
-"camel" from the generic) and `spell_names()` (`R/utils.R`) applies it. Legends
-are hand-written with `...` only, so they always suggest camelCase.
+What that costs, for what's still open: warnings that suggest a name must
+spell it per caller (a suggestion is only useful if typing it doesn't warn
+again), which is why `build_mark()`/`build_interactor()` take a `style`
+("snake" from a wrapper, "camel" from the generic) and `spell_names()`
+(`R/utils.R`) applies it -- this plumbing is still needed for the
+mark/interactor generic-vs-wrapper split, even though legends no longer need
+a `style` distinction (there's only one constructor family, so
+`warn_unrecognized_legend_args()`/`check_transform_calls()` always pass
+`style = "snake"` now).
 
-The question: make snake_case work in the generic constructors and in legends
-too -- canonicalising snake_case to the exact key, as
-`canonicalize_plot_attr_names()` already does for plot attributes. The rule
-would become uniform ("snake_case everywhere; the exact camelCase key always
-works too"), and the `style` plumbing could be deleted, so suggestions would
-always be snake_case.
+The remaining question: make snake_case work in `vg_mark()`/`vg_interactor()`
+too, the same way -- canonicalising snake_case to the exact key via
+something like `canonicalize_plot_attr_names()`/the new
+`canonicalize_legend_prop_names()`. The rule would become fully uniform
+("snake_case everywhere; the exact camelCase key always works too"), and the
+`style` plumbing could be deleted entirely.
 
 Facts to start from:
 
@@ -97,11 +106,17 @@ Facts to start from:
   argument on its wrapper (all 3,558, verified by
   `tests/testthat/test-suggest-style.R`), and the generator fails loudly if two
   properties ever collide once snake_cased (`check_snake_collisions()` in
-  `data-raw/update-schema.R`; zero collisions in v0.31.0).
-- Legends already have a schema-derived property list (`.vg_legend_props`,
-  generated), so they could get real snake_case formals from the generator
-  instead of `...`.
+  `data-raw/update-schema.R`; zero collisions in v0.31.0) -- the same check
+  now also covers `PlotLegend`'s properties.
+- Legends kept their `...`-based, hand-written constructors (deliberately --
+  "only 3 types, small enough to maintain by hand") rather than gaining real
+  snake_case formals from the generator; `.vg_legend_props`/
+  `.vg_legend_prop_types`/`.vg_legend_props_snake` (all schema-derived, in
+  R/attrs-generated.R) are what `vg_legend()` checks/canonicalizes/documents
+  against, so none of it can go stale when `MOSAIC_VERSION` bumps. The same
+  choice (canonicalize on `...`, vs. real generated formals) applies to
+  `vg_mark()`/`vg_interactor()` if/when this is resolved for them too.
 - Tests that pin today's behaviour and would change: `test-suggest-style.R`,
-  `test-legend-args.R`, `test-mark-args.R`, `test-interactor-args.R` (each has a
-  "the generic ... takes camelCase" test), and the `?vg_mark` / `?vg_legend`
-  documentation of `...`.
+  `test-mark-args.R`, `test-interactor-args.R` (each has a "the generic ...
+  takes camelCase" test), and the `?vg_mark`/`?vg_interactor` documentation of
+  `...`.
