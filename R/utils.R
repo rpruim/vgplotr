@@ -351,8 +351,9 @@ drop_unset <- function(args) {
   args[!vapply(args, identical, logical(1), vg_unset)]
 }
 
-# Shared by the vg_scale_*()/vg_guide_*() constructors (R/scale.R, R/guide.R):
-# builds a named list of mosaic attrs from a snake_case-argument-name ->
+# Shared by the vg_scale_*()/vg_guide_*() constructors (R/scale-generated.R,
+# R/guide-generated.R): builds a named list of mosaic attrs from a
+# snake_case-argument-name ->
 # camelCase-suffix lookup table (e.g., c(type = "Scale") for `xScale`),
 # reading each argument's current value out of the caller's own environment
 # and dropping the ones left at their vg_unset default. `prefix` is the
@@ -430,8 +431,9 @@ add_inset_attrs <- function(attrs, which, env, context) {
 #' opaque `(spec = NULL, ...)`. Used to build the thin
 #' `vg_scale_x()`/`vg_scale_y()`/`vg_scale_fx()`/`vg_scale_fy()` and
 #' `vg_guide_x()`/`vg_guide_y()`/`vg_guide_fx()`/`vg_guide_fy()` wrappers
-#' (R/scale.R, R/guide.R), plus `vg_legend_color()`/`vg_legend_opacity()`/
-#' `vg_legend_symbol()` (R/legend.R).
+#' (R/scale-generated.R, R/guide-generated.R), plus
+#' `vg_legend_color()`/`vg_legend_opacity()`/`vg_legend_symbol()`
+#' (R/legend.R).
 #'
 #' `drop` removes formals that don't apply to this particular wrapper
 #' without fixing them to a value -- e.g., `vg_scale_x()` drops
