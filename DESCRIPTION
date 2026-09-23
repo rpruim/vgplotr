@@ -41,7 +41,8 @@ Suggests:
     quarto,
     testthat (>= 3.0.0),
     tibble,
-    webshot2
+    webshot2,
+    mosaicData
 Config/testthat/edition: 3
 VignetteBuilder: quarto
 Config/roxygen2/version: 8.0.0
