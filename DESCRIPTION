@@ -52,6 +52,7 @@ Collate:
     'connector.R'
     'create.R'
     'data.R'
+    'datasets.R'
     'duckdb_cache.R'
     'duckdb_server.R'
     'export.R'
@@ -76,3 +77,4 @@ Collate:
     'transforms.R'
     'value-types.R'
     'widget.R'
+LazyData: true
