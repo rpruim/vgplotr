@@ -65,9 +65,6 @@ print.vg_legend <- function(x, ...) {
   cat("<vg_legend:", x$type, ">")
   if (!is.null(x$for_plot)) cat(" for", x$for_plot)
   cat("\n")
-  if (length(x$options)) {
-    str_opt <- vapply(x$options, deparse_short, character(1))
-    cat(paste0("  ", names(x$options), " = ", str_opt, collapse = "\n"), "\n")
-  }
+  print_fields(x$options)
   invisible(x)
 }

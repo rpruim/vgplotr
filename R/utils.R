@@ -332,6 +332,19 @@ deparse_short <- function(x) {
   paste(deparse(x, width.cutoff = 30L), collapse = " ")
 }
 
+# Shared by print.vg_mark()/print.vg_interactor()/print.vg_input()/
+# print.vg_legend()/print.vg_transform()/print.vgspec()/
+# print.vg_plot_fragment(): prints one "name = value" line per entry of
+# named list x (via deparse_short()), each prefixed with `indent`. A no-op
+# for an empty/NULL x, so callers can call it unconditionally after their
+# own header line.
+print_fields <- function(x, indent = "  ") {
+  if (!length(x)) return(invisible(NULL))
+  str_x <- vapply(x, deparse_short, character(1))
+  cat(paste0(indent, names(x), " = ", str_x, collapse = "\n"), "\n")
+  invisible(NULL)
+}
+
 # list(x = value) without deparsing/quasiquotation, for a dynamic name.
 named_list <- function(name, value) {
   out <- list(value)

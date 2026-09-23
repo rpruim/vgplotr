@@ -107,8 +107,7 @@ print.vg_plot_fragment <- function(x, ...) {
   }
   if (length(x$attrs)) {
     cat("  attrs:\n")
-    str_attrs <- vapply(x$attrs, deparse_short, character(1))
-    cat(paste0("    ", names(x$attrs), " = ", str_attrs, collapse = "\n"), "\n")
+    print_fields(x$attrs, indent = "    ")
   }
   invisible(x)
 }

@@ -371,12 +371,12 @@ print.vgspec <- function(x, ...) {
   if (length(x$data)) cat("  data:", paste(names(x$data), collapse = ", "), "\n")
   if (length(x$params)) cat("  params:", paste(names(x$params), collapse = ", "), "\n")
   if (length(x$attrs)) {
-    str_at <- vapply(x$attrs, deparse_short, character(1))
-    cat("  attrs:", paste0(names(x$attrs), " = ", str_at, collapse = ", "), "\n")
+    cat("  attrs:\n")
+    print_fields(x$attrs, indent = "    ")
   }
   if (length(x$plot_defaults)) {
-    str_pd <- vapply(x$plot_defaults, deparse_short, character(1))
-    cat("  plot_defaults:", paste0(names(x$plot_defaults), " = ", str_pd, collapse = ", "), "\n")
+    cat("  plot_defaults:\n")
+    print_fields(x$plot_defaults, indent = "    ")
   }
   if (is.null(x$layout)) {
     cat("  layout: (empty)\n")

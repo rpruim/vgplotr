@@ -207,9 +207,6 @@ vg_mark_ <- function(spec, mark, formula, ...) {
 #' @export
 print.vg_mark <- function(x, ...) {
   cat("<vg_mark:", x$mark, ">\n")
-  if (length(x$encodings)) {
-    str_enc <- vapply(x$encodings, deparse_short, character(1))
-    cat(paste0("  ", names(x$encodings), " = ", str_enc, collapse = "\n"), "\n")
-  }
+  print_fields(x$encodings)
   invisible(x)
 }

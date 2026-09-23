@@ -132,10 +132,7 @@ transform_name_suggestion <- function(fn_name) {
 print.vg_transform <- function(x, ...) {
   field_str <- vapply(x$field, deparse_short, character(1))
   cat("<vg_transform: ", x$key, "(", paste(field_str, collapse = ", "), ")>\n", sep = "")
-  if (length(x$options)) {
-    str_opt <- vapply(x$options, deparse_short, character(1))
-    cat(paste0("  ", names(x$options), " = ", str_opt, collapse = "\n"), "\n")
-  }
+  print_fields(x$options)
   invisible(x)
 }
 

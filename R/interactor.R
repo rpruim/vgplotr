@@ -102,19 +102,13 @@ vg_interactor_ <- function(spec, interactor, ...) {
 #' @export
 print.vg_interactor <- function(x, ...) {
   cat("<vg_interactor:", x$type, ">\n")
-  if (length(x$options)) {
-    str_opt <- vapply(x$options, deparse_short, character(1))
-    cat(paste0("  ", names(x$options), " = ", str_opt, collapse = "\n"), "\n")
-  }
+  print_fields(x$options)
   invisible(x)
 }
 
 #' @export
 print.vg_input <- function(x, ...) {
   cat("<vg_input:", x$type, ">\n")
-  if (length(x$options)) {
-    str_opt <- vapply(x$options, deparse_short, character(1))
-    cat(paste0("  ", names(x$options), " = ", str_opt, collapse = "\n"), "\n")
-  }
+  print_fields(x$options)
   invisible(x)
 }
