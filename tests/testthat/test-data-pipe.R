@@ -274,3 +274,52 @@ test_that("reset_auto_data_names() clears the session-wide registry", {
   spec <- vg_create() |> vg_data(data = df)
   expect_equal(names(spec$data), "data") # "data" is available again
 })
+
+test_that("vg_data_registry() is an empty 3-column data frame when nothing has been registered yet", {
+  reset_auto_data_names()
+  reg <- vg_data_registry()
+  expect_equal(names(reg), c("name", "kind", "source"))
+  expect_equal(nrow(reg), 0)
+})
+
+test_that("vg_data_registry() records name/kind/source for every source kind", {
+  reset_auto_data_names()
+  df <- data.frame(a = 1:3, b = 4:6)
+  vg_create() |> vg_data(name = "inline", data = df)
+  vg_create() |> vg_data(name = "local_file", file = "data/stocks.csv")
+  vg_create() |> vg_data(name = "remote", file = "https://example.com/data.parquet")
+  vg_create() |> vg_data(name = "sql", query = "SELECT * FROM t")
+
+  reg <- vg_data_registry()
+  by_name <- setNames(split(reg[c("kind", "source")], seq_len(nrow(reg))), reg$name)
+
+  expect_equal(by_name$inline$kind, "local data")
+  expect_equal(by_name$inline$source, "data.frame [3 x 2]")
+  expect_equal(by_name$local_file$kind, "file")
+  expect_equal(by_name$local_file$source, "data/stocks.csv")
+  expect_equal(by_name$remote$kind, "url")
+  expect_equal(by_name$remote$source, "https://example.com/data.parquet")
+  expect_equal(by_name$sql$kind, "query")
+  expect_equal(by_name$sql$source, "SELECT * FROM t")
+})
+
+test_that("vg_data_registry() picks up both auto-generated and explicit names", {
+  reset_auto_data_names()
+  df <- data.frame(a = 1:3)
+  df |> vg_mark_dot(x = ~a) # auto-named "data"
+  vg_create() |> vg_data(name = "explicit", data = df)
+
+  expect_setequal(vg_data_registry()$name, c("data", "explicit"))
+})
+
+test_that("vg_data_registry() reflects only the most recent registration when a name is reused", {
+  reset_auto_data_names()
+  df1 <- data.frame(a = 1:3)
+  df2 <- data.frame(b = 1:5, c = 1:5) # a different shape, registered under the same name
+  vg_create() |> vg_data(name = "shared", data = df1)
+  vg_create() |> vg_data(name = "shared", data = df2)
+
+  reg <- vg_data_registry()
+  expect_equal(nrow(reg), 1)
+  expect_equal(reg$source, "data.frame [5 x 2]")
+})

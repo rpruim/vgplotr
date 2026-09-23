@@ -121,32 +121,36 @@ vg_config <- function(spec, ...) {
 vg_data <- function(spec, name = NULL, data = NULL, ...) {
   stopifnot(is_vgspec(spec))
   if (is.null(name)) name <- auto_data_name(spec)
-  spec$data[[name]] <- if (!is.null(data)) list(data = data) else list(...)
+  src <- if (!is.null(data)) list(data = data) else list(...)
+  spec$data[[name]] <- src
+  record_data_registry_entry(name, src)
   spec
 }
 
-# Session-wide registry of every auto-generated data-source name ("data",
-# "data1", ...) that auto_data_name() has already handed out -- to ANY
-# spec, not just the current one. See auto_data_name() for why this needs
-# to span separate vg_create() chains: without it, this bit the
-# getting-started vignette for real (confirmed directly, browser console:
-# "Referenced column ... not found", from one plot's table silently
-# overwriting another's once both were rendered onto the same page).
-.vgplotr_auto_data_names <- new.env(parent = emptyenv())
-.vgplotr_auto_data_names$used <- character(0)
+# Session-wide log of every data-source name vg_data() has registered so
+# far this R session -- auto-generated or explicit, to ANY spec, not just
+# the current one -- keyed by name, each entry holding what that name most
+# recently referred to (see data_registry_kind()/data_registry_source()).
+# Backs both auto_data_name()'s collision avoidance (see its own comment
+# for why that needs to span separate vg_create() chains) and the public
+# vg_data_registry(). A single shared structure for both, rather than two
+# parallel ones, since "every name handed out so far" and "what every name
+# currently refers to" are the same underlying fact.
+.vgplotr_data_registry <- new.env(parent = emptyenv())
+.vgplotr_data_registry$entries <- list()
 
 # Test-only: clears the registry so a test can assert the naming sequence
 # restarts at "data" without leaking state from a test that ran earlier in
 # the same session. @noRd
 reset_auto_data_names <- function() {
-  assign("used", character(0), envir = .vgplotr_auto_data_names)
+  assign("entries", list(), envir = .vgplotr_data_registry)
 }
 
 # The first name, from "data", "data1", "data2", ..., that is unused both
 # in `spec$data` (this spec's own already-registered sources -- what lets
 # vg_data() called several times on one evolving spec still get "data",
-# "data1", "data2", ...) and in .vgplotr_auto_data_names$used (every
-# auto-name handed out so far this R session, regardless of spec).
+# "data1", "data2", ...) and in the session-wide registry (every name
+# handed out so far this session, regardless of spec).
 #
 # The second check is what actually matters for build_mark()'s
 # `some_df |> vg_mark_dot(...)` shortcut (see vg_mark()): that path always
@@ -162,15 +166,101 @@ reset_auto_data_names <- function() {
 # of anything pointing at the real cause.
 auto_data_name <- function(spec) {
   existing <- names(spec$data)
-  used <- .vgplotr_auto_data_names$used
+  used <- names(.vgplotr_data_registry$entries)
   i <- 0
   repeat {
     candidate <- if (i == 0) "data" else paste0("data", i)
     if (!(candidate %in% existing) && !(candidate %in% used)) break
     i <- i + 1
   }
-  .vgplotr_auto_data_names$used <- c(used, candidate)
   candidate
+}
+
+# Human-facing classification of a data source for vg_data_registry() --
+# distinct from vg_data_source_kind() (R/serialize.R), which classifies
+# for a different purpose (what rendering needs to preload) and doesn't
+# tell a URL apart from a query the way this needs to.
+data_registry_kind <- function(src) {
+  if (!is.null(src$data) && is.data.frame(src$data)) {
+    "local data"
+  } else if (!is.null(src$file)) {
+    if (grepl("^https?://", src$file, ignore.case = TRUE)) "url" else "file"
+  } else if (!is.null(src$query)) {
+    "query"
+  } else {
+    "other"
+  }
+}
+
+# A short, human-readable description of where a data source's rows
+# actually come from -- the data frame's dimensions, the file path/URL, or
+# the query text -- for vg_data_registry().
+data_registry_source <- function(src) {
+  if (!is.null(src$data) && is.data.frame(src$data)) {
+    sprintf("data.frame [%d x %d]", nrow(src$data), ncol(src$data))
+  } else if (!is.null(src$file)) {
+    src$file
+  } else if (!is.null(src$query)) {
+    src$query
+  } else {
+    NA_character_
+  }
+}
+
+# Records (or overwrites, if `name` was already registered -- e.g., the
+# same source re-registered under the same name across several chunks)
+# what `name` currently refers to, for vg_data_registry().
+record_data_registry_entry <- function(name, src) {
+  .vgplotr_data_registry$entries[[name]] <- list(
+    kind = data_registry_kind(src),
+    source = data_registry_source(src)
+  )
+}
+
+#' List every data source name used this session, and what it currently refers to
+#'
+#' A session-wide log of every name [vg_data()] has registered so far --
+#' whether given explicitly or auto-generated (see its `name` argument) --
+#' meant as a diagnostic aid. Since every `vg_render()` call on the same
+#' page shares one DuckDB instance, two different specs that end up using
+#' the same name for different data silently clobber each other once
+#' rendered together, with nothing in the R console to say so (see
+#' `vignette("getting-started")`'s "One DuckDB instance for an entire
+#' page" callout). Checking `vg_data_registry()` before rendering several
+#' specs onto the same page -- to confirm each name's `source` is really
+#' the data meant for it -- is a quick way to catch that kind of mistake
+#' before it happens instead of after.
+#'
+#' Reflects only the *most recent* registration for each name (matching
+#' what would actually be live in the shared DuckDB instance if every spec
+#' built so far were rendered onto one page right now), not a full history
+#' of every past registration. Only covers sources registered through
+#' [vg_data()]/[vg_create(data = )][vg_create()]/the `some_df |>
+#' vg_mark_dot(...)` shorthand -- a name that only appears inside a raw
+#' JSON/YAML string passed straight to [vg_render()]/[vg_widget()] isn't
+#' tracked here, since that path never goes through [vg_data()].
+#'
+#' @return A data frame with one row per distinct name: `name`; `kind`
+#'   (`"local data"`, `"file"`, `"url"`, `"query"`, or `"other"`); and
+#'   `source`, a short description (the data frame's dimensions, the file
+#'   path/URL, or the query text).
+#' @family spec functions
+#' @export
+vg_data_registry <- function() {
+  entries <- .vgplotr_data_registry$entries
+  if (!length(entries)) {
+    return(data.frame(
+      name = character(0), kind = character(0), source = character(0),
+      stringsAsFactors = FALSE
+    ))
+  }
+  data.frame(
+    name = names(entries),
+    kind = vapply(entries, `[[`, character(1), "kind"),
+    source = vapply(entries, `[[`, character(1), "source"),
+    stringsAsFactors = FALSE,
+    row.names = NULL
+  )
 }
 
 # Resolves an integer data_from (a 1-based index into `names_vec`, the

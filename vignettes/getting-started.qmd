@@ -222,7 +222,9 @@ implicit `"data"` name used when a data frame is piped directly into a
 mark (see "Some shortcuts" above) -- if more than one such plot appears
 on the same page, give each an explicit, distinct `data_from =` (or
 register the data yourself with `vg_data()`) so they don't overwrite
-each other.
+each other. `vg_data_registry()` lists every name registered so far this
+session and what it currently refers to -- a quick way to check for this
+before rendering, since nothing else will point out the mistake.
 :::
 
 We can obtain a subset of the data contained in the file using
@@ -256,6 +258,15 @@ vg_create() |>
   vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
   vg_mark_dot(temp_max ~ date, fill = "steelblue") |>
   vg_render()
+```
+
+`vg_data_registry()` shows every name registered so far this session --
+handy for checking that a name really points at the data you expect
+before rendering several specs onto the same page.
+
+```{r}
+#| label: data-registry
+vg_data_registry()
 ```
 
 

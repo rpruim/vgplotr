@@ -27,6 +27,7 @@ Other spec functions:
 \code{\link[=vg_config]{vg_config()}},
 \code{\link[=vg_create]{vg_create()}},
 \code{\link[=vg_data]{vg_data()}},
+\code{\link[=vg_data_registry]{vg_data_registry()}},
 \code{\link[=vg_data_url]{vg_data_url()}},
 \code{\link[=vg_params]{vg_params()}},
 \code{\link[=vg_plot_defaults]{vg_plot_defaults()}}
