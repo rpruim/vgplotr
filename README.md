@@ -38,6 +38,9 @@ Births2015 |>
   vg_mark_line(x = ~date, y = ~births, stroke = ~wday) |>
   vg_meta(title = "US Births in 2015") |>
   vg_render(mode = vg_render_mode)
+#> Warning: Data source 'data1' has ordered factor column(s) (wday) -- their level
+#> order isn't preserved when rendered. Set the matching scale's domain explicitly
+#> (e.g., x_domain = levels(data1$wday)) if the order matters.
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
@@ -60,7 +63,7 @@ vg_create() |>
       "in response."
     )
   ) |>
-  vg_data(name = "stocks", file = vg_data_url("stocks.parquet")) |>
+  vg_data(name = "stocks", file = vg_example_url("stocks.parquet")) |>
   vg_data(
     name = "labels",
     query = "SELECT MAX(Date) as Date, ARGMAX(Close, Date) AS Close, Symbol FROM stocks GROUP BY Symbol"

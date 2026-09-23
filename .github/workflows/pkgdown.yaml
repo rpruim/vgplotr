@@ -34,8 +34,21 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::.
+          extra-packages: any::pkgdown, any::rmarkdown, local::.
           needs: website
+
+      - name: Render pkgdown home page
+        # pkgdown/index.Rmd child-includes README.Rmd with live widgets
+        # embedded as <iframe>s (vg_render_mode <- "iframe"); the standalone
+        # widget HTML those iframes point at (man/figures/README-*.html) is
+        # gitignored (a knitr byproduct, not meant to be committed), so a
+        # fresh checkout never has it -- regenerate it here, before the
+        # site build's copy_figures() step (part of build_reference())
+        # copies whatever's in man/figures/ into docs/reference/figures/.
+        # Confirmed directly: skipping this step is exactly what leaves the
+        # deployed site's two home-page widgets 404ing.
+        run: rmarkdown::render("pkgdown/index.Rmd", knit_root_dir = normalizePath("."))
+        shell: Rscript {0}
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)

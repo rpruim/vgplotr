@@ -4,7 +4,7 @@ Each example recreates a page from <https://idl.uw.edu/mosaic/examples/>.
 Verification method: build the R spec, then compare `to_json(spec)`
 against the "JSON" tab on the corresponding mosaic example page (rather
 than rendering, per instruction -- rendering/visual verification is done
-separately). Data comes from `vg_data_url("<file>")` (mosaic's own
+separately). Data comes from `vg_example_url("<file>")` (mosaic's own
 `data/` directory on GitHub) rather than a local copy.
 
 The `.qmd` files themselves now live in `vignettes/articles/` (flat,
@@ -193,7 +193,7 @@ All ten are covered by new tests (`test-merge.R`, `test-plot-defaults.R`,
 ## Examples
 
 Status key: ✅ JSON matches (aside from the cosmetic differences above and
-the intentional `vg_data_url()` vs. relative-path difference) · ⚠️ gap/issue
+the intentional `vg_example_url()` vs. relative-path difference) · ⚠️ gap/issue
 noted below.
 
 ### Basic Marks & Inputs
@@ -287,7 +287,7 @@ All 47 examples across all 5 gallery categories (Basic Marks & Inputs,
 Data Transformation, Maps & Spatial Data, Multi-View Coordination,
 Density Visualizations) are recreated, and each one's `to_json()`
 output was verified to match mosaic's own reference JSON exactly (aside
-from the intentional `vg_data_url()` vs. relative-path difference and
+from the intentional `vg_example_url()` vs. relative-path difference and
 cosmetic object-key ordering). Along the way, this exercise found and
 fixed 10 real vgplotr bugs (see above), all covered by new regression
 tests, with the full test suite green throughout.

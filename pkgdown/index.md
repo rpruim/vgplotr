@@ -3,7 +3,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# {vgplotr}: An R interface to Mosaic vgplot
+# vgplotr: An R interface to Mosaic vgplot
 
 ## What is Mosaic?
 
@@ -30,8 +30,8 @@ Observable Plot to render SVG output.
 
 ## Bringing Mosaic to R
 
-The goal of {vgplotr} is to bring Mosaic functionality to R in a way
-that feels familiar to R users.
+The goal of vgplotr is to bring Mosaic functionality to R in a way that
+feels familiar to R users.
 
 ``` r
 library(vgplotr)
@@ -40,6 +40,9 @@ Births2015 |>
   vg_mark_line(x = ~date, y = ~births, stroke = ~wday) |>
   vg_meta(title = "US Births in 2015") |>
   vg_render(mode = vg_render_mode)
+#> Warning: Data source 'data1' has ordered factor column(s) (wday) -- their level
+#> order isn't preserved when rendered. Set the matching scale's domain explicitly
+#> (e.g., x_domain = levels(data1$wday)) if the order matters.
 ```
 
 <iframe src="reference/figures/README-unnamed-chunk-6-1.html" width="992" height="744" style="border: none;" loading="lazy">
@@ -47,7 +50,7 @@ Births2015 |>
 </iframe>
 
 Here is an example that shows some of the interactive capabilities of
-{vgplotr}:
+vgplotr:
 
 ``` r
 library(vgplotr)
@@ -64,7 +67,7 @@ vg_create() |>
       "in response."
     )
   ) |>
-  vg_data(name = "stocks", file = vg_data_url("stocks.parquet")) |>
+  vg_data(name = "stocks", file = vg_example_url("stocks.parquet")) |>
   vg_data(
     name = "labels",
     query = "SELECT MAX(Date) as Date, ARGMAX(Close, Date) AS Close, Symbol FROM stocks GROUP BY Symbol"
