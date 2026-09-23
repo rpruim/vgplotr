@@ -9,7 +9,7 @@ vg_widget(
   width = NULL,
   height = NULL,
   elementId = NULL,
-  use_cache = vg_duckdb_cache_status()$cached,
+  use_cache = getOption("vgplotr.use_cache", vg_duckdb_cache_status()$cached),
   connector = vg_default_connector(),
   ...
 )
@@ -45,12 +45,23 @@ the widget in either case.}
 
 \item{use_cache}{Whether this graphic should use the local duckdb-wasm
 engine cache (see \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}) if one exists. Defaults to
+\code{getOption("vgplotr.use_cache")} if that option is set, or otherwise
 whatever \code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}} currently reports, so it tracks the
 cache automatically; set to \code{FALSE} to force this one graphic to fetch
 the engine from the CDN even when a cache is present, or \code{TRUE} to
 request the cache explicitly (harmless, and equivalent to the default,
 when no cache exists -- it just falls back to the CDN). Ignored when
-\code{connector} isn't the default (there's no duckdb-wasm engine to cache).}
+\code{connector} isn't the default (there's no duckdb-wasm engine to cache).
+
+The \code{vgplotr.use_cache} option is meant for a whole document rather
+than one call -- e.g., a vignette's setup chunk setting
+\code{options(vgplotr.use_cache = FALSE)} so its \emph{built, shipped} output
+always references the CDN, regardless of whether the machine that
+happens to build it has a local cache. That matters because
+self-contained HTML embeds a cache directly as base64: confirmed
+directly, one vignette with a cache present at build time went from
+1.3 MB to 48 MB, purely depending on the building machine's own,
+otherwise-invisible cache state.}
 
 \item{connector}{Which database this graphic's SQL actually runs against:
 \code{\link[=vg_wasm_connector]{vg_wasm_connector()}} (the default -- DuckDB-Wasm in the browser, fully

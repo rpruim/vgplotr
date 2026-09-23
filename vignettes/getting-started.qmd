@@ -15,6 +15,13 @@ execute:
 #| include: false
 library(vgplotr)
 set.seed(12345)
+# Always reference DuckDB-Wasm from the CDN in this vignette's *built,
+# shipped* output, regardless of whether the machine building it happens
+# to have a local cache (vg_cache_duckdb()) -- a self-contained HTML
+# build embeds a cache directly as base64, which took this file from
+# 1.3 MB to 48 MB purely depending on that (otherwise invisible) cache
+# state. See ?vg_widget's `use_cache` docs.
+options(vgplotr.use_cache = FALSE)
 ```
 
 ## A grammar of interactive graphics

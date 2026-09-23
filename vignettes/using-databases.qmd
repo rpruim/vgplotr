@@ -10,6 +10,10 @@ engine: knitr
 
 ```{r setup}
 library(vgplotr)
+# Always reference DuckDB-Wasm from the CDN in this vignette's built,
+# shipped output -- see the same note in getting-started.qmd's setup
+# chunk, or ?vg_widget's `use_cache` docs.
+options(vgplotr.use_cache = FALSE)
 ```
 
 Every graphic vgplotr renders is ultimately a response to a live SQL 

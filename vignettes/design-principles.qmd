@@ -19,6 +19,10 @@ library(dplyr)
 library(gt)
 library(vgplotr)
 library(palmerpenguins)
+# Always reference DuckDB-Wasm from the CDN in this vignette's built,
+# shipped output -- see the same note in getting-started.qmd's setup
+# chunk, or ?vg_widget's `use_cache` docs.
+options(vgplotr.use_cache = FALSE)
 ```
 
 Part of learning a new graphics system is learning the 
