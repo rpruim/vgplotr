@@ -107,7 +107,13 @@ vg_config <- function(spec, ...) {
 #' @param name The name other parts of the spec use to refer to this data
 #'   (via `data_from =`/`filter_by =` on marks and interactors). Optional --
 #'   if omitted, an unused name is generated (`"data"`, then `"data1"`,
-#'   `"data2"`, ...), e.g., for the shorthand described in [vg_mark()].
+#'   `"data2"`, ...), e.g., for the shorthand described in [vg_mark()]. This
+#'   is unique across the whole R session, not just within this spec: every
+#'   `vg_render()` call on the same page shares one DuckDB instance (see
+#'   `vignette("getting-started")`), so two *separate* specs that both
+#'   omit `name` -- e.g., two `some_df |> vg_mark_dot(...)` shortcuts in one
+#'   document -- still get distinct names instead of silently clobbering
+#'   each other's table once rendered together.
 #' @param data An optional data frame to use as this data source.
 #' @param ... Data source options, e.g., `file =`, `query =`, `where =`.
 #' @family spec functions
@@ -119,14 +125,52 @@ vg_data <- function(spec, name = NULL, data = NULL, ...) {
   spec
 }
 
-# The first unused "data"/"data1"/"data2"/... name in `spec$data` -- used
-# when vg_data()'s own `name` is omitted, and by the vg_mark_*() shorthand
-# for piping a data frame directly in as `spec` (see vg_mark()).
+# Session-wide registry of every auto-generated data-source name ("data",
+# "data1", ...) that auto_data_name() has already handed out -- to ANY
+# spec, not just the current one. See auto_data_name() for why this needs
+# to span separate vg_create() chains: without it, this bit the
+# getting-started vignette for real (confirmed directly, browser console:
+# "Referenced column ... not found", from one plot's table silently
+# overwriting another's once both were rendered onto the same page).
+.vgplotr_auto_data_names <- new.env(parent = emptyenv())
+.vgplotr_auto_data_names$used <- character(0)
+
+# Test-only: clears the registry so a test can assert the naming sequence
+# restarts at "data" without leaking state from a test that ran earlier in
+# the same session. @noRd
+reset_auto_data_names <- function() {
+  assign("used", character(0), envir = .vgplotr_auto_data_names)
+}
+
+# The first name, from "data", "data1", "data2", ..., that is unused both
+# in `spec$data` (this spec's own already-registered sources -- what lets
+# vg_data() called several times on one evolving spec still get "data",
+# "data1", "data2", ...) and in .vgplotr_auto_data_names$used (every
+# auto-name handed out so far this R session, regardless of spec).
+#
+# The second check is what actually matters for build_mark()'s
+# `some_df |> vg_mark_dot(...)` shortcut (see vg_mark()): that path always
+# starts from a brand-new, empty vg_create(), so spec$data alone is always
+# empty there -- without a session-wide registry too, every such shortcut
+# would always get named "data", no matter how many others already exist.
+# That's harmless for one plot on a page, but once a *different* data
+# frame's shortcut plot ends up on the same page (mosaic-spec's `data:`
+# names are shared across every `vg_render()` call on a page -- see
+# vg_data()'s own `name` docs), the two tables collide: whichever finishes
+# loading last silently overwrites the other's, and any plot that queries
+# afterward gets a confusing DuckDB error about a missing column instead
+# of anything pointing at the real cause.
 auto_data_name <- function(spec) {
-  if (!("data" %in% names(spec$data))) return("data")
-  i <- 1
-  while (paste0("data", i) %in% names(spec$data)) i <- i + 1
-  paste0("data", i)
+  existing <- names(spec$data)
+  used <- .vgplotr_auto_data_names$used
+  i <- 0
+  repeat {
+    candidate <- if (i == 0) "data" else paste0("data", i)
+    if (!(candidate %in% existing) && !(candidate %in% used)) break
+    i <- i + 1
+  }
+  .vgplotr_auto_data_names$used <- c(used, candidate)
+  candidate
 }
 
 # Resolves an integer data_from (a 1-based index into `names_vec`, the

@@ -12,7 +12,13 @@ vg_data(spec, name = NULL, data = NULL, ...)
 \item{name}{The name other parts of the spec use to refer to this data
 (via \verb{data_from =}/\verb{filter_by =} on marks and interactors). Optional --
 if omitted, an unused name is generated (\code{"data"}, then \code{"data1"},
-\code{"data2"}, ...), e.g., for the shorthand described in \code{\link[=vg_mark]{vg_mark()}}.}
+\code{"data2"}, ...), e.g., for the shorthand described in \code{\link[=vg_mark]{vg_mark()}}. This
+is unique across the whole R session, not just within this spec: every
+\code{vg_render()} call on the same page shares one DuckDB instance (see
+\code{vignette("getting-started")}), so two \emph{separate} specs that both
+omit \code{name} -- e.g., two \code{some_df |> vg_mark_dot(...)} shortcuts in one
+document -- still get distinct names instead of silently clobbering
+each other's table once rendered together.}
 
 \item{data}{An optional data frame to use as this data source.}
 
