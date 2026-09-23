@@ -71,13 +71,34 @@ including whether DuckDB-Wasm has been cached locally.
 vg_info()
 ```
 
+:::{.callout-tip}
+#### Using native DuckDB
+
+To learn about using native DuckDB (locally or hosted on a server),
+see [*Using Databases with vgplotr*](using-databases.qmd).
+:::
+
 ## Non-interactive graphics
 
-### A single mark
-
+Before getting to interactive elements of graphics, let's begin
+by learning how to make graphics without interactive elements.
 vgplotr works by creating and then rendering a graphics specification.
-A piped workflow can add marks to the graphic and set various 
-graphic-level attributes.
+A piped workflow can 
+
+* register data sources, 
+* add marks (dots, lines, bars, etc.), 
+* add interactors (menus, sliders, interval selectors, etc.),
+* arrange the layout of the graphic, and 
+* set various plot- and graphic-level attributes.
+
+### A graphic with one mark
+
+For our first example, we
+
+* create a graphic specification with a custom title,
+* register one data source (a local data frame),
+* add one mark (a line mark), and 
+* specify the size of our graphic.
 
 ```{r}
 #| label: aapl-closes
@@ -87,9 +108,9 @@ aapl <- stocks |> dplyr::filter(Symbol == "AAPL")
 
 spec <-
   vg_create(title = "AAPL closing price") |>
-  vg_attributes(width = 680, height = 200) |>
   vg_data(name = "aapl", aapl) |>
-  vg_mark_line_y(y = ~Close, x = ~Date, data_from = "aapl")
+  vg_mark_line_y(y = ~Close, x = ~Date, data_from = "aapl") |>
+  vg_attributes(width = 680, height = 200)
 
 spec
 ```
@@ -102,7 +123,20 @@ graphic can be rendered.
 vg_render(spec)
 ```
 
-vgplotr specs can also be converted to native Mosaic YAML or JSON.
+
+### YAML and JSON
+
+vgplotr specs can also be converted to native Mosaic YAML or JSON, 
+which can be useful for debugging or for comparing to 
+Mosaic documentation. 
+
+:::{.callout-tip}
+#### Hiding the data
+
+Since local data is included in the 
+specification, it is often handy to hide this with
+`suppress_data = TRUE`, especially if the dataset is large.
+:::
 
 ```{r}
 #| label: yaml-spec
@@ -144,15 +178,18 @@ of some shortcuts.
 #| label: short-cuts
 aapl |>
   vg_mark_line_y(y = ~Close, x = ~Date, width = 680, height = 200) |>
+  vg_meta(title = "AAPL closing price") |>
   vg_render()
 ```
 
 ### Multiple marks
 
-Later marks in the same chain don't need to repeat `data_from =` either:
+Later marks in the same chain don't need to repeat `data_from =` 
+if all marks are using the same data source:
 any mark that doesn't set its own `data_from`
 (and whose mark type requires data) defaults to the spec's
-*first* registered data source. That makes simple multi-layer plots from
+*first* registered data source. 
+That makes simple multi-layer plots from
 one data source easy to build straight out of a pipe chain:
 
 ```{r}
@@ -160,6 +197,7 @@ one data source easy to build straight out of a pipe chain:
 aapl |>
   vg_mark_line_y(y = ~Close, x = ~Date, width = 680, height = 200) |>
   vg_mark_dot(y = ~Close, x = ~Date, fill = "steelblue") |>
+  vg_meta(title = "AAPL closing price") |>
   vg_render()
 ```
 
@@ -180,13 +218,14 @@ The optional `| fy ~ fx` sets y- and x-faceting.
 For marks that require two x-values or two y-values, 
 replace `x` or `y` with `x1 + x2` or `y1 + y2`.
 Unused channels can be omitted, but since R formulas always require a 
-right hand side, use, for example, `fy ~ .` to specify `fy` without 
-specifying `fx`.
+right hand side, use, for example, `a ~ .` to specify `y` or `fy` 
+without specifying `x` or `fx`.
 
 
 ```{r}
 #| label: formula
-mtcars |> vg_mark_dot(mpg ~ hp | cyl, fill = "steelblue", width = 500)
+mtcars |>
+  vg_mark_dot(mpg ~ hp | cyl ~ ., fill = "steelblue", width = 500)
 ```
 
 is equivalent to writing out every channel by hand:
@@ -194,7 +233,7 @@ is equivalent to writing out every channel by hand:
 ```{r}
 #| label: formula-expanded
 mtcars |>
-  vg_mark_dot(y = ~mpg, x = ~hp, fx = ~cyl, fill = "steelblue", width = 500)
+  vg_mark_dot(y = ~mpg, x = ~hp, fy = ~cyl, fill = "steelblue", width = 500)
 ```
 
 An explicit `x =`/`y =`/etc. alongside `formula`
@@ -211,6 +250,22 @@ Relative paths resolve against wherever the rendered document itself
 ends up, the same way a relative link or image would in an ordinary
 web page.
 
+:::{.callout-tip}
+#### Accessing Mosaic example data sets
+
+`vg_data_url()` returns the URL for a Mosaic example dataset
+from its name.
+
+:::
+
+```{r}
+#| label: vg-data-url
+vg_create() |>
+  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
+  vg_mark_dot(temp_max ~ date, fill = "steelblue") |>
+  vg_render()
+```
+
 :::{.callout-warning}
 #### One DuckDB instance for an entire *page*.
 Every `vg_render()` call on the same page
@@ -219,14 +274,22 @@ need to be registered once.  This also means that it is not
 possible to use the same name for different data sources
 in different specifications on the same page. This includes the
 implicit `"data1"`/`"data2"`/... names used when a data frame is piped
-directly into a mark (see "Some shortcuts" above) -- if more than one
-such plot appears on the same page, give each an explicit, distinct
-`data_from =` (or register the data yourself with `vg_data()`) so they
-don't overwrite each other. `vg_data_registry()` lists every name
+directly into a mark (see "Some shortcuts" above).
+
+Good practice is to explicity name data sources you plan to 
+reuse with distinct, meaningful names (not `data1`, `data2`, etc.).
+If a name gets reused, only the last use will remain in the 
+database, and any plots that rely on a previous data source
+assigned to that name will be incorrect or fail to render altogether
+(if the data source doesn't include information the graphic needs).
+
+`vg_data_registry()` lists every name
 registered so far this session and what it currently refers to -- a
 quick way to check for this before rendering, since nothing else will
 point out the mistake.
 :::
+
+### Using a subset of a data source
 
 We can obtain a subset of the data contained in the file using
 `where =` to declare the WHERE clause of an SQL query.
@@ -245,30 +308,7 @@ vg_create() |>
   vg_render()
 ```
 
-:::{.callout-tip}
-#### Accessing Mosaic example data sets
 
-`vg_data_url()` returns the URL for a Mosaic example dataset
-from its name.
-
-:::
-
-```{r}
-#| label: vg-data-url
-vg_create() |>
-  vg_data(name = "weather", file = vg_data_url("seattle-weather.parquet")) |>
-  vg_mark_dot(temp_max ~ date, fill = "steelblue") |>
-  vg_render()
-```
-
-`vg_data_registry()` shows every name registered so far this session --
-handy for checking that a name really points at the data you expect
-before rendering several specs onto the same page.
-
-```{r}
-#| label: data-registry
-vg_data_registry()
-```
 
 
 ## Graphics with multiple plots
@@ -299,6 +339,8 @@ vg_create() |>
 ```
 
 ## Interaction
+
+### Interactors
 
 Piping one mark straight into another appends it to the *same* plot,
 without needing to wrap them in `vg_plot()` explicitly. Interactors
@@ -338,7 +380,7 @@ param(brush)
 ```
 
 
-## Two linked plots with vg_vconcat()
+### Two linked plots with vg_vconcat()
 
 Now we create another version of our plot that responds to
 the brush by filtering the data (and zooming in on that data).
@@ -362,22 +404,30 @@ vg_create() |>
   vg_render()
 ```
 
+Some additional example of interaction appear below.
 
 ## Transform functions: binning and aggregation
 
-Encoding formulas can use transform functions like `vg_bin()`/`vg_count()`
+Mosaic does not have a histogram "mark" (or an other histogram primative).
+From the perspective of Mosaic, a histogram is a graphic with bar marks
+created from binned counts.  So we need to specify three things to 
+make a histogram:
+
+* the bar mark,
+* what to bin, and 
+* that we want to count how many items are in each bin.
+
+Channel encoding formulas can use transform functions like 
+`vg_bin()`/`vg_count()`
 (mirroring mosaic's own `bin`/`count` transforms) instead of a bare column
-reference. This reproduces the histogram pattern from mosaic's
-`flights-200k.yaml` example (`x: {bin: delay}`, `y: {count:}`), binning a
-continuous variable and counting rows per bin -- all computed by DuckDB, not
-in R.
+reference. The binning and counting for the histogram below are all done 
+in DuckDB, not in R.  
 
 ```{r}
 delays <-
   data.frame(delay = rgamma(2000, shape = 2, rate = 0.3) - 5)
 
-spec4 <-
-  vg_create() |>
+vg_create() |>
   vg_data(name = "delays", data = delays) |>
   vg_mark_rect_y(
     data_from = "delays",
@@ -386,20 +436,15 @@ spec4 <-
     fill = "steelblue",
     inset = 0.5
   ) |>
-  vg_attributes(width = 680, height = 200)
-
-spec4
+  vg_attributes(width = 680, height = 200) |>
+  vg_render()
 ```
 
-Every transform function also works called directly, without a formula --
+Transform functions call also be called directly, 
 useful for inspecting what it builds:
 
 ```{r}
 vg_bin(delay, step = 2)
-```
-
-```{r}
-vg_render(spec4)
 ```
 
 ## More marks
@@ -493,6 +538,7 @@ vg_create() |>
 
 By default, Mosaic plots do not include a boundary rectangle. For faceted
 graphics, such a frame can often make it easier to see the facets.
+`vg_mark_frame()` can be added to non-faceted plots as well.
 :::
 
 :::{.callout-warning}
@@ -530,7 +576,7 @@ So
     range = c("red", "darkgreen", "steelblue", "orange")
 ```
 
-below instructs that scale to show group A as red, group B as green, etc.
+below instructs the color scale to show group A as red, group B as green, etc.
 
 ```{r}
 pts <- data.frame(
@@ -561,6 +607,8 @@ spec. `vg_guide_color()`/`vg_guide_opacity()`/`vg_guide_r()` only set the
 `opacityTickFormat`) plot attributes; they neither add nor require a
 legend. -->
 
+### Setting attributes for multiple scales at once
+
 `vg_scale_all()`/`vg_guide_all()` set mosaic's plot-wide *default* scale/
 guide properties -- `align`/`inset`/`padding` and `axis`/`grid`/
 `ariaLabel`/`ariaDescription` respectively -- which apply to every
@@ -570,6 +618,10 @@ affect one axis, `vg_guide_all(grid = TRUE)` turns grid lines on for both
 axes at once, without repeating the call per axis (a later
 `vg_guide_x(grid = FALSE)` would still override it just for `x`, since the
 per-axis attribute always wins over the default).
+
+`vg_scale_position()` and `vg_scale_facet()` are similar, but affect only
+the x- and y- or fx- and fy-scales, respectively.
+
 
 ```{r}
 pts |>
@@ -642,7 +694,8 @@ different color and the plot updates.
 color_picker <- vg_menu(
   label = "Color",
   as = param(dotcolor),
-  options = c("steelblue", "orange", "firebrick")
+  options = c("steelblue", "orange", "firebrick"),
+  value = "firebrick"
 )
 
 colored_plot <-
@@ -680,11 +733,15 @@ Celsius to Fahrenheit as needed.
 
 Two things to note here:
 
-* In the SQL expression parameter names are preceded with `$`. 
-(`param(temp_unit)` does almost the same thing, returning `\`$temp_unit\``
-since R variable names cannot begin with `$` unless escaped.)
+*   In the SQL expression parameter names are preceded with `$`. 
+    (`param(temp_unit)` does almost the same thing but escaping appropriately
+    since R variable names cannot begin with `$` unless escaped.)
 
-* SQL expressions are not allowed everywhere in the Mosaic specification.
+    ```{r}
+    param(temp_unit)
+    ```
+
+*   SQL expressions are not allowed everywhere in the Mosaic specification.
 In particular, they are not allowed in the `label =` of `vg_guide_y()`.
 We have worked around this by having the value of the parameter be the
 text we want, since a parameter value is allowed in this context.
@@ -722,7 +779,8 @@ vg_create() |>
 #### Adding space to the layout
 
 We can use `vg_hspace()` and `vg_vspace()` to add additional space between
-concatenated elements.
+concatenated elements.  Without the extra space in the example above,
+the menu is uncomfortably close to the plot.
 :::
 
 ## `to_json()`/`to_yaml()`: converting a spec to mosaic's own format
