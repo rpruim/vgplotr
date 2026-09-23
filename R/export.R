@@ -1,21 +1,23 @@
-#' Convert a vgspec (or plot fragment) to mosaic-spec JSON
+#' Convert a vgspec (or plot fragment) to mosaic-spec JSON or YAML
 #'
-#' Produces the same kind of JSON mosaic's own spec files use (e.g., the
-#' examples under `docs/public/specs/json/` in uwdata/mosaic) -- useful for
-#' inspecting exactly what a spec built with vgplotr's R API translates to,
-#' or for saving/sharing it independent of R. Works on a full `vgspec` (from
-#' [vg_create()]) or a bare fragment that hasn't been wrapped in one -- a
-#' chain of piped marks/interactors, a [vg_vconcat()]/[vg_hconcat()] layout,
-#' or a standalone [vg_legend()]/[vg_slider()]/etc.
+#' `to_json()`/`to_yaml()` produce the same kind of JSON/YAML mosaic's own
+#' spec files use (e.g., the examples under `docs/public/specs/json/`
+#' (`.../yaml/`) in uwdata/mosaic) -- useful for inspecting exactly what a
+#' spec built with vgplotr's R API translates to, or for saving/sharing it
+#' independent of R. Both work on a full `vgspec` (from [vg_create()]) or a
+#' bare fragment that hasn't been wrapped in one -- a chain of piped
+#' marks/interactors, a [vg_vconcat()]/[vg_hconcat()] layout, or a
+#' standalone [vg_legend()]/[vg_slider()]/etc.
 #'
-#' Unlike [vg_render()]'s own internal widget payload, this always keeps
+#' Unlike [vg_render()]'s own internal widget payload, both always keep
 #' data sources exactly as mosaic-spec itself represents them: a data frame
 #' becomes an inline array of row objects (mosaic-spec's own
 #' `{data: [...]}` form), and a `file =`/`query =` source is left as a
 #' plain reference rather than having its content read and embedded.
 #'
 #' @param spec A `vgspec`, or a bare layout fragment.
-#' @param pretty Whether to indent the JSON for readability (default `TRUE`).
+#' @param pretty Whether to indent the JSON for readability (default
+#'   `TRUE`). `to_json()` only.
 #' @param suppress_data If `TRUE`, omit data sources defined *with* the spec
 #'   (an inline data frame, e.g., `vg_data(name, data = df)`, serialized as
 #'   mosaic-spec's own `{data: [...]}` row-object array) from the output --
@@ -24,9 +26,13 @@
 #'   `query =`, `type = "spatial"`, ...) are left alone either way, since
 #'   they're already just a reference, not embedded content. Default
 #'   `FALSE`.
-#' @param ... Additional arguments passed on to [jsonlite::toJSON()].
-#' @return A `json` object (see [jsonlite::toJSON()]); printing it shows the
-#'   raw JSON text.
+#' @param ... Additional arguments passed on to [jsonlite::toJSON()] (for
+#'   `to_json()`) or [yaml::as.yaml()] (for `to_yaml()`).
+#' @return `to_json()` returns a `json` object (see [jsonlite::toJSON()]);
+#'   printing it shows the raw JSON text. `to_yaml()` returns a `vg_yaml`
+#'   object (a character string with a `print()` method that writes it out
+#'   unquoted/unescaped); use [writeLines()] or `cat(..., file = ...)` to
+#'   save either to disk.
 #' @family spec export functions
 #' @export
 to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, ...) {
@@ -52,27 +58,7 @@ to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, ...) {
   do.call(jsonlite::toJSON, args)
 }
 
-#' Convert a vgspec (or plot fragment) to mosaic-spec YAML
-#'
-#' The YAML counterpart to [to_json()] -- see its documentation for what
-#' gets converted and how. Produces the same kind of YAML mosaic's own spec
-#' files use (e.g., the examples under `docs/public/specs/yaml/` in
-#' uwdata/mosaic).
-#'
-#' @param spec A `vgspec`, or a bare layout fragment.
-#' @param suppress_data If `TRUE`, omit data sources defined *with* the spec
-#'   (an inline data frame, e.g., `vg_data(name, data = df)`, serialized as
-#'   mosaic-spec's own `{data: [...]}` row-object array) from the output --
-#'   handy for a compact, human-readable spec when the actual data isn't
-#'   the point. Data sources specified *by name* elsewhere (`file =`,
-#'   `query =`, `type = "spatial"`, ...) are left alone either way, since
-#'   they're already just a reference, not embedded content. Default
-#'   `FALSE`.
-#' @param ... Additional arguments passed on to [yaml::as.yaml()].
-#' @return A `vg_yaml` object (a character string with a `print()` method
-#'   that writes it out unquoted/unescaped); use [writeLines()] or
-#'   `cat(..., file = ...)` to save it to disk.
-#' @family spec export functions
+#' @rdname to_json
 #' @export
 to_yaml <- function(spec, suppress_data = FALSE, ...) {
   # yaml::as.yaml() defaults to YAML 1.1's `yes`/`no` for logicals, which a

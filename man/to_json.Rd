@@ -2,14 +2,18 @@
 % Please edit documentation in R/export.R
 \name{to_json}
 \alias{to_json}
-\title{Convert a vgspec (or plot fragment) to mosaic-spec JSON}
+\alias{to_yaml}
+\title{Convert a vgspec (or plot fragment) to mosaic-spec JSON or YAML}
 \usage{
 to_json(spec, pretty = TRUE, suppress_data = FALSE, ...)
+
+to_yaml(spec, suppress_data = FALSE, ...)
 }
 \arguments{
 \item{spec}{A \code{vgspec}, or a bare layout fragment.}
 
-\item{pretty}{Whether to indent the JSON for readability (default \code{TRUE}).}
+\item{pretty}{Whether to indent the JSON for readability (default
+\code{TRUE}). \code{to_json()} only.}
 
 \item{suppress_data}{If \code{TRUE}, omit data sources defined \emph{with} the spec
 (an inline data frame, e.g., \code{vg_data(name, data = df)}, serialized as
@@ -20,30 +24,31 @@ the point. Data sources specified \emph{by name} elsewhere (\verb{file =},
 they're already just a reference, not embedded content. Default
 \code{FALSE}.}
 
-\item{...}{Additional arguments passed on to \code{\link[jsonlite:toJSON]{jsonlite::toJSON()}}.}
+\item{...}{Additional arguments passed on to \code{\link[jsonlite:toJSON]{jsonlite::toJSON()}} (for
+\code{to_json()}) or \code{\link[yaml:as.yaml]{yaml::as.yaml()}} (for \code{to_yaml()}).}
 }
 \value{
-A \code{json} object (see \code{\link[jsonlite:toJSON]{jsonlite::toJSON()}}); printing it shows the
-raw JSON text.
+\code{to_json()} returns a \code{json} object (see \code{\link[jsonlite:toJSON]{jsonlite::toJSON()}});
+printing it shows the raw JSON text. \code{to_yaml()} returns a \code{vg_yaml}
+object (a character string with a \code{print()} method that writes it out
+unquoted/unescaped); use \code{\link[=writeLines]{writeLines()}} or \code{cat(..., file = ...)} to
+save either to disk.
 }
 \description{
-Produces the same kind of JSON mosaic's own spec files use (e.g., the
-examples under \verb{docs/public/specs/json/} in uwdata/mosaic) -- useful for
-inspecting exactly what a spec built with vgplotr's R API translates to,
-or for saving/sharing it independent of R. Works on a full \code{vgspec} (from
-\code{\link[=vg_create]{vg_create()}}) or a bare fragment that hasn't been wrapped in one -- a
-chain of piped marks/interactors, a \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}} layout,
-or a standalone \code{\link[=vg_legend]{vg_legend()}}/\code{\link[=vg_slider]{vg_slider()}}/etc.
+\code{to_json()}/\code{to_yaml()} produce the same kind of JSON/YAML mosaic's own
+spec files use (e.g., the examples under \verb{docs/public/specs/json/}
+(\verb{.../yaml/}) in uwdata/mosaic) -- useful for inspecting exactly what a
+spec built with vgplotr's R API translates to, or for saving/sharing it
+independent of R. Both work on a full \code{vgspec} (from \code{\link[=vg_create]{vg_create()}}) or a
+bare fragment that hasn't been wrapped in one -- a chain of piped
+marks/interactors, a \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}} layout, or a
+standalone \code{\link[=vg_legend]{vg_legend()}}/\code{\link[=vg_slider]{vg_slider()}}/etc.
 }
 \details{
-Unlike \code{\link[=vg_render]{vg_render()}}'s own internal widget payload, this always keeps
+Unlike \code{\link[=vg_render]{vg_render()}}'s own internal widget payload, both always keep
 data sources exactly as mosaic-spec itself represents them: a data frame
 becomes an inline array of row objects (mosaic-spec's own
 \verb{\{data: [...]\}} form), and a \verb{file =}/\verb{query =} source is left as a
 plain reference rather than having its content read and embedded.
-}
-\seealso{
-Other spec export functions:
-\code{\link[=to_yaml]{to_yaml()}}
 }
 \concept{spec export functions}
