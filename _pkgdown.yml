@@ -122,6 +122,12 @@ reference:
   contents:
   - has_concept("info functions")
 
+- title: Data 
+  desc: >
+    Datasets used in examples.
+  contents:
+  - NPSvisits
+
 - title: Reference
   desc: >
     Shared vocabulary for the `<option | option | ...>` notation shown in

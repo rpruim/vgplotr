@@ -7,7 +7,8 @@
 #' \describe{
 #'   \item{UnitCode}{A character string. Official 4-character alphanumeric park unit code (e.g., "YELL", "GRCA").}
 #'   \item{UnitName}{A character string. Full name of the National Park Service unit.}
-#'   \item{State}{A character string. Two-letter postal abbreviation for the primary state or territory in which the unit is located.}
+#'   \item{State}{A character string. Two-letter postal abbreviation for the primary state or territory in which the unit is located.
+#'         For parks than span state borders, a comma-separated list of state abbreviations.}
 #'   \item{Latitude}{A numeric value. Latitude coordinate of the park centroid in decimal degrees.}
 #'   \item{Longitude}{A numeric value. Longitude coordinate of the park centroid in decimal degrees.}
 #'   \item{Year}{An integer. Four-digit calendar year.}
