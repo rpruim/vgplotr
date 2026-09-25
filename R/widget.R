@@ -93,6 +93,13 @@ spec_top_level_size <- function(x) {
 #'   when you'd want this and its sharing/security caveats). Defaults to
 #'   the session's default connector ([vg_set_default_connector()]), so you
 #'   don't need to repeat this on every call once you've set one.
+#' @param coordinator Options for mosaic's client-side query coordinator (its
+#'   caching, query consolidation, pre-aggregation and console logging), made
+#'   with [vg_coordinator()]. Defaults to `getOption("vgplotr.coordinator")`,
+#'   so `options(vgplotr.coordinator = vg_coordinator(logging = "errors"))`
+#'   sets it for a whole document; `NULL` leaves mosaic's own defaults. The
+#'   first widget on a page to render creates the coordinator, and its options
+#'   are the ones used (see [vg_coordinator()]).
 #' @param link Optional name of a *link group*, a single string. Live widgets
 #'   on the same web page that give the same name share their params and
 #'   selections, so a brush made in one plot filters the plots in the others
@@ -127,11 +134,15 @@ vg_widget <- function(
   elementId = NULL,
   use_cache = getOption("vgplotr.use_cache", vg_duckdb_cache_status()$cached),
   connector = vg_default_connector(),
+  coordinator = getOption("vgplotr.coordinator"),
   link = NULL,
   ...
 ) {
   if (!is_vg_connector(connector)) {
     stop("`connector` must be vg_wasm_connector() or vg_duckdb_connector().", call. = FALSE)
+  }
+  if (!is.null(coordinator) && !is_vg_coordinator(coordinator)) {
+    stop("`coordinator` must be NULL or the result of vg_coordinator().", call. = FALSE)
   }
   if (!is.null(link) && !(is.character(link) && length(link) == 1 && !is.na(link) && nzchar(link))) {
     stop("`link` must be NULL or a single, non-empty string naming a link group.", call. = FALSE)
@@ -161,8 +172,9 @@ vg_widget <- function(
     # immediately, in the same render, rather than only from the next call on.
     dep <- if (isTRUE(use_cache)) vg_duckdb_cache_dependency() else NULL
   }
-  # Not part of the mosaic spec: it is read by inst/htmlwidgets/vgplotr.js.
+  # Neither is part of the mosaic spec: inst/htmlwidgets/vgplotr.js reads them.
   x$link <- link
+  x$coordinator <- if (!is.null(coordinator)) coordinator_payload(coordinator)
   # Data frames in `tables` need to become arrays of row objects in JSON
   # (what the JS side expects), not htmlwidgets' columnar default. NULL
   # needs to become JSON `null` (jsonlite's default turns it into `{}`),

@@ -50,6 +50,7 @@ Collate:
     'attrs-generated.R'
     'concat.R'
     'connector.R'
+    'coordinator.R'
     'create.R'
     'data.R'
     'datasets.R'

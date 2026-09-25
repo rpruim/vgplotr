@@ -13,7 +13,7 @@ or an already-built widget (i.e., the result of calling
 
 \item{...}{Passed on to whichever of \code{\link[=vg_widget]{vg_widget()}}, \code{\link[=vg_snapshot]{vg_snapshot()}},
 or \code{\link[=vg_iframe]{vg_iframe()}} ends up handling the request (e.g., \verb{width =},
-\verb{use_cache =}, \verb{connector =} or \verb{link =} for \code{\link[=vg_widget]{vg_widget()}}, \verb{delay =} for
+\verb{use_cache =}, \verb{connector =}, \verb{coordinator =} or \verb{link =} for \code{\link[=vg_widget]{vg_widget()}}, \verb{delay =} for
 \code{\link[=vg_snapshot]{vg_snapshot()}}).
 Each of those three accepts and silently ignores arguments meant for
 one of the other two, so it's fine to pass along options for a mode
@@ -54,6 +54,7 @@ setting \code{mode} appropriately.
 }
 \seealso{
 Other rendering functions:
+\code{\link[=vg_coordinator]{vg_coordinator()}},
 \code{\link[=vg_iframe]{vg_iframe()}},
 \code{\link[=vg_snapshot]{vg_snapshot()}},
 \code{\link[=vg_widget]{vg_widget()}}

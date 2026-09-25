@@ -158,6 +158,37 @@ spec3 |> vg_render(connector = vg_wasm_connector())
 vg_set_default_connector()  # back to vg_wasm_connector()
 ```
 
+## Tables Mosaic creates in your database
+
+To keep interactive filtering fast, Mosaic *pre-aggregates*: when you brush
+a plot that other plots filter by, it materializes small summary tables (data
+cubes) in the database, in a schema named `mosaic`, and answers the other
+plots from those. With DuckDB-Wasm they live and die with the page. With a
+native connector they are ordinary tables in the database behind it, created by
+the same SQL the plots run (for the default private connection, that means
+`mosaic.preagg_...` tables you'll see if you look while a graphic is being
+used).
+
+That is usually what you want, but if the connection you handed to
+`vg_duckdb_connector()` is a database you'd rather Mosaic didn't write to, turn
+it off with `vg_coordinator()`. Graphics still work; the plots just query the
+underlying table each time instead.
+
+```r
+spec |>
+  vg_render(
+    connector = vg_duckdb_connector(con),
+    coordinator = vg_coordinator(preaggregate = FALSE)
+  )
+
+# or once, for every graphic in a document
+options(vgplotr.coordinator = vg_coordinator(preaggregate = FALSE))
+```
+
+`vg_coordinator()` also switches off Mosaic's query cache and query merging
+and quiets its browser-console messages (`logging = "errors"`); see
+`?vg_coordinator`.
+
 ## Sharing and security
 
 This article's examples aren't demonstrated live, because native-DuckDB

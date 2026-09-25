@@ -11,6 +11,7 @@ vg_widget(
   elementId = NULL,
   use_cache = getOption("vgplotr.use_cache", vg_duckdb_cache_status()$cached),
   connector = vg_default_connector(),
+  coordinator = getOption("vgplotr.coordinator"),
   link = NULL,
   ...
 )
@@ -69,6 +70,14 @@ reached over a local server started automatically -- see its docs for
 when you'd want this and its sharing/security caveats). Defaults to
 the session's default connector (\code{\link[=vg_set_default_connector]{vg_set_default_connector()}}), so you
 don't need to repeat this on every call once you've set one.}
+
+\item{coordinator}{Options for mosaic's client-side query coordinator (its
+caching, query consolidation, pre-aggregation and console logging), made
+with \code{\link[=vg_coordinator]{vg_coordinator()}}. Defaults to \code{getOption("vgplotr.coordinator")},
+so \code{options(vgplotr.coordinator = vg_coordinator(logging = "errors"))}
+sets it for a whole document; \code{NULL} leaves mosaic's own defaults. The
+first widget on a page to render creates the coordinator, and its options
+are the ones used (see \code{\link[=vg_coordinator]{vg_coordinator()}}).}
 
 \item{link}{Optional name of a \emph{link group}, a single string. Live widgets
 on the same web page that give the same name share their params and
@@ -134,6 +143,7 @@ convenience layered on top of what mosaic itself does; \code{description}/
 \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}, \code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}}
 
 Other rendering functions:
+\code{\link[=vg_coordinator]{vg_coordinator()}},
 \code{\link[=vg_iframe]{vg_iframe()}},
 \code{\link[=vg_render]{vg_render()}},
 \code{\link[=vg_snapshot]{vg_snapshot()}}

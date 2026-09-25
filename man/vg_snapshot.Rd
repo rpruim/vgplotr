@@ -55,6 +55,7 @@ the \code{webshot2} package), which lets the widget's JS actually run.
 }
 \seealso{
 Other rendering functions:
+\code{\link[=vg_coordinator]{vg_coordinator()}},
 \code{\link[=vg_iframe]{vg_iframe()}},
 \code{\link[=vg_render]{vg_render()}},
 \code{\link[=vg_widget]{vg_widget()}}

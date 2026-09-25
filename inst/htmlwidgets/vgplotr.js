@@ -99,9 +99,54 @@
     return x.connector && x.connector.type === "rest" ? "rest:" + x.connector.uri : "wasm";
   }
 
+  // vg_coordinator()'s options (R/coordinator.R), sent as `x.coordinator`:
+  // { cache, consolidate, preagg: { enabled, schema }, logging }. Applied
+  // once, when this page's coordinator is created; see getCoordinator().
+  function makeLogger(level) {
+    if (level === "none") return null; // mosaic swaps in its silent logger
+    if (level === "errors") {
+      var quiet = function () {};
+      return {
+        debug: quiet, info: quiet, log: quiet, group: quiet, groupCollapsed: quiet, groupEnd: quiet,
+        warn: console.warn.bind(console), error: console.error.bind(console),
+      };
+    }
+    return console; // mosaic's own default
+  }
+
+  function applyCoordinatorOptions(coord, o) {
+    // consolidate(true) keeps hold of the cache in use when it is switched on,
+    // so it has to be switched off and on again around a change of cache.
+    coord.manager.consolidate(false);
+    coord.manager.cache(o.cache);
+    coord.manager.consolidate(o.consolidate);
+    coord.preaggregator.enabled = o.preagg.enabled;
+    coord.preaggregator.schema = o.preagg.schema;
+    coord.logger(makeLogger(o.logging));
+  }
+
+  // The coordinator is one per page (per connector), created by whichever
+  // widget renders first, so its options are that widget's. A later widget
+  // asking for different options can't change them: say so, instead of
+  // silently ignoring it. A widget that asks for none is fine either way.
+  function noteCoordinatorOptions(x, key) {
+    var applied = (window.__vgplotrCoordinatorOptions = window.__vgplotrCoordinatorOptions || {});
+    var requested = x.coordinator ? JSON.stringify(x.coordinator) : null;
+    if (!(key in applied)) {
+      applied[key] = requested;
+    } else if (requested !== null && requested !== applied[key]) {
+      console.warn(
+        "vgplotr: this page's coordinator was already created " +
+        (applied[key] === null ? "with mosaic's defaults" : "with " + applied[key]) +
+        " by an earlier widget, so this widget's coordinator options (" + requested + ") are ignored."
+      );
+    }
+  }
+
   function getCoordinator(mosaicCore, duckdbWasm, x) {
     window.__vgplotrCoordinators = window.__vgplotrCoordinators || {};
     var key = coordinatorKey(x);
+    noteCoordinatorOptions(x, key);
     if (!window.__vgplotrCoordinators[key]) {
       window.__vgplotrCoordinators[key] = (async function () {
         var coord = mosaicCore.coordinator();
@@ -119,6 +164,7 @@
           connector = mosaicCore.restConnector({ uri: x.connector.uri });
         }
         coord.databaseConnector(connector);
+        if (x.coordinator) applyCoordinatorOptions(coord, x.coordinator);
         return coord;
       })();
     }

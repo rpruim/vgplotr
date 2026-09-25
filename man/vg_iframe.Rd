@@ -106,6 +106,7 @@ itself.
 
 \seealso{
 Other rendering functions:
+\code{\link[=vg_coordinator]{vg_coordinator()}},
 \code{\link[=vg_render]{vg_render()}},
 \code{\link[=vg_snapshot]{vg_snapshot()}},
 \code{\link[=vg_widget]{vg_widget()}}
