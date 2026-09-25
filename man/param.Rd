@@ -34,6 +34,7 @@ Other spec functions:
 \code{\link[=vg_data_registry]{vg_data_registry()}},
 \code{\link[=vg_example_url]{vg_example_url()}},
 \code{\link[=vg_meta]{vg_meta()}},
+\code{\link[=vg_on_render]{vg_on_render()}},
 \code{\link[=vg_params]{vg_params()}},
 \code{\link[=vg_plot_defaults]{vg_plot_defaults()}},
 \code{\link[=vg_selection]{vg_selection()}}

@@ -33,7 +33,8 @@ vg_create <- function(data = NULL, ...) {
       config = list(),
       layout = NULL,
       attrs = routed$attrs,
-      plot_defaults = list()
+      plot_defaults = list(),
+      on_render = list()
     ),
     class = "vgspec"
   )
@@ -372,6 +373,7 @@ print.vgspec <- function(x, ...) {
   if (length(x$meta)) cat("  meta:", paste(names(x$meta), collapse = ", "), "\n")
   if (length(x$data)) cat("  data:", paste(names(x$data), collapse = ", "), "\n")
   if (length(x$params)) cat("  params:", paste(names(x$params), collapse = ", "), "\n")
+  if (length(x$on_render)) cat("  on_render:", length(x$on_render), "hook(s)\n")
   if (length(x$attrs)) {
     cat("  attrs:\n")
     print_fields(x$attrs, indent = "    ")

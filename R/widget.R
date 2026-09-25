@@ -174,6 +174,7 @@ vg_widget <- function(
   }
   # Neither is part of the mosaic spec: inst/htmlwidgets/vgplotr.js reads them.
   x$link <- link
+  x$onRender <- on_render_payload(spec)
   x$coordinator <- if (!is.null(coordinator)) coordinator_payload(coordinator)
   # Data frames in `tables` need to become arrays of row objects in JSON
   # (what the JS side expects), not htmlwidgets' columnar default. NULL

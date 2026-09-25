@@ -38,6 +38,8 @@ column itself (\code{opacity = ~col}) or use \code{\link[=sql]{sql()}}.
 Unlike \code{\link[=sql]{sql()}}, \code{js()} is not translated from R and takes no \code{\link[=param]{param()}}
 pieces, and it works as an argument value (\code{opacity = js(...)}) but not
 inside a mapping formula.
+
+See \code{vignette("custom-javascript")} for examples, including \code{\link[=vg_on_render]{vg_on_render()}}.
 }
 \examples{
 js("() => 0.7")

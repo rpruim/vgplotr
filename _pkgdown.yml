@@ -23,6 +23,8 @@ navbar:
         href: articles/design-principles.html
       - text: Using Databases
         href: articles/using-databases.html
+      - text: Custom JavaScript
+        href: articles/custom-javascript.html
     examples:
       text: Examples
       href: articles/examples.html
@@ -143,6 +145,10 @@ articles:
 - title: Using Databases
   contents:
   - using-databases
+
+- title: Custom JavaScript
+  contents:
+  - custom-javascript
 
 - title: Design Principles
   contents:

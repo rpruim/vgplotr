@@ -1,0 +1,164 @@
+---
+title: "Custom JavaScript with vgplotr"
+vignette: >
+  %\VignetteIndexEntry{Custom JavaScript with vgplotr}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+format: html
+toc: true
+engine: knitr
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(vgplotr)
+set.seed(12345)
+# Reference DuckDB-Wasm from the CDN in this vignette's *built* output,
+# regardless of whether the machine building it happens
+# to have a local cache (vg_cache_duckdb()).  See ?vg_widget's `use_cache`.
+options(vgplotr.use_cache = FALSE)
+```
+
+Mosaic specs are data: they can name a column or hold a literal, but they can't
+hold code. Most graphics never need to. This article is for the times when
+one does, and it assumes you're comfortable reading a little JavaScript. It
+covers two functions, both of which run in the browser, with the page's own
+privileges. As with any JavaScript you put in a page, only use code you wrote or
+trust.
+
+- `js()` supplies a *value*, most usefully a function, for an option.
+- `vg_on_render()` runs a function once the graphic has rendered, with access to
+  its params, selections and database queries.
+
+New to vgplotr? Start with `vignette("getting-started")`.
+
+## Function-valued options: `js()`
+
+`js()` marks a string of JavaScript as a *value* rather than text, so it reaches
+the plot as a function instead of being read as a column name. Observable Plot
+accepts a function for many options, called with the row's index as its second
+argument (mosaic keeps data in columns, so the first argument is `undefined`).
+Here it dims every other point:
+
+```{r}
+#| label: js-opacity
+
+alternating <- data.frame(x = 1:20, y = cumsum(rnorm(20)))
+
+alternating |>
+  vg_mark_dot(
+    x = ~x, y = ~y, r = 6, fill = "steelblue",
+    opacity = js("(d, i) => i % 2 ? 1 : 0.25")
+  ) |>
+  vg_render()
+```
+
+Because the function only sees the row's position, `js()` suits constants and
+values computed from the index. To draw from a column's values, map the column
+itself (`opacity = ~col`) or use `sql()`. See `?js`.
+
+## Custom behavior: `vg_on_render()`
+
+Some things a spec can't express at all: a *client* that runs its own query and
+reacts to a selection, or a *clause* you publish into a selection from your own
+controls. `vg_on_render()` takes a JavaScript function that vgplotr calls once
+the graphic has rendered. It receives one object holding everything it needs:
+
+| Property | What it is |
+|---|---|
+| `element` | the graphic's root DOM element; append your own elements to it |
+| `params` | a `Map` of every param and selection, including ones that are only referred to, like an interactor's `as = param(brush)` |
+| `coordinator` | the graphic's mosaic coordinator, which runs its queries |
+| `vg` | the vgplot API bound to that coordinator, including the SQL builders (`vg.Query`, `vg.sql`, `vg.count()`, ...) |
+| `mosaic` | the `mosaic-core` module: `MosaicClient`, `Selection`, and the clause helpers such as `mosaic.clauseInterval()` |
+| `makeClient(options)` | mosaic's `makeClient()`, already connected to this graphic |
+
+Use this `makeClient()` rather than `mosaic.makeClient()`, which connects to a
+different, global coordinator.
+
+### An example: a live count and a toggle
+
+Below, the graphic adds a label with a custom client that counts the rows
+inside the brush, plus a button that restricts the selection to `x` between 40 and 60
+and takes the restriction off again. The client re-runs its query whenever the
+selection changes, whether the change comes from the brush or from the button,
+and the two combine: with both, only points in the overlap are counted. (The
+plot below the brush shows only the selected points, so you can see the effect.)
+
+```{r}
+#| label: on-render
+
+uniform_points <- data.frame(x = runif(200, 0, 100), y = runif(200, 0, 100))
+
+vg_create() |>
+  vg_data("uniform_points", uniform_points) |>
+  vg_params(brush = vg_selection("crossfilter")) |>
+  vg_vconcat(
+    vg_mark_dot(
+      x = ~x, y = ~y, r = 3, fill = "gray", data_from = "uniform_points",
+      width = 500, height = 160
+    ) |>
+      vg_interval_x(as = param(brush)),
+    vg_mark_dot(
+      x = ~x, y = ~y, r = 3, fill = "steelblue", data_from = "uniform_points",
+      filter_by = param(brush), width = 500, height = 160
+    )
+  ) |>
+  vg_on_render(js("({ element, params, makeClient, vg, mosaic }) => {
+    const brush = params.get('brush');
+    const panel = element.appendChild(document.createElement('div'));
+    const label = panel.appendChild(document.createElement('span'));
+    const button = panel.appendChild(document.createElement('button'));
+
+    // The restriction is on while the button's own clause is in the selection.
+    // Reading that back, instead of keeping a separate flag, means the button
+    // is right however the selection changes.
+    const restricted = () => brush.clauses.some(clause => clause.source === button);
+    const sync = () => {
+      button.textContent = restricted() ? 'Remove [40, 60] restriction' : 'Restrict to [40, 60]';
+    };
+    brush.addEventListener('value', sync);
+    sync();
+
+    // A clause with no interval takes the button's clause back out.
+    button.onclick = () => brush.update(
+      mosaic.clauseInterval('x', restricted() ? null : [40, 60], { source: button })
+    );
+
+    makeClient({
+      selection: brush,
+      query: filter => vg.Query.from('uniform_points').select({ n: vg.count() }).where(filter),
+      queryResult: data => { label.textContent = [...data][0].n + ' of 200 points selected  '; }
+    });
+  }")) |>
+  vg_render()
+```
+
+A few things to notice:
+
+- The count comes from a *client*: `makeClient()` is given the selection to
+  listen to (`selection: brush`) and a `query` function that turns the
+  selection's current filter into SQL. Whenever the selection changes, mosaic
+  calls `query` again and hands the result to `queryResult`.
+- The button publishes a *clause*: `mosaic.clauseInterval()` builds one for a
+  column and an interval, tagged with the `source` that made it. Publishing
+  another clause from the same source replaces the earlier one, and a clause with
+  no interval (`null`) removes it, which is how the brush clears itself too.
+- The table is named `uniform_points`, rather than something generic, because every
+  graphic on a page shares one database. Two graphics on one page that use the
+  same table name for different data overwrite each other.
+
+The function may be `async`, and you can add several hooks with more calls to
+`vg_on_render()`; they run in order. If a hook throws, the error is shown under
+the graphic.
+
+## What to know
+
+- The code runs once per rendering, in the browser, and can only see what the
+  context object gives it.
+- Hooks are not part of mosaic-spec, so `to_json()` and `to_yaml()` leave them
+  out, with a warning. Likewise they apply to a spec built with `vg_create()`,
+  not to a JSON or YAML string given to `vg_widget()`.
+- Hooks are for live output. In a non-HTML output, where `vg_render()` falls
+  back to a static snapshot, there is nothing to click.

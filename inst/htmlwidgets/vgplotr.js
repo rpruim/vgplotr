@@ -361,11 +361,44 @@
     // This widget's plots and inputs talk to its own coordinator (the one for
     // its connector), not mosaic's global singleton: astToDOM() builds its
     // API context from `api`, defaulting to one bound to the singleton.
+    var api = mod.createAPIContext({ coordinator: coord });
     var app = await mod.mosaicSpec.astToDOM(ast, {
-      api: mod.createAPIContext({ coordinator: coord }),
+      api: api,
       params: group ? group.params : undefined,
     });
     el.appendChild(app.element);
+
+    await runOnRender(x, {
+      element: app.element,
+      params: app.params,
+      coordinator: coord,
+      vg: api,
+      mosaic: mod.mosaicCore,
+      // mosaic's makeClient() defaults to the global coordinator, which is
+      // not this widget's, so hand out one bound to the right one.
+      makeClient: function (options) {
+        return mod.mosaicCore.makeClient(Object.assign({ coordinator: coord }, options));
+      },
+    });
+  }
+
+  // vg_on_render() hooks (R/on-render.R): JavaScript functions, sent as
+  // strings in `x.onRender` (a lone one arrives as a bare string, not an
+  // array), called in order once the graphic is in the page.
+  async function runOnRender(x, context) {
+    var hooks = [].concat(x.onRender || []);
+    for (var i = 0; i < hooks.length; i++) {
+      var label = "vgplotr: vg_on_render() hook " + (i + 1) + " of " + hooks.length;
+      var hook = evalJs(hooks[i]);
+      if (typeof hook !== "function") {
+        throw new Error(label + " must be JavaScript that evaluates to a function, not " + typeof hook + ".");
+      }
+      try {
+        await hook(context);
+      } catch (err) {
+        throw new Error(label + " failed: " + ((err && err.message) || err));
+      }
+    }
   }
 
   HTMLWidgets.widget({

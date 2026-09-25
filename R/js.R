@@ -27,6 +27,8 @@
 #' pieces, and it works as an argument value (`opacity = js(...)`) but not
 #' inside a mapping formula.
 #'
+#' See `vignette("custom-javascript")` for examples, including [vg_on_render()].
+#'
 #' @param code A single string of JavaScript source that evaluates to the
 #'   value wanted, e.g., `"() => 0.7"` or `"(d, i) => i % 2 ? 1 : 0.3"`.
 #' @family transform functions

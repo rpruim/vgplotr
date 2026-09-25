@@ -36,6 +36,7 @@
 #' @family spec export functions
 #' @export
 to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, ...) {
+  warn_on_render_dropped(spec)
   # Built via modifyList()/do.call() rather than passed as literal named
   # arguments alongside `...`, so a caller who explicitly supplies one of
   # these defaults (e.g., `auto_unbox = FALSE`) overrides it cleanly instead
@@ -61,6 +62,7 @@ to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, ...) {
 #' @rdname to_json
 #' @export
 to_yaml <- function(spec, suppress_data = FALSE, ...) {
+  warn_on_render_dropped(spec)
   # yaml::as.yaml() defaults to YAML 1.1's `yes`/`no` for logicals, which a
   # YAML-1.2-core-schema parser (e.g., the JS `js-yaml` library mosaic itself
   # is likely to use) reads back as the plain strings "yes"/"no", not

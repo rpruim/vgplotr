@@ -868,3 +868,7 @@ For data too large for the browser, or that actually lives in another
 database (Postgres, MySQL, SQLite, via DuckDB's own federation
 extensions), see `vignette("using-databases")` for `vg_duckdb_connector()`,
 an opt-in way to render against a real, native DuckDB process instead.
+
+For the rare graphic that needs behavior a spec can't express -- an option that
+is a JavaScript function, or a custom query that reacts to a selection -- see
+`vignette("custom-javascript")`.

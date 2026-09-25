@@ -69,6 +69,7 @@ Collate:
     'legend.R'
     'mark.R'
     'marks-generated.R'
+    'on-render.R'
     'param.R'
     'plot.R'
     'render.R'
