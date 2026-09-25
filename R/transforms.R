@@ -213,6 +213,11 @@ rm(.name, .spec)
 #' @param orderby,partitionby,rows,range,groups,exclude Window options,
 #'   shared by aggregate and window transforms: control the ordering,
 #'   partitioning, and frame of the window the transform is computed over.
+#'   `rows`, `range` and `groups` each take a pair of frame offsets, measured
+#'   from the current row: how far the frame reaches before it, then after it
+#'   (numbers, `NULL` for unbounded, or date/time intervals such as
+#'   [vg_days()]; see [vg_intervals], including a caveat about which of these
+#'   currently render).
 #' @family transform functions
 #' @name vg_transforms
 #' @aliases vg_bin vg_column vg_date_month vg_date_month_day vg_date_day vg_centroid vg_centroid_x vg_centroid_y vg_geojson vg_argmax vg_argmin vg_avg vg_count vg_covariance vg_covar_pop vg_first vg_geomean vg_last vg_max vg_min vg_median vg_mode vg_product vg_quantile vg_stddev vg_stddev_pop vg_sum vg_variance vg_var_pop vg_row_number vg_rank vg_dense_rank vg_percent_rank vg_cume_dist vg_ntile vg_lag vg_lead vg_first_value vg_last_value vg_nth_value

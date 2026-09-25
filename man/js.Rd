@@ -45,6 +45,7 @@ js("() => 0.7")
 \seealso{
 Other transform functions:
 \code{\link[=sql]{sql()}},
+\code{\link{vg_intervals}},
 \code{\link{vg_transforms}}
 }
 \concept{transform functions}

@@ -35,6 +35,7 @@ value (\code{y = sql(...)}) or inside a mapping formula (\code{y = ~ sql(...)}).
 \seealso{
 Other transform functions:
 \code{\link[=js]{js()}},
+\code{\link{vg_intervals}},
 \code{\link{vg_transforms}}
 }
 \concept{transform functions}

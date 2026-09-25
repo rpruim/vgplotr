@@ -484,6 +484,12 @@ serialize_value <- function(x) {
     serialize_sql_expr(x)
   } else if (is_vg_js(x)) {
     serialize_js(x)
+  } else if (is_vg_interval(x)) {
+    serialize_interval(x)
+  } else if (is.list(x) && identical(class(x), "list")) {
+    # a plain (possibly named) list: serialize what's inside it, e.g. a
+    # window frame `list(vg_days(-7), 0)`
+    lapply(x, serialize_value)
   } else {
     x
   }
