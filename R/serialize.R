@@ -482,6 +482,8 @@ serialize_value <- function(x) {
     serialize_transform(x)
   } else if (is_vg_sql_expr(x)) {
     serialize_sql_expr(x)
+  } else if (is_vg_js(x)) {
+    serialize_js(x)
   } else {
     x
   }

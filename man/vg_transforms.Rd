@@ -74,6 +74,7 @@ resulting \code{vg_transform} object.
 }
 \seealso{
 Other transform functions:
+\code{\link[=js]{js()}},
 \code{\link[=sql]{sql()}}
 }
 \concept{transform functions}

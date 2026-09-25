@@ -349,6 +349,7 @@ override_attrs <- function(defaults, overrides) {
 }
 
 deparse_short <- function(x) {
+  if (is_vg_param(x) || is_vg_sql_expr(x) || is_vg_js(x)) return(format(x))
   paste(deparse(x, width.cutoff = 30L), collapse = " ")
 }
 

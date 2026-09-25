@@ -180,6 +180,39 @@
     }
   }
 
+  // R's js("() => 0.7") reaches the page as {js: "() => 0.7"} (a vgplotr
+  // extension to mosaic-spec: JSON can't carry a function, and mosaic's
+  // parseSpec() would read that object as a transform). Swap each such
+  // marker for the value its code evaluates to *before* parseSpec(), which
+  // passes a non-object option value (a function) through as a literal.
+  // Copies rather than edits x.spec, so a re-render starts from markers
+  // again. Never descends into the spec's data block or an inline `data:
+  // [...]` array: those are table rows, where a column named "js" would
+  // otherwise look like a marker.
+  function evalJs(code) {
+    try {
+      return (0, eval)("(" + code + ")");
+    } catch (err) {
+      throw new Error("vgplotr: could not evaluate js(" + JSON.stringify(code) + "): " + err.message);
+    }
+  }
+
+  function resolveJs(v, key) {
+    if (Array.isArray(v)) return key === "data" ? v : v.map(function (e) { return resolveJs(e); });
+    if (v === null || typeof v !== "object") return v;
+    var keys = Object.keys(v);
+    if (keys.length === 1 && keys[0] === "js" && typeof v.js === "string") return evalJs(v.js);
+    var out = {};
+    keys.forEach(function (k) { out[k] = resolveJs(v[k], k); });
+    return out;
+  }
+
+  function resolveSpecJs(spec) {
+    var out = {};
+    Object.keys(spec).forEach(function (k) { out[k] = k === "data" ? spec[k] : resolveJs(spec[k], k); });
+    return out;
+  }
+
   async function renderVgplotr(el, x) {
     var mod = await waitForBundle();
 
@@ -189,7 +222,7 @@
       await loadFiles(coord, x.files);
     }
 
-    var ast = mod.mosaicSpec.parseSpec(x.spec);
+    var ast = mod.mosaicSpec.parseSpec(resolveSpecJs(x.spec));
     var app = await mod.mosaicSpec.astToDOM(ast);
     el.appendChild(app.element);
   }

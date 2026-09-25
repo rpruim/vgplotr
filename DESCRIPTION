@@ -63,6 +63,7 @@ Collate:
     'info.R'
     'interactor.R'
     'interactors-generated.R'
+    'js.R'
     'legend.R'
     'mark.R'
     'marks-generated.R'
