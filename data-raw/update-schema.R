@@ -164,6 +164,29 @@ for (nm in c("Menu", "Search", "Slider", "Table")) {
   )
 }
 
+# Interactors mosaic's runtime parser accepts but its JSON schema omits.
+# parseSpec() recognizes every directive vgplot exports (plotInteractorNames()
+# is Object.keys(interactorDirectives)), but PlotInteractor lists only
+# NearestX/NearestY and Toggle/ToggleX/ToggleY: `nearest` (both x and y; its
+# Nearest interface exists in mosaic-spec's Nearest.ts but isn't in the
+# PlotInteractor union) and `toggleZ` (toggle over the z channel) never made
+# it in. Each takes exactly the options of a sibling schema type -- confirmed
+# in vgplot's interactors.js, where nearest()/toggleZ() differ from
+# nearestX()/toggleY() only in the `pointer`/`channels` they fix -- so clone
+# that sibling's properties instead of hand-writing them. A future schema
+# that lists one of these itself is skipped: it is already generated.
+runtime_only_interactors <- c(nearest = "NearestX", toggleZ = "ToggleY")
+for (nm in names(runtime_only_interactors)) {
+  if (nm %in% interactor_types) next
+  sibling <- interactor_defs[[defs[[runtime_only_interactors[[nm]]]]$properties$select$const]]
+  stopifnot(!is.null(sibling))
+  interactor_defs[[nm]] <- list(
+    description = paste0("A ", nm, " interactor."),
+    properties = sibling$properties
+  )
+  interactor_types <- c(interactor_types, nm)
+}
+
 plot_attrs <- sort(names(defs$PlotAttributes$properties))
 
 # Some property names exist in *both* a mark/interactor's own schema (e.g.,

@@ -21,7 +21,9 @@
   "toggle",
   "toggleX",
   "toggleY",
-  "toggleColor"
+  "toggleColor",
+  "nearest",
+  "toggleZ"
 )
 
 .vg_input_types <- c(
@@ -307,6 +309,36 @@ vg_toggle_y <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 #' @export
 vg_toggle_color <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
   vg_interactor_(spec, "toggleColor", as = as, peers = peers, ...)
+}
+
+#' A nearest interactor.
+#'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
+#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
+#' @param as `<param()>` The output selection.
+#' @param channels `<character vector>` The encoding channels whose domain values should be selected.
+#' @param fields `<character vector>` The fields (database column names) to use in generated selection clause predicates.
+#' @param max_radius `<number>` The maximum radius of a nearest selection (default 40).
+#' @param ... Additional options or plot-level attributes.
+#' @family interactor functions
+#' @export
+vg_nearest <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, max_radius = vg_unset, ...) {
+  vg_interactor_(spec, "nearest", as = as, channels = channels, fields = fields, maxRadius = max_radius, ...)
+}
+
+#' A toggleZ interactor.
+#'
+#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#'
+#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
+#' @param as `<param()>` The output selection.
+#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
+#' @param ... Additional options or plot-level attributes.
+#' @family interactor functions
+#' @export
+vg_toggle_z <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
+  vg_interactor_(spec, "toggleZ", as = as, peers = peers, ...)
 }
 
 #' A menu input component.

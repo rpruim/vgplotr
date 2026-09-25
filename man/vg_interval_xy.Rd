@@ -42,6 +42,7 @@ Other interactor functions:
 \code{\link[=vg_interval_x]{vg_interval_x()}},
 \code{\link[=vg_interval_y]{vg_interval_y()}},
 \code{\link[=vg_menu]{vg_menu()}},
+\code{\link[=vg_nearest]{vg_nearest()}},
 \code{\link[=vg_nearest_x]{vg_nearest_x()}},
 \code{\link[=vg_nearest_y]{vg_nearest_y()}},
 \code{\link[=vg_pan]{vg_pan()}},
@@ -57,6 +58,7 @@ Other interactor functions:
 \code{\link[=vg_toggle]{vg_toggle()}},
 \code{\link[=vg_toggle_color]{vg_toggle_color()}},
 \code{\link[=vg_toggle_x]{vg_toggle_x()}},
-\code{\link[=vg_toggle_y]{vg_toggle_y()}}
+\code{\link[=vg_toggle_y]{vg_toggle_y()}},
+\code{\link[=vg_toggle_z]{vg_toggle_z()}}
 }
 \concept{interactor functions}

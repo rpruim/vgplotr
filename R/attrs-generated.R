@@ -317,7 +317,9 @@
   "menu" = c("as", "column", "field", "filterBy", "from", "label", "listMatch", "options", "value"),
   "search" = c("as", "column", "field", "filterBy", "from", "label", "type"),
   "slider" = c("as", "column", "field", "filterBy", "from", "label", "max", "min", "select", "step", "value", "width"),
-  "table" = c("align", "as", "columns", "filterBy", "from", "height", "maxWidth", "rowBatch", "width")
+  "table" = c("align", "as", "columns", "filterBy", "from", "height", "maxWidth", "rowBatch", "width"),
+  "nearest" = c("as", "channels", "fields", "maxRadius"),
+  "toggleZ" = c("as", "peers")
 )
 
 # Every option a legend (vg_legend()/vg_legend_color()/etc.) accepts --
