@@ -180,9 +180,17 @@ for (nm in c("Menu", "Search", "Slider", "Table")) {
 # nearestX()/toggleY() only in the `pointer`/`channels` they fix -- so clone
 # that sibling's properties instead of hand-writing them. A future schema
 # that lists one of these itself is skipped: it is already generated.
+#
+# uwdata/mosaic#1269 (merged 2026-09-25, not yet in a release when this was
+# written; 0.31.0 lacks it) adds both to PlotInteractor. Once MOSAIC_VERSION
+# is a release that has it, this block does nothing, and says so below.
 runtime_only_interactors <- c(nearest = "NearestX", toggleZ = "ToggleY")
+now_in_schema <- character()
 for (nm in names(runtime_only_interactors)) {
-  if (nm %in% interactor_types) next
+  if (nm %in% interactor_types) {
+    now_in_schema <- c(now_in_schema, nm)
+    next
+  }
   sibling <- interactor_defs[[defs[[runtime_only_interactors[[nm]]]]$properties$select$const]]
   stopifnot(!is.null(sibling))
   interactor_defs[[nm]] <- list(
@@ -190,6 +198,21 @@ for (nm in names(runtime_only_interactors)) {
     properties = sibling$properties
   )
   interactor_types <- c(interactor_types, nm)
+}
+if (length(now_in_schema)) {
+  message(
+    "[update-schema] mosaic-spec@", MOSAIC_VERSION, "'s schema now lists ",
+    paste0("`", now_in_schema, "`", collapse = " and "), " itself, so the ",
+    "runtime_only_interactors workaround is no longer needed for ",
+    if (length(now_in_schema) == length(runtime_only_interactors)) "either" else "it", ".\n",
+    "  ", if (length(now_in_schema) == length(runtime_only_interactors)) "Delete" else "Trim",
+    " the runtime_only_interactors block in data-raw/update-schema.R",
+    if (length(now_in_schema) == length(runtime_only_interactors)) {
+      ", reword the header comment of tests/testthat/test-runtime-only-interactors.R,\n  and delete the matching entry under \"Upstream issues to watch\" in AGENTS.md."
+    } else {
+      " (and the matching entry in AGENTS.md)."
+    }
+  )
 }
 
 plot_attrs <- sort(names(defs$PlotAttributes$properties))

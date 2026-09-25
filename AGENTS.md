@@ -104,6 +104,27 @@ number and turns `0` into `CURRENT ROW`, but writes an interval's sign straight
 into SQL, so `vg_days()` etc. reject negatives. That is mosaic's design, not
 part of this bug.
 
+### `nearest` and `toggleZ` missing from the schema (mosaic-spec 0.31.0)
+
+mosaic's runtime parser accepts every interactor vgplot exports, but the JSON
+schema's `PlotInteractor` union listed only `NearestX`/`NearestY` and
+`Toggle`/`ToggleX`/`ToggleY`, so the generator produced no `vg_nearest()` or
+`vg_toggle_z()`. uwdata/mosaic#1269 (merged 2026-09-25, part of the tracking
+issue #1264) adds both to the union; it is not in a published release yet
+(0.31.0 is the latest).
+
+Workaround: the `runtime_only_interactors` block in `data-raw/update-schema.R`
+clones `NearestX`'s / `ToggleY`'s properties for them. It skips any name the
+schema already lists, so it does nothing once `MOSAIC_VERSION` is a release with
+the fix -- and `update-schema.R` prints a notice when that happens. Checked
+against a schema built from upstream `main` (which includes the PR): the
+generator ran cleanly and its output differed only in the *order* of the
+entries, with identical wrapper code.
+
+When the notice appears: delete the `runtime_only_interactors` block, reword the
+header comment of `tests/testthat/test-runtime-only-interactors.R` (its
+assertions stay valid), and delete this entry.
+
 ## Open design questions
 
 Things deliberately left undecided, to revisit rather than forget.
