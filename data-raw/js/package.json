@@ -2,10 +2,11 @@
   "name": "vgplotr-bundle-build",
   "private": true,
   "type": "module",
-  "description": "Dev-only tooling to bundle the mosaic JS runtime (mosaic-spec/mosaic-core/duckdb-wasm) into inst/htmlwidgets/lib/mosaic-bundle.min.js. Not part of the R package itself. Versions here must match MOSAIC_VERSION/DUCKDB_WASM_VERSION in build.js and in inst/htmlwidgets/vgplotr.js.",
+  "description": "Dev-only tooling to bundle the mosaic JS runtime (mosaic-spec/mosaic-core/vgplot/duckdb-wasm) into inst/htmlwidgets/lib/mosaic-bundle.min.js. Not part of the R package itself. Versions here must match MOSAIC_VERSION/DUCKDB_WASM_VERSION in build.js and in inst/htmlwidgets/vgplotr.js.",
   "dependencies": {
     "@uwdata/mosaic-spec": "0.31.0",
     "@uwdata/mosaic-core": "0.31.0",
+    "@uwdata/vgplot": "0.31.0",
     "@duckdb/duckdb-wasm": "1.29.0"
   },
   "devDependencies": {

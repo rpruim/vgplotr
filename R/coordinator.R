@@ -12,11 +12,13 @@
 #' `options(vgplotr.coordinator = vg_coordinator(...))` once for a whole
 #' document (like `vgplotr.use_cache`; see [vg_widget()]).
 #'
-#' The coordinator is shared by every widget on a page, and the first widget
-#' to render creates it. Its options are the ones that count: a later widget
-#' that asks for different ones is told so in the browser console and
-#' otherwise ignored. To use a setting, give it to every widget (the
-#' `vgplotr.coordinator` option does that).
+#' Widgets on a page that use the same `connector` share one coordinator, and
+#' the first of them to render creates it. Its options are the ones that
+#' count: a later widget that asks for different ones is told so in the browser
+#' console and otherwise ignored. To use a setting, give it to every widget (the
+#' `vgplotr.coordinator` option does that). Widgets that use different
+#' connectors, e.g. one on [vg_duckdb_connector()] and one on the default, each
+#' get their own coordinator.
 #'
 #' @param cache Whether to keep query results in the browser and reuse them
 #'   when the same query is asked again (default `TRUE`). Turn off to see every

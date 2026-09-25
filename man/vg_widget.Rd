@@ -76,8 +76,8 @@ caching, query consolidation, pre-aggregation and console logging), made
 with \code{\link[=vg_coordinator]{vg_coordinator()}}. Defaults to \code{getOption("vgplotr.coordinator")},
 so \code{options(vgplotr.coordinator = vg_coordinator(logging = "errors"))}
 sets it for a whole document; \code{NULL} leaves mosaic's own defaults. The
-first widget on a page to render creates the coordinator, and its options
-are the ones used (see \code{\link[=vg_coordinator]{vg_coordinator()}}).}
+first widget on a page (using a given \code{connector}) to render creates the
+coordinator, and its options are the ones used (see \code{\link[=vg_coordinator]{vg_coordinator()}}).}
 
 \item{link}{Optional name of a \emph{link group}, a single string. Live widgets
 on the same web page that give the same name share their params and

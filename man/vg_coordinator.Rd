@@ -52,11 +52,13 @@ Pass the result to \code{\link[=vg_widget]{vg_widget()}}/\code{\link[=vg_render]
 \code{options(vgplotr.coordinator = vg_coordinator(...))} once for a whole
 document (like \code{vgplotr.use_cache}; see \code{\link[=vg_widget]{vg_widget()}}).
 
-The coordinator is shared by every widget on a page, and the first widget
-to render creates it. Its options are the ones that count: a later widget
-that asks for different ones is told so in the browser console and
-otherwise ignored. To use a setting, give it to every widget (the
-\code{vgplotr.coordinator} option does that).
+Widgets on a page that use the same \code{connector} share one coordinator, and
+the first of them to render creates it. Its options are the ones that
+count: a later widget that asks for different ones is told so in the browser
+console and otherwise ignored. To use a setting, give it to every widget (the
+\code{vgplotr.coordinator} option does that). Widgets that use different
+connectors, e.g. one on \code{\link[=vg_duckdb_connector]{vg_duckdb_connector()}} and one on the default, each
+get their own coordinator.
 }
 \examples{
 vg_coordinator(logging = "errors")

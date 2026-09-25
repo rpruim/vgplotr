@@ -86,10 +86,14 @@
 
   // A page can hold multiple vgplotr widgets; those using the same backend
   // share one Coordinator (and, for wasm, one DuckDB-WASM instance) rather
-  // than each spinning up their own -- keyed so a page mixing the default
-  // wasm connector with a vg_duckdb_connector() one (R/connector.R) gets
-  // two independent coordinators instead of the first widget's choice
-  // silently winning for every other widget on the page. Tables are
+  // than each spinning up their own. A page mixing the default wasm
+  // connector with a vg_duckdb_connector() one (R/connector.R) needs two
+  // *separate* coordinators, one per connector, each widget bound to its own
+  // (see renderVgplotr()): mosaic's global coordinator() singleton is a
+  // single object with a single connector, so building both keys on it
+  // made them the same object, and whichever connector was set last won --
+  // a native-DuckDB widget then silently drew the browser database's table
+  // of the same name (confirmed directly: 5 points instead of 7). Tables are
   // namespaced by the names the user gave vg_data(), so sharing one
   // coordinator is fine as long as different widgets don't reuse the same
   // table name for different data. Each entry is built from a promise, set
@@ -100,8 +104,9 @@
   }
 
   // vg_coordinator()'s options (R/coordinator.R), sent as `x.coordinator`:
-  // { cache, consolidate, preagg: { enabled, schema }, logging }. Applied
-  // once, when this page's coordinator is created; see getCoordinator().
+  // { cache, consolidate, preagg: { enabled, schema }, logging }, which are
+  // the options of mosaic's `new Coordinator(connector, options)`, given when
+  // this page's coordinator for a connector is created; see getCoordinator().
   function makeLogger(level) {
     if (level === "none") return null; // mosaic swaps in its silent logger
     if (level === "errors") {
@@ -114,18 +119,12 @@
     return console; // mosaic's own default
   }
 
-  function applyCoordinatorOptions(coord, o) {
-    // consolidate(true) keeps hold of the cache in use when it is switched on,
-    // so it has to be switched off and on again around a change of cache.
-    coord.manager.consolidate(false);
-    coord.manager.cache(o.cache);
-    coord.manager.consolidate(o.consolidate);
-    coord.preaggregator.enabled = o.preagg.enabled;
-    coord.preaggregator.schema = o.preagg.schema;
-    coord.logger(makeLogger(o.logging));
+  function coordinatorOptions(o) {
+    if (!o) return {};
+    return { cache: o.cache, consolidate: o.consolidate, preagg: o.preagg, logger: makeLogger(o.logging) };
   }
 
-  // The coordinator is one per page (per connector), created by whichever
+  // The coordinator is one per page and connector, created by whichever
   // widget renders first, so its options are that widget's. A later widget
   // asking for different options can't change them: say so, instead of
   // silently ignoring it. A widget that asks for none is fine either way.
@@ -149,7 +148,6 @@
     noteCoordinatorOptions(x, key);
     if (!window.__vgplotrCoordinators[key]) {
       window.__vgplotrCoordinators[key] = (async function () {
-        var coord = mosaicCore.coordinator();
         var connector;
         if (key === "wasm") {
           var bundle = localDuckdbBundle();
@@ -163,9 +161,7 @@
           // there's no loadTables()/loadFiles() step for this connector.
           connector = mosaicCore.restConnector({ uri: x.connector.uri });
         }
-        coord.databaseConnector(connector);
-        if (x.coordinator) applyCoordinatorOptions(coord, x.coordinator);
-        return coord;
+        return new mosaicCore.Coordinator(connector, coordinatorOptions(x.coordinator));
       })();
     }
     return window.__vgplotrCoordinators[key];
@@ -362,7 +358,13 @@
     var spec = resolveSpecJs(x.spec);
     var group = x.link ? linkGroup(x.link) : null;
     var ast = mod.mosaicSpec.parseSpec(group ? withLinkedParams(spec, group) : spec);
-    var app = await mod.mosaicSpec.astToDOM(ast, group ? { params: group.params } : undefined);
+    // This widget's plots and inputs talk to its own coordinator (the one for
+    // its connector), not mosaic's global singleton: astToDOM() builds its
+    // API context from `api`, defaulting to one bound to the singleton.
+    var app = await mod.mosaicSpec.astToDOM(ast, {
+      api: mod.createAPIContext({ coordinator: coord }),
+      params: group ? group.params : undefined,
+    });
     el.appendChild(app.element);
   }
 

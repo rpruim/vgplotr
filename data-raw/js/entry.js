@@ -9,5 +9,14 @@
 import * as mosaicSpec from "@uwdata/mosaic-spec";
 import * as mosaicCore from "@uwdata/mosaic-core";
 import * as duckdbWasm from "@duckdb/duckdb-wasm";
+// mosaic-spec bundles vgplot but doesn't re-export this; vgplotr.js needs it to
+// give each widget an API context bound to its own Coordinator (mosaic-spec's
+// astToDOM() takes one as its `api` option) instead of the global singleton.
+import { createAPIContext } from "@uwdata/vgplot";
 
-window.__vgplotrBundle = { mosaicSpec: mosaicSpec, mosaicCore: mosaicCore, duckdbWasm: duckdbWasm };
+window.__vgplotrBundle = {
+  mosaicSpec: mosaicSpec,
+  mosaicCore: mosaicCore,
+  duckdbWasm: duckdbWasm,
+  createAPIContext: createAPIContext,
+};

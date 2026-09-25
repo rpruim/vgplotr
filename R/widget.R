@@ -98,8 +98,8 @@ spec_top_level_size <- function(x) {
 #'   with [vg_coordinator()]. Defaults to `getOption("vgplotr.coordinator")`,
 #'   so `options(vgplotr.coordinator = vg_coordinator(logging = "errors"))`
 #'   sets it for a whole document; `NULL` leaves mosaic's own defaults. The
-#'   first widget on a page to render creates the coordinator, and its options
-#'   are the ones used (see [vg_coordinator()]).
+#'   first widget on a page (using a given `connector`) to render creates the
+#'   coordinator, and its options are the ones used (see [vg_coordinator()]).
 #' @param link Optional name of a *link group*, a single string. Live widgets
 #'   on the same web page that give the same name share their params and
 #'   selections, so a brush made in one plot filters the plots in the others
