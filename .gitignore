@@ -46,3 +46,5 @@ man/figures/README-*_files/
 # rmarkdown::render()'s local HTML preview of pkgdown/index.Rmd -- same
 # story as README.html above.
 pkgdown/index.html
+/doc/
+/Meta/

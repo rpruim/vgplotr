@@ -15,3 +15,5 @@
 ^README\.html$
 ^man/figures/README-.*_files$
 ^man/figures/README-.*\.html$
+^doc$
+^Meta$
