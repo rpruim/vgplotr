@@ -98,6 +98,14 @@ vg_iframe <- function(
   ...
 ) {
   dots <- list(...)
+  if (!is.null(dots$link)) {
+    warning(
+      "`link` is ignored by vg_iframe(): each iframe is a separate document, ",
+      "and only widgets in the same page can share params/selections.",
+      call. = FALSE
+    )
+    dots$link <- NULL
+  }
   if (!inherits(spec, "htmlwidget") && is.null(dots$use_cache)) {
     dots$use_cache <- FALSE
   }

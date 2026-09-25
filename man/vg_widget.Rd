@@ -11,6 +11,7 @@ vg_widget(
   elementId = NULL,
   use_cache = getOption("vgplotr.use_cache", vg_duckdb_cache_status()$cached),
   connector = vg_default_connector(),
+  link = NULL,
   ...
 )
 }
@@ -68,6 +69,26 @@ reached over a local server started automatically -- see its docs for
 when you'd want this and its sharing/security caveats). Defaults to
 the session's default connector (\code{\link[=vg_set_default_connector]{vg_set_default_connector()}}), so you
 don't need to repeat this on every call once you've set one.}
+
+\item{link}{Optional name of a \emph{link group}, a single string. Live widgets
+on the same web page that give the same name share their params and
+selections, so a brush made in one plot filters the plots in the others
+-- separate \code{vg_render()} calls, e.g. one per Quarto chunk, behaving like
+one \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}. See the "Linking widgets" section of
+\code{vignette("getting-started")}. The default \code{NULL} keeps a widget on its
+own, as before.
+
+How it works, and what it needs from you: a param/selection is shared by
+\emph{name}. Declare it (see \code{\link[=vg_params]{vg_params()}}) the same way in every widget that
+declares it; if two widgets in a group declare one name differently, the
+first declaration wins and the browser console shows a warning. A widget
+that only uses \code{param(brush)} (e.g., in \code{filter_by}) picks up whatever
+the group declares, whichever renders first. Each widget must still
+include the data its own plots use (\code{\link[=vg_data]{vg_data()}}), under the same name
+and with the same contents as the others -- linking shares selections,
+not tables. The widgets must use the same \code{connector}. Only live widgets
+in the same page can link: separate documents (see \code{\link[=vg_iframe]{vg_iframe()}}) and
+static \code{\link[=vg_snapshot]{vg_snapshot()}} images cannot.}
 
 \item{...}{Not used by \code{vg_widget()} itself. Accepted (and silently
 ignored) so that \code{\link[=vg_render]{vg_render()}} can forward its own \code{...} uniformly to

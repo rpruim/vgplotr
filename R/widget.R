@@ -93,6 +93,25 @@ spec_top_level_size <- function(x) {
 #'   when you'd want this and its sharing/security caveats). Defaults to
 #'   the session's default connector ([vg_set_default_connector()]), so you
 #'   don't need to repeat this on every call once you've set one.
+#' @param link Optional name of a *link group*, a single string. Live widgets
+#'   on the same web page that give the same name share their params and
+#'   selections, so a brush made in one plot filters the plots in the others
+#'   -- separate `vg_render()` calls, e.g. one per Quarto chunk, behaving like
+#'   one [vg_vconcat()]/[vg_hconcat()]. See the "Linking widgets" section of
+#'   `vignette("getting-started")`. The default `NULL` keeps a widget on its
+#'   own, as before.
+#'
+#'   How it works, and what it needs from you: a param/selection is shared by
+#'   *name*. Declare it (see [vg_params()]) the same way in every widget that
+#'   declares it; if two widgets in a group declare one name differently, the
+#'   first declaration wins and the browser console shows a warning. A widget
+#'   that only uses `param(brush)` (e.g., in `filter_by`) picks up whatever
+#'   the group declares, whichever renders first. Each widget must still
+#'   include the data its own plots use ([vg_data()]), under the same name
+#'   and with the same contents as the others -- linking shares selections,
+#'   not tables. The widgets must use the same `connector`. Only live widgets
+#'   in the same page can link: separate documents (see [vg_iframe()]) and
+#'   static [vg_snapshot()] images cannot.
 #' @param ... Not used by `vg_widget()` itself. Accepted (and silently
 #'   ignored) so that [vg_render()] can forward its own `...` uniformly to
 #'   whichever of [vg_widget()]/[vg_snapshot()]/[vg_iframe()] ends up
@@ -108,10 +127,14 @@ vg_widget <- function(
   elementId = NULL,
   use_cache = getOption("vgplotr.use_cache", vg_duckdb_cache_status()$cached),
   connector = vg_default_connector(),
+  link = NULL,
   ...
 ) {
   if (!is_vg_connector(connector)) {
     stop("`connector` must be vg_wasm_connector() or vg_duckdb_connector().", call. = FALSE)
+  }
+  if (!is.null(link) && !(is.character(link) && length(link) == 1 && !is.na(link) && nzchar(link))) {
+    stop("`link` must be NULL or a single, non-empty string naming a link group.", call. = FALSE)
   }
 
   payload <- as_spec_payload(spec)
@@ -138,6 +161,8 @@ vg_widget <- function(
     # immediately, in the same render, rather than only from the next call on.
     dep <- if (isTRUE(use_cache)) vg_duckdb_cache_dependency() else NULL
   }
+  # Not part of the mosaic spec: it is read by inst/htmlwidgets/vgplotr.js.
+  x$link <- link
   # Data frames in `tables` need to become arrays of row objects in JSON
   # (what the JS side expects), not htmlwidgets' columnar default. NULL
   # needs to become JSON `null` (jsonlite's default turns it into `{}`),

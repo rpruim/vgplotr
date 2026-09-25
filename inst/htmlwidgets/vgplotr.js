@@ -247,6 +247,62 @@
     TN.prototype.__vgplotrFramePatched = true;
   }
 
+  // Linked widgets (vg_widget(link = "name")): widgets on one page that name
+  // the same group share one params map, handed to astToDOM(), which skips
+  // defining any param name already in it -- so a brush declared in one
+  // widget is the very same Selection the other widgets' plots filter by.
+  //
+  // A param is shared by *name*, and whichever widget instantiates first
+  // would otherwise define it: a widget that only references $brush (mosaic
+  // then invents a default `intersect` selection) could beat the one that
+  // declares it a crossfilter. So every widget first *registers* what it
+  // declares -- synchronously from renderValue(), before any await, so all
+  // the widgets of a static page have registered before the first one
+  // instantiates -- and then parses with the union of the group's
+  // declarations. The first declaration of a name wins; a later one that
+  // differs is reported in the console.
+  //
+  // A widget that is rendered again (renderValue() called twice on one
+  // element) leaves its earlier plots' clients connected to the group's
+  // selections; nothing here disconnects them.
+  function linkGroup(name) {
+    var groups = (window.__vgplotrLinks = window.__vgplotrLinks || {});
+    return (groups[name] = groups[name] || { params: new Map(), declared: {}, connector: null });
+  }
+
+  function registerLink(x) {
+    if (!x.link) return;
+    var group = linkGroup(x.link);
+    var connector = coordinatorKey(x);
+    if (group.connector && group.connector !== connector) {
+      console.warn(
+        "vgplotr: link group '" + x.link + "' mixes widgets with different connectors; " +
+        "selections are shared, but the widgets query different databases."
+      );
+    }
+    group.connector = group.connector || connector;
+    var params = (x.spec && x.spec.params) || {};
+    Object.keys(params).forEach(function (name) {
+      var json = JSON.stringify(params[name]);
+      if (!(name in group.declared)) {
+        group.declared[name] = json;
+      } else if (group.declared[name] !== json) {
+        console.warn(
+          "vgplotr: link group '" + x.link + "': param '" + name + "' is declared differently " +
+          "in another widget; using the first declaration, " + group.declared[name] + "."
+        );
+      }
+    });
+  }
+
+  function withLinkedParams(spec, group) {
+    var params = Object.assign({}, spec.params);
+    Object.keys(group.declared).forEach(function (name) {
+      params[name] = JSON.parse(group.declared[name]);
+    });
+    return Object.assign({}, spec, { params: params });
+  }
+
   async function renderVgplotr(el, x) {
     var mod = await waitForBundle();
     patchWindowFrames(mod.mosaicSpec);
@@ -257,8 +313,10 @@
       await loadFiles(coord, x.files);
     }
 
-    var ast = mod.mosaicSpec.parseSpec(resolveSpecJs(x.spec));
-    var app = await mod.mosaicSpec.astToDOM(ast);
+    var spec = resolveSpecJs(x.spec);
+    var group = x.link ? linkGroup(x.link) : null;
+    var ast = mod.mosaicSpec.parseSpec(group ? withLinkedParams(spec, group) : spec);
+    var app = await mod.mosaicSpec.astToDOM(ast, group ? { params: group.params } : undefined);
     el.appendChild(app.element);
   }
 
@@ -269,6 +327,7 @@
     factory: function (el, width, height) {
       return {
         renderValue: function (x) {
+          registerLink(x);
           el.innerHTML = "";
           renderVgplotr(el, x).catch(function (err) {
             console.error(err);

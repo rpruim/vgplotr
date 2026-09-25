@@ -34,7 +34,7 @@
 #'   [vg_widget()] yourself).
 #' @param ... Passed on to whichever of [vg_widget()], [vg_snapshot()],
 #'   or [vg_iframe()] ends up handling the request (e.g., `width =`,
-#'   `use_cache =`, or `connector =` for [vg_widget()], `delay =` for
+#'   `use_cache =`, `connector =` or `link =` for [vg_widget()], `delay =` for
 #'   [vg_snapshot()]).
 #'   Each of those three accepts and silently ignores arguments meant for
 #'   one of the other two, so it's fine to pass along options for a mode

@@ -412,6 +412,42 @@ vg_create() |>
   vg_render()
 ```
 
+### Linking widgets
+
+`vg_vconcat()` puts linked plots into a single widget. If you want other
+content between them, or simply prefer one chunk per plot, give the widgets
+the same `link` name instead: widgets on the same page that name the same
+link group share their params and selections. Below, the brush in the 
+overview (this chunk) filters the detail plot (the next chunk).
+
+```{r}
+#| label: linked-overview
+
+vg_create() |>
+  vg_data(name = "weather", file = vg_example_url("seattle-weather.parquet")) |>
+  vg_plot(overview) |>
+  vg_render(link = "weather")
+```
+
+The detail plot only *refers* to `param(brush)`, through `filter_by`; the
+matching `link` is what connects it to the brush above. Each widget 
+still has to load the data it uses -- linking shares selections, not tables.
+
+```{r}
+#| label: linked-detail
+
+vg_create() |>
+  vg_data(name = "weather", file = vg_example_url("seattle-weather.parquet")) |>
+  vg_plot(detail) |>
+  vg_render(link = "weather")
+```
+
+A selection is shared by name. To give it a type other than the default, 
+declare it -- `vg_params(brush = vg_selection("crossfilter"))` -- the same 
+way in every widget that declares it (see `?vg_selection`).
+Links only work between live widgets on one page, so not for `vg_iframe()`
+or the static snapshots used for non-HTML output.
+
 Some additional example of interaction appear below.
 
 ## Transform functions: binning and aggregation
