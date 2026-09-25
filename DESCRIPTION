@@ -72,6 +72,7 @@ Collate:
     'plot.R'
     'render.R'
     'scale-generated.R'
+    'selection.R'
     'serialize.R'
     'snapshot.R'
     'sql.R'

@@ -293,9 +293,11 @@ resolve_data_from_index <- function(i, names_vec) {
 #' Declare Params/Selections on a vgspec
 #' @param spec A `vgspec`.
 #' @param ... Named params, e.g., `point = 0`, or selections, e.g., `query =
-#'   list(select = "intersect")` (mosaic-spec's `Selection` shape --
-#'   `select` is one of `"crossfilter"`/`"intersect"`/`"single"`/`"union"`,
-#'   with optional `cross`/`empty`/`include` fields).
+#'   vg_selection("intersect")` (see [vg_selection()], which also has
+#'   `vg_param_date()` for a date-valued param). A selection can also be
+#'   written out as a list in mosaic-spec's own `Selection` shape,
+#'   `list(select = "intersect")`, with optional `cross`/`empty`/`include`
+#'   fields.
 #' @family spec functions
 #' @export
 vg_params <- function(spec, ...) {

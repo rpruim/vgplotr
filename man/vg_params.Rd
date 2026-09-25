@@ -9,9 +9,11 @@ vg_params(spec, ...)
 \arguments{
 \item{spec}{A \code{vgspec}.}
 
-\item{...}{Named params, e.g., \code{point = 0}, or selections, e.g., \code{query = list(select = "intersect")} (mosaic-spec's \code{Selection} shape --
-\code{select} is one of \code{"crossfilter"}/\code{"intersect"}/\code{"single"}/\code{"union"},
-with optional \code{cross}/\code{empty}/\code{include} fields).}
+\item{...}{Named params, e.g., \code{point = 0}, or selections, e.g., \code{query = vg_selection("intersect")} (see \code{\link[=vg_selection]{vg_selection()}}, which also has
+\code{vg_param_date()} for a date-valued param). A selection can also be
+written out as a list in mosaic-spec's own \code{Selection} shape,
+\code{list(select = "intersect")}, with optional \code{cross}/\code{empty}/\code{include}
+fields.}
 }
 \description{
 Declare Params/Selections on a vgspec
@@ -26,6 +28,7 @@ Other spec functions:
 \code{\link[=vg_data_registry]{vg_data_registry()}},
 \code{\link[=vg_example_url]{vg_example_url()}},
 \code{\link[=vg_meta]{vg_meta()}},
-\code{\link[=vg_plot_defaults]{vg_plot_defaults()}}
+\code{\link[=vg_plot_defaults]{vg_plot_defaults()}},
+\code{\link[=vg_selection]{vg_selection()}}
 }
 \concept{spec functions}
