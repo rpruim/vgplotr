@@ -16,9 +16,8 @@
 #' (a column name, as a string) to say which column the distances are
 #' measured along.
 #'
-#' As of mosaic-spec 0.31.0 a frame is only rendered correctly if *both*
-#' offsets are intervals, as above: mosaic fails on a plain number or `NULL`
-#' in a frame (`rows = c(6, 0)`), so write `vg_days(0)` rather than `0`.
+#' Either offset can also be a plain number (`0` means the current row) or
+#' `NULL` (unbounded), so `range = list(vg_days(6), 0)` works too.
 #'
 #' @param n A single non-negative number of units, or a [param()].
 #' @return A `vg_interval` object, serialized as `{<unit>: n}`.
@@ -26,7 +25,7 @@
 #' @name vg_intervals
 #' @examples
 #' # a 7-day trailing average
-#' y <- ~ vg_avg(close, orderby = "date", range = list(vg_days(6), vg_days(0)))
+#' y <- ~ vg_avg(close, orderby = "date", range = list(vg_days(6), 0))
 NULL
 
 new_vg_interval_fn <- function(unit) {

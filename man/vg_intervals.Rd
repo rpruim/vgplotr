@@ -52,13 +52,12 @@ distance, so it can't be negative. A \code{range} frame also needs \code{orderby
 (a column name, as a string) to say which column the distances are
 measured along.
 
-As of mosaic-spec 0.31.0 a frame is only rendered correctly if \emph{both}
-offsets are intervals, as above: mosaic fails on a plain number or \code{NULL}
-in a frame (\code{rows = c(6, 0)}), so write \code{vg_days(0)} rather than \code{0}.
+Either offset can also be a plain number (\code{0} means the current row) or
+\code{NULL} (unbounded), so \code{range = list(vg_days(6), 0)} works too.
 }
 \examples{
 # a 7-day trailing average
-y <- ~ vg_avg(close, orderby = "date", range = list(vg_days(6), vg_days(0)))
+y <- ~ vg_avg(close, orderby = "date", range = list(vg_days(6), 0))
 }
 \seealso{
 Other transform functions:

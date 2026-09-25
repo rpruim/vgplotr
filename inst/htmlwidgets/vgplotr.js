@@ -213,8 +213,43 @@
     return out;
   }
 
+  // WORKAROUND for an upstream bug in mosaic-spec 0.31.0 (the latest release
+  // when written): parseWindowFrame() builds each literal frame offset (a
+  // number or null in `rows`/`range`/`groups`) with mosaic-*sql*'s
+  // LiteralNode, which has no instantiate(), and WindowFrameNode.instantiate()
+  // then calls it -- "s.instantiate is not a function", so any frame with a
+  // plain offset fails to render (and takes the whole page down with it).
+  // Only offsets that are themselves transforms, like {days: 7}, worked.
+  //
+  // TransformNode is the one piece of this that mosaic-spec exports, and it
+  // owns the frame (options.frame), so wrap its instantiate() to give each
+  // offset that lacks one a stand-in that returns the literal value -- which
+  // is exactly what mosaic-sql's own frame code wants (a number, or null for
+  // unbounded). Only an offset with no instantiate() is touched, so once
+  // mosaic fixes this the wrapper does nothing; delete it then. Rebuilding
+  // the bundle (data-raw/js/build.js) prints a notice when it can tell the
+  // bug is gone; see "Upstream issues to watch" in AGENTS.md.
+  function patchWindowFrames(mosaicSpec) {
+    var TN = mosaicSpec.TransformNode;
+    if (!TN || TN.prototype.__vgplotrFramePatched) return;
+    var original = TN.prototype.instantiate;
+    TN.prototype.instantiate = function (ctx) {
+      var frame = this.options && this.options.frame;
+      if (frame && Array.isArray(frame.extent)) {
+        frame.extent = frame.extent.map(function (v) {
+          return v && typeof v.instantiate !== "function"
+            ? { instantiate: function () { return v.value; } }
+            : v;
+        });
+      }
+      return original.call(this, ctx);
+    };
+    TN.prototype.__vgplotrFramePatched = true;
+  }
+
   async function renderVgplotr(el, x) {
     var mod = await waitForBundle();
+    patchWindowFrames(mod.mosaicSpec);
 
     var coord = await getCoordinator(mod.mosaicCore, mod.duckdbWasm, x);
     if (coordinatorKey(x) === "wasm") {

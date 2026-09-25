@@ -60,8 +60,7 @@ partitioning, and frame of the window the transform is computed over.
 \code{rows}, \code{range} and \code{groups} each take a pair of frame offsets, measured
 from the current row: how far the frame reaches before it, then after it
 (numbers, \code{NULL} for unbounded, or date/time intervals such as
-\code{\link[=vg_days]{vg_days()}}; see \link{vg_intervals}, including a caveat about which of these
-currently render).}
+\code{\link[=vg_days]{vg_days()}}; see \link{vg_intervals}).}
 }
 \description{
 Transform and aggregate functions from mosaic's SQL layer (binning,

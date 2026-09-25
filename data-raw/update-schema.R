@@ -42,6 +42,11 @@
 
 MOSAIC_VERSION <- "0.31.0"
 
+# Reports whether the upstream bug behind vgplotr.js's patchWindowFrames() is
+# fixed in this version (never blocks generation: it only prints).
+source("data-raw/check-upstream.R", local = TRUE)
+report_window_frame_bug(MOSAIC_VERSION)
+
 schema_url <- sprintf(
   "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-spec@%s/dist/mosaic-schema.json",
   MOSAIC_VERSION

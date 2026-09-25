@@ -60,6 +60,44 @@ back to edit distance (so list a real name as a candidate when it is the right
 answer somewhere, as `labels` does with `label`), and a near-miss of a key is
 only a last resort -- a real name in the call always wins.
 
+## Upstream issues to watch
+
+Bugs in mosaic itself that vgplotr works around. Each has a workaround that
+does nothing once upstream is fixed, and a check that says when that happens.
+`Rscript data-raw/check-upstream.R` reports on the latest published release
+(`Rscript data-raw/check-upstream.R 0.31.0` for a specific one), and
+`data-raw/update-schema.R` runs it for the pinned `MOSAIC_VERSION`, so a version
+bump reports on it too. Re-run it whenever mosaic publishes a release.
+
+### Window frames with plain-number or `null` offsets (mosaic-spec 0.31.0)
+
+`parseWindowFrame()` in mosaic-spec's `src/ast/WindowFrameNode.js` builds each
+literal frame offset with `LiteralNode` imported from `@uwdata/mosaic-sql`,
+which has no `instantiate()`; `WindowFrameNode.instantiate()` then calls it and
+throws `s.instantiate is not a function`. So `rows = c(6, 0)`, `range =
+list(vg_days(6), 0)` or a `NULL` (unbounded) offset fail to render -- and one
+failing plot takes the whole page down. Only frames whose offsets are *all*
+interval transforms (`{days: 6}`) worked. Reproduced with a hand-written JSON
+spec, so it is not a vgplotr bug. 0.31.0 was the latest release when this was
+found (2026-09-25).
+
+Workaround: `patchWindowFrames()` in `inst/htmlwidgets/vgplotr.js` wraps
+`TransformNode.prototype.instantiate` to give any offset lacking `instantiate()`
+a stand-in returning its value. It touches only offsets that lack the method, so
+it is inert once mosaic is fixed.
+
+When `check-upstream.R` says it is fixed: rebuild the bundle on that version
+(`cd data-raw/js && npm install && node build.js`, after bumping
+`MOSAIC_VERSION` everywhere it is pinned), confirm a frame like `rows = c(6, 0)`
+renders with `patchWindowFrames()` disabled, then delete that function and its
+call, and delete this entry. Worth filing upstream (uwdata/mosaic) if not
+already: the fix is importing spec's own `./LiteralNode.js` in that file.
+
+Frame offsets are distances, not signed values: mosaic-sql takes `abs()` of a
+number and turns `0` into `CURRENT ROW`, but writes an interval's sign straight
+into SQL, so `vg_days()` etc. reject negatives. That is mosaic's design, not
+part of this bug.
+
 ## Open design questions
 
 Things deliberately left undecided, to revisit rather than forget.
