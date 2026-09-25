@@ -46,7 +46,8 @@ Births2015 |>
 <img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
 
 Here is an example that shows some of the interactive capabilities of
-vgplotr:
+vgplotr. (Live interaction not available on GitHub, see
+<https://rpruim.github.io/vgplotr>.)
 
 ``` r
 library(vgplotr)
@@ -123,10 +124,11 @@ vg_create() |>
 
 ## Installation
 
-Once the GitHub repo has been made public, you can install the
-development version of vgplotr from [GitHub](https://github.com/) with:
+vgplotr can be installed from GitHub:
 
 ``` r
 # install.packages("pak")
 pak::pak("rpruim/vgplotr")
 ```
+
+Eventually it will also be available via CRAN.
