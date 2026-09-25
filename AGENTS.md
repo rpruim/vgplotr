@@ -90,8 +90,14 @@ When `check-upstream.R` says it is fixed: rebuild the bundle on that version
 (`cd data-raw/js && npm install && node build.js`, after bumping
 `MOSAIC_VERSION` everywhere it is pinned), confirm a frame like `rows = c(6, 0)`
 renders with `patchWindowFrames()` disabled, then delete that function and its
-call, and delete this entry. Worth filing upstream (uwdata/mosaic) if not
-already: the fix is importing spec's own `./LiteralNode.js` in that file.
+call, and delete this entry.
+
+Reported upstream: <https://github.com/uwdata/mosaic/issues/1270> (filed
+2026-09-25; the proposed fix there is importing spec's own `./LiteralNode.js`
+in that file). Check its status (`gh issue view 1270 --repo uwdata/mosaic`)
+alongside `check-upstream.R`: a closed issue means a fix is merged, but it only
+helps once it is in a *published* release, which is what `check-upstream.R`
+tests.
 
 Frame offsets are distances, not signed values: mosaic-sql takes `abs()` of a
 number and turns `0` into `CURRENT ROW`, but writes an interval's sign straight
