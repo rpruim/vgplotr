@@ -133,6 +133,20 @@ test_that("a mark with `data` support but only literal args doesn't get a defaul
   expect_equal(payload$spec$plot[[2]]$x, 0)
 })
 
+test_that("a geo mark with only literal args still gets a default data_from", {
+  reset_auto_data_names()
+  # mosaic's geo mark reads a `geom` column implicitly, so it needs data even
+  # when none of its args reference a column.
+  df <- data.frame(a = 1:3)
+  spec <- df |> vg_mark_geo(fill = "steelblue")
+  expect_equal(spec$layout$items[[1]]$encodings$data_from, "data1")
+
+  spec <- vg_create() |>
+    vg_data(name = "counties", data = df) |>
+    vg_mark_geo(stroke = "white")
+  expect_equal(spec$layout$items[[1]]$encodings$data_from, "counties")
+})
+
 test_that("a mark using sql()/agg() unwrapped still gets a default data_from", {
   reset_auto_data_names()
   df <- data.frame(a = 1:3, b = c(4, 5, 6))

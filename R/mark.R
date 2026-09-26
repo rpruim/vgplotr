@@ -139,7 +139,7 @@ build_mark <- function(spec, mark, formula, args, style) {
       is_vgspec(spec) &&
       length(spec$data) &&
       isTRUE(unname(.vg_mark_has_data[mark])) &&
-      args_reference_data(args)
+      (mark %in% .vg_mark_implicit_data || args_reference_data(args))
   ) {
     args$data_from <- names(spec$data)[[1]]
   }
@@ -164,6 +164,11 @@ build_mark <- function(spec, mark, formula, args, style) {
 
   update_layout(spec, fragment)
 }
+
+# Marks that read data even when none of their own args mention it: mosaic's
+# geo mark defaults its `geometry` channel to a `geom` column whenever it's
+# given a table, so a bare vg_mark_geo() still needs data_from.
+.vg_mark_implicit_data <- c("geo")
 
 # Whether any value in a mark's `...` args actually references data -- a
 # formula (`~col`, `~fn(col)`), an unwrapped sql()/agg() (a "vg_sql_expr"),
