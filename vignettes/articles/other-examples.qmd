@@ -1,0 +1,24 @@
+---
+title: "Other Examples"
+---
+
+Additional worked examples written for vgplotr, beyond the ones recreated from
+Mosaic's own gallery (see [Mosaic Examples](mosaic-examples.html)), organized by
+topic.
+
+<!--
+To add an example:
+
+1. Put it in vignettes/articles/ (next to this file), named <topic>-<example>.qmd
+   (e.g., basic-marks-inputs-my-example.qmd), with a `title:` in its YAML
+   header. Don't start the name with `mosaic-`: that prefix marks the examples
+   recreated from Mosaic's gallery.
+2. Link it below, under its topic, with that title as the link text:
+   - [My Example](basic-marks-inputs-my-example.html)
+3. List it under the matching "Other Examples: ..." section of `articles:` in
+   _pkgdown.yml.
+4. Run `Rscript data-raw/update-example-usage.R` so the reference pages link to
+   it and `vg_example_usage` includes it.
+-->
+
+No examples yet.

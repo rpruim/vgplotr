@@ -1,0 +1,77 @@
+---
+title: "Mosaic Examples"
+---
+
+Worked examples recreating pages from mosaic/vgplot's own [example gallery](https://idl.uw.edu/mosaic/examples/), organized by topic.
+
+## Basic Marks & Inputs
+
+Core mark types, encodings, and layout-level input widgets (menus, sliders, tables).
+
+- [Mark Types](mosaic-basic-marks-inputs-mark-types.html)
+- [Symbol Plots](mosaic-basic-marks-inputs-symbol-plots.html)
+- [Axes & Gridlines](mosaic-basic-marks-inputs-axes-gridlines.html)
+- [Airline Travelers](mosaic-basic-marks-inputs-airline-travelers.html)
+- [Aeromagnetic Survey](mosaic-basic-marks-inputs-aeromagnetic-survey.html)
+- [Athlete Birth Waffle](mosaic-basic-marks-inputs-athlete-birth-waffle.html)
+- [Driving Shifts into Reverse](mosaic-basic-marks-inputs-driving-shifts.html)
+- [Population Change Arrows](mosaic-basic-marks-inputs-population-arrows.html)
+- [Presidential Opinion](mosaic-basic-marks-inputs-presidential-opinion.html)
+- [Voronoi Diagram](mosaic-basic-marks-inputs-voronoi.html)
+- [Seattle Temperatures](mosaic-basic-marks-inputs-seattle-temperatures.html)
+- [Sorted Bars](mosaic-basic-marks-inputs-sorted-bars.html)
+- [Sortable Table](mosaic-basic-marks-inputs-table.html)
+
+## Data Transformation
+
+Binning, aggregation, window functions, and SQL expressions computed live in the database.
+
+- [Athlete Height Intervals](mosaic-data-transformation-athlete-height.html)
+- [Bias Parameter](mosaic-data-transformation-bias.html)
+- [Linear Regression](mosaic-data-transformation-linear-regression.html)
+- [Linear Regression 10M](mosaic-data-transformation-linear-regression-10m.html)
+- [Moving Average](mosaic-data-transformation-moving-average.html)
+- [Line Multi-Series](mosaic-data-transformation-line-multi-series.html)
+- [Normalized Stock Prices](mosaic-data-transformation-normalize.html)
+- [Seattle Weather Pivot](mosaic-data-transformation-seattle-weather-pivot.html)
+- [Overview + Detail](mosaic-data-transformation-overview-detail.html)
+- [Wind Map](mosaic-data-transformation-wind-map.html)
+- [WNBA Shot Chart](mosaic-data-transformation-wnba-shots.html)
+
+## Maps & Spatial Data
+
+Geographic marks, projections, and spatial data sources (GeoJSON, TopoJSON, DuckDB's spatial extension).
+
+- [Earthquakes Feed](mosaic-maps-spatial-data-earthquakes-feed.html)
+- [Earthquakes Globe](mosaic-maps-spatial-data-earthquakes-globe.html)
+- [U.S. States](mosaic-maps-spatial-data-us-state-map.html)
+- [U.S. Counties](mosaic-maps-spatial-data-us-county-map.html)
+- [U.S. Unemployment](mosaic-maps-spatial-data-unemployment.html)
+- [Walmart Openings](mosaic-maps-spatial-data-walmart-openings.html)
+- [NYC Taxi Rides](mosaic-maps-spatial-data-nyc-taxi-rides.html)
+
+## Multi-View Coordination
+
+Linked selections, crossfilters, and coordinated views across multiple plots.
+
+- [Cross-Filter Flights (200k)](mosaic-multi-view-coordination-flights-200k.html)
+- [Cross-Filter Flights (10M)](mosaic-multi-view-coordination-flights-10m.html)
+- [Gaia Star Catalog](mosaic-multi-view-coordination-gaia.html)
+- [Observable Latency](mosaic-multi-view-coordination-observable-latency.html)
+- [Olympic Athletes](mosaic-multi-view-coordination-athletes.html)
+- [Protein Design Explorer](mosaic-multi-view-coordination-protein-design.html)
+- [Pan & Zoom](mosaic-multi-view-coordination-pan-zoom.html)
+- [Scatter Plot Matrix (SPLOM)](mosaic-multi-view-coordination-splom.html)
+- [Seattle Weather](mosaic-multi-view-coordination-weather.html)
+
+## Density Visualizations
+
+Contours, 1D/2D density estimation, heatmaps, and hexbins.
+
+- [Contour Plot](mosaic-density-visualizations-contours.html)
+- [Density Groups](mosaic-density-visualizations-density-groups.html)
+- [Density 1D](mosaic-density-visualizations-density1d.html)
+- [Density 2D](mosaic-density-visualizations-density2d.html)
+- [Flights Density](mosaic-density-visualizations-flights-density.html)
+- [Flights Hexbin](mosaic-density-visualizations-flights-hexbin.html)
+- [Line Density](mosaic-density-visualizations-line-density.html)

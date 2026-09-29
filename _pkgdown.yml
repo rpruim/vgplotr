@@ -27,7 +27,11 @@ navbar:
         href: articles/custom-javascript.html
     examples:
       text: Examples
-      href: articles/examples.html
+      menu:
+      - text: Mosaic Examples
+        href: articles/mosaic-examples.html
+      - text: Other Examples
+        href: articles/other-examples.html
 
 reference:
 - title: Spec functions
@@ -156,80 +160,81 @@ articles:
 
 - title: Examples
   contents:
-  - articles/examples
+  - articles/mosaic-examples
+  - articles/other-examples
 
 - title: Basic Marks & Inputs
   desc: >
     Core mark types, encodings, and layout-level input widgets (menus,
     sliders, tables).
   contents:
-  - articles/basic-marks-inputs-mark-types
-  - articles/basic-marks-inputs-symbol-plots
-  - articles/basic-marks-inputs-axes-gridlines
-  - articles/basic-marks-inputs-airline-travelers
-  - articles/basic-marks-inputs-aeromagnetic-survey
-  - articles/basic-marks-inputs-athlete-birth-waffle
-  - articles/basic-marks-inputs-driving-shifts
-  - articles/basic-marks-inputs-population-arrows
-  - articles/basic-marks-inputs-presidential-opinion
-  - articles/basic-marks-inputs-voronoi
-  - articles/basic-marks-inputs-seattle-temperatures
-  - articles/basic-marks-inputs-sorted-bars
-  - articles/basic-marks-inputs-table
+  - articles/mosaic-basic-marks-inputs-mark-types
+  - articles/mosaic-basic-marks-inputs-symbol-plots
+  - articles/mosaic-basic-marks-inputs-axes-gridlines
+  - articles/mosaic-basic-marks-inputs-airline-travelers
+  - articles/mosaic-basic-marks-inputs-aeromagnetic-survey
+  - articles/mosaic-basic-marks-inputs-athlete-birth-waffle
+  - articles/mosaic-basic-marks-inputs-driving-shifts
+  - articles/mosaic-basic-marks-inputs-population-arrows
+  - articles/mosaic-basic-marks-inputs-presidential-opinion
+  - articles/mosaic-basic-marks-inputs-voronoi
+  - articles/mosaic-basic-marks-inputs-seattle-temperatures
+  - articles/mosaic-basic-marks-inputs-sorted-bars
+  - articles/mosaic-basic-marks-inputs-table
 
 - title: Data Transformation
   desc: >
     Binning, aggregation, window functions, and SQL expressions computed
     live in the database.
   contents:
-  - articles/data-transformation-athlete-height
-  - articles/data-transformation-bias
-  - articles/data-transformation-linear-regression
-  - articles/data-transformation-linear-regression-10m
-  - articles/data-transformation-moving-average
-  - articles/data-transformation-line-multi-series
-  - articles/data-transformation-normalize
-  - articles/data-transformation-seattle-weather-pivot
-  - articles/data-transformation-overview-detail
-  - articles/data-transformation-wind-map
-  - articles/data-transformation-wnba-shots
+  - articles/mosaic-data-transformation-athlete-height
+  - articles/mosaic-data-transformation-bias
+  - articles/mosaic-data-transformation-linear-regression
+  - articles/mosaic-data-transformation-linear-regression-10m
+  - articles/mosaic-data-transformation-moving-average
+  - articles/mosaic-data-transformation-line-multi-series
+  - articles/mosaic-data-transformation-normalize
+  - articles/mosaic-data-transformation-seattle-weather-pivot
+  - articles/mosaic-data-transformation-overview-detail
+  - articles/mosaic-data-transformation-wind-map
+  - articles/mosaic-data-transformation-wnba-shots
 
 - title: Maps & Spatial Data
   desc: >
     Geographic marks, projections, and spatial data sources (GeoJSON,
     TopoJSON, DuckDB's spatial extension).
   contents:
-  - articles/maps-spatial-data-earthquakes-feed
-  - articles/maps-spatial-data-earthquakes-globe
-  - articles/maps-spatial-data-us-state-map
-  - articles/maps-spatial-data-us-county-map
-  - articles/maps-spatial-data-unemployment
-  - articles/maps-spatial-data-walmart-openings
-  - articles/maps-spatial-data-nyc-taxi-rides
+  - articles/mosaic-maps-spatial-data-earthquakes-feed
+  - articles/mosaic-maps-spatial-data-earthquakes-globe
+  - articles/mosaic-maps-spatial-data-us-state-map
+  - articles/mosaic-maps-spatial-data-us-county-map
+  - articles/mosaic-maps-spatial-data-unemployment
+  - articles/mosaic-maps-spatial-data-walmart-openings
+  - articles/mosaic-maps-spatial-data-nyc-taxi-rides
 
 - title: Multi-View Coordination
   desc: >
     Linked selections, crossfilters, and coordinated views across
     multiple plots.
   contents:
-  - articles/multi-view-coordination-flights-200k
-  - articles/multi-view-coordination-flights-10m
-  - articles/multi-view-coordination-gaia
-  - articles/multi-view-coordination-observable-latency
-  - articles/multi-view-coordination-athletes
-  - articles/multi-view-coordination-protein-design
-  - articles/multi-view-coordination-pan-zoom
-  - articles/multi-view-coordination-splom
-  - articles/multi-view-coordination-weather
+  - articles/mosaic-multi-view-coordination-flights-200k
+  - articles/mosaic-multi-view-coordination-flights-10m
+  - articles/mosaic-multi-view-coordination-gaia
+  - articles/mosaic-multi-view-coordination-observable-latency
+  - articles/mosaic-multi-view-coordination-athletes
+  - articles/mosaic-multi-view-coordination-protein-design
+  - articles/mosaic-multi-view-coordination-pan-zoom
+  - articles/mosaic-multi-view-coordination-splom
+  - articles/mosaic-multi-view-coordination-weather
 
 - title: Density Visualizations
   desc: >
     Contours, 1D/2D density estimation, heatmaps, and hexbins.
   contents:
-  - articles/density-visualizations-contours
-  - articles/density-visualizations-density-groups
-  - articles/density-visualizations-density1d
-  - articles/density-visualizations-density2d
-  - articles/density-visualizations-flights-density
-  - articles/density-visualizations-flights-hexbin
-  - articles/density-visualizations-line-density
+  - articles/mosaic-density-visualizations-contours
+  - articles/mosaic-density-visualizations-density-groups
+  - articles/mosaic-density-visualizations-density1d
+  - articles/mosaic-density-visualizations-density2d
+  - articles/mosaic-density-visualizations-flights-density
+  - articles/mosaic-density-visualizations-flights-hexbin
+  - articles/mosaic-density-visualizations-line-density
