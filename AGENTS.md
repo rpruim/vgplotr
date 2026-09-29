@@ -29,6 +29,11 @@ commit messages looked like before this convention started.
 
 `R/*-generated.R` and a few others are produced by `data-raw/update-schema.R`
 (and `data-raw/update-mosaic-examples.R` for the vendored test corpus).
+`R/example-usage-generated.R` and `data/vg_example_usage.rda` come from
+`data-raw/update-example-usage.R`, which scans the example articles in
+`vignettes/articles/` (`mosaic-*.qmd` for Mosaic's gallery); rerun it whenever
+an example is added, retitled or changes which functions it calls
+(`tests/testthat/test-example-usage.R` fails until you do).
 Never hand-edit a generated file -- change the generator and rerun it.
 After regenerating, diff against the pre-change committed version and
 confirm the diff is *exactly* the intended change, nothing incidental

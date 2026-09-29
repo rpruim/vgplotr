@@ -56,6 +56,7 @@ Collate:
     'datasets.R'
     'duckdb_cache.R'
     'duckdb_server.R'
+    'example-usage-generated.R'
     'export.R'
     'formula.R'
     'utils.R'

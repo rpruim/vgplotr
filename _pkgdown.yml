@@ -130,9 +130,10 @@ reference:
 
 - title: Data 
   desc: >
-    Datasets used in examples.
+    Datasets used in examples, and which functions each example uses.
   contents:
   - NPSvisits
+  - vg_example_usage
 
 - title: Reference
   desc: >

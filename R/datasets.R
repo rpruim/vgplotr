@@ -44,3 +44,41 @@
 #'   and IRMA DataStore Reference 2317666 (\url{https://irma.nps.gov/DataStore/Reference/Profile/2317666}).
 #'   Geographic coordinate and unit metadata retrieved via the official NPS API (\url{https://developer.nps.gov/}).
 "NPSvisits"
+
+#' Which functions each example uses
+#'
+#' A 0-1 matrix recording which of vgplotr's exported functions each worked
+#' example on the package website calls.
+#'
+#' @format An integer matrix with a row for every exported function and a
+#'   column for every example, with named dimnames:
+#' \describe{
+#'   \item{`function`}{Function names, e.g., `"vg_mark_geo"`.}
+#'   \item{`example`}{Example articles, by their name on the package
+#'     website -- e.g., `"mosaic-maps-spatial-data-us-state-map"` for
+#'     <https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-state-map.html>.
+#'     Names starting with `mosaic-` are examples recreated from Mosaic's own
+#'     gallery (listed first); the rest are additional ones.}
+#' }
+#' A value is `1` if the example calls the function anywhere in its R code
+#' (including inside a formula, e.g., `~ vg_centroid_x(geom)`), `0` if not.
+#'
+#' @details
+#' The same information appears as a "Used in examples" section, with links,
+#' in the help page of each function an example uses. Both are regenerated
+#' from the example articles by `data-raw/update-example-usage.R` in the
+#' package's source repository.
+#'
+#' @examples
+#' # Examples that use vg_mark_geo()
+#' names(which(vg_example_usage["vg_mark_geo", ] == 1))
+#'
+#' # Functions used by the most examples
+#' head(sort(rowSums(vg_example_usage), decreasing = TRUE))
+#'
+#' # Exported functions no example uses yet
+#' rownames(vg_example_usage)[rowSums(vg_example_usage) == 0]
+#' @docType data
+#' @keywords datasets
+#' @name vg_example_usage
+NULL
