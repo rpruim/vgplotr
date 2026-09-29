@@ -215,3 +215,54 @@ print.vg_mark <- function(x, ...) {
   print_fields(x$encodings)
   invisible(x)
 }
+
+# Hand-written additions to the generated vg_mark_geo() docs
+# (R/marks-generated.R), merged into the same Rd topic.
+
+#' @details
+#' ## How a geo mark uses data
+#'
+#' A geo mark draws one GeoJSON geometry per row of its data source. Like
+#' other marks, it reads from `data_from`, defaulting to the spec's first
+#' registered data source. Unlike most marks, it gets that default even if
+#' none of its arguments mention a column (e.g., `vg_mark_geo(stroke =
+#' "white")`), because it always reads a geometry column (see below).
+#'
+#' **The default `geom` column.** If `geometry` is left unset, Mosaic looks
+#' for a column named `geom` and converts it to GeoJSON in the database
+#' (`ST_AsGeoJSON(geom)`, the same as `geometry = ~ vg_geojson(geom)`). A
+#' spatial data source, `vg_data(type = "spatial", file = ...)`, which loads
+#' GeoJSON, TopoJSON (pick one with `layer =`), shapefiles and other formats
+#' that DuckDB's `spatial` extension reads, produces exactly such a column.
+#' Using it also loads the `spatial` extension automatically.
+#'
+#' **Other geometry columns.** If the geometry lives in a differently named
+#' column, point to it with `geometry`:
+#' * `geometry = ~ vg_geojson(boundary)` for a DuckDB `GEOMETRY` column.
+#' * `geometry = ~ boundary` for a column that already holds GeoJSON, either
+#'   as objects or as JSON text (text values are parsed automatically).
+#'
+#' **Other channels.** `fill`, `stroke`, `r`, `title`, `href`, etc. are
+#' per-row channels read from the same table as the geometry, so each shape
+#' can be colored or labeled by its own attributes. To combine geometry with
+#' values from another table (e.g., county shapes with unemployment rates),
+#' join them into one data source with `vg_data(query = ...)`. For point
+#' geometries, `r` sizes the points.
+#'
+#' Marks that draw purely computed geometry and take no data at all, such
+#' as the outline of the globe or a grid of meridians and parallels, are
+#' [vg_mark_sphere()] and [vg_mark_graticule()].
+#' @examples
+#' \dontrun{
+#' vg_create() |>
+#'   vg_data(
+#'     name = "states",
+#'     type = "spatial",
+#'     file = vg_example_url("us-counties-10m.json"),
+#'     layer = "states"
+#'   ) |>
+#'   vg_mark_geo(stroke = "currentColor", fill = "none") |>
+#'   vg_plot(projection_type = "albers-usa")
+#' }
+#' @name vg_mark_geo
+NULL
