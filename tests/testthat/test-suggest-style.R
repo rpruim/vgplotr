@@ -71,14 +71,14 @@ test_that("a wrapper suggests snake_case", {
   expect_warning(vg_mark_dot(x = ~a, y = ~b, alpha = 0.5), "Did you perhaps mean `opacity` or `fill_opacity`\\?")
   expect_warning(vg_mark_dot(x = ~a, y = ~b, fill_opacty = 0.5), "Did you perhaps mean `fill_opacity`\\?")
   expect_warning(vg_mark_dot(x = ~a, y = ~b, stroke_widht = 2), "Did you perhaps mean `stroke_width`\\?")
-  expect_warning(vg_interval_x(as = param(s), pixelsize = 2), "Did you perhaps mean `pixel_size`\\?")
+  expect_warning(vg_mark_dot(x = ~a, y = ~b) |> vg_interval_x(as = param(s), pixelsize = 2), "Did you perhaps mean `pixel_size`\\?")
   expect_warning(vg_menu(column = "a", filterby = param(s)), "Did you perhaps mean `filter_by`\\?")
 })
 
 test_that("the generic constructors suggest mosaic's exact key, since that is all they accept", {
   expect_warning(vg_mark(mark = "dot", x = ~a, y = ~b, alpha = 0.5), "Did you perhaps mean `opacity` or `fillOpacity`\\?")
   expect_warning(vg_mark(mark = "dot", x = ~a, y = ~b, fill_opacity = 0.5), "Did you perhaps mean `fillOpacity`\\?")
-  expect_warning(vg_interactor(interactor = "intervalX", as = param(s), pixel_size = 2), "Did you perhaps mean `pixelSize`\\?")
+  expect_warning(vg_interactor(vg_mark_dot(x = ~a, y = ~b), interactor = "intervalX", as = param(s), pixel_size = 2), "Did you perhaps mean `pixelSize`\\?")
   expect_warning(vg_interactor(interactor = "menu", column = "a", filter_by = param(s)), "Did you perhaps mean `filterBy`\\?")
 })
 
@@ -97,7 +97,7 @@ test_that("scales, guides and attribute setters were already snake_case, and sti
 test_that("accepting either spelling: typing the exact key through a wrapper is fine and silent", {
   expect_no_warning(vg_mark_dot(x = ~a, y = ~b, fillOpacity = 0.5))
   expect_no_warning(vg_mark_dot(x = ~a, y = ~b, fill_opacity = 0.5))
-  expect_no_warning(vg_interval_x(as = param(s), pixelSize = 2))
+  expect_no_warning(vg_mark_dot(x = ~a, y = ~b) |> vg_interval_x(as = param(s), pixelSize = 2))
   expect_no_warning(vg_legend_color(tickSize = 5))
   expect_no_warning(vg_legend_color(tick_size = 5))
 })
@@ -113,8 +113,8 @@ test_that("an enum warning names the argument as the caller spells it", {
 
 test_that("a transform error names the argument as the caller spells it", {
   msg <- function(expr) tryCatch({ force(expr); "" }, error = function(e) conditionMessage(e))
-  expect_match(msg(vg_interval_x(as = param(s), pixel_size = ~vg_bin(a, stp = 1))), "in the `pixel_size` argument of interactor")
-  expect_match(msg(vg_interactor(interactor = "intervalX", as = param(s), pixelSize = ~vg_bin(a, stp = 1))), "in the `pixelSize` argument of interactor")
+  expect_match(msg(vg_mark_dot(x = ~a, y = ~b) |> vg_interval_x(as = param(s), pixel_size = ~vg_bin(a, stp = 1))), "in the `pixel_size` argument of interactor")
+  expect_match(msg(vg_interactor(vg_mark_dot(x = ~a, y = ~b), interactor = "intervalX", as = param(s), pixelSize = ~vg_bin(a, stp = 1))), "in the `pixelSize` argument of interactor")
   expect_match(msg(vg_mark_dot(x = ~vg_bin(delay, stp = 1))), "in the `x` argument of mark")
 })
 
@@ -122,7 +122,7 @@ test_that("a transform error names the argument as the caller spells it", {
 
 test_that("the typo being corrected is never treated as 'already supplied' (pixelsize normalises to pixel_size)", {
   # regression: comparing normalised names made `pixelsize` exclude its own correction
-  expect_warning(vg_interval_x(as = param(s), pixelsize = 2), "`pixel_size`")
+  expect_warning(vg_mark_dot(x = ~a, y = ~b) |> vg_interval_x(as = param(s), pixelsize = 2), "`pixel_size`")
   expect_warning(vg_mark_dot(x = ~a, y = ~b, strokewidth = 2), "Did you perhaps mean `stroke_width`\\?")
 })
 

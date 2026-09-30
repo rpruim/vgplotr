@@ -27,6 +27,13 @@ vg_interactor_placement <- function(interactor) {
 #' wrapper per type -- `vg_toggle()`, `vg_menu()`, etc. -- is generated from
 #' mosaic's own JSON schema into `R/interactors-generated.R`.
 #'
+#' A plot-embedded interactor selects on the mark just before it in its plot
+#' -- the columns mapped to that mark's `x`, `y`, `fill`, ... channels -- so
+#' add it right after the mark it's for (`vg_mark_dot(...) |> vg_interval_x(...)`,
+#' then any other marks). Adding one where the mark before it doesn't map the
+#' channel it needs to a data column (or where there is no mark before it)
+#' warns, since the interactor would have nothing to select on.
+#'
 #' The second argument is named `interactor`, not `type`, on purpose: some
 #' interactor/input types have their own unrelated option that mosaic calls
 #' `type` (e.g., `vg_search()`'s `type = "prefix"`, its query mode). Naming
@@ -69,6 +76,7 @@ build_interactor <- function(spec, interactor, args, style) {
       class = "vg_interactor"
     )
     fragment <- as_vg_plot_fragment(spec)
+    warn_interactor_without_mark(fragment, interactor, split$local_args, style)
     fragment$items <- c(fragment$items, list(interactor_obj))
     fragment$attrs <- merge_attrs(fragment$attrs, split$plot_attrs, context = paste0("interactor `", interactor, "`"))
     update_layout(spec, fragment)
@@ -131,4 +139,104 @@ print.vg_input <- function(x, ...) {
   cat("<vg_input:", x$type, ">\n")
   print_fields(x$options)
   invisible(x)
+}
+
+# Mosaic attaches a plot-embedded interactor to the mark just before it in
+# its plot (vgplot's `plot.marks[plot.marks.length - 1]`, when the interactor
+# is added), and reads the data column(s) it selects on from that mark's
+# channels. If that mark doesn't map the needed channel to data, an interval
+# or nearest interactor silently gets no column -- its selection filters
+# with `NULL BETWEEN ...`, matching nothing -- and a toggle or region fails
+# when rendered ("Missing channel"). This warns when the interactor is added.
+
+# The channels `interactor` reads from its mark, given its own options -- each
+# a list(channel =, match =): "prefix" (any channel whose name starts with
+# it, as Mark.channelField() does for intervals and nearest) or "exact" (one
+# of a fixed set, as Toggle/Region do). Empty when an option supplies the
+# column directly.
+interactor_needed_channels <- function(interactor, opts) {
+  need <- function(channels, match) lapply(channels, function(ch) list(channel = ch, match = match))
+  given_channels <- if (is.character(opts$channels)) opts$channels
+  switch(interactor,
+    intervalX = if (is.null(opts$field)) need("x", "prefix"),
+    intervalY = if (is.null(opts$field)) need("y", "prefix"),
+    intervalXY = c(if (is.null(opts$xfield)) need("x", "prefix"), if (is.null(opts$yfield)) need("y", "prefix")),
+    nearest = , nearestX = , nearestY = if (is.null(opts$fields)) {
+      default <- switch(interactor, nearestX = "x", nearestY = "y", c("x", "y"))
+      need(if (!is.null(given_channels)) given_channels else default, "prefix")
+    },
+    toggleX = need("x", "exact"),
+    toggleY = need("y", "exact"),
+    toggleZ = need("z", "exact"),
+    toggleColor = need("color", "exact"),
+    toggle = , region = need(given_channels, "exact"),
+    list()
+  )
+}
+
+# The names of a mark's channels that Mosaic maps to data (a column, SQL
+# expression or transform), as opposed to constants and params -- the
+# channels an interactor can select on. Includes the extra ones under
+# `channels = list(...)`.
+mark_data_channels <- function(mark_obj) {
+  enc <- mark_obj$encodings
+  enc$data_from <- NULL
+  enc$filter_by <- NULL
+  enc$data_optimize <- NULL
+  extra <- enc$channels
+  enc$channels <- NULL
+  if (is.list(extra) && !is.null(names(extra))) enc <- c(enc, extra)
+  is_data <- function(name, v) {
+    if (inherits(v, "formula") || is_vg_transform(v) || is_vg_sql_expr(v)) return(TRUE)
+    if (is.character(v) && length(v) == 1) return(!mosaic_reads_as_constant(name, v))
+    is.list(v) && !is.null(names(v)) && !inherits(v, "vg_param")
+  }
+  names(enc)[mapply(is_data, names(enc), enc)]
+}
+
+has_channel <- function(channels, need) {
+  if (need$match == "prefix") return(any(startsWith(channels, need$channel)))
+  candidates <- switch(need$channel,
+    color = c("color", "fill", "stroke"),
+    x = c("x", "x1", "x2"),
+    y = c("y", "y1", "y2"),
+    need$channel
+  )
+  any(candidates %in% channels)
+}
+
+warn_interactor_without_mark <- function(fragment, interactor, opts, style) {
+  needed <- interactor_needed_channels(interactor, opts)
+  if (length(needed) == 0) return(invisible())
+  fn_name <- function(prefix, type) {
+    if (identical(style, "snake")) paste0(prefix, camel_to_snake(type), "()")
+    else sprintf('vg_%s("%s")', if (prefix == "vg_") "interactor" else "mark", type)
+  }
+  this <- fn_name("vg_", interactor)
+  marks <- Filter(function(item) inherits(item, "vg_mark"), fragment$items)
+  if (length(marks) == 0) {
+    warning(
+      this, " has no mark before it in its plot to select from. An interactor ",
+      "uses the mark just before it, so put it right after that mark, e.g. ",
+      "`vg_mark_dot(...) |> ", this, "`.",
+      call. = FALSE
+    )
+    return(invisible())
+  }
+  prev <- marks[[length(marks)]]
+  missing <- Filter(function(n) !has_channel(mark_data_channels(prev), n), needed)
+  if (length(missing) == 0) return(invisible())
+  chans <- paste0("`", vapply(missing, `[[`, "", "channel"), "`", collapse = " or ")
+  better <- Filter(function(m) all(vapply(needed, has_channel, logical(1), channels = mark_data_channels(m))),
+                   marks[-length(marks)])
+  hint <- if (length(better)) {
+    paste0(" (e.g., right after ", fn_name("vg_mark_", better[[length(better)]]$mark), ")")
+  } else ""
+  warning(
+    this, " uses the mark just before it in its plot, ", fn_name("vg_mark_", prev$mark),
+    ", which doesn't map ", chans, " to a data column, so it would have nothing ",
+    "to select on. Put ", this, " right after the mark it's for", hint, ".",
+    call. = FALSE
+  )
+  invisible()
 }

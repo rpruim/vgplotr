@@ -36,6 +36,13 @@ wrapper per type -- \code{vg_toggle()}, \code{vg_menu()}, etc. -- is generated f
 mosaic's own JSON schema into \code{R/interactors-generated.R}.
 }
 \details{
+A plot-embedded interactor selects on the mark just before it in its plot
+-- the columns mapped to that mark's \code{x}, \code{y}, \code{fill}, ... channels -- so
+add it right after the mark it's for (\code{vg_mark_dot(...) |> vg_interval_x(...)},
+then any other marks). Adding one where the mark before it doesn't map the
+channel it needs to a data column (or where there is no mark before it)
+warns, since the interactor would have nothing to select on.
+
 The second argument is named \code{interactor}, not \code{type}, on purpose: some
 interactor/input types have their own unrelated option that mosaic calls
 \code{type} (e.g., \code{vg_search()}'s \code{type = "prefix"}, its query mode). Naming

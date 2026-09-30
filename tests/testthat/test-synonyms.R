@@ -210,7 +210,7 @@ test_that("scales, guides, legends, inputs and interactors", {
   expect_warning(vg_legend_color(ncol = 2), "Did you perhaps mean `columns`\\?")
   expect_warning(vg_slider(column = "a", default = 5), "Did you perhaps mean `value`\\?")
   expect_warning(vg_menu(column = "a", choices = c("x", "y")), "Did you perhaps mean `options`\\?")
-  expect_warning(vg_interval_x(selection = param(b)), "Did you perhaps mean `as`\\?")
+  expect_warning(vg_mark_dot(x = ~a) |> vg_interval_x(selection = param(b)), "Did you perhaps mean `as`\\?")
 })
 
 test_that("enum values", {
