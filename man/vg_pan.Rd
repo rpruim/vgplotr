@@ -2,9 +2,29 @@
 % Please edit documentation in R/interactors-generated.R
 \name{vg_pan}
 \alias{vg_pan}
-\title{A pan interactor.}
+\alias{vg_pan_x}
+\alias{vg_pan_y}
+\title{The \code{pan}, \code{panX}, and \code{panY} interactors}
 \usage{
 vg_pan(
+  spec = NULL,
+  x = vg_unset,
+  xfield = vg_unset,
+  y = vg_unset,
+  yfield = vg_unset,
+  ...
+)
+
+vg_pan_x(
+  spec = NULL,
+  x = vg_unset,
+  xfield = vg_unset,
+  y = vg_unset,
+  yfield = vg_unset,
+  ...
+)
+
+vg_pan_y(
   spec = NULL,
   x = vg_unset,
   xfield = vg_unset,
@@ -27,6 +47,9 @@ vg_pan(
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
+Each function adds one type of Mosaic interactor: \code{vg_pan()} adds \code{pan}, \code{vg_pan_x()} adds \code{panX}, and \code{vg_pan_y()} adds \code{panY}.
+}
+\details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \seealso{
@@ -34,25 +57,13 @@ Other interactor functions:
 \code{\link[=vg_highlight]{vg_highlight()}},
 \code{\link[=vg_interactor]{vg_interactor()}},
 \code{\link[=vg_interval_x]{vg_interval_x()}},
-\code{\link[=vg_interval_xy]{vg_interval_xy()}},
-\code{\link[=vg_interval_y]{vg_interval_y()}},
 \code{\link[=vg_menu]{vg_menu()}},
 \code{\link[=vg_nearest]{vg_nearest()}},
-\code{\link[=vg_nearest_x]{vg_nearest_x()}},
-\code{\link[=vg_nearest_y]{vg_nearest_y()}},
-\code{\link[=vg_pan_x]{vg_pan_x()}},
-\code{\link[=vg_pan_y]{vg_pan_y()}},
 \code{\link[=vg_pan_zoom]{vg_pan_zoom()}},
-\code{\link[=vg_pan_zoom_x]{vg_pan_zoom_x()}},
-\code{\link[=vg_pan_zoom_y]{vg_pan_zoom_y()}},
 \code{\link[=vg_region]{vg_region()}},
 \code{\link[=vg_search]{vg_search()}},
 \code{\link[=vg_slider]{vg_slider()}},
 \code{\link[=vg_table]{vg_table()}},
-\code{\link[=vg_toggle]{vg_toggle()}},
-\code{\link[=vg_toggle_color]{vg_toggle_color()}},
-\code{\link[=vg_toggle_x]{vg_toggle_x()}},
-\code{\link[=vg_toggle_y]{vg_toggle_y()}},
-\code{\link[=vg_toggle_z]{vg_toggle_z()}}
+\code{\link[=vg_toggle]{vg_toggle()}}
 }
 \concept{interactor functions}

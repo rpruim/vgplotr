@@ -3,9 +3,29 @@
 %   R/interactors-generated.R
 \name{vg_pan_zoom}
 \alias{vg_pan_zoom}
-\title{A panZoom interactor.}
+\alias{vg_pan_zoom_x}
+\alias{vg_pan_zoom_y}
+\title{The \code{panZoom}, \code{panZoomX}, and \code{panZoomY} interactors}
 \usage{
 vg_pan_zoom(
+  spec = NULL,
+  x = vg_unset,
+  xfield = vg_unset,
+  y = vg_unset,
+  yfield = vg_unset,
+  ...
+)
+
+vg_pan_zoom_x(
+  spec = NULL,
+  x = vg_unset,
+  xfield = vg_unset,
+  y = vg_unset,
+  yfield = vg_unset,
+  ...
+)
+
+vg_pan_zoom_y(
   spec = NULL,
   x = vg_unset,
   xfield = vg_unset,
@@ -28,13 +48,16 @@ vg_pan_zoom(
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
+Each function adds one type of Mosaic interactor: \code{vg_pan_zoom()} adds \code{panZoom}, \code{vg_pan_zoom_x()} adds \code{panZoomX}, and \code{vg_pan_zoom_y()} adds \code{panZoomY}.
+}
+\details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 
-Examples on the package website that use this function:
+Examples on the package website that use these functions:
 \itemize{
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html}{Pan & Zoom}
+\item \code{vg_pan_zoom()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html}{Pan & Zoom}
 }
 }
 
@@ -43,25 +66,13 @@ Other interactor functions:
 \code{\link[=vg_highlight]{vg_highlight()}},
 \code{\link[=vg_interactor]{vg_interactor()}},
 \code{\link[=vg_interval_x]{vg_interval_x()}},
-\code{\link[=vg_interval_xy]{vg_interval_xy()}},
-\code{\link[=vg_interval_y]{vg_interval_y()}},
 \code{\link[=vg_menu]{vg_menu()}},
 \code{\link[=vg_nearest]{vg_nearest()}},
-\code{\link[=vg_nearest_x]{vg_nearest_x()}},
-\code{\link[=vg_nearest_y]{vg_nearest_y()}},
 \code{\link[=vg_pan]{vg_pan()}},
-\code{\link[=vg_pan_x]{vg_pan_x()}},
-\code{\link[=vg_pan_y]{vg_pan_y()}},
-\code{\link[=vg_pan_zoom_x]{vg_pan_zoom_x()}},
-\code{\link[=vg_pan_zoom_y]{vg_pan_zoom_y()}},
 \code{\link[=vg_region]{vg_region()}},
 \code{\link[=vg_search]{vg_search()}},
 \code{\link[=vg_slider]{vg_slider()}},
 \code{\link[=vg_table]{vg_table()}},
-\code{\link[=vg_toggle]{vg_toggle()}},
-\code{\link[=vg_toggle_color]{vg_toggle_color()}},
-\code{\link[=vg_toggle_x]{vg_toggle_x()}},
-\code{\link[=vg_toggle_y]{vg_toggle_y()}},
-\code{\link[=vg_toggle_z]{vg_toggle_z()}}
+\code{\link[=vg_toggle]{vg_toggle()}}
 }
 \concept{interactor functions}

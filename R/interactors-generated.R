@@ -58,59 +58,43 @@ vg_highlight <- function(spec = NULL, by = vg_unset, fill = vg_unset, fill_opaci
   vg_interactor_(spec, "highlight", by = by, fill = fill, fillOpacity = fill_opacity, opacity = opacity, stroke = stroke, strokeOpacity = stroke_opacity, ...)
 }
 
-#' An intervalX interactor.
+#' The `intervalX`, `intervalY`, and `intervalXY` interactors
+#'
+#' Each function adds one type of Mosaic interactor: `vg_interval_x()` adds `intervalX`, `vg_interval_y()` adds `intervalY`, and `vg_interval_xy()` adds `intervalXY`. They take the same arguments, except those noted below as belonging to only some of them.
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
 #'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
 #' @param as `<param()>` The output selection.
 #' @param brush `<list>` CSS styles for the brush (SVG `rect`) element.
-#' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
+#' @param field `<string>` The name of the field (database column) over which the interval selection should be defined. (Only for `vg_interval_x()` and `vg_interval_y()`.)
 #' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param pixel_size `<number>` The size of an interactive pixel (default `1`).
+#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined. (Only for `vg_interval_xy()`.)
+#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined. (Only for `vg_interval_xy()`.)
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
+#' @rdname vg_interval
 #' @export
 vg_interval_x <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = vg_unset, peers = vg_unset, pixel_size = vg_unset, ...) {
   vg_interactor_(spec, "intervalX", as = as, brush = brush, field = field, peers = peers, pixelSize = pixel_size, ...)
 }
 
-#' An intervalY interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as `<param()>` The output selection.
-#' @param brush `<list>` CSS styles for the brush (SVG `rect`) element.
-#' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
-#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param pixel_size `<number>` The size of an interactive pixel (default `1`).
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
+#' @rdname vg_interval
 #' @export
 vg_interval_y <- function(spec = NULL, as = vg_unset, brush = vg_unset, field = vg_unset, peers = vg_unset, pixel_size = vg_unset, ...) {
   vg_interactor_(spec, "intervalY", as = as, brush = brush, field = field, peers = peers, pixelSize = pixel_size, ...)
 }
 
-#' An intervalXY interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as `<param()>` The output selection.
-#' @param brush `<list>` CSS styles for the brush (SVG `rect`) element.
-#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param pixel_size `<number>` The size of an interactive pixel (default `1`).
-#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
+#' @rdname vg_interval
 #' @export
 vg_interval_xy <- function(spec = NULL, as = vg_unset, brush = vg_unset, peers = vg_unset, pixel_size = vg_unset, xfield = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "intervalXY", as = as, brush = brush, peers = peers, pixelSize = pixel_size, xfield = xfield, yfield = yfield, ...)
 }
 
-#' A nearestX interactor.
+#' The `nearest`, `nearestX`, and `nearestY` interactors
+#'
+#' Each function adds one type of Mosaic interactor: `vg_nearest()` adds `nearest`, `vg_nearest_x()` adds `nearestX`, and `vg_nearest_y()` adds `nearestY`.
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
 #'
@@ -121,28 +105,27 @@ vg_interval_xy <- function(spec = NULL, as = vg_unset, brush = vg_unset, peers =
 #' @param max_radius `<number>` The maximum radius of a nearest selection (default 40).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
+#' @rdname vg_nearest
+#' @export
+vg_nearest <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, max_radius = vg_unset, ...) {
+  vg_interactor_(spec, "nearest", as = as, channels = channels, fields = fields, maxRadius = max_radius, ...)
+}
+
+#' @rdname vg_nearest
 #' @export
 vg_nearest_x <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, max_radius = vg_unset, ...) {
   vg_interactor_(spec, "nearestX", as = as, channels = channels, fields = fields, maxRadius = max_radius, ...)
 }
 
-#' A nearestY interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as `<param()>` The output selection.
-#' @param channels `<character vector>` The encoding channels whose domain values should be selected.
-#' @param fields `<character vector>` The fields (database column names) to use in generated selection clause predicates.
-#' @param max_radius `<number>` The maximum radius of a nearest selection (default 40).
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
+#' @rdname vg_nearest
 #' @export
 vg_nearest_y <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, max_radius = vg_unset, ...) {
   vg_interactor_(spec, "nearestY", as = as, channels = channels, fields = fields, maxRadius = max_radius, ...)
 }
 
-#' A pan interactor.
+#' The `pan`, `panX`, and `panY` interactors
+#'
+#' Each function adds one type of Mosaic interactor: `vg_pan()` adds `pan`, `vg_pan_x()` adds `panX`, and `vg_pan_y()` adds `panY`.
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
 #'
@@ -153,44 +136,27 @@ vg_nearest_y <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields
 #' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
+#' @rdname vg_pan
 #' @export
 vg_pan <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "pan", x = x, xfield = xfield, y = y, yfield = yfield, ...)
 }
 
-#' A panX interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x `<param()>` The output selection for the `x` domain.
-#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y `<param()>` The output selection for the `y` domain.
-#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
+#' @rdname vg_pan
 #' @export
 vg_pan_x <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panX", x = x, xfield = xfield, y = y, yfield = yfield, ...)
 }
 
-#' A panY interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x `<param()>` The output selection for the `x` domain.
-#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y `<param()>` The output selection for the `y` domain.
-#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
+#' @rdname vg_pan
 #' @export
 vg_pan_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panY", x = x, xfield = xfield, y = y, yfield = yfield, ...)
 }
 
-#' A panZoom interactor.
+#' The `panZoom`, `panZoomX`, and `panZoomY` interactors
+#'
+#' Each function adds one type of Mosaic interactor: `vg_pan_zoom()` adds `panZoom`, `vg_pan_zoom_x()` adds `panZoomX`, and `vg_pan_zoom_y()` adds `panZoomY`.
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
 #'
@@ -201,38 +167,19 @@ vg_pan_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset,
 #' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
+#' @rdname vg_pan_zoom
 #' @export
 vg_pan_zoom <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panZoom", x = x, xfield = xfield, y = y, yfield = yfield, ...)
 }
 
-#' A panZoomX interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x `<param()>` The output selection for the `x` domain.
-#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y `<param()>` The output selection for the `y` domain.
-#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
+#' @rdname vg_pan_zoom
 #' @export
 vg_pan_zoom_x <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panZoomX", x = x, xfield = xfield, y = y, yfield = yfield, ...)
 }
 
-#' A panZoomY interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x `<param()>` The output selection for the `x` domain.
-#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y `<param()>` The output selection for the `y` domain.
-#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
+#' @rdname vg_pan_zoom
 #' @export
 vg_pan_zoom_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panZoomY", x = x, xfield = xfield, y = y, yfield = yfield, ...)
@@ -254,91 +201,46 @@ vg_region <- function(spec = NULL, as = vg_unset, brush = vg_unset, channels = v
   vg_interactor_(spec, "region", as = as, brush = brush, channels = channels, peers = peers, ...)
 }
 
-#' A toggle interactor.
+#' The `toggle`, `toggleX`, `toggleY`, `toggleZ`, and `toggleColor` interactors
+#'
+#' Each function adds one type of Mosaic interactor: `vg_toggle()` adds `toggle`, `vg_toggle_x()` adds `toggleX`, `vg_toggle_y()` adds `toggleY`, `vg_toggle_z()` adds `toggleZ`, and `vg_toggle_color()` adds `toggleColor`. They take the same arguments, except those noted below as belonging to only some of them.
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
 #'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
 #' @param as `<param()>` The output selection.
-#' @param channels `<character vector>` The encoding channels whose domain values should be selected.
+#' @param channels `<character vector>` The encoding channels whose domain values should be selected. (Only for `vg_toggle()`.)
 #' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
+#' @rdname vg_toggle
 #' @export
 vg_toggle <- function(spec = NULL, as = vg_unset, channels = vg_unset, peers = vg_unset, ...) {
   vg_interactor_(spec, "toggle", as = as, channels = channels, peers = peers, ...)
 }
 
-#' A toggleX interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as `<param()>` The output selection.
-#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
+#' @rdname vg_toggle
 #' @export
 vg_toggle_x <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
   vg_interactor_(spec, "toggleX", as = as, peers = peers, ...)
 }
 
-#' A toggleY interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as `<param()>` The output selection.
-#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
+#' @rdname vg_toggle
 #' @export
 vg_toggle_y <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
   vg_interactor_(spec, "toggleY", as = as, peers = peers, ...)
 }
 
-#' A toggleColor interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as `<param()>` The output selection.
-#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
-#' @export
-vg_toggle_color <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
-  vg_interactor_(spec, "toggleColor", as = as, peers = peers, ...)
-}
-
-#' A nearest interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as `<param()>` The output selection.
-#' @param channels `<character vector>` The encoding channels whose domain values should be selected.
-#' @param fields `<character vector>` The fields (database column names) to use in generated selection clause predicates.
-#' @param max_radius `<number>` The maximum radius of a nearest selection (default 40).
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
-#' @export
-vg_nearest <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields = vg_unset, max_radius = vg_unset, ...) {
-  vg_interactor_(spec, "nearest", as = as, channels = channels, fields = fields, maxRadius = max_radius, ...)
-}
-
-#' A toggleZ interactor.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param as `<param()>` The output selection.
-#' @param peers `<boolean>` A flag indicating if peer (sibling) marks are excluded when cross-filtering (default `true`).
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
+#' @rdname vg_toggle
 #' @export
 vg_toggle_z <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
   vg_interactor_(spec, "toggleZ", as = as, peers = peers, ...)
+}
+
+#' @rdname vg_toggle
+#' @export
+vg_toggle_color <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
+  vg_interactor_(spec, "toggleColor", as = as, peers = peers, ...)
 }
 
 #' A menu input component.

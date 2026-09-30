@@ -2,7 +2,9 @@
 % Please edit documentation in R/example-usage-generated.R, R/marks-generated.R
 \name{vg_mark_dot}
 \alias{vg_mark_dot}
-\title{The dot mark.}
+\alias{vg_mark_dot_x}
+\alias{vg_mark_dot_y}
+\title{The \code{dot}, \code{dotX}, and \code{dotY} marks}
 \usage{
 vg_mark_dot(
   spec = NULL,
@@ -24,6 +26,120 @@ vg_mark_dot(
   fy = vg_unset,
   href = vg_unset,
   image_filter = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  mix_blend_mode = vg_unset,
+  opacity = vg_unset,
+  paint_order = vg_unset,
+  pointer_events = vg_unset,
+  r = vg_unset,
+  reverse = vg_unset,
+  rotate = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  symbol = vg_unset,
+  target = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  x = vg_unset,
+  y = vg_unset,
+  z = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
+
+vg_mark_dot_x(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  frame_anchor = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  interval = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  mix_blend_mode = vg_unset,
+  opacity = vg_unset,
+  paint_order = vg_unset,
+  pointer_events = vg_unset,
+  r = vg_unset,
+  reverse = vg_unset,
+  rotate = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  symbol = vg_unset,
+  target = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  x = vg_unset,
+  y = vg_unset,
+  z = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
+
+vg_mark_dot_y(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  frame_anchor = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  interval = vg_unset,
   margin = vg_unset,
   margin_bottom = vg_unset,
   margin_left = vg_unset,
@@ -166,31 +282,20 @@ vg_mark_dot(
 \item{filter_by}{A Param/Selection (e.g., from \code{\link[=param]{param()}}) to filter this mark's data by.}
 
 \item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
+
+\item{interval}{\verb{<"day"/"week"/"month"/... | number | param()>} Enforces uniformity for data at regular intervals, such as integer values or daily samples. (Only for \code{vg_mark_dot_x()} and \code{vg_mark_dot_y()}.)}
 }
 \description{
+Each function adds one type of Mosaic mark: \code{vg_mark_dot()} adds \code{dot}, \code{vg_mark_dot_x()} adds \code{dotX}, and \code{vg_mark_dot_y()} adds \code{dotY}. They take the same arguments, except those noted below as belonging to only some of them.
+}
+\details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 
-Examples on the package website that use this function:
+Examples on the package website that use these functions:
 \itemize{
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html}{Mark Types}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html}{Symbol Plots}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html}{Voronoi Diagram}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-line-multi-series.html}{Line Multi-Series}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-linear-regression.html}{Linear Regression}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html}{Contour Plot}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density2d.html}{Density 2D}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html}{Earthquakes Globe}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-county-map.html}{U.S. Counties}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-state-map.html}{U.S. States}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-walmart-openings.html}{Walmart Openings}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-athletes.html}{Olympic Athletes}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html}{Pan & Zoom}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html}{Protein Design Explorer}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-splom.html}{Scatter Plot Matrix (SPLOM)}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html}{Seattle Weather}
-\item \href{https://rpruim.github.io/vgplotr/articles/params-computed-params.html}{Computed Params}
+\item \code{vg_mark_dot()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html}{Mark Types}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html}{Symbol Plots}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html}{Voronoi Diagram}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-line-multi-series.html}{Line Multi-Series}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-linear-regression.html}{Linear Regression}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html}{Contour Plot}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density2d.html}{Density 2D}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html}{Earthquakes Globe}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-county-map.html}{U.S. Counties}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-state-map.html}{U.S. States}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-walmart-openings.html}{Walmart Openings}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-athletes.html}{Olympic Athletes}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html}{Pan & Zoom}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html}{Protein Design Explorer}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-splom.html}{Scatter Plot Matrix (SPLOM)}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html}{Seattle Weather}, \href{https://rpruim.github.io/vgplotr/articles/params-computed-params.html}{Computed Params}
 }
 }
 
@@ -198,37 +303,21 @@ Examples on the package website that use this function:
 Other mark functions:
 \code{\link[=vg_mark]{vg_mark()}},
 \code{\link[=vg_mark_area]{vg_mark_area()}},
-\code{\link[=vg_mark_area_x]{vg_mark_area_x()}},
-\code{\link[=vg_mark_area_y]{vg_mark_area_y()}},
 \code{\link[=vg_mark_arrow]{vg_mark_arrow()}},
-\code{\link[=vg_mark_axis_fx]{vg_mark_axis_fx()}},
-\code{\link[=vg_mark_axis_fy]{vg_mark_axis_fy()}},
 \code{\link[=vg_mark_axis_x]{vg_mark_axis_x()}},
-\code{\link[=vg_mark_axis_y]{vg_mark_axis_y()}},
 \code{\link[=vg_mark_bar_x]{vg_mark_bar_x()}},
-\code{\link[=vg_mark_bar_y]{vg_mark_bar_y()}},
 \code{\link[=vg_mark_cell]{vg_mark_cell()}},
-\code{\link[=vg_mark_cell_x]{vg_mark_cell_x()}},
-\code{\link[=vg_mark_cell_y]{vg_mark_cell_y()}},
 \code{\link[=vg_mark_circle]{vg_mark_circle()}},
 \code{\link[=vg_mark_contour]{vg_mark_contour()}},
 \code{\link[=vg_mark_delaunay_link]{vg_mark_delaunay_link()}},
 \code{\link[=vg_mark_delaunay_mesh]{vg_mark_delaunay_mesh()}},
 \code{\link[=vg_mark_dense_line]{vg_mark_dense_line()}},
 \code{\link[=vg_mark_density]{vg_mark_density()}},
-\code{\link[=vg_mark_density_x]{vg_mark_density_x()}},
-\code{\link[=vg_mark_density_y]{vg_mark_density_y()}},
-\code{\link[=vg_mark_dot_x]{vg_mark_dot_x()}},
-\code{\link[=vg_mark_dot_y]{vg_mark_dot_y()}},
 \code{\link[=vg_mark_errorbar_x]{vg_mark_errorbar_x()}},
-\code{\link[=vg_mark_errorbar_y]{vg_mark_errorbar_y()}},
 \code{\link[=vg_mark_frame]{vg_mark_frame()}},
 \code{\link[=vg_mark_geo]{vg_mark_geo()}},
 \code{\link[=vg_mark_graticule]{vg_mark_graticule()}},
-\code{\link[=vg_mark_grid_fx]{vg_mark_grid_fx()}},
-\code{\link[=vg_mark_grid_fy]{vg_mark_grid_fy()}},
 \code{\link[=vg_mark_grid_x]{vg_mark_grid_x()}},
-\code{\link[=vg_mark_grid_y]{vg_mark_grid_y()}},
 \code{\link[=vg_mark_heatmap]{vg_mark_heatmap()}},
 \code{\link[=vg_mark_hexagon]{vg_mark_hexagon()}},
 \code{\link[=vg_mark_hexbin]{vg_mark_hexbin()}},
@@ -236,30 +325,19 @@ Other mark functions:
 \code{\link[=vg_mark_hull]{vg_mark_hull()}},
 \code{\link[=vg_mark_image]{vg_mark_image()}},
 \code{\link[=vg_mark_line]{vg_mark_line()}},
-\code{\link[=vg_mark_line_x]{vg_mark_line_x()}},
-\code{\link[=vg_mark_line_y]{vg_mark_line_y()}},
 \code{\link[=vg_mark_link]{vg_mark_link()}},
 \code{\link[=vg_mark_raster]{vg_mark_raster()}},
 \code{\link[=vg_mark_raster_tile]{vg_mark_raster_tile()}},
 \code{\link[=vg_mark_rect]{vg_mark_rect()}},
-\code{\link[=vg_mark_rect_x]{vg_mark_rect_x()}},
-\code{\link[=vg_mark_rect_y]{vg_mark_rect_y()}},
 \code{\link[=vg_mark_regression_y]{vg_mark_regression_y()}},
 \code{\link[=vg_mark_rule_x]{vg_mark_rule_x()}},
-\code{\link[=vg_mark_rule_y]{vg_mark_rule_y()}},
 \code{\link[=vg_mark_sphere]{vg_mark_sphere()}},
 \code{\link[=vg_mark_spike]{vg_mark_spike()}},
 \code{\link[=vg_mark_text]{vg_mark_text()}},
-\code{\link[=vg_mark_text_x]{vg_mark_text_x()}},
-\code{\link[=vg_mark_text_y]{vg_mark_text_y()}},
 \code{\link[=vg_mark_tick_x]{vg_mark_tick_x()}},
-\code{\link[=vg_mark_tick_y]{vg_mark_tick_y()}},
 \code{\link[=vg_mark_vector]{vg_mark_vector()}},
-\code{\link[=vg_mark_vector_x]{vg_mark_vector_x()}},
-\code{\link[=vg_mark_vector_y]{vg_mark_vector_y()}},
 \code{\link[=vg_mark_voronoi]{vg_mark_voronoi()}},
 \code{\link[=vg_mark_voronoi_mesh]{vg_mark_voronoi_mesh()}},
-\code{\link[=vg_mark_waffle_x]{vg_mark_waffle_x()}},
-\code{\link[=vg_mark_waffle_y]{vg_mark_waffle_y()}}
+\code{\link[=vg_mark_waffle_x]{vg_mark_waffle_x()}}
 }
 \concept{mark functions}

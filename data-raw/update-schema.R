@@ -586,7 +586,7 @@ enum_props <- property_enums(c(mark_defs, interactor_defs), defs)
 
 generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, prop_types, extra_formals = character(),
                               extra_docs = character(), title, spec_doc, family, required = character(),
-                              formula_arg = FALSE) {
+                              formula_arg = FALSE, doc = NULL) {
   props <- names(properties)
   props <- c(intersect(required, props), setdiff(props, required))
   snake_props <- camel_to_snake(props)
@@ -607,7 +607,7 @@ generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, prop_t
     if (length(extra_formals)) paste0(extra_formals, " = ", extra_formals)
   ), collapse = ", ")
 
-  c(
+  if (is.null(doc)) doc <- c(
     paste0("#' ", title),
     "#'",
     if (length(props)) "#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.",
@@ -618,12 +618,108 @@ generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, prop_t
     "#' @param ... Additional options or plot-level attributes.",
     extra_docs,
     sprintf("#' @family %s", family),
-    "#' @export",
+    "#' @export"
+  )
+  c(
+    doc,
     sprintf("%s <- function(%s) {", fn, formals_str),
     sprintf("  %s(%s)", helper, call_args),
     "}",
     ""
   )
+}
+
+# --- Variants that share a help page -------------------------------------
+#
+# Mark and interactor types that differ only by a suffix -- dot/dotX/dotY,
+# axisX/axisY/axisFx/axisFy, intervalX/intervalY/intervalXY,
+# toggle/toggleX/.../toggleColor -- share one help page (named after the
+# shared stem, e.g. vg_mark_dot or vg_mark_bar), since they take nearly the
+# same arguments. Each argument is documented once, noting when only some of
+# the functions take it; the argument docs are keyed by property name, so a
+# shared argument has the same text for every variant anyway.
+
+variant_suffixes <- c("", "X", "Y", "XY", "Fx", "Fy", "Z", "Color")
+variant_stem <- function(type) sub("(XY|X|Y|Z|Fx|Fy|Color)$", "", type)
+
+# Groups of `types` sharing a stem, each ordered base, X, Y, XY, Fx, Fy, Z,
+# Color; a type with no variants is a group of one.
+variant_groups <- function(types) {
+  groups <- split(types, variant_stem(types))
+  lapply(groups, function(g) {
+    suffix <- substring(g, nchar(variant_stem(g[[1]])) + 1)
+    g[order(match(suffix, variant_suffixes))]
+  })
+}
+
+english_list <- function(x) {
+  n <- length(x)
+  if (n <= 2) paste(x, collapse = " and ") else paste0(paste(x[-n], collapse = ", "), ", and ", x[n])
+}
+
+# The roxygen block for a group's shared page. `members` is a list of
+# list(fn, type, props) -- props in each function's own argument order.
+group_doc <- function(members, rdname, kind, prop_docs, prop_types, extra_docs, spec_doc, family, formula_arg) {
+  fns <- vapply(members, `[[`, "", "fn")
+  types <- vapply(members, `[[`, "", "type")
+  all_props <- unique(unlist(lapply(members, `[[`, "props")))
+  has <- lapply(all_props, function(p) fns[vapply(members, function(m) p %in% m$props, logical(1))])
+  partial <- lengths(has) < length(members)
+  only <- ifelse(partial, vapply(has, function(f) sprintf(" (Only for %s.)", english_list(paste0("`", f, "()`"))), ""), "")
+  c(
+    sprintf("#' The %s %ss", english_list(paste0("`", types, "`")), kind),
+    "#'",
+    paste0(
+      "#' Each function adds one type of Mosaic ", kind, ": ",
+      english_list(sprintf("`%s()` adds `%s`", fns, types)), ".",
+      if (any(partial)) " They take the same arguments, except those noted below as belonging to only some of them."
+    ),
+    "#'",
+    "#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.",
+    "#'",
+    sprintf("#' @param spec %s", spec_doc),
+    if (formula_arg) sprintf("#' @param formula %s", .vg_formula_doc),
+    sprintf("#' @param %s %s %s%s", camel_to_snake(all_props), unlist(prop_types[all_props]), unlist(prop_docs[all_props]), only),
+    "#' @param ... Additional options or plot-level attributes.",
+    extra_docs,
+    sprintf("#' @family %s", family),
+    sprintf("#' @rdname %s", rdname),
+    "#' @export"
+  )
+}
+
+# Generates the wrappers for `types` (in the given order, each group emitted
+# together where its first member appears), giving each group of variants one
+# shared page. `wrapper_args(type)` returns generate_wrapper()'s arguments for
+# one type; `rd_prefix` is the function-name prefix ("vg_mark_" or "vg_").
+generate_grouped <- function(types, kind, rd_prefix, wrapper_args) {
+  groups <- variant_groups(types)
+  group_of <- setNames(rep(names(groups), lengths(groups)), unlist(groups))
+  out <- character()
+  done <- character()
+  for (type in types) {
+    if (type %in% done) next
+    g <- groups[[group_of[[type]]]]
+    done <- c(done, g)
+    if (length(g) == 1) {
+      out <- c(out, do.call(generate_wrapper, wrapper_args(type)))
+      next
+    }
+    args <- lapply(g, wrapper_args)
+    rdname <- paste0(rd_prefix, camel_to_snake(variant_stem(g[[1]])))
+    members <- lapply(args, function(a) {
+      props <- names(a$properties)
+      list(fn = a$fn, type = a$type_arg, props = c(intersect(a$required, props), setdiff(props, a$required)))
+    })
+    a1 <- args[[1]]
+    head_doc <- group_doc(members, rdname, kind, a1$prop_docs, a1$prop_types, a1$extra_docs %||% character(),
+                          a1$spec_doc, a1$family, isTRUE(a1$formula_arg))
+    for (i in seq_along(g)) {
+      doc <- if (i == 1) head_doc else c(sprintf("#' @rdname %s", rdname), "#' @export")
+      out <- c(out, do.call(generate_wrapper, c(args[[i]], list(doc = doc))))
+    }
+  }
+  out
 }
 
 # --- R/marks-generated.R -------------------------------------------------
@@ -643,10 +739,8 @@ mark_lines <- c(
   "# unrelated vg_<name>() function elsewhere in the package.",
   ""
 )
-for (name in sort(names(mark_defs))) {
-  fn <- paste0("vg_mark_", camel_to_snake(name))
-  mark_lines <- c(mark_lines, generate_wrapper(
-    fn = fn,
+mark_lines <- c(mark_lines, generate_grouped(sort(names(mark_defs)), "mark", "vg_mark_", function(name) list(
+    fn = paste0("vg_mark_", camel_to_snake(name)),
     helper = "vg_mark_",
     type_arg = name,
     properties = mark_defs[[name]]$properties,
@@ -663,8 +757,7 @@ for (name in sort(names(mark_defs))) {
     family = "mark functions",
     required = mark_defs[[name]]$required,
     formula_arg = TRUE
-  ))
-}
+)))
 writeLines(mark_lines, "R/marks-generated.R")
 
 # --- R/interactors-generated.R --------------------------------------------
@@ -692,10 +785,8 @@ inter_lines <- c(
   "# other toggle option) as a real, documented argument.",
   ""
 )
-for (type in interactor_types) {
-  fn <- paste0("vg_", camel_to_snake(type))
-  inter_lines <- c(inter_lines, generate_wrapper(
-    fn = fn,
+inter_lines <- c(inter_lines, generate_grouped(interactor_types, "interactor", "vg_", function(type) list(
+    fn = paste0("vg_", camel_to_snake(type)),
     helper = "vg_interactor_",
     type_arg = type,
     properties = interactor_defs[[type]]$properties,
@@ -704,8 +795,7 @@ for (type in interactor_types) {
     title = docline(interactor_defs[[type]]$description, paste0("A `", type, "` interactor.")),
     spec_doc = "A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.",
     family = "interactor functions"
-  ))
-}
+)))
 for (type in input_types) {
   fn <- paste0("vg_", camel_to_snake(type))
   inter_lines <- c(inter_lines, generate_wrapper(

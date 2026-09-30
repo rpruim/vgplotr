@@ -2,9 +2,127 @@
 % Please edit documentation in R/example-usage-generated.R, R/marks-generated.R
 \name{vg_mark_line}
 \alias{vg_mark_line}
-\title{The line mark.}
+\alias{vg_mark_line_x}
+\alias{vg_mark_line_y}
+\title{The \code{line}, \code{lineX}, and \code{lineY} marks}
 \usage{
 vg_mark_line(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  curve = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  marker = vg_unset,
+  marker_end = vg_unset,
+  marker_mid = vg_unset,
+  marker_start = vg_unset,
+  mix_blend_mode = vg_unset,
+  opacity = vg_unset,
+  paint_order = vg_unset,
+  pointer_events = vg_unset,
+  reverse = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  target = vg_unset,
+  tension = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  x = vg_unset,
+  y = vg_unset,
+  z = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
+
+vg_mark_line_x(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  curve = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  marker = vg_unset,
+  marker_end = vg_unset,
+  marker_mid = vg_unset,
+  marker_start = vg_unset,
+  mix_blend_mode = vg_unset,
+  opacity = vg_unset,
+  paint_order = vg_unset,
+  pointer_events = vg_unset,
+  reverse = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  target = vg_unset,
+  tension = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  x = vg_unset,
+  y = vg_unset,
+  z = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
+
+vg_mark_line_y(
   spec = NULL,
   formula = vg_unset,
   aria_description = vg_unset,
@@ -174,14 +292,17 @@ vg_mark_line(
 \item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
 }
 \description{
+Each function adds one type of Mosaic mark: \code{vg_mark_line()} adds \code{line}, \code{vg_mark_line_x()} adds \code{lineX}, and \code{vg_mark_line_y()} adds \code{lineY}.
+}
+\details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 
-Examples on the package website that use this function:
+Examples on the package website that use these functions:
 \itemize{
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html}{Driving Shifts into Reverse}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html}{WNBA Shot Chart}
+\item \code{vg_mark_line()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html}{Driving Shifts into Reverse}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html}{WNBA Shot Chart}
+\item \code{vg_mark_line_y()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-airline-travelers.html}{Airline Travelers}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html}{Mark Types}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-line-multi-series.html}{Line Multi-Series}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-moving-average.html}{Moving Average}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-normalize.html}{Normalized Stock Prices}
 }
 }
 
@@ -189,68 +310,41 @@ Examples on the package website that use this function:
 Other mark functions:
 \code{\link[=vg_mark]{vg_mark()}},
 \code{\link[=vg_mark_area]{vg_mark_area()}},
-\code{\link[=vg_mark_area_x]{vg_mark_area_x()}},
-\code{\link[=vg_mark_area_y]{vg_mark_area_y()}},
 \code{\link[=vg_mark_arrow]{vg_mark_arrow()}},
-\code{\link[=vg_mark_axis_fx]{vg_mark_axis_fx()}},
-\code{\link[=vg_mark_axis_fy]{vg_mark_axis_fy()}},
 \code{\link[=vg_mark_axis_x]{vg_mark_axis_x()}},
-\code{\link[=vg_mark_axis_y]{vg_mark_axis_y()}},
 \code{\link[=vg_mark_bar_x]{vg_mark_bar_x()}},
-\code{\link[=vg_mark_bar_y]{vg_mark_bar_y()}},
 \code{\link[=vg_mark_cell]{vg_mark_cell()}},
-\code{\link[=vg_mark_cell_x]{vg_mark_cell_x()}},
-\code{\link[=vg_mark_cell_y]{vg_mark_cell_y()}},
 \code{\link[=vg_mark_circle]{vg_mark_circle()}},
 \code{\link[=vg_mark_contour]{vg_mark_contour()}},
 \code{\link[=vg_mark_delaunay_link]{vg_mark_delaunay_link()}},
 \code{\link[=vg_mark_delaunay_mesh]{vg_mark_delaunay_mesh()}},
 \code{\link[=vg_mark_dense_line]{vg_mark_dense_line()}},
 \code{\link[=vg_mark_density]{vg_mark_density()}},
-\code{\link[=vg_mark_density_x]{vg_mark_density_x()}},
-\code{\link[=vg_mark_density_y]{vg_mark_density_y()}},
 \code{\link[=vg_mark_dot]{vg_mark_dot()}},
-\code{\link[=vg_mark_dot_x]{vg_mark_dot_x()}},
-\code{\link[=vg_mark_dot_y]{vg_mark_dot_y()}},
 \code{\link[=vg_mark_errorbar_x]{vg_mark_errorbar_x()}},
-\code{\link[=vg_mark_errorbar_y]{vg_mark_errorbar_y()}},
 \code{\link[=vg_mark_frame]{vg_mark_frame()}},
 \code{\link[=vg_mark_geo]{vg_mark_geo()}},
 \code{\link[=vg_mark_graticule]{vg_mark_graticule()}},
-\code{\link[=vg_mark_grid_fx]{vg_mark_grid_fx()}},
-\code{\link[=vg_mark_grid_fy]{vg_mark_grid_fy()}},
 \code{\link[=vg_mark_grid_x]{vg_mark_grid_x()}},
-\code{\link[=vg_mark_grid_y]{vg_mark_grid_y()}},
 \code{\link[=vg_mark_heatmap]{vg_mark_heatmap()}},
 \code{\link[=vg_mark_hexagon]{vg_mark_hexagon()}},
 \code{\link[=vg_mark_hexbin]{vg_mark_hexbin()}},
 \code{\link[=vg_mark_hexgrid]{vg_mark_hexgrid()}},
 \code{\link[=vg_mark_hull]{vg_mark_hull()}},
 \code{\link[=vg_mark_image]{vg_mark_image()}},
-\code{\link[=vg_mark_line_x]{vg_mark_line_x()}},
-\code{\link[=vg_mark_line_y]{vg_mark_line_y()}},
 \code{\link[=vg_mark_link]{vg_mark_link()}},
 \code{\link[=vg_mark_raster]{vg_mark_raster()}},
 \code{\link[=vg_mark_raster_tile]{vg_mark_raster_tile()}},
 \code{\link[=vg_mark_rect]{vg_mark_rect()}},
-\code{\link[=vg_mark_rect_x]{vg_mark_rect_x()}},
-\code{\link[=vg_mark_rect_y]{vg_mark_rect_y()}},
 \code{\link[=vg_mark_regression_y]{vg_mark_regression_y()}},
 \code{\link[=vg_mark_rule_x]{vg_mark_rule_x()}},
-\code{\link[=vg_mark_rule_y]{vg_mark_rule_y()}},
 \code{\link[=vg_mark_sphere]{vg_mark_sphere()}},
 \code{\link[=vg_mark_spike]{vg_mark_spike()}},
 \code{\link[=vg_mark_text]{vg_mark_text()}},
-\code{\link[=vg_mark_text_x]{vg_mark_text_x()}},
-\code{\link[=vg_mark_text_y]{vg_mark_text_y()}},
 \code{\link[=vg_mark_tick_x]{vg_mark_tick_x()}},
-\code{\link[=vg_mark_tick_y]{vg_mark_tick_y()}},
 \code{\link[=vg_mark_vector]{vg_mark_vector()}},
-\code{\link[=vg_mark_vector_x]{vg_mark_vector_x()}},
-\code{\link[=vg_mark_vector_y]{vg_mark_vector_y()}},
 \code{\link[=vg_mark_voronoi]{vg_mark_voronoi()}},
 \code{\link[=vg_mark_voronoi_mesh]{vg_mark_voronoi_mesh()}},
-\code{\link[=vg_mark_waffle_x]{vg_mark_waffle_x()}},
-\code{\link[=vg_mark_waffle_y]{vg_mark_waffle_y()}}
+\code{\link[=vg_mark_waffle_x]{vg_mark_waffle_x()}}
 }
 \concept{mark functions}

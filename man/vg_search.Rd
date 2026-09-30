@@ -52,25 +52,13 @@ Other interactor functions:
 \code{\link[=vg_highlight]{vg_highlight()}},
 \code{\link[=vg_interactor]{vg_interactor()}},
 \code{\link[=vg_interval_x]{vg_interval_x()}},
-\code{\link[=vg_interval_xy]{vg_interval_xy()}},
-\code{\link[=vg_interval_y]{vg_interval_y()}},
 \code{\link[=vg_menu]{vg_menu()}},
 \code{\link[=vg_nearest]{vg_nearest()}},
-\code{\link[=vg_nearest_x]{vg_nearest_x()}},
-\code{\link[=vg_nearest_y]{vg_nearest_y()}},
 \code{\link[=vg_pan]{vg_pan()}},
-\code{\link[=vg_pan_x]{vg_pan_x()}},
-\code{\link[=vg_pan_y]{vg_pan_y()}},
 \code{\link[=vg_pan_zoom]{vg_pan_zoom()}},
-\code{\link[=vg_pan_zoom_x]{vg_pan_zoom_x()}},
-\code{\link[=vg_pan_zoom_y]{vg_pan_zoom_y()}},
 \code{\link[=vg_region]{vg_region()}},
 \code{\link[=vg_slider]{vg_slider()}},
 \code{\link[=vg_table]{vg_table()}},
-\code{\link[=vg_toggle]{vg_toggle()}},
-\code{\link[=vg_toggle_color]{vg_toggle_color()}},
-\code{\link[=vg_toggle_x]{vg_toggle_x()}},
-\code{\link[=vg_toggle_y]{vg_toggle_y()}},
-\code{\link[=vg_toggle_z]{vg_toggle_z()}}
+\code{\link[=vg_toggle]{vg_toggle()}}
 }
 \concept{interactor functions}

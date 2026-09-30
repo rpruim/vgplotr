@@ -2,7 +2,9 @@
 % Please edit documentation in R/example-usage-generated.R, R/marks-generated.R
 \name{vg_mark_density}
 \alias{vg_mark_density}
-\title{The density mark for 2D densities.}
+\alias{vg_mark_density_x}
+\alias{vg_mark_density_y}
+\title{The \code{density}, \code{densityX}, and \code{densityY} marks}
 \usage{
 vg_mark_density(
   spec = NULL,
@@ -76,6 +78,166 @@ vg_mark_density(
   filter_by = vg_unset,
   data_optimize = vg_unset
 )
+
+vg_mark_density_x(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  bandwidth = vg_unset,
+  bins = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  curve = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  mix_blend_mode = vg_unset,
+  normalize = vg_unset,
+  offset = vg_unset,
+  opacity = vg_unset,
+  order = vg_unset,
+  paint_order = vg_unset,
+  pointer_events = vg_unset,
+  reverse = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stack = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  target = vg_unset,
+  tension = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  type = vg_unset,
+  y = vg_unset,
+  z = vg_unset,
+  marker = vg_unset,
+  marker_end = vg_unset,
+  marker_mid = vg_unset,
+  marker_start = vg_unset,
+  frame_anchor = vg_unset,
+  r = vg_unset,
+  rotate = vg_unset,
+  symbol = vg_unset,
+  font_family = vg_unset,
+  font_size = vg_unset,
+  font_style = vg_unset,
+  font_variant = vg_unset,
+  font_weight = vg_unset,
+  line_anchor = vg_unset,
+  line_height = vg_unset,
+  line_width = vg_unset,
+  monospace = vg_unset,
+  text = vg_unset,
+  text_anchor = vg_unset,
+  text_overflow = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
+
+vg_mark_density_y(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  bandwidth = vg_unset,
+  bins = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  curve = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  mix_blend_mode = vg_unset,
+  normalize = vg_unset,
+  offset = vg_unset,
+  opacity = vg_unset,
+  order = vg_unset,
+  paint_order = vg_unset,
+  pointer_events = vg_unset,
+  reverse = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stack = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  target = vg_unset,
+  tension = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  type = vg_unset,
+  x = vg_unset,
+  z = vg_unset,
+  marker = vg_unset,
+  marker_end = vg_unset,
+  marker_mid = vg_unset,
+  marker_start = vg_unset,
+  frame_anchor = vg_unset,
+  r = vg_unset,
+  rotate = vg_unset,
+  symbol = vg_unset,
+  font_family = vg_unset,
+  font_size = vg_unset,
+  font_style = vg_unset,
+  font_variant = vg_unset,
+  font_weight = vg_unset,
+  line_anchor = vg_unset,
+  line_height = vg_unset,
+  line_width = vg_unset,
+  monospace = vg_unset,
+  text = vg_unset,
+  text_anchor = vg_unset,
+  text_overflow = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to add this mark to, or \code{NULL} to start a new plot with just this mark.}
@@ -124,13 +286,13 @@ vg_mark_density(
 
 \item{fy}{\verb{<column | literal | transform() | sql()/agg()>} The vertical facet position channel, for mark-level faceting, bound to the \emph{fy} scale.}
 
-\item{height}{\verb{<number | param()>} The height (number of rows) of the grid, in actual pixels.}
+\item{height}{\verb{<number | param()>} The height (number of rows) of the grid, in actual pixels. (Only for \code{vg_mark_density()}.)}
 
 \item{href}{\verb{<column | literal | transform() | sql()/agg()>} The href; a channel specifying URLs for clickable links.}
 
 \item{image_filter}{\verb{<string | param()>} A CSS filter; a constant string used to adjust the rendering of images, such as \emph{blur(5px)}.}
 
-\item{interpolate}{\verb{<"none" | "linear" | "nearest" | "barycentric" | "random-walk" | NULL | param()>} The spatial interpolation method; one of: - \emph{none} - do not perform interpolation (the default), maps samples to single bins - \emph{linear} - apply proportional linear interpolation across adjacent bins - \emph{nearest} - assign each pixel to the closest sample’s value (Voronoi diagram) - \emph{barycentric} - apply barycentric interpolation over the Delaunay triangulation - \emph{random-walk} - apply a random walk from each pixel, stopping when near a sample}
+\item{interpolate}{\verb{<"none" | "linear" | "nearest" | "barycentric" | "random-walk" | NULL | param()>} The spatial interpolation method; one of: - \emph{none} - do not perform interpolation (the default), maps samples to single bins - \emph{linear} - apply proportional linear interpolation across adjacent bins - \emph{nearest} - assign each pixel to the closest sample’s value (Voronoi diagram) - \emph{barycentric} - apply barycentric interpolation over the Delaunay triangulation - \emph{random-walk} - apply a random walk from each pixel, stopping when near a sample (Only for \code{vg_mark_density()}.)}
 
 \item{line_height}{\verb{<number | param()>} The line height in ems; defaults to 1.}
 
@@ -152,11 +314,11 @@ vg_mark_density(
 
 \item{opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{pad}{\verb{<number | param()>} The bin padding, one of 1 (default) to include extra padding for the final bin, or 0 to make the bins flush with the maximum domain value.}
+\item{pad}{\verb{<number | param()>} The bin padding, one of 1 (default) to include extra padding for the final bin, or 0 to make the bins flush with the maximum domain value. (Only for \code{vg_mark_density()}.)}
 
 \item{paint_order}{\verb{<string | param()>} The paint-order; a constant string specifying the order in which the \strong{fill}, \strong{stroke}, and any markers are drawn; defaults to \emph{normal}, which draws the fill, then stroke, then markers; defaults to \emph{stroke} for the text mark to create a “halo” around text to improve legibility.}
 
-\item{pixel_size}{\verb{<number | param()>} The effective screen size of a raster pixel, used to determine the height and width of the raster from the frame’s dimensions; defaults to 1.}
+\item{pixel_size}{\verb{<number | param()>} The effective screen size of a raster pixel, used to determine the height and width of the raster from the frame’s dimensions; defaults to 1. (Only for \code{vg_mark_density()}.)}
 
 \item{pointer_events}{\verb{<string | param()>} The pointer-events property; a constant string such as \emph{none}.}
 
@@ -202,11 +364,11 @@ vg_mark_density(
 
 \item{type}{\verb{<"dot" | "circle" | "hexagon" | "cell" | "text" | param()>} The basic mark type to use to render 2D density values.}
 
-\item{width}{\verb{<number | param()>} The width (number of columns) of the grid, in actual pixels.}
+\item{width}{\verb{<number | param()>} The width (number of columns) of the grid, in actual pixels. (Only for \code{vg_mark_density()}.)}
 
-\item{x}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The horizontal position (or length) channel, typically bound to the \emph{x} scale.}
+\item{x}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The horizontal position (or length) channel, typically bound to the \emph{x} scale. (Only for \code{vg_mark_density()} and \code{vg_mark_density_y()}.)}
 
-\item{y}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, ….}
+\item{y}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, …. (Only for \code{vg_mark_density()} and \code{vg_mark_density_x()}.)}
 
 \item{z}{\verb{<column | literal | transform() | sql()/agg()>} An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to \strong{fill} if a channel, or \strong{stroke} if a channel.}
 
@@ -217,15 +379,45 @@ vg_mark_density(
 \item{filter_by}{A Param/Selection (e.g., from \code{\link[=param]{param()}}) to filter this mark's data by.}
 
 \item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
+
+\item{bins}{\verb{<number | param()>} The number of bins over which to discretize the data prior to smoothing. (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{curve}{\verb{<"basis" | "basis-closed" | "basis-open" | "bundle" | "bump-x" | "bump-y" | "cardinal" | "cardinal-closed" | "cardinal-open" | "catmull-rom" | ... | param()>} The curve (interpolation) method for connecting adjacent points. (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{normalize}{\verb{<boolean | param()>} Flag to perform approximate arc length normalization of line segments to prevent artifacts due to overcounting steep lines. (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{offset}{\verb{<"center" | "normalize" | "wiggle" | NULL | param()>} After stacking, an optional \strong{offset} can be applied to translate and scale stacks, say to produce a streamgraph; defaults to null for a zero baseline (\strong{y} = 0 for stackY, and \strong{x} = 0 for stackX). (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{order}{\verb{<"value" | "x" | "y" | "z" | "sum" | "appearance" | "inside-out" | "-value" | "-x" | "-y" | ... | NULL | param()>} The order in which stacks are layered; one of: - null (default) for input order - a named stack order method such as \emph{inside-out} or \emph{sum} - a field name, for natural order of the corresponding values - a function of data, for natural order of the corresponding values - an array of explicit \strong{z} values in the desired order If the \emph{wiggle} \strong{offset} is used, as for a streamgraph, the default changes to \emph{inside-out}. (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{stack}{\verb{<boolean | param()>} Flag indicating if densities should be stacked. (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{tension}{\verb{<number | param()>} The tension option only has an effect on bundle, cardinal and Catmull–Rom splines (\emph{bundle}, \emph{cardinal}, \emph{cardinal-open}, \emph{cardinal-closed}, \emph{catmull-rom}, \emph{catmull-rom-open}, and \emph{catmull-rom-closed}). (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{marker}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} Shorthand to set the same default for markerStart, markerMid, and markerEnd; one of: - a marker name such as \emph{arrow} or \emph{circle} - \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none} (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{marker_end}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} The marker for the ending point of a line segment; one of: - a marker name such as \emph{arrow} or \emph{circle} * \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none} (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{marker_mid}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} The marker for any middle (interior) points of a line segment. (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{marker_start}{\verb{<"arrow" | "arrow-reverse" | "dot" | "circle" | "circle-fill" | "circle-stroke" | "tick" | "tick-x" | "tick-y" | "none" | boolean | NULL | param()>} The marker for the starting point of a line segment; one of: - a marker name such as \emph{arrow} or \emph{circle} * \emph{none} (default) - no marker * true - alias for \emph{circle-fill} * false or null - alias for \emph{none} (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{line_anchor}{\verb{<"top" | "middle" | "bottom" | param()>} The line anchor controls how text is aligned (typically vertically) relative to its anchor point; it is one of \emph{top}, \emph{bottom}, or \emph{middle}. (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
+
+\item{text}{\verb{<column | literal | transform() | sql()/agg()>} The text contents channel, possibly with line breaks (\\n, \\r\\n, or \\r). (Only for \code{vg_mark_density_x()} and \code{vg_mark_density_y()}.)}
 }
 \description{
+Each function adds one type of Mosaic mark: \code{vg_mark_density()} adds \code{density}, \code{vg_mark_density_x()} adds \code{densityX}, and \code{vg_mark_density_y()} adds \code{densityY}. They take the same arguments, except those noted below as belonging to only some of them.
+}
+\details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 
-Examples on the package website that use this function:
+Examples on the package website that use these functions:
 \itemize{
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density2d.html}{Density 2D}
+\item \code{vg_mark_density()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density2d.html}{Density 2D}
+\item \code{vg_mark_density_y()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density-groups.html}{Density Groups}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density1d.html}{Density 1D}
 }
 }
 
@@ -233,37 +425,21 @@ Examples on the package website that use this function:
 Other mark functions:
 \code{\link[=vg_mark]{vg_mark()}},
 \code{\link[=vg_mark_area]{vg_mark_area()}},
-\code{\link[=vg_mark_area_x]{vg_mark_area_x()}},
-\code{\link[=vg_mark_area_y]{vg_mark_area_y()}},
 \code{\link[=vg_mark_arrow]{vg_mark_arrow()}},
-\code{\link[=vg_mark_axis_fx]{vg_mark_axis_fx()}},
-\code{\link[=vg_mark_axis_fy]{vg_mark_axis_fy()}},
 \code{\link[=vg_mark_axis_x]{vg_mark_axis_x()}},
-\code{\link[=vg_mark_axis_y]{vg_mark_axis_y()}},
 \code{\link[=vg_mark_bar_x]{vg_mark_bar_x()}},
-\code{\link[=vg_mark_bar_y]{vg_mark_bar_y()}},
 \code{\link[=vg_mark_cell]{vg_mark_cell()}},
-\code{\link[=vg_mark_cell_x]{vg_mark_cell_x()}},
-\code{\link[=vg_mark_cell_y]{vg_mark_cell_y()}},
 \code{\link[=vg_mark_circle]{vg_mark_circle()}},
 \code{\link[=vg_mark_contour]{vg_mark_contour()}},
 \code{\link[=vg_mark_delaunay_link]{vg_mark_delaunay_link()}},
 \code{\link[=vg_mark_delaunay_mesh]{vg_mark_delaunay_mesh()}},
 \code{\link[=vg_mark_dense_line]{vg_mark_dense_line()}},
-\code{\link[=vg_mark_density_x]{vg_mark_density_x()}},
-\code{\link[=vg_mark_density_y]{vg_mark_density_y()}},
 \code{\link[=vg_mark_dot]{vg_mark_dot()}},
-\code{\link[=vg_mark_dot_x]{vg_mark_dot_x()}},
-\code{\link[=vg_mark_dot_y]{vg_mark_dot_y()}},
 \code{\link[=vg_mark_errorbar_x]{vg_mark_errorbar_x()}},
-\code{\link[=vg_mark_errorbar_y]{vg_mark_errorbar_y()}},
 \code{\link[=vg_mark_frame]{vg_mark_frame()}},
 \code{\link[=vg_mark_geo]{vg_mark_geo()}},
 \code{\link[=vg_mark_graticule]{vg_mark_graticule()}},
-\code{\link[=vg_mark_grid_fx]{vg_mark_grid_fx()}},
-\code{\link[=vg_mark_grid_fy]{vg_mark_grid_fy()}},
 \code{\link[=vg_mark_grid_x]{vg_mark_grid_x()}},
-\code{\link[=vg_mark_grid_y]{vg_mark_grid_y()}},
 \code{\link[=vg_mark_heatmap]{vg_mark_heatmap()}},
 \code{\link[=vg_mark_hexagon]{vg_mark_hexagon()}},
 \code{\link[=vg_mark_hexbin]{vg_mark_hexbin()}},
@@ -271,30 +447,19 @@ Other mark functions:
 \code{\link[=vg_mark_hull]{vg_mark_hull()}},
 \code{\link[=vg_mark_image]{vg_mark_image()}},
 \code{\link[=vg_mark_line]{vg_mark_line()}},
-\code{\link[=vg_mark_line_x]{vg_mark_line_x()}},
-\code{\link[=vg_mark_line_y]{vg_mark_line_y()}},
 \code{\link[=vg_mark_link]{vg_mark_link()}},
 \code{\link[=vg_mark_raster]{vg_mark_raster()}},
 \code{\link[=vg_mark_raster_tile]{vg_mark_raster_tile()}},
 \code{\link[=vg_mark_rect]{vg_mark_rect()}},
-\code{\link[=vg_mark_rect_x]{vg_mark_rect_x()}},
-\code{\link[=vg_mark_rect_y]{vg_mark_rect_y()}},
 \code{\link[=vg_mark_regression_y]{vg_mark_regression_y()}},
 \code{\link[=vg_mark_rule_x]{vg_mark_rule_x()}},
-\code{\link[=vg_mark_rule_y]{vg_mark_rule_y()}},
 \code{\link[=vg_mark_sphere]{vg_mark_sphere()}},
 \code{\link[=vg_mark_spike]{vg_mark_spike()}},
 \code{\link[=vg_mark_text]{vg_mark_text()}},
-\code{\link[=vg_mark_text_x]{vg_mark_text_x()}},
-\code{\link[=vg_mark_text_y]{vg_mark_text_y()}},
 \code{\link[=vg_mark_tick_x]{vg_mark_tick_x()}},
-\code{\link[=vg_mark_tick_y]{vg_mark_tick_y()}},
 \code{\link[=vg_mark_vector]{vg_mark_vector()}},
-\code{\link[=vg_mark_vector_x]{vg_mark_vector_x()}},
-\code{\link[=vg_mark_vector_y]{vg_mark_vector_y()}},
 \code{\link[=vg_mark_voronoi]{vg_mark_voronoi()}},
 \code{\link[=vg_mark_voronoi_mesh]{vg_mark_voronoi_mesh()}},
-\code{\link[=vg_mark_waffle_x]{vg_mark_waffle_x()}},
-\code{\link[=vg_mark_waffle_y]{vg_mark_waffle_y()}}
+\code{\link[=vg_mark_waffle_x]{vg_mark_waffle_x()}}
 }
 \concept{mark functions}
