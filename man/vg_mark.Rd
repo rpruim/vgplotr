@@ -18,8 +18,9 @@ Which data source a mark uses is set with \verb{data_from =}: a data source's
 name, or its position as an integer (\code{1L} for the first, \code{-1L} for the
 most recently added; note the \code{L}). Left unset, a mark that uses data
 reads the first data source, so all the layers of a plot can share one
-without repeating \verb{data_from =}, e.g., \code{some_data |> vg_mark_dot(x = ~a, y = ~b) |> vg_mark_line_y(x = ~a, y = ~b)}. This looks only at the data
-sources added before the mark itself.}
+without repeating \verb{data_from =}, e.g., \code{some_data |> vg_mark_dot(x = ~a, y = ~b) |> vg_mark_line_y(x = ~a, y = ~b)}. That includes marks built
+separately, e.g. inside \code{\link[=vg_vconcat]{vg_vconcat()}}: they use the first data source
+of the spec they end up in.}
 
 \item{mark}{The mosaic mark type, e.g., \code{"dot"}, \code{"lineY"}.}
 

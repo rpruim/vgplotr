@@ -18,8 +18,9 @@
 #'   most recently added; note the `L`). Left unset, a mark that uses data
 #'   reads the first data source, so all the layers of a plot can share one
 #'   without repeating `data_from =`, e.g., `some_data |> vg_mark_dot(x = ~a,
-#'   y = ~b) |> vg_mark_line_y(x = ~a, y = ~b)`. This looks only at the data
-#'   sources added before the mark itself.
+#'   y = ~b) |> vg_mark_line_y(x = ~a, y = ~b)`. That includes marks built
+#'   separately, e.g. inside [vg_vconcat()]: they use the first data source
+#'   of the spec they end up in.
 #' @param mark The mosaic mark type, e.g., `"dot"`, `"lineY"`.
 #' @param formula A shorthand for this mark's position channels (`x`, `y`,
 #'   `fx`, `fy`, and paired `x1`/`x2` or `y1`/`y2`), e.g.,
@@ -120,13 +121,7 @@ build_mark <- function(spec, mark, formula, args, style) {
   # values (e.g., vg_mark_rule_x(x = 0), a plain reference line) has nothing
   # to look up, and mosaic errors on an empty SELECT if data_from is
   # attached anyway -- confirmed directly, this used to happen.
-  if (
-    is.null(args$data_from) &&
-      is_vgspec(spec) &&
-      length(spec$data) &&
-      isTRUE(unname(.vg_mark_has_data[mark])) &&
-      (mark %in% .vg_mark_implicit_data || args_reference_data(args))
-  ) {
+  if (is_vgspec(spec) && length(spec$data) && needs_default_data(mark, args)) {
     args$data_from <- names(spec$data)[[1]]
   }
 
@@ -150,6 +145,35 @@ build_mark <- function(spec, mark, formula, args, style) {
   )
 
   update_layout(spec, fragment)
+}
+
+# Whether a mark with these args should get the default data source (the
+# spec's first): it has no `data_from` of its own, its type takes data, and
+# it actually uses some (see above). Checked when the mark is added to a
+# spec that already has data, and again when the whole spec is rendered or
+# exported (fill_default_data_from()), for marks built on their own -- e.g.
+# inside vg_vconcat() -- before there was any data to default to.
+needs_default_data <- function(mark, args) {
+  is.null(args$data_from) &&
+    isTRUE(unname(.vg_mark_has_data[mark])) &&
+    (mark %in% .vg_mark_implicit_data || args_reference_data(args))
+}
+
+# The layout with every mark that needs_default_data() given `data_from =
+# first`, the spec's first data source.
+fill_default_data_from <- function(layout, first) {
+  if (is.null(first)) return(layout)
+  if (is_vg_plot_fragment(layout)) {
+    layout$items <- lapply(layout$items, function(item) {
+      if (inherits(item, "vg_mark") && needs_default_data(item$mark, item$encodings)) {
+        item$encodings$data_from <- first
+      }
+      item
+    })
+  } else if (is_vg_concat(layout)) {
+    layout$children <- lapply(layout$children, fill_default_data_from, first = first)
+  }
+  layout
 }
 
 # Marks that read data even when none of their own args mention it: mosaic's

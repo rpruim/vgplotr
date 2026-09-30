@@ -45,6 +45,7 @@ as_spec_payload <- function(spec) {
     stop("This vgspec doesn't have any plots yet.", call. = FALSE)
   }
   warn_unset_params(spec)
+  spec$layout <- fill_default_data_from(spec$layout, names(spec$data)[1])
 
   tables <- list()
   files <- list()
@@ -592,6 +593,7 @@ spec_to_list <- function(spec, suppress_data = FALSE, vgplotr_keys = TRUE) {
       stop("This vgspec doesn't have any plots yet.", call. = FALSE)
     }
     warn_unset_params(spec)
+    spec$layout <- fill_default_data_from(spec$layout, names(spec$data)[1])
     out <- list()
     if (length(spec$meta)) out$meta <- spec$meta
     if (length(spec$config)) out$config <- spec$config
