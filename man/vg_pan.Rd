@@ -81,7 +81,7 @@ vg_pan_zoom_y(
 Each function adds one type of Mosaic interactor: \code{vg_pan()} adds \code{pan}, \code{vg_pan_x()} adds \code{panX}, \code{vg_pan_y()} adds \code{panY}, \code{vg_pan_zoom()} adds \code{panZoom}, \code{vg_pan_zoom_x()} adds \code{panZoomX}, and \code{vg_pan_zoom_y()} adds \code{panZoomY}.
 }
 \details{
-See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{~column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 

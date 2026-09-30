@@ -413,9 +413,11 @@ type_tokens <- function(node, defs, depth = 0) {
   if (!is.null(node$`$ref`)) {
     rn <- ref_name(node)
     if (rn == "ParamRef") return("param()")
-    if (rn == "ChannelValue") return(c("column", "literal", "transform()", "sql()/agg()"))
+    # `~column`/`~constant` are written with the tilde because that's how
+    # they're typed: a formula (see ?vg_value_types).
+    if (rn == "ChannelValue") return(c("~column", "~constant", "literal", "transform()", "sql()/agg()"))
     if (rn %in% c("ChannelValueSpec", "ChannelValueIntervalSpec")) {
-      return(c("column", "literal", "transform()", "sql()/agg()", "list(value=, ...)"))
+      return(c("~column", "~constant", "literal", "transform()", "sql()/agg()", "list(value=, ...)"))
     }
     if (rn == "Fixed") return('"Fixed"')
     if (rn %in% c("Interval", "LiteralTimeInterval")) return(c('"day"/"week"/"month"/...', "number"))
@@ -610,7 +612,7 @@ generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, prop_t
   if (is.null(doc)) doc <- c(
     paste0("#' ", title),
     "#'",
-    if (length(props)) "#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.",
+    if (length(props)) "#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.",
     "#'",
     if (!is.null(spec_doc)) sprintf("#' @param spec %s", spec_doc),
     if (formula_arg) sprintf("#' @param formula %s", .vg_formula_doc),
@@ -703,7 +705,7 @@ group_doc <- function(members, rdname, kind, prop_docs, prop_types, extra_docs, 
       if (any(partial)) " They take the same arguments, except those noted below as belonging to only some of them."
     ),
     "#'",
-    "#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.",
+    "#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.",
     "#'",
     sprintf("#' @param spec %s", spec_doc),
     if (formula_arg) sprintf("#' @param formula %s", .vg_formula_doc),

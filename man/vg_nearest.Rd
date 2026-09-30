@@ -51,7 +51,7 @@ vg_nearest_y(
 Each function adds one type of Mosaic interactor: \code{vg_nearest()} adds \code{nearest}, \code{vg_nearest_x()} adds \code{nearestX}, and \code{vg_nearest_y()} adds \code{nearestY}.
 }
 \details{
-See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{~column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 

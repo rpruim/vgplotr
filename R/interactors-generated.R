@@ -42,7 +42,7 @@
 
 #' A highlight interactor.
 #'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.
 #'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
 #' @param by `<param()>` The input selection.
@@ -62,7 +62,7 @@ vg_highlight <- function(spec = NULL, by = vg_unset, fill = vg_unset, fill_opaci
 #'
 #' Each function adds one type of Mosaic interactor: `vg_interval_x()` adds `intervalX`, `vg_interval_y()` adds `intervalY`, and `vg_interval_xy()` adds `intervalXY`. They take the same arguments, except those noted below as belonging to only some of them.
 #'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.
 #'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
 #' @param as `<param()>` The output selection.
@@ -96,7 +96,7 @@ vg_interval_xy <- function(spec = NULL, as = vg_unset, brush = vg_unset, peers =
 #'
 #' Each function adds one type of Mosaic interactor: `vg_nearest()` adds `nearest`, `vg_nearest_x()` adds `nearestX`, and `vg_nearest_y()` adds `nearestY`.
 #'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.
 #'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
 #' @param as `<param()>` The output selection.
@@ -127,7 +127,7 @@ vg_nearest_y <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields
 #'
 #' Each function adds one type of Mosaic interactor: `vg_pan()` adds `pan`, `vg_pan_x()` adds `panX`, `vg_pan_y()` adds `panY`, `vg_pan_zoom()` adds `panZoom`, `vg_pan_zoom_x()` adds `panZoomX`, and `vg_pan_zoom_y()` adds `panZoomY`.
 #'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.
 #'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
 #' @param x `<param()>` The output selection for the `x` domain.
@@ -174,7 +174,7 @@ vg_pan_zoom_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_u
 
 #' A rectangular region interactor.
 #'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.
 #'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
 #' @param as `<param()>` The output selection.
@@ -192,7 +192,7 @@ vg_region <- function(spec = NULL, as = vg_unset, brush = vg_unset, channels = v
 #'
 #' Each function adds one type of Mosaic interactor: `vg_toggle()` adds `toggle`, `vg_toggle_x()` adds `toggleX`, `vg_toggle_y()` adds `toggleY`, `vg_toggle_z()` adds `toggleZ`, and `vg_toggle_color()` adds `toggleColor`. They take the same arguments, except those noted below as belonging to only some of them.
 #'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.
 #'
 #' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
 #' @param as `<param()>` The output selection.
@@ -232,7 +232,7 @@ vg_toggle_color <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 
 #' A menu input component.
 #'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.
 #'
 #' @param spec A `vgspec` with no layout yet, to make this input its whole layout (e.g., a spec that is just one table), or `NULL` (the default) to return the input on its own, to combine with plots and other inputs using [vg_vconcat()]/[vg_hconcat()]. It is an error to pass a spec that already has a layout, or a plot: use [vg_vconcat()]/[vg_hconcat()] to add the input to those.
 #' @param as `<param()>` The output selection.
@@ -253,7 +253,7 @@ vg_menu <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_un
 
 #' A search input component.
 #'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.
 #'
 #' @param spec A `vgspec` with no layout yet, to make this input its whole layout (e.g., a spec that is just one table), or `NULL` (the default) to return the input on its own, to combine with plots and other inputs using [vg_vconcat()]/[vg_hconcat()]. It is an error to pass a spec that already has a layout, or a plot: use [vg_vconcat()]/[vg_hconcat()] to add the input to those.
 #' @param as `<param()>` The output selection.
@@ -272,7 +272,7 @@ vg_search <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_
 
 #' A slider input component.
 #'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.
 #'
 #' @param spec A `vgspec` with no layout yet, to make this input its whole layout (e.g., a spec that is just one table), or `NULL` (the default) to return the input on its own, to combine with plots and other inputs using [vg_vconcat()]/[vg_hconcat()]. It is an error to pass a spec that already has a layout, or a plot: use [vg_vconcat()]/[vg_hconcat()] to add the input to those.
 #' @param as `<param()>` The output selection.
@@ -296,7 +296,7 @@ vg_slider <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_
 
 #' A table grid view component.
 #'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
+#' See [vg_value_types] for what the `<...>` notation below (`~column`, `param()`, ...) means.
 #'
 #' @param spec A `vgspec` with no layout yet, to make this input its whole layout (e.g., a spec that is just one table), or `NULL` (the default) to return the input on its own, to combine with plots and other inputs using [vg_vconcat()]/[vg_hconcat()]. It is an error to pass a spec that already has a layout, or a plot: use [vg_vconcat()]/[vg_hconcat()] to add the input to those.
 #' @param align `<list>` An object of per-column alignment values.

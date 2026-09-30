@@ -61,7 +61,7 @@ vg_interval_xy(
 Each function adds one type of Mosaic interactor: \code{vg_interval_x()} adds \code{intervalX}, \code{vg_interval_y()} adds \code{intervalY}, and \code{vg_interval_xy()} adds \code{intervalXY}. They take the same arguments, except those noted below as belonging to only some of them.
 }
 \details{
-See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{~column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 

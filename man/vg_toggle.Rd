@@ -40,7 +40,7 @@ vg_toggle_color(spec = NULL, as = vg_unset, peers = vg_unset, ...)
 Each function adds one type of Mosaic interactor: \code{vg_toggle()} adds \code{toggle}, \code{vg_toggle_x()} adds \code{toggleX}, \code{vg_toggle_y()} adds \code{toggleY}, \code{vg_toggle_z()} adds \code{toggleZ}, and \code{vg_toggle_color()} adds \code{toggleColor}. They take the same arguments, except those noted below as belonging to only some of them.
 }
 \details{
-See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{~column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 

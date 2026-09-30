@@ -14,22 +14,22 @@
 #' these; see `vignette("getting-started")` for worked examples of each.
 #'
 #' \describe{
-#'   \item{`column`}{A one-sided formula naming a data column, e.g.
+#'   \item{`~column`}{A one-sided formula naming a data column, e.g.
 #'     `x = ~mpg`. Its values go through the channel's scale. A formula is
 #'     always a column, even when the name is also a color or symbol name:
 #'     `symbol = ~square` uses a column named `square`.}
-#'   \item{`literal`}{A constant value applied to every row, e.g.
-#'     `fill = "steelblue"`, `symbol = "square"` or `opacity = 0.5`. It is
-#'     used as is, not passed through the scale. (A string that isn't a
-#'     valid constant for the channel, e.g. `fill = "species"`, is still
-#'     read by Mosaic as a column name, for now; write columns as formulas.)}
-#'   \item{scaled constant}{A one-sided formula holding a single string,
+#'   \item{`~constant`}{A one-sided formula holding a single string,
 #'     number or `TRUE`/`FALSE`, e.g. `fill = ~"medium"` or \code{r = ~5}: a
 #'     constant that *does* go through the scale, so it gets the same color
 #'     (or radius, symbol, ...) the scale gives `"medium"` (or 5) in the data
 #'     -- e.g., to label a group in its own color. Compare \code{r = 5}, a radius
 #'     of 5 pixels. (Sent to Mosaic as a SQL literal, e.g.
 #'     `sql("'medium'")`.)}
+#'   \item{`literal`}{A constant value applied to every row, e.g.
+#'     `fill = "steelblue"`, `symbol = "square"` or `opacity = 0.5`. It is
+#'     used as is, not passed through the scale. (A string that isn't a
+#'     valid constant for the channel, e.g. `fill = "species"`, is still
+#'     read by Mosaic as a column name, for now; write columns as formulas.)}
 #'   \item{`transform()`}{A vgplotr transform function, e.g. `vg_bin()`,
 #'     `vg_count()`, `vg_avg()` -- computed by DuckDB, not R. See
 #'     [vg_transforms] for the full set.}
@@ -70,8 +70,9 @@
 #'   \item{numeric vector / character vector / vector}{A plain R vector,
 #'     e.g. `range = c(0, 20)`; `vector` when mosaic accepts elements of
 #'     more than one type (or doesn't constrain them further).}
-#'   \item{`list`}{A named list of sub-options specific to that property. 
-#'     Example: `[vg_plot_defaults](margins = list(left = 5, top = 5, right = 5, bottom = 5))`.
+#'   \item{`list`}{A named list of sub-options specific to that property,
+#'     e.g. `margins = list(left = 5, top = 5, right = 5, bottom = 5)` in
+#'     [vg_plot_defaults()].}
 #'   \item{`any`}{Genuinely unconstrained by mosaic's own schema -- e.g. a
 #'     [vg_menu()]'s initial `value`, which can be whatever type its
 #'     `options` are.}

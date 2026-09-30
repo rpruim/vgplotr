@@ -75,7 +75,7 @@ vg_mark_arrow(
 
 \item{aria_hidden}{\verb{<string | param()>} The aria-hidden state; a constant indicating whether the element is exposed to an accessibility API.}
 
-\item{aria_label}{\verb{<column | literal | transform() | sql()/agg()>} The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.}
+\item{aria_label}{\verb{<~column | ~constant | literal | transform() | sql()/agg()>} The aria-label; a channel specifying short textual labels representing the value in the accessibility tree.}
 
 \item{bend}{\verb{<number | boolean | param()>} The angle, a constant in degrees, between the straight line intersecting the arrow’s two control points and the outgoing tangent direction of the arrow from the start point.}
 
@@ -91,21 +91,21 @@ vg_mark_arrow(
 
 \item{facet_anchor}{\verb{<"top" | "right" | "bottom" | "left" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | "top-empty" | "right-empty" | "bottom-empty" | "left-empty" | "empty" | NULL | param()>} How to place the mark with respect to facets; one of: - null (default for most marks) - display the mark in each non-empty facet - \emph{top}, \emph{right}, \emph{bottom}, or \emph{left} - display the mark only in facets on the given side - \emph{top-empty}, \emph{right-empty}, \emph{bottom-empty}, or \emph{left-empty} (default for axis marks) - display the mark only in facets that have empty space on the given side: either the margin, or an empty facet - \emph{empty} - display the mark in empty facets only}
 
-\item{fill}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The fill; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
+\item{fill}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The fill; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
 
-\item{fill_opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The fill-opacity; a constant number between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{fill_opacity}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The fill-opacity; a constant number between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{filter}{\verb{<column | literal | transform() | sql()/agg()>} Applies a transform to filter the mark’s index according to the given channel values; only truthy values are retained.}
+\item{filter}{\verb{<~column | ~constant | literal | transform() | sql()/agg()>} Applies a transform to filter the mark’s index according to the given channel values; only truthy values are retained.}
 
-\item{fx}{\verb{<column | literal | transform() | sql()/agg()>} The horizontal facet position channel, for mark-level faceting, bound to the \emph{fx} scale.}
+\item{fx}{\verb{<~column | ~constant | literal | transform() | sql()/agg()>} The horizontal facet position channel, for mark-level faceting, bound to the \emph{fx} scale.}
 
-\item{fy}{\verb{<column | literal | transform() | sql()/agg()>} The vertical facet position channel, for mark-level faceting, bound to the \emph{fy} scale.}
+\item{fy}{\verb{<~column | ~constant | literal | transform() | sql()/agg()>} The vertical facet position channel, for mark-level faceting, bound to the \emph{fy} scale.}
 
 \item{head_angle}{\verb{<number | param()>} How pointy the arrowhead is, in degrees; a constant typically between 0° and 180°, and defaults to 60°.}
 
 \item{head_length}{\verb{<number | param()>} The size of the arrowhead relative to the \strong{strokeWidth}; a constant.}
 
-\item{href}{\verb{<column | literal | transform() | sql()/agg()>} The href; a channel specifying URLs for clickable links.}
+\item{href}{\verb{<~column | ~constant | literal | transform() | sql()/agg()>} The href; a channel specifying URLs for clickable links.}
 
 \item{image_filter}{\verb{<string | param()>} A CSS filter; a constant string used to adjust the rendering of images, such as \emph{blur(5px)}.}
 
@@ -127,7 +127,7 @@ vg_mark_arrow(
 
 \item{mix_blend_mode}{\verb{<string | param()>} The mix-blend-mode; a constant string specifying how to blend content such as \emph{multiply}.}
 
-\item{opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{opacity}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...)>} The opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
 \item{paint_order}{\verb{<string | param()>} The paint-order; a constant string specifying the order in which the \strong{fill}, \strong{stroke}, and any markers are drawn; defaults to \emph{normal}, which draws the fill, then stroke, then markers; defaults to \emph{stroke} for the text mark to create a “halo” around text to improve legibility.}
 
@@ -139,9 +139,9 @@ vg_mark_arrow(
 
 \item{shape_rendering}{\verb{<string | param()>} The shape-rendering; a constant string such as \emph{crispEdges}.}
 
-\item{sort}{\verb{<column | literal | transform() | sql()/agg() | list>} Either applies a transform to sort the mark’s index by the specified channel values, or imputes ordinal scale domains from this mark’s channels.}
+\item{sort}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list>} Either applies a transform to sort the mark’s index by the specified channel values, or imputes ordinal scale domains from this mark’s channels.}
 
-\item{stroke}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The stroke; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
+\item{stroke}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...) | param()>} The stroke; a constant CSS color string, or a channel typically bound to the \emph{color} scale.}
 
 \item{stroke_dasharray}{\verb{<string | number | param()>} The stroke-dasharray; a constant number indicating the length in pixels of alternating dashes and gaps, or a constant string of numbers separated by spaces or commas (\emph{e.g.}, \emph{10 2} for dashes of 10 pixels separated by gaps of 2 pixels), or \emph{none} (the default) for no dashing : https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray}
 
@@ -153,9 +153,9 @@ vg_mark_arrow(
 
 \item{stroke_miterlimit}{\verb{<number | param()>} The stroke-miterlimit; a constant number specifying how to limit the length of \emph{miter} joins on stroked paths.}
 
-\item{stroke_opacity}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
+\item{stroke_opacity}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...)>} The stroke-opacity; a constant between 0 and 1, or a channel typically bound to the \emph{opacity} scale.}
 
-\item{stroke_width}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The stroke-width; a constant number in pixels, or a channel.}
+\item{stroke_width}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...)>} The stroke-width; a constant number in pixels, or a channel.}
 
 \item{sweep}{\verb{<number | "+x" | "-x" | "+y" | "-y" | param()>} The sweep order; defaults to 1 indicating a positive (clockwise) bend angle; -1 indicates a negative (anticlockwise) bend angle; 0 effectively clears the bend angle.}
 
@@ -163,19 +163,19 @@ vg_mark_arrow(
 
 \item{tip}{\verb{<boolean | "x" | "y" | "xy" | list | param()>} Whether to generate a tooltip for this mark, and any tip options.}
 
-\item{title}{\verb{<column | literal | transform() | sql()/agg()>} The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).}
+\item{title}{\verb{<~column | ~constant | literal | transform() | sql()/agg()>} The title; a channel specifying accessible, short textual descriptions as strings (possibly with newlines).}
 
-\item{x}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The horizontal position (or length) channel, typically bound to the \emph{x} scale.}
+\item{x}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...)>} The horizontal position (or length) channel, typically bound to the \emph{x} scale.}
 
-\item{x1}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The required primary (starting, often left) horizontal position channel, representing the area’s baseline, typically bound to the \emph{x} scale.}
+\item{x1}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...)>} The required primary (starting, often left) horizontal position channel, representing the area’s baseline, typically bound to the \emph{x} scale.}
 
-\item{x2}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The optional secondary (ending, often right) horizontal position channel, representing the area’s topline, typically bound to the \emph{x} scale; if not specified, \strong{x1} is used.}
+\item{x2}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...)>} The optional secondary (ending, often right) horizontal position channel, representing the area’s topline, typically bound to the \emph{x} scale; if not specified, \strong{x1} is used.}
 
-\item{y}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, ….}
+\item{y}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...)>} The vertical position channel, typically bound to the \emph{y} scale; defaults to the zero-based index of the data 0, 1, 2, ….}
 
-\item{y1}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the \emph{y} scale.}
+\item{y1}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...)>} The required primary (starting, often bottom) vertical position channel, representing the area’s baseline, typically bound to the \emph{y} scale.}
 
-\item{y2}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...)>} The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the \emph{y} scale; if not specified, \strong{y1} is used.}
+\item{y2}{\verb{<~column | ~constant | literal | transform() | sql()/agg() | list(value=, ...)>} The optional secondary (ending, often top) vertical position channel, representing the area’s topline, typically bound to the \emph{y} scale; if not specified, \strong{y1} is used.}
 
 \item{...}{Additional options or plot-level attributes.}
 
@@ -186,7 +186,7 @@ vg_mark_arrow(
 \item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
 }
 \description{
-See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{~column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 

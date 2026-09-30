@@ -28,7 +28,7 @@ vg_region(
 \item{...}{Additional options or plot-level attributes.}
 }
 \description{
-See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{~column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 
