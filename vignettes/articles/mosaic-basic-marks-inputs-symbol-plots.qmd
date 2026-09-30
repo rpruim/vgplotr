@@ -29,8 +29,8 @@ stroked <-
     data_from = "penguins",
     x = ~ vg_column(x_param),
     y = ~ vg_column(y_param),
-    stroke = "species",
-    symbol = "species"
+    stroke = ~species,
+    symbol = ~species
   ) |>
   vg_guide_all(grid = TRUE) |>
   vg_guide_x(label = "Body mass (g) →") |>
@@ -42,8 +42,8 @@ filled <-
     data_from = "penguins",
     x = ~ vg_column(x_param),
     y = ~ vg_column(y_param),
-    fill = "species",
-    symbol = "species"
+    fill = ~species,
+    symbol = ~species
   ) |>
   vg_guide_all(grid = TRUE) |>
   vg_guide_x(label = "Body mass (g) →") |>
