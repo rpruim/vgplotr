@@ -385,7 +385,7 @@ serialize_layout <- function(layout, plot_defaults = list()) {
 
 serialize_item <- function(item) {
   if (inherits(item, "vg_mark")) {
-    c(list(mark = item$mark), serialize_encodings(item$encodings))
+    c(list(mark = item$mark), serialize_encodings(item$encodings, channels = TRUE))
   } else if (inherits(item, "vg_interactor")) {
     c(list(select = item$type), serialize_encodings(item$options))
   } else if (inherits(item, "vg_legend")) {
@@ -422,7 +422,11 @@ serialize_legend <- function(x) {
 # vector) guarantees this serializes as a JSON array even when it has only
 # one element -- jsonlite's `auto_unbox` would otherwise turn a length-1
 # atomic vector into a bare scalar.
-serialize_encodings <- function(enc) {
+#
+# `channels = TRUE` (a mark's options) serializes each value knowing which
+# channel it's for, so a formula can't be misread by Mosaic as a constant
+# (serialize_channel_value(), R/channels.R).
+serialize_encodings <- function(enc, channels = FALSE) {
   data_from <- enc$data_from
   filter_by <- enc$filter_by
   data_optimize <- enc$data_optimize
@@ -430,7 +434,11 @@ serialize_encodings <- function(enc) {
   enc$filter_by <- NULL
   enc$data_optimize <- NULL
 
-  out <- lapply(enc, serialize_value)
+  out <- if (channels) {
+    Map(serialize_channel_value, names(enc), enc)
+  } else {
+    lapply(enc, serialize_value)
+  }
 
   # A table reference is either a table-name string or a Param/Selection
   # (e.g., `data_from = param(data)`, for a menu-driven dynamic data source)

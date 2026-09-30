@@ -48,6 +48,7 @@ VignetteBuilder: quarto
 Config/roxygen2/version: 8.0.0
 Collate: 
     'attrs-generated.R'
+    'channels.R'
     'concat.R'
     'connector.R'
     'coordinator.R'

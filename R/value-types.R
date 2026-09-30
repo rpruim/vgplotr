@@ -16,9 +16,19 @@
 #'
 #' \describe{
 #'   \item{`column`}{A one-sided formula naming a data column, e.g.
-#'     `x = ~mpg`.}
+#'     `x = ~mpg`. Its values go through the channel's scale. A formula is
+#'     always a column, even when the name is also a color or symbol name:
+#'     `symbol = ~square` uses a column named `square`.}
 #'   \item{`literal`}{A constant value applied to every row, e.g.
-#'     `fill = "steelblue"` or `opacity = 0.5`.}
+#'     `fill = "steelblue"`, `symbol = "square"` or `opacity = 0.5`. It is
+#'     used as is, not passed through the scale. (A string that isn't a
+#'     valid constant for the channel, e.g. `fill = "species"`, is still
+#'     read by Mosaic as a column name, for now; write columns as formulas.)}
+#'   \item{scaled constant}{A one-sided formula holding a string, e.g.
+#'     `fill = ~"medium"`: a constant that *does* go through the scale, so
+#'     it gets the same color (or symbol, ...) the scale gives `"medium"` in
+#'     the data -- e.g., to label a group in its own color. (Sent to Mosaic
+#'     as the SQL literal `sql("'medium'")`.)}
 #'   \item{`transform()`}{A vgplotr transform function, e.g. `vg_bin()`,
 #'     `vg_count()`, `vg_avg()` -- computed by DuckDB, not R. See
 #'     [vg_transforms] for the full set.}
@@ -26,10 +36,12 @@
 #'     an aggregate function (`agg()`), for anything a column reference or
 #'     transform can't express. See [sql()].}
 #'   \item{`list(value=, ...)`}{The `{value:, scale:, label:}` object form
-#'     mosaic-spec allows for overriding a channel's scale/label directly,
-#'     e.g. `x = list(value = ~mpg, scale = "shared")`. Rarely needed --
-#'     the plain `column`/`literal`/`transform()`/`sql()` forms above cover
-#'     the vast majority of cases.}
+#'     mosaic-spec's schema allows for overriding a channel's scale/label
+#'     directly, e.g. `x = list(value = ~mpg, scale = "shared")`. Mosaic
+#'     0.31.0 doesn't handle this form when rendering yet (the plot fails
+#'     with a SQL error; see
+#'     <https://github.com/uwdata/mosaic/issues/1311>), so avoid it for
+#'     now.}
 #' }
 #'
 #' A property whose notation includes `list(value=, ...)` (not just

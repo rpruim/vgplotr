@@ -21,9 +21,19 @@ these; see \code{vignette("getting-started")} for worked examples of each.
 
 \describe{
 \item{\code{column}}{A one-sided formula naming a data column, e.g.
-\code{x = ~mpg}.}
+\code{x = ~mpg}. Its values go through the channel's scale. A formula is
+always a column, even when the name is also a color or symbol name:
+\code{symbol = ~square} uses a column named \code{square}.}
 \item{\code{literal}}{A constant value applied to every row, e.g.
-\code{fill = "steelblue"} or \code{opacity = 0.5}.}
+\code{fill = "steelblue"}, \code{symbol = "square"} or \code{opacity = 0.5}. It is
+used as is, not passed through the scale. (A string that isn't a
+valid constant for the channel, e.g. \code{fill = "species"}, is still
+read by Mosaic as a column name, for now; write columns as formulas.)}
+\item{scaled constant}{A one-sided formula holding a string, e.g.
+\code{fill = ~"medium"}: a constant that \emph{does} go through the scale, so
+it gets the same color (or symbol, ...) the scale gives \code{"medium"} in
+the data -- e.g., to label a group in its own color. (Sent to Mosaic
+as the SQL literal \code{sql("'medium'")}.)}
 \item{\code{transform()}}{A vgplotr transform function, e.g. \code{vg_bin()},
 \code{vg_count()}, \code{vg_avg()} -- computed by DuckDB, not R. See
 \link{vg_transforms} for the full set.}
@@ -31,10 +41,12 @@ these; see \code{vignette("getting-started")} for worked examples of each.
 an aggregate function (\code{agg()}), for anything a column reference or
 transform can't express. See \code{\link[=sql]{sql()}}.}
 \item{\code{list(value=, ...)}}{The \verb{\{value:, scale:, label:\}} object form
-mosaic-spec allows for overriding a channel's scale/label directly,
-e.g. \code{x = list(value = ~mpg, scale = "shared")}. Rarely needed --
-the plain \code{column}/\code{literal}/\code{transform()}/\code{sql()} forms above cover
-the vast majority of cases.}
+mosaic-spec's schema allows for overriding a channel's scale/label
+directly, e.g. \code{x = list(value = ~mpg, scale = "shared")}. Mosaic
+0.31.0 doesn't handle this form when rendering yet (the plot fails
+with a SQL error; see
+\url{https://github.com/uwdata/mosaic/issues/1311}), so avoid it for
+now.}
 }
 
 A property whose notation includes \code{list(value=, ...)} (not just
