@@ -46,17 +46,36 @@ spec <-
   # When the brush changes, reset the slider's factor to 1.
   vg_on_change(param(brush), vg_set_param(param(factor), 1)) |>
   vg_vconcat(
-    vg_slider(label = "Factor", as = param(factor), min = 0.5, max = 1.5, step = 0.05),
-    vg_mark_dot(data_from = "cars", x = ~hp, y = ~mpg, fill = "steelblue") |>
+    vg_slider(
+      label = "Factor",
+      as = param(factor),
+      min = 0.5,
+      max = 1.5,
+      step = 0.05
+    ),
+    vg_mark_rule_x(x = 0) |>
+      vg_mark_axis_x(label_anchor = "center", label_arrow = FALSE) |>
+      vg_mark_rule_y(y = 0) |>
+      vg_mark_axis_y(label_anchor = "center", label_arrow = FALSE) |>
+      vg_mark_dot(data_from = "cars", x = ~hp, y = ~mpg, fill = "steelblue") |>
       # An interactor brushes the mark just before it -- here the dots.
       vg_interval_x(as = param(brush)) |>
-      vg_mark_rule_y(y = param(sel_mean), stroke = "firebrick", stroke_width = 2) |>
-      vg_mark_rule_y(y = param(target), stroke = "firebrick", stroke_dasharray = "6 4") |>
+      vg_mark_rule_y(
+        y = param(sel_mean),
+        stroke = "firebrick",
+        stroke_width = 2
+      ) |>
+      vg_mark_rule_y(
+        y = param(target),
+        stroke = "firebrick",
+        stroke_dasharray = "6 4"
+      ) |>
       vg_plot(
-        width = 600, height = 350,
+        width = 600,
+        height = 350,
         y_domain = c(0, 50),
-        x_label = "Horsepower →",
-        y_label = "↑ Miles per gallon"
+        x_label = "Horsepower",
+        y_label = "Miles per gallon"
       )
   )
 
