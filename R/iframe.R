@@ -19,19 +19,9 @@
 #' ends up served alongside everything else on the deployed site, and
 #' `src` defaults accordingly (see `src` below).
 #'
-#' Note: [vg_render()] never picks this mode automatically
-#' (only [vg_widget()] or [vg_snapshot()]), so you must ask for it
-#' explicitly, e.g., via `vg_render(spec, mode = "iframe")`. This is
-#' because [vg_render()]'s auto-detection works by asking
-#' "Can this pandoc target run embedded JavaScript?" — that's a real,
-#' fixed property of the output format itself
-#' (HTML can, gfm/markdown/PDF/Word can't), so it's reliable.
-#' But whether an `<iframe>` is useful depends on
-#' whether the rendered file ends up served over http(s),
-#' with its sibling reference/figures/*.html file reachable at a
-#' predictable relative path. That's not a property of the render at all
-#' — it's a fact about what happens to the rendered file afterward,
-#' entirely outside the knitting process.
+#' [vg_render()] never chooses this mode itself, since whether an
+#' `<iframe>` works depends on where the finished page ends up, which it
+#' can't know. Ask for it with `vg_render(spec, mode = "iframe")`.
 #'
 #' @section Using this outside a pkgdown home page:
 #' The default `src` handling only makes sense for the pkgdown scenario
@@ -80,13 +70,10 @@
 #'   built widget (e.g., `width =`, `height =`). Also silently absorbs
 #'   arguments meant for [vg_snapshot()] instead (e.g., `delay =`), so
 #'   [vg_render()] can forward its own `...` uniformly. `use_cache`
-#'   defaults to `FALSE` here specifically, even if this machine has a
-#'   local duckdb-wasm cache set up (see [vg_cache_duckdb()]):
-#'   htmlwidgets bundles a cached dependency as a real copy of the file,
-#'   and duckdb-wasm's engine is a ~35 MB binary -- embedding that into
-#'   what's typically a *committed* file would be a serious bloat
-#'   (confirmed directly: this happened once, ~35 MB per widget). Pass
-#'   `use_cache = TRUE` explicitly to override.
+#'   defaults to `FALSE` here, even if you have a local copy of the
+#'   DuckDB-Wasm engine (see [vg_cache_duckdb()]): using it would put a copy
+#'   of the ~35 MB engine next to every saved widget. Pass
+#'   `use_cache = TRUE` to use it anyway.
 #' @family rendering functions
 #' @export
 vg_iframe <- function(

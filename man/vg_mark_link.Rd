@@ -176,11 +176,11 @@ vg_mark_link(
 
 \item{...}{Additional options or plot-level attributes.}
 
-\item{data_from}{The name of the data source this mark reads from (see \code{\link[=vg_data]{vg_data()}}); a length-1 nonzero R integer (\code{1L}, \code{-1L}, ...; note the \code{L}) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., \code{-1L} for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's \verb{"data": [...]} shorthand, e.g., for a single reference line -- a bare double like \code{0}/\code{c(0)}, or \code{0L} itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to \code{data_from = 1L}) for any mark type that takes data at all.}
+\item{data_from}{The data source this mark reads from: a data source's name (see \code{\link[=vg_data]{vg_data()}}), or its position as an integer (\code{1L} for the first, \code{-1L} for the most recently added; note the \code{L}). Left unset, a mark that uses data reads the first data source. A vector of numbers, such as \code{c(0)}, is used as the data itself -- handy for a single reference line.}
 
 \item{filter_by}{A Param/Selection (e.g., from \code{\link[=param]{param()}}) to filter this mark's data by.}
 
-\item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
+\item{data_optimize}{Whether Mosaic may optimize this mark's database queries (default \code{TRUE}); set \code{FALSE} to turn that off, e.g. when tracking down a problem.}
 }
 \description{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{~column}, \code{param()}, ...) means.

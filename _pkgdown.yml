@@ -44,8 +44,8 @@ reference:
 - title: Mark functions
   desc: >
     Add a visual layer (points, lines, bars, ...) to a plot -- one
-    `vg_mark_*()` wrapper per mark type mosaic supports, plus the generic
-    `vg_mark()` they're built on.
+    `vg_mark_*()` function per mark type Mosaic supports, plus the general
+    `vg_mark()`.
   contents:
   - has_concept("mark functions")
 
@@ -73,8 +73,8 @@ reference:
   desc: >
     Selections that live inside a plot alongside its marks (brushes,
     pan/zoom, highlight, ...), and standalone layout-level input widgets
-    (menu, search, slider, table) -- one wrapper per type, plus the
-    generic `vg_interactor()` they're built on.
+    (menu, search, slider, table) -- one function per type, plus the
+    general `vg_interactor()`.
   contents:
   - has_concept("interactor functions")
 
@@ -102,7 +102,7 @@ reference:
 
 - title: Spec export functions
   desc: >
-    Convert a vgspec to mosaic's own portable JSON/YAML spec format.
+    Convert a vgspec to Mosaic's own portable JSON/YAML spec format.
   contents:
   - has_concept("spec export functions")
 
@@ -137,8 +137,8 @@ reference:
 
 - title: Reference
   desc: >
-    Shared vocabulary for the `<option | option | ...>` notation shown in
-    every generated mark/interactor/scale/guide argument's documentation.
+    What the `<option | option | ...>` notation in the argument
+    documentation of marks, interactors, scales and guides means.
   contents:
   - vg_value_types
 

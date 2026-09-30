@@ -10,13 +10,8 @@ Athletes](https://idl.uw.edu/mosaic/examples/athletes.html) from the
 mosaic/vgplot example gallery. The menus and searchbox filter the
 display and are automatically populated by backing data columns.
 
-`query`'s Selection declares `include = category` -- mosaic-spec's
-`{"select": "intersect", "include": "$category"}` shape, where one
-Selection's clauses build on another's. This is the same recursive
-param-value serialization used for "Earthquakes Globe"'s
-`rotate: [$longitude, $latitude]`, just nested one level differently
-(a single param reference inside a Selection object, rather than an
-array of two).
+The `query` selection declares `include = category`, so it also includes
+the clauses of the `category` selection: one selection builds on another.
 
 ```{r setup}
 library(vgplotr)

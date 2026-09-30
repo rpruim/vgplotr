@@ -11,8 +11,8 @@ mosaic/vgplot example gallery. A `nearestX` interactor selects the
 nearest date, and parameterized expressions reactively update in
 response.
 
-The `point` param is declared as a mosaic `ParamDate` (`list(date =
-"2013-05-13")`, mosaic-spec's `{"date": "..."}` shape), and used both
+The `point` param is declared as a date (`list(date = "2013-05-13")`;
+`vg_param_date()` does the same), and used both
 directly as a mark encoding (`x = point`, with no `~` formula needed,
 since a `param()` reference is already a self-contained value) and
 interpolated inside `sql()` expressions.

@@ -65,14 +65,13 @@ update_layout <- function(spec, fragment) {
 #'
 #' When two sibling marks/interactors set the same plot-level attribute to
 #' different values, the later one wins and a warning is emitted; identical
-#' values accumulate silently. A named argument that isn't one of mosaic's
-#' own plot attributes also triggers a warning, since it won't do anything
-#' to the rendered graphic -- see [vg_attributes()].
+#' values accumulate silently. A named argument that isn't a plot attribute
+#' also gives a warning, since it would have no effect.
 #'
 #' @param spec A plot fragment or `vgspec` to extend, or `NULL` to start a new plot.
 #' @param ... Additional plot fragments (marks/interactors) to include, and/or
 #'   named plot-level attributes (`width =`, `height =`, `name =`, `x_domain =`,
-#'   ..., snake_case -- translated to mosaic's own camelCase key, e.g., `xDomain`).
+#'   ...: Mosaic's attribute names, such as `xDomain`, written in snake_case).
 #' @family layout functions
 #' @export
 vg_plot <- function(spec = NULL, ...) {

@@ -12,7 +12,7 @@ vg_plot(spec = NULL, ...)
 
 \item{...}{Additional plot fragments (marks/interactors) to include, and/or
 named plot-level attributes (\verb{width =}, \verb{height =}, \verb{name =}, \verb{x_domain =},
-..., snake_case -- translated to mosaic's own camelCase key, e.g., \code{xDomain}).}
+...: Mosaic's attribute names, such as \code{xDomain}, written in snake_case).}
 }
 \description{
 Plot-level attributes such as \code{width}, \code{height}, \code{name}, and \code{margins}
@@ -31,9 +31,8 @@ vg_mark_dot(x = ~a, y = ~b) |>
 
 When two sibling marks/interactors set the same plot-level attribute to
 different values, the later one wins and a warning is emitted; identical
-values accumulate silently. A named argument that isn't one of mosaic's
-own plot attributes also triggers a warning, since it won't do anything
-to the rendered graphic -- see \code{\link[=vg_attributes]{vg_attributes()}}.
+values accumulate silently. A named argument that isn't a plot attribute
+also gives a warning, since it would have no effect.
 }
 \section{Used in examples}{
 

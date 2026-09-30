@@ -22,17 +22,14 @@ start a new plot fragment with just these attributes.}
 
 \item{inset}{\verb{<number | param()>} Shorthand to set the same default for all four insets: \strong{insetTop}, \strong{insetRight}, \strong{insetBottom}, and \strong{insetLeft}. (\code{inset}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-\code{vg_scale_all()} sets mosaic-spec's plot-wide fallback defaults --
-unlike \code{xAlign}/\code{xPadding}/etc. (set via \code{\link[=vg_scale_position]{vg_scale_position()}}) or
-\code{fxAlign}/etc. (via \code{\link[=vg_scale_facet]{vg_scale_facet()}}), which only affect one scale,
-these bare attributes are mosaic's own defaults applied to \emph{every}
-ordinal position scale (\code{x}, \code{y}, \code{fx}, \code{fy}) that doesn't set its
-own value. For the analogous axis-guide defaults, see
-\code{\link[=vg_guide_all]{vg_guide_all()}}.
+\code{vg_scale_all()} sets defaults for all of a plot's ordinal position scales
+(\code{x}, \code{y}, \code{fx}, \code{fy}), used by any of them that doesn't set its own
+value -- unlike \code{\link[=vg_scale_position]{vg_scale_position()}} and \code{\link[=vg_scale_facet]{vg_scale_facet()}}, which set
+one scale. For axis defaults, see \code{\link[=vg_guide_all]{vg_guide_all()}}.
 }
 \details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.

@@ -2,8 +2,8 @@
 #'
 #' `vg_years()`, `vg_months()`, `vg_days()`, `vg_hours()`, `vg_minutes()`,
 #' `vg_seconds()`, `vg_milliseconds()` and `vg_microseconds()` write a span of
-#' time -- mosaic-spec's interval transforms (`{days: 7}`) -- where a window
-#' frame wants an offset in time units instead of a row count. The frame
+#' time, for a window frame that measures its offsets in time rather than in
+#' rows. The frame
 #' options `rows`, `range` and `groups` of a window or aggregate transform
 #' (see [vg_transforms]) each take a pair of offsets, measured from the
 #' current row: how far the frame reaches *before* it, then how far *after*
@@ -20,7 +20,7 @@
 #' `NULL` (unbounded), so `range = list(vg_days(6), 0)` works too.
 #'
 #' @param n A single non-negative number of units, or a [param()].
-#' @return A `vg_interval` object, serialized as `{<unit>: n}`.
+#' @return A `vg_interval` object.
 #' @family transform functions
 #' @name vg_intervals
 #' @examples

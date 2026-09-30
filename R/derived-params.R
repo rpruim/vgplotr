@@ -37,9 +37,9 @@
 #' query), so it lags the params it uses by a moment.
 #'
 #' Computed params and [vg_on_change()] handlers are vgplotr additions, not
-#' part of mosaic-spec: [to_json()]/[to_yaml()] write them under a top-level
-#' `"vgplotr"` key (unless `vgplotr_keys = FALSE`), which Mosaic's own tools
-#' don't understand.
+#' part of Mosaic's spec format: [to_json()]/[to_yaml()] write them under a
+#' top-level `"vgplotr"` key (unless `vgplotr_keys = FALSE`), which Mosaic's
+#' own tools don't understand.
 #'
 #' @param spec A `vgspec`.
 #' @param ... Named one-sided formulas (or [sql()] expressions), one per

@@ -3,7 +3,7 @@
 \name{to_json}
 \alias{to_json}
 \alias{to_yaml}
-\title{Convert a vgspec (or plot fragment) to mosaic-spec JSON or YAML}
+\title{Convert a vgspec (or plot fragment) to a Mosaic JSON or YAML spec}
 \usage{
 to_json(spec, pretty = TRUE, suppress_data = FALSE, vgplotr_keys = TRUE, ...)
 
@@ -15,19 +15,16 @@ to_yaml(spec, suppress_data = FALSE, vgplotr_keys = TRUE, ...)
 \item{pretty}{Whether to indent the JSON for readability (default
 \code{TRUE}). \code{to_json()} only.}
 
-\item{suppress_data}{If \code{TRUE}, omit data sources defined \emph{with} the spec
-(an inline data frame, e.g., \code{vg_data(name, data = df)}, serialized as
-mosaic-spec's own \verb{\{data: [...]\}} row-object array) from the output --
-handy for a compact, human-readable spec when the actual data isn't
-the point. Data sources specified \emph{by name} elsewhere (\verb{file =},
-\verb{query =}, \code{type = "spatial"}, ...) are left alone either way, since
-they're already just a reference, not embedded content. Default
-\code{FALSE}.}
+\item{suppress_data}{If \code{TRUE}, leave out data frames included in the
+spec (e.g., \code{vg_data(name, data = df)}), for a compact, readable spec
+when the data itself isn't the point. Data sources that are references
+(\verb{file =}, \verb{query =}, \code{type = "spatial"}, ...) are kept either way.
+Default \code{FALSE}.}
 
 \item{vgplotr_keys}{If \code{TRUE} (the default), include vgplotr's own
 additions to the spec -- params made with \code{\link[=vg_computed_param]{vg_computed_param()}} and
 handlers made with \code{\link[=vg_on_change]{vg_on_change()}} -- under a top-level \code{"vgplotr"}
-key. They aren't part of mosaic-spec, so set this to \code{FALSE} for a spec
+key. They aren't part of Mosaic's spec format, so set this to \code{FALSE} for a spec
 to use with Mosaic's own tools, which don't know that key (a spec with
 it may fail to load there). \code{\link[=vg_render]{vg_render()}} reads the key back.}
 
@@ -42,21 +39,16 @@ unquoted/unescaped); use \code{\link[=writeLines]{writeLines()}} or \code{cat(..
 save either to disk.
 }
 \description{
-\code{to_json()}/\code{to_yaml()} produce the same kind of JSON/YAML mosaic's own
-spec files use (e.g., the examples under \verb{docs/public/specs/json/}
-(\verb{.../yaml/}) in uwdata/mosaic) -- useful for inspecting exactly what a
-spec built with vgplotr's R API translates to, or for saving/sharing it
-independent of R. Both work on a full \code{vgspec} (from \code{\link[=vg_create]{vg_create()}}) or a
+\code{to_json()}/\code{to_yaml()} write a spec in Mosaic's own JSON/YAML format, the
+format of Mosaic's example specs -- useful for seeing exactly what a spec
+built in R describes, or for saving and sharing it independent of R. Both work on a full \code{vgspec} (from \code{\link[=vg_create]{vg_create()}}) or a
 bare fragment that hasn't been wrapped in one -- a chain of piped
 marks/interactors, a \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}} layout, or a
 standalone \code{\link[=vg_legend]{vg_legend()}}/\code{\link[=vg_slider]{vg_slider()}}/etc.
 }
 \details{
-Unlike \code{\link[=vg_render]{vg_render()}}'s own internal widget payload, both always keep
-data sources exactly as mosaic-spec itself represents them: a data frame
-becomes an inline array of row objects (mosaic-spec's own
-\verb{\{data: [...]\}} form), and a \verb{file =}/\verb{query =} source is left as a
-plain reference rather than having its content read and embedded.
+A data frame is written into the spec as an array of rows; a \verb{file =} or
+\verb{query =} data source is kept as a reference, without reading its data.
 }
 \section{Used in examples}{
 

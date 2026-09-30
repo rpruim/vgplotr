@@ -14,13 +14,12 @@ param(name)
 declared elsewhere in the spec, e.g., via \code{vg_params()} or as the \verb{as =}
 target of an interactor) is written in valid R. \verb{$brush} alone is not
 parseable R, so \code{param()} captures the bare name you give it and returns an
-object that serializes as \verb{$brush}.
+object that stands for \verb{$brush}.
 }
 \details{
-Like \code{dplyr::n()}, \code{param()} is only meaningful where the package's own
-translation code interprets it (formulas passed as mark/interactor
-encodings, and inside \code{sql()} expressions) -- calling it and printing the
-result directly just shows the \verb{$name} form for inspection.
+\code{param()} is meant for use in the arguments of marks, interactors and
+inputs, in formulas, and inside \code{sql()} expressions. Printing it just
+shows the \verb{$name} form.
 }
 \section{Used in examples}{
 

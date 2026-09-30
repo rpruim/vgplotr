@@ -15,15 +15,14 @@ is_vg_sql_expr <- function(x) inherits(x, "vg_sql_expr")
 #' Write a raw SQL expression
 #'
 #' Wraps a raw SQL expression for use as a mark encoding or other spec
-#' value, matching mosaic-spec's own `SQLExpression`/`AggregateExpression`.
-#' Unlike [vg_bin()]/[vg_count()]/etc., this is not translated from R syntax
-#' -- the pieces are just pasted together as SQL text, exactly as DuckDB
+#' value. Unlike [vg_bin()]/[vg_count()]/etc., this is not translated from R
+#' syntax -- the pieces are pasted together as SQL text, exactly as DuckDB
 #' will see it. Use `sql()` for ordinary expressions and `agg()` when the
-#' expression contains an aggregate function (e.g., `SUM(...)`); mosaic
+#' expression contains an aggregate function (e.g., `SUM(...)`); Mosaic
 #' needs to know which, since aggregates are handled differently in a
 #' query.
 #'
-#' A `param()` reference can be embedded either by writing mosaic's own
+#' A `param()` reference can be embedded either by writing Mosaic's
 #' `$name` syntax directly in the SQL text, or by passing the `param()`
 #' object as one of the pieces -- `sql("v + $point")` and
 #' `sql("v + ", param(point))` are equivalent. Both work directly as a

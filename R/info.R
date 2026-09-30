@@ -7,15 +7,11 @@
 
 #' Report the versions of Mosaic and DuckDB-Wasm this vgplotr bundles
 #'
-#' The mosaic JS runtime and DuckDB-Wasm's JS API are vendored into the
-#' package at a fixed version, chosen when this vgplotr version was built
-#' (not resolved at install time or view time) -- see `vignette("using-databases")`
-#' and `data-raw/js/build.js`. `vg_info()` reports exactly which versions
-#' that is, along with whether the (separately-cached, since it's too large
-#' to vendor) DuckDB-Wasm engine binary itself is currently cached locally,
-#' and -- since these aren't vendored at all, but come from whatever the
-#' user has installed -- the `duckdb`/`nanoarrow` package versions used by
-#' [vg_duckdb_connector()]'s native rendering path, if installed.
+#' Each version of vgplotr includes a fixed version of Mosaic and of
+#' DuckDB-Wasm's JavaScript code. `vg_info()` reports those versions, whether
+#' the DuckDB-Wasm database engine is cached locally (see
+#' [vg_cache_duckdb()]), and the versions of the duckdb, nanoarrow and DBI
+#' packages that [vg_duckdb_connector()] uses, if they're installed.
 #'
 #' @return An object of class `vg_info`, with a `print()` method, containing:
 #'   \describe{

@@ -108,27 +108,20 @@ start a new plot fragment with just these attributes.}
 
 \item{aria_description}{\verb{<string | param()>} A textual description for the axis in the accessibility tree. (\code{xAriaDescription}/\code{yAriaDescription}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-\code{vg_guide_x()}/\code{vg_guide_y()} set the axis-guide properties
-mosaic-spec exposes per positional axis (\code{xAxis}, \code{xTicks}, ... --
-substitute \code{y} for the vertical axis). Like the \code{xScale}/\code{yScale}
-properties handled by \code{\link[=vg_scale_position]{vg_scale_position()}}, these are already
-plot-level attributes that \code{\link[=vg_plot]{vg_plot()}}/\code{\link[=vg_attributes]{vg_attributes()}} accept
-directly, snake_case (e.g., \verb{x_ticks =}).
+\code{vg_guide_x()} and \code{vg_guide_y()} set the properties of a plot's x and y
+axes: labels, ticks, grid lines, and so on (Mosaic's \code{xAxis}, \code{xTicks},
+... attributes, and the same for \code{y}). The same attributes can also be
+given to \code{\link[=vg_plot]{vg_plot()}} or \code{\link[=vg_attributes]{vg_attributes()}}, as \verb{x_ticks =} and so on.
+\code{vg_guide_position()} is the general form, taking \code{which}.
 }
 \details{
-These are named \verb{vg_guide_*()} rather than \verb{vg_axis_*()} to avoid
-colliding with \code{vg_mark_axis_x()}/\code{vg_mark_axis_y()}
-(mosaic-spec's \code{axisX}/\code{axisY} \emph{mark}, a drawable,
-independently-styled axis) -- a different (if related) thing from
-the plain \code{xAxis}/\code{yAxis} guide attributes set here, which appear
-automatically alongside a plot's marks. Same story for the
-analogous facet guides, \code{\link[=vg_guide_facet]{vg_guide_facet()}} (vs.
-\code{vg_mark_axis_fx()}/\code{vg_mark_axis_fy()}, mosaic's \code{axisFx}/\code{axisFy}
-marks).
+These set the axes drawn automatically with a plot's marks. To add an axis
+as a mark of its own, styled separately, see \code{\link[=vg_mark_axis_x]{vg_mark_axis_x()}}. For the
+facet axes, see \code{\link[=vg_guide_facet]{vg_guide_facet()}}.
 
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }

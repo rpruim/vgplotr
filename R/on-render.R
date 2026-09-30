@@ -28,7 +28,7 @@
 #' The function may be `async`, and may be added more than once (they run in
 #' order). If it throws, the error is shown under the graphic.
 #'
-#' Hooks are not part of mosaic-spec, so [to_json()]/[to_yaml()] leave them
+#' Hooks are not part of Mosaic's spec format, so [to_json()]/[to_yaml()] leave them
 #' out (with a warning), and they only apply to a spec built with
 #' [vg_create()], not to a JSON/YAML string given to [vg_widget()].
 #'

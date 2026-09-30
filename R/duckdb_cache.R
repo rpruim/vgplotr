@@ -89,7 +89,7 @@ print.vg_duckdb_cache_status <- function(x, ...) {
 #' Cache the DuckDB WASM engine locally for offline/reproducible rendering
 #'
 #' [vg_render()] needs a client-side DuckDB to query data in the browser.
-#' Most of the JS runtime it uses ships with vgplotr, but the database
+#' Everything else it needs comes with vgplotr, but the database
 #' engine itself is a compiled WebAssembly binary too large to include in
 #' the package (about 35 MB). Without this, `vg_render()` must fetch it from a
 #' CDN each time a graphic is *viewed*.
@@ -108,8 +108,8 @@ print.vg_duckdb_cache_status <- function(x, ...) {
 #' even though the cache exists. Pages served over http(s) -- a Quarto or
 #' RStudio/Positron preview, a web server -- use the cache as described.
 #'
-#' This is entirely opt-in: without a cached binary, vgplotr keeps fetching
-#' from a CDN at view time, exactly as before. Set `force = TRUE` to
+#' This is entirely optional: without a local copy, the engine is fetched
+#' from a CDN when a graphic is viewed. Set `force = TRUE` to
 #' re-download even if already cached (e.g., after clearing it with
 #' [vg_uncache_duckdb()]).
 #'

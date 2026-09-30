@@ -15,25 +15,15 @@ start a new plot fragment with just these attributes.}
 
 \item{label}{\verb{<string | NULL | param()>} A textual label to show on the axis or legend; if null, show no label. (\code{rLabel}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-\code{vg_guide_r()} (aliased as \code{vg_guide_radius()}) sets the axis-guide
-propert(y/ies) mosaic-spec exposes for the \code{r} channel -- the
-counterpart of \code{\link[=vg_scale_r]{vg_scale_r()}}/\code{\link[=vg_scale_radius]{vg_scale_radius()}} for the radius
-channel's label rather than its domain/range. Which properties
-exist here (just a label, no tick-format) is derived from the
-schema, not hand-picked.
+\code{vg_guide_r()} (also called \code{vg_guide_radius()}) sets the label of the
+radius scale -- the counterpart of \code{\link[=vg_scale_r]{vg_scale_r()}}. A legend for sizes can
+be made with \code{\link[=vg_legend_symbol]{vg_legend_symbol()}}.
 }
 \details{
-See \code{\link[=vg_guide_color]{vg_guide_color()}} for why this is \code{vg_guide_r()}/
-\code{vg_guide_radius()} rather than \code{vg_legend_r()}/\code{vg_legend_radius()}
--- mosaic doesn't have a dedicated \code{r}-typed legend mark to collide
-with here (radius/size is usually shown via \code{\link[=vg_legend_symbol]{vg_legend_symbol()}}
-instead), but the naming stays consistent with \code{\link[=vg_guide_color]{vg_guide_color()}}/
-\code{\link[=vg_guide_opacity]{vg_guide_opacity()}}.
-
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{

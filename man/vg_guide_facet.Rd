@@ -103,22 +103,17 @@ start a new plot fragment with just these attributes.}
 
 \item{aria_description}{\verb{<string | param()>} A textual description for the axis in the accessibility tree. (\code{fxAriaDescription}/\code{fyAriaDescription}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-\code{vg_guide_fx()}/\code{vg_guide_fy()} set the axis-guide properties
-mosaic-spec exposes per facet axis (\code{fxAxis}, \code{fxTicks}, ... --
-substitute \code{fy} for the row facet axis). This is the facet
-counterpart of \code{\link[=vg_guide_position]{vg_guide_position()}}; the property set (which lacks
-\code{label_arrow}, among others) is derived from the schema, not
-hand-picked.
+\code{vg_guide_fx()} and \code{vg_guide_fy()} set the properties of a plot's facet
+axes (\code{fxAxis}, \code{fxTicks}, ..., and the same for \code{fy}) -- the facet
+counterpart of \code{\link[=vg_guide_position]{vg_guide_position()}}, with a few fewer properties (no
+\code{label_arrow}, for example). To add a facet axis as a mark of its own,
+see \code{\link[=vg_mark_axis_fx]{vg_mark_axis_fx()}}.
 }
 \details{
-See \code{\link[=vg_guide_position]{vg_guide_position()}} for why these are \verb{vg_guide_*()} rather
-than \verb{vg_axis_*()} (to avoid colliding with \code{vg_mark_axis_fx()}/
-\code{vg_mark_axis_fy()}, mosaic's \code{axisFx}/\code{axisFy} marks).
-
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{

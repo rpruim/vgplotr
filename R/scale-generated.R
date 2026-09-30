@@ -21,18 +21,14 @@ vg_position_counterpart <- c(x = "y", y = "x", fx = "fy", fy = "fx")
 
 #' Set position scale properties (x or y)
 #'
-#' `vg_scale_x()`/`vg_scale_y()` set the scale properties mosaic-spec
-#' exposes per positional axis (`xScale`, `xDomain`, ... -- substitute
-#' `y` for the vertical axis). These are already plot-level attributes
-#' that [vg_plot()]/[vg_attributes()] accept directly, snake_case; this
-#' is a discoverable, per-channel convenience layer on top of that.
-#' `vg_scale_x()` and `vg_scale_y()` are thin wrappers around the
-#' generic `vg_scale_position()`.
+#' `vg_scale_x()` and `vg_scale_y()` set the properties of a plot's x and y
+#' scales: type, domain, range, and so on (Mosaic's `xScale`, `xDomain`, ...
+#' attributes, and the same for `y`). The same attributes can also be given
+#' to [vg_plot()] or [vg_attributes()], as `x_domain =` and so on.
+#' `vg_scale_position()` is the general form, taking `which = "x"` or `"y"`.
 #'
-#' Like [vg_plot()], this can be piped in alongside marks/interactors --
-#' it only ever sets attributes on the current plot fragment, so it
-#' never needs to come last in a chain. For the analogous facet scales
-#' (`fx`/`fy`), see [vg_scale_facet()].
+#' Like [vg_plot()], these can be piped in anywhere among a plot's marks and
+#' interactors. For the facet scales (`fx`/`fy`), see [vg_scale_facet()].
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
@@ -58,8 +54,8 @@ vg_position_counterpart <- c(x = "y", y = "x", fx = "fy", fy = "fx")
 #' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`xPercent`/`yPercent`).
 #' @param inset_left,inset_right `<number | param()>` Pixel inset at the left/right end of the range; only meaningful for `which = "x"` (`xInsetLeft`/`xInsetRight`).
 #' @param inset_top,inset_bottom `<number | param()>` Pixel inset at the top/bottom end of the range; only meaningful for `which = "y"` (`yInsetTop`/`yInsetBottom`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family scale functions
 #' @export
 #' @examples
@@ -85,14 +81,11 @@ vg_scale_y <- wrapper_function(vg_scale_position, which = "y", drop = c("inset_l
 
 #' Set facet scale properties (fx or fy)
 #'
-#' `vg_scale_fx()`/`vg_scale_fy()` set the scale properties mosaic-spec
-#' exposes per facet axis (`fxDomain`, `fxPadding`, ... -- substitute
-#' `fy` for the row facet axis). Facet scales are always band scales,
-#' so this covers fewer properties than [vg_scale_position()] (no
-#' `type`, `nice`, `zero`, `clamp`, or the log/pow/symlog-only
-#' properties) -- exactly which ones is derived from the schema, not
-#' hand-picked. `vg_scale_fx()` and `vg_scale_fy()` are thin wrappers
-#' around the generic `vg_scale_facet()`.
+#' `vg_scale_fx()` and `vg_scale_fy()` set the properties of a plot's facet
+#' scales (`fxDomain`, `fxPadding`, ..., and the same for `fy`). Facet scales
+#' are always band scales, so they have fewer properties than
+#' [vg_scale_position()] (no `type`, `nice`, `zero`, `clamp`, ...).
+#' `vg_scale_facet()` is the general form, taking `which = "fx"` or `"fy"`.
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
@@ -110,8 +103,8 @@ vg_scale_y <- wrapper_function(vg_scale_position, which = "y", drop = c("inset_l
 #' @param inset `<number | param()>` Shorthand to set the same default for all four insets: **insetTop**, **insetRight**, **insetBottom**, and **insetLeft**. (`fxInset`/`fyInset`).
 #' @param inset_left,inset_right `<number | param()>` Pixel inset at the left/right end of the range; only meaningful for `which = "fx"` (`fxInsetLeft`/`fxInsetRight`).
 #' @param inset_top,inset_bottom `<number | param()>` Pixel inset at the top/bottom end of the range; only meaningful for `which = "fy"` (`fyInsetTop`/`fyInsetBottom`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family scale functions
 #' @export
 #' @examples
@@ -136,16 +129,10 @@ vg_scale_fy <- wrapper_function(vg_scale_facet, which = "fy", drop = c("inset_le
 
 #' Set the color scale's properties
 #'
-#' `vg_scale_color()` sets the scale properties mosaic-spec exposes for
-#' the `color` channel (`colorScale`, `colorDomain`, ... -- the scale
-#' that `fill`/`stroke` encodings are bound to unless they're a literal
-#' constant). Unlike `vg_scale_x()`/`vg_scale_y()`, there's only one
-#' color channel, so `vg_scale_color()` isn't built from a `which =`
-#' generic -- it's the whole implementation. For the axis-guide
-#' properties (`colorLabel`/`colorTickFormat`), see [vg_guide_color()];
-#' for an actual rendered color legend, see [vg_legend_color()] -- a
-#' different (if related) thing, a standalone/embedded legend mark
-#' rather than a plot attribute.
+#' `vg_scale_color()` sets the properties of the color scale (`colorScale`,
+#' `colorDomain`, ...), used by `fill` and `stroke` when they're mapped to
+#' data. For the scale's label and tick format, see [vg_guide_color()]; to
+#' add a color legend, see [vg_legend_color()].
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
@@ -167,8 +154,8 @@ vg_scale_fy <- wrapper_function(vg_scale_facet, which = "fy", drop = c("inset_le
 #' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`colorConstant`).
 #' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`colorPercent`).
 #' @param n `<number | param()>` For a *quantile* scale, the number of quantiles (creates *n* - 1 thresholds); for a *quantize* scale, the approximate number of thresholds; defaults to 5. (`colorN`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family scale functions
 #' @export
 #' @examples
@@ -185,29 +172,20 @@ vg_scale_color <- function(spec = NULL, type = vg_unset, domain = vg_unset, rang
 #'
 #' `vg_scale_r()`, `vg_scale_length()`, and `vg_scale_opacity()` set the scale properties of the `r`, `length`, and `opacity` channels. They take the same arguments, except those noted below as belonging to only some of them; each is described below.
 #'
-#' `vg_scale_r()` (aliased as `vg_scale_radius()`) sets the scale
-#' properties mosaic-spec exposes for the `r` channel (`rScale`,
-#' `rDomain`, ... -- the scale that a `dot`/`circle` mark's `r`
-#' encoding is bound to unless it's a literal constant). Which
-#' properties exist here (e.g., no `reverse` -- mosaic doesn't define
-#' `rReverse`) is derived from the schema, not hand-picked. For the
-#' axis-guide property, see [vg_guide_r()]/[vg_guide_radius()]; for an
-#' actual rendered radius/size legend, see [vg_legend_symbol()]
-#' (mosaic doesn't have a dedicated `r`-typed legend).
+#' `vg_scale_r()` (also called `vg_scale_radius()`) sets the properties of
+#' the radius scale (`rScale`, `rDomain`, ...), used by a `dot` mark's `r`
+#' when it's mapped to data. For the scale's label, see [vg_guide_r()]; a
+#' legend for sizes can be made with [vg_legend_symbol()].
 #'
-#' `vg_scale_length()` sets the scale properties mosaic-spec exposes
-#' for the `length` channel (`lengthScale`, `lengthDomain`, ... -- the
-#' scale that a `vector`/`spike` mark's `length` encoding is bound to
-#' unless it's a literal constant). Mosaic doesn't define a length
-#' axis-guide or legend, so there's no `vg_guide_length()`/
-#' `vg_legend_length()` to pair with this.
+#' `vg_scale_length()` sets the properties of the length scale
+#' (`lengthScale`, `lengthDomain`, ...), used by a `vector` or `spike`
+#' mark's `length` when it's mapped to data.
 #'
-#' `vg_scale_opacity()` sets the scale properties mosaic-spec exposes
-#' for the `opacity` channel (`opacityScale`, `opacityDomain`, ... --
-#' the scale that `opacity`/`fillOpacity`/`strokeOpacity` encodings are
-#' bound to unless they're a literal constant). For the axis-guide
-#' properties, see [vg_guide_opacity()]; for an actual rendered opacity
-#' legend, see [vg_legend_opacity()].
+#' `vg_scale_opacity()` sets the properties of the opacity scale
+#' (`opacityScale`, `opacityDomain`, ...), used by `opacity`, `fill_opacity`
+#' and `stroke_opacity` when they're mapped to data. For the scale's label
+#' and tick format, see [vg_guide_opacity()]; to add an opacity legend, see
+#' [vg_legend_opacity()].
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
@@ -224,8 +202,8 @@ vg_scale_color <- function(spec = NULL, type = vg_unset, domain = vg_unset, rang
 #' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`rConstant`/`lengthConstant`/`opacityConstant`).
 #' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`rPercent`/`lengthPercent`/`opacityPercent`).
 #' @param reverse `<boolean | param()>` Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`opacityReverse`). Only for `vg_scale_opacity()`.
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family scale functions
 #' @rdname vg_scale_r
 #' @export
@@ -267,11 +245,9 @@ vg_scale_opacity <- function(spec = NULL, type = vg_unset, domain = vg_unset, ra
 
 #' Set the symbol scale's properties
 #'
-#' `vg_scale_symbol()` sets the scale properties mosaic-spec exposes
-#' for the `symbol` channel (`symbolScale`, `symbolDomain`,
-#' `symbolRange` -- the scale that a `dot`'s `symbol` encoding is bound
-#' to unless it's a literal constant). Mosaic doesn't define a symbol
-#' axis-guide, but does have a dedicated legend type -- see
+#' `vg_scale_symbol()` sets the properties of the symbol scale
+#' (`symbolScale`, `symbolDomain`, `symbolRange`), used by a `dot` mark's
+#' `symbol` when it's mapped to data. To add a symbol legend, see
 #' [vg_legend_symbol()].
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
@@ -281,8 +257,8 @@ vg_scale_opacity <- function(spec = NULL, type = vg_unset, domain = vg_unset, ra
 #' @param type `<"ordinal" | "identity" | NULL | param()>` The *symbol* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`symbolScale`).
 #' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`symbolDomain`).
 #' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`symbolRange`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family scale functions
 #' @export
 #' @examples
@@ -297,13 +273,10 @@ vg_scale_symbol <- function(spec = NULL, type = vg_unset, domain = vg_unset, ran
 
 #' Set global default scale properties (all ordinal position scales)
 #'
-#' `vg_scale_all()` sets mosaic-spec's plot-wide fallback defaults --
-#' unlike `xAlign`/`xPadding`/etc. (set via [vg_scale_position()]) or
-#' `fxAlign`/etc. (via [vg_scale_facet()]), which only affect one scale,
-#' these bare attributes are mosaic's own defaults applied to *every*
-#' ordinal position scale (`x`, `y`, `fx`, `fy`) that doesn't set its
-#' own value. For the analogous axis-guide defaults, see
-#' [vg_guide_all()].
+#' `vg_scale_all()` sets defaults for all of a plot's ordinal position scales
+#' (`x`, `y`, `fx`, `fy`), used by any of them that doesn't set its own
+#' value -- unlike [vg_scale_position()] and [vg_scale_facet()], which set
+#' one scale. For axis defaults, see [vg_guide_all()].
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
@@ -312,8 +285,8 @@ vg_scale_symbol <- function(spec = NULL, type = vg_unset, domain = vg_unset, ran
 #' @param padding `<number | param()>` For *band* scales, how much of the **range** to reserve to separate adjacent bands; defaults to 0.1 (10%). (`padding`).
 #' @param align `<number | param()>` How to distribute unused space in the **range** for *point* and *band* scales. (`align`).
 #' @param inset `<number | param()>` Shorthand to set the same default for all four insets: **insetTop**, **insetRight**, **insetBottom**, and **insetLeft**. (`inset`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family scale functions
 #' @export
 #' @examples

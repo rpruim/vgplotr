@@ -13,11 +13,9 @@ pre-aggregated materialized views. The area around a regression line
 shows a 95% confidence interval. Select a region to view regression
 results for a data subset.
 
-Note: the underlying `flights-10m.parquet` file is ~10 million rows,
-hosted outside mosaic's usual `data/` directory (a Cloudflare R2
-bucket, referenced directly inside the SQL query text below rather than
-via `vg_example_url()`, which only covers files under mosaic's own GitHub
-`data/` directory). Rendering this one may be slow.
+Note: the underlying `flights-10m.parquet` file has about 10 million rows.
+It is stored elsewhere than Mosaic's other example data, so the SQL query
+below refers to its URL directly rather than using `vg_example_url()`. Rendering this one may be slow.
 
 ```{r setup}
 library(vgplotr)

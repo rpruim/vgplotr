@@ -6,8 +6,7 @@ engine: knitr
 ---
 
 Recreates [Contour Plot](https://idl.uw.edu/mosaic/examples/contours.html)
-from the mosaic/vgplot example gallery. Setting the `fill` color to
-`"species"` subdivides the data into three sets of densities.
+from the mosaic/vgplot example gallery. Mapping the `fill` color to `species` subdivides the data into three sets of densities.
 
 ```{r setup}
 library(vgplotr)

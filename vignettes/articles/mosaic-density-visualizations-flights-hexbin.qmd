@@ -9,11 +9,8 @@ Recreates [Flights Hexbin](https://idl.uw.edu/mosaic/examples/flights-hexbin.htm
 from the mosaic/vgplot example gallery. Select regions in the marginal
 histograms to filter the density display.
 
-`scale`'s initial value is declared as mosaic-spec's explicit
-`ParamValue` object shape (`{"value": "log"}`, i.e. `list(value =
-"log")`) rather than a bare string -- functionally identical to
-`scale = "log"`, just a different way mosaic-spec allows writing the
-same thing.
+`scale`'s initial value is written as `list(value = "log")`, which is the
+same as `scale = "log"`.
 
 ```{r setup}
 library(vgplotr)

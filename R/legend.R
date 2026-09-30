@@ -10,10 +10,10 @@ legend_options_doc <- function() {
   opts <- paste0("  - `", snake_names, "` ", .vg_legend_prop_types)
   c(
     "@param ... Legend options, e.g., `as = param(brush)`, `label =",
-    "  \"Species\"`. Snake_case (matching marks/interactors) or mosaic-spec's",
-    "  own exact camelCase key (`tickSize =`) both work. An argument that",
-    "  isn't an option of a legend in mosaic-spec warns, since mosaic would",
-    "  silently ignore it. Accepted options:",
+    "  \"Species\"`. Snake_case (`tick_size =`, as for marks and interactors)",
+    "  or Mosaic's own camelCase (`tickSize =`) both work. An argument that",
+    "  isn't a legend option gives a warning, since it would have no effect.",
+    "  Accepted options:",
     opts
   )
 }
@@ -23,7 +23,7 @@ legend_options_doc <- function() {
 #' A legend can be embedded in a plot (added alongside its marks, picking up
 #' a matching encoding automatically) or, given `for_plot`, live as a
 #' standalone layout item referencing a plot by name (its `name =` attribute,
-#' see [vg_plot()]) -- mirroring mosaic-spec's own two legend forms.
+#' see [vg_plot()]).
 #'
 #' @param spec A plot fragment or `vgspec` to embed this legend in, or `NULL`
 #'   to start a new plot with just this legend. Not used (and not allowed)

@@ -30,13 +30,10 @@ the default \code{file} is given (i.e., one-off/scripted use with only
 built widget (e.g., \verb{width =}, \verb{height =}). Also silently absorbs
 arguments meant for \code{\link[=vg_snapshot]{vg_snapshot()}} instead (e.g., \verb{delay =}), so
 \code{\link[=vg_render]{vg_render()}} can forward its own \code{...} uniformly. \code{use_cache}
-defaults to \code{FALSE} here specifically, even if this machine has a
-local duckdb-wasm cache set up (see \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}):
-htmlwidgets bundles a cached dependency as a real copy of the file,
-and duckdb-wasm's engine is a ~35 MB binary -- embedding that into
-what's typically a \emph{committed} file would be a serious bloat
-(confirmed directly: this happened once, ~35 MB per widget). Pass
-\code{use_cache = TRUE} explicitly to override.}
+defaults to \code{FALSE} here, even if you have a local copy of the
+DuckDB-Wasm engine (see \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}): using it would put a copy
+of the ~35 MB engine next to every saved widget. Pass
+\code{use_cache = TRUE} to use it anyway.}
 }
 \description{
 Saves \code{spec} as a non-self-contained HTML file and
@@ -59,19 +56,9 @@ than from \code{README.md}). pkgdown copies
 ends up served alongside everything else on the deployed site, and
 \code{src} defaults accordingly (see \code{src} below).
 
-Note: \code{\link[=vg_render]{vg_render()}} never picks this mode automatically
-(only \code{\link[=vg_widget]{vg_widget()}} or \code{\link[=vg_snapshot]{vg_snapshot()}}), so you must ask for it
-explicitly, e.g., via \code{vg_render(spec, mode = "iframe")}. This is
-because \code{\link[=vg_render]{vg_render()}}'s auto-detection works by asking
-"Can this pandoc target run embedded JavaScript?" — that's a real,
-fixed property of the output format itself
-(HTML can, gfm/markdown/PDF/Word can't), so it's reliable.
-But whether an \verb{<iframe>} is useful depends on
-whether the rendered file ends up served over http(s),
-with its sibling reference/figures/*.html file reachable at a
-predictable relative path. That's not a property of the render at all
-— it's a fact about what happens to the rendered file afterward,
-entirely outside the knitting process.
+\code{\link[=vg_render]{vg_render()}} never chooses this mode itself, since whether an
+\verb{<iframe>} works depends on where the finished page ends up, which it
+can't know. Ask for it with \code{vg_render(spec, mode = "iframe")}.
 }
 \section{Using this outside a pkgdown home page}{
 

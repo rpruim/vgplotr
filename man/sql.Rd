@@ -17,16 +17,15 @@ and \code{\link[=param]{param()}} values are pasted together with no separator i
 }
 \description{
 Wraps a raw SQL expression for use as a mark encoding or other spec
-value, matching mosaic-spec's own \code{SQLExpression}/\code{AggregateExpression}.
-Unlike \code{\link[=vg_bin]{vg_bin()}}/\code{\link[=vg_count]{vg_count()}}/etc., this is not translated from R syntax
--- the pieces are just pasted together as SQL text, exactly as DuckDB
+value. Unlike \code{\link[=vg_bin]{vg_bin()}}/\code{\link[=vg_count]{vg_count()}}/etc., this is not translated from R
+syntax -- the pieces are pasted together as SQL text, exactly as DuckDB
 will see it. Use \code{sql()} for ordinary expressions and \code{agg()} when the
-expression contains an aggregate function (e.g., \code{SUM(...)}); mosaic
+expression contains an aggregate function (e.g., \code{SUM(...)}); Mosaic
 needs to know which, since aggregates are handled differently in a
 query.
 }
 \details{
-A \code{param()} reference can be embedded either by writing mosaic's own
+A \code{param()} reference can be embedded either by writing Mosaic's
 \verb{$name} syntax directly in the SQL text, or by passing the \code{param()}
 object as one of the pieces -- \code{sql("v + $point")} and
 \code{sql("v + ", param(point))} are equivalent. Both work directly as a

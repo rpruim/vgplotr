@@ -11,8 +11,7 @@ from the mosaic/vgplot example gallery (adapted from an [Observable
 Plot example](https://observablehq.com/@observablehq/plot-us-choropleth)).
 Requires the DuckDB `spatial` extension.
 
-`combined` is a derived table (a plain SQL join query, mosaic-spec's
-bare-string `DataQuery`) joining the spatial `counties` geometry with
+`combined` is a table defined by a SQL query, joining the spatial `counties` geometry with
 the `rates` unemployment data by county id.
 
 ```{r setup}

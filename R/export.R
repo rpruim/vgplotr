@@ -1,35 +1,27 @@
-#' Convert a vgspec (or plot fragment) to mosaic-spec JSON or YAML
+#' Convert a vgspec (or plot fragment) to a Mosaic JSON or YAML spec
 #'
-#' `to_json()`/`to_yaml()` produce the same kind of JSON/YAML mosaic's own
-#' spec files use (e.g., the examples under `docs/public/specs/json/`
-#' (`.../yaml/`) in uwdata/mosaic) -- useful for inspecting exactly what a
-#' spec built with vgplotr's R API translates to, or for saving/sharing it
-#' independent of R. Both work on a full `vgspec` (from [vg_create()]) or a
+#' `to_json()`/`to_yaml()` write a spec in Mosaic's own JSON/YAML format, the
+#' format of Mosaic's example specs -- useful for seeing exactly what a spec
+#' built in R describes, or for saving and sharing it independent of R. Both work on a full `vgspec` (from [vg_create()]) or a
 #' bare fragment that hasn't been wrapped in one -- a chain of piped
 #' marks/interactors, a [vg_vconcat()]/[vg_hconcat()] layout, or a
 #' standalone [vg_legend()]/[vg_slider()]/etc.
 #'
-#' Unlike [vg_render()]'s own internal widget payload, both always keep
-#' data sources exactly as mosaic-spec itself represents them: a data frame
-#' becomes an inline array of row objects (mosaic-spec's own
-#' `{data: [...]}` form), and a `file =`/`query =` source is left as a
-#' plain reference rather than having its content read and embedded.
+#' A data frame is written into the spec as an array of rows; a `file =` or
+#' `query =` data source is kept as a reference, without reading its data.
 #'
 #' @param spec A `vgspec`, or a bare layout fragment.
 #' @param pretty Whether to indent the JSON for readability (default
 #'   `TRUE`). `to_json()` only.
-#' @param suppress_data If `TRUE`, omit data sources defined *with* the spec
-#'   (an inline data frame, e.g., `vg_data(name, data = df)`, serialized as
-#'   mosaic-spec's own `{data: [...]}` row-object array) from the output --
-#'   handy for a compact, human-readable spec when the actual data isn't
-#'   the point. Data sources specified *by name* elsewhere (`file =`,
-#'   `query =`, `type = "spatial"`, ...) are left alone either way, since
-#'   they're already just a reference, not embedded content. Default
-#'   `FALSE`.
+#' @param suppress_data If `TRUE`, leave out data frames included in the
+#'   spec (e.g., `vg_data(name, data = df)`), for a compact, readable spec
+#'   when the data itself isn't the point. Data sources that are references
+#'   (`file =`, `query =`, `type = "spatial"`, ...) are kept either way.
+#'   Default `FALSE`.
 #' @param vgplotr_keys If `TRUE` (the default), include vgplotr's own
 #'   additions to the spec -- params made with [vg_computed_param()] and
 #'   handlers made with [vg_on_change()] -- under a top-level `"vgplotr"`
-#'   key. They aren't part of mosaic-spec, so set this to `FALSE` for a spec
+#'   key. They aren't part of Mosaic's spec format, so set this to `FALSE` for a spec
 #'   to use with Mosaic's own tools, which don't know that key (a spec with
 #'   it may fail to load there). [vg_render()] reads the key back.
 #' @param ... Additional arguments passed on to [jsonlite::toJSON()] (for

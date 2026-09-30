@@ -12,15 +12,11 @@ source (equivalent to following up with \code{vg_data(data = data)} -- see
 \code{\link[=vg_data]{vg_data()}} for the name this gets, and \code{\link[=vg_mark]{vg_mark()}} for the analogous
 \code{some_data |> vg_mark_dot(...)} shorthand).}
 
-\item{...}{Named values routed automatically to wherever mosaic-spec
-allows them: a known plot-level attribute (e.g., \verb{width =}, \verb{height =})
-goes to the spec's own top level (as if passed to \code{\link[=vg_attributes]{vg_attributes()}});
-anything else goes to \code{meta} (as if passed to \code{\link[=vg_meta]{vg_meta()}}), since
-mosaic-spec's metadata accepts arbitrary keys (e.g., \verb{title =}). To set
-mosaic-spec's \code{plotDefaults} (applied to \emph{every} plot, as opposed to
-just the spec's own top level) instead, call \code{\link[=vg_plot_defaults]{vg_plot_defaults()}}
-explicitly -- it's never chosen automatically, since every name valid
-there is also valid at the top level, which is preferred.}
+\item{...}{Named values, sorted automatically: a plot attribute (e.g.,
+\verb{width =}, \verb{height =}) is set on the spec itself, as with
+\code{\link[=vg_attributes]{vg_attributes()}}; anything else (e.g., \verb{title =}) is metadata, as with
+\code{\link[=vg_meta]{vg_meta()}}. To set attributes for every plot in the spec, use
+\code{\link[=vg_plot_defaults]{vg_plot_defaults()}}.}
 }
 \description{
 \code{vg_create()} starts a new \code{vgspec}, the top-level object that other

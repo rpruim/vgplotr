@@ -284,7 +284,7 @@ in different specifications on the same page. This includes the
 implicit `"data1"`/`"data2"`/... names used when a data frame is piped
 directly into a mark (see "Some shortcuts" above).
 
-Good practice is to explicity name data sources you plan to 
+Good practice is to explicitly name data sources you plan to 
 reuse with distinct, meaningful names (not `data1`, `data2`, etc.).
 If a name gets reused, only the last use will remain in the 
 database, and any plots that rely on a previous data source
@@ -448,11 +448,11 @@ way in every widget that declares it (see `?vg_selection`).
 Links only work between live widgets on one page, so not for `vg_iframe()`
 or the static snapshots used for non-HTML output.
 
-Some additional example of interaction appear below.
+Some additional examples of interaction appear below.
 
 ## Transform functions: binning and aggregation
 
-Mosaic does not have a histogram "mark" (or an other histogram primative).
+Mosaic does not have a histogram "mark" (or any other histogram primitive).
 From the perspective of Mosaic, a histogram is a graphic with bar marks
 created from binned counts.  So we need to specify three things to 
 make a histogram:
@@ -484,7 +484,7 @@ vg_create() |>
   vg_render()
 ```
 
-Transform functions call also be called directly, 
+Transform functions can also be called directly, 
 useful for inspecting what they build:
 
 ```{r}
@@ -495,12 +495,8 @@ vg_bin(delay, step = 2)
 
 vgplotr includes a `vg_mark_*()` function for each of the 65
 marks supported by Mosaic.
-Each of these functions recognizes every plot-level attribute 
-(215) as belonging to the plot, not the mark -- 
-even when a mark has a same-named property of its own 
-(e.g., a mark's own `inset` vs. the plot-wide default
-`inset`, told apart by `vg_mark_*()`'s generated list of each 
-mark's real properties).
+Each of these functions also accepts plot-level attributes (such as
+`width =`), which apply to the plot as a whole rather than to the mark.
 
 
 ```{r}
@@ -653,7 +649,7 @@ legend. -->
 
 ### Setting attributes for multiple scales at once
 
-`vg_scale_all()`/`vg_guide_all()` set mosaic's plot-wide *default* scale/
+`vg_scale_all()`/`vg_guide_all()` set plot-wide *default* scale/
 guide properties -- `align`/`inset`/`padding` and `axis`/`grid`/
 `ariaLabel`/`ariaDescription` respectively -- which apply to every
 position scale/axis (`x`, `y`, `fx`, `fy`) that doesn't set its own value.
@@ -770,7 +766,7 @@ conflicted_graphic$attrs$width
 
 `sql()` (and `agg()`, for expressions with an aggregate function) wraps a
 raw SQL expression for encodings that transforms and plain column
-references can't express -- mosaic-spec's own `{sql: "..."}`/`{agg: "..."}`.
+references can't express.
 Below, a menu-controlled parameter chooses a temperature scale, and 
 an SQL expression is computed by DuckDB to convert the temperature from 
 Celsius to Fahrenheit as needed.

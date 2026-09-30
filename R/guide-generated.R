@@ -10,22 +10,15 @@ NULL
 
 #' Set axis-guide properties for a position scale (x or y)
 #'
-#' `vg_guide_x()`/`vg_guide_y()` set the axis-guide properties
-#' mosaic-spec exposes per positional axis (`xAxis`, `xTicks`, ... --
-#' substitute `y` for the vertical axis). Like the `xScale`/`yScale`
-#' properties handled by [vg_scale_position()], these are already
-#' plot-level attributes that [vg_plot()]/[vg_attributes()] accept
-#' directly, snake_case (e.g., `x_ticks =`).
+#' `vg_guide_x()` and `vg_guide_y()` set the properties of a plot's x and y
+#' axes: labels, ticks, grid lines, and so on (Mosaic's `xAxis`, `xTicks`,
+#' ... attributes, and the same for `y`). The same attributes can also be
+#' given to [vg_plot()] or [vg_attributes()], as `x_ticks =` and so on.
+#' `vg_guide_position()` is the general form, taking `which`.
 #'
-#' These are named `vg_guide_*()` rather than `vg_axis_*()` to avoid
-#' colliding with `vg_mark_axis_x()`/`vg_mark_axis_y()`
-#' (mosaic-spec's `axisX`/`axisY` *mark*, a drawable,
-#' independently-styled axis) -- a different (if related) thing from
-#' the plain `xAxis`/`yAxis` guide attributes set here, which appear
-#' automatically alongside a plot's marks. Same story for the
-#' analogous facet guides, [vg_guide_facet()] (vs.
-#' `vg_mark_axis_fx()`/`vg_mark_axis_fy()`, mosaic's `axisFx`/`axisFy`
-#' marks).
+#' These set the axes drawn automatically with a plot's marks. To add an axis
+#' as a mark of its own, styled separately, see [vg_mark_axis_x()]. For the
+#' facet axes, see [vg_guide_facet()].
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
@@ -48,8 +41,8 @@ NULL
 #' @param font_variant `<string | param()>` The font-variant attribute for axis ticks; defaults to *tabular-nums* for quantitative axes. (`xFontVariant`/`yFontVariant`).
 #' @param aria_label `<string | param()>` A short label representing the axis in the accessibility tree. (`xAriaLabel`/`yAriaLabel`).
 #' @param aria_description `<string | param()>` A textual description for the axis in the accessibility tree. (`xAriaDescription`/`yAriaDescription`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family guide functions
 #' @export
 #' @examples
@@ -74,16 +67,11 @@ vg_guide_y <- wrapper_function(vg_guide_position, which = "y")
 
 #' Set axis-guide properties for a facet scale (fx or fy)
 #'
-#' `vg_guide_fx()`/`vg_guide_fy()` set the axis-guide properties
-#' mosaic-spec exposes per facet axis (`fxAxis`, `fxTicks`, ... --
-#' substitute `fy` for the row facet axis). This is the facet
-#' counterpart of [vg_guide_position()]; the property set (which lacks
-#' `label_arrow`, among others) is derived from the schema, not
-#' hand-picked.
-#'
-#' See [vg_guide_position()] for why these are `vg_guide_*()` rather
-#' than `vg_axis_*()` (to avoid colliding with `vg_mark_axis_fx()`/
-#' `vg_mark_axis_fy()`, mosaic's `axisFx`/`axisFy` marks).
+#' `vg_guide_fx()` and `vg_guide_fy()` set the properties of a plot's facet
+#' axes (`fxAxis`, `fxTicks`, ..., and the same for `fy`) -- the facet
+#' counterpart of [vg_guide_position()], with a few fewer properties (no
+#' `label_arrow`, for example). To add a facet axis as a mark of its own,
+#' see [vg_mark_axis_fx()].
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
@@ -105,8 +93,8 @@ vg_guide_y <- wrapper_function(vg_guide_position, which = "y")
 #' @param font_variant `<string | param()>` The font-variant attribute for axis ticks; defaults to *tabular-nums* for quantitative axes. (`fxFontVariant`/`fyFontVariant`).
 #' @param aria_label `<string | param()>` A short label representing the axis in the accessibility tree. (`fxAriaLabel`/`fyAriaLabel`).
 #' @param aria_description `<string | param()>` A textual description for the axis in the accessibility tree. (`fxAriaDescription`/`fyAriaDescription`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family guide functions
 #' @export
 #' @examples
@@ -132,26 +120,14 @@ vg_guide_fy <- wrapper_function(vg_guide_facet, which = "fy")
 #'
 #' `vg_guide_color()` and `vg_guide_opacity()` set the axis-guide properties of the `color` and `opacity` channels. They take the same arguments; each is described below.
 #'
-#' `vg_guide_color()` sets the axis-guide properties mosaic-spec
-#' exposes for the `color` channel (`colorLabel`, `colorTickFormat`) --
-#' the counterpart of [vg_scale_color()] for the color channel's
-#' label/tick formatting rather than its domain/range/palette.
+#' `vg_guide_color()` sets the label and tick format of the color scale
+#' (`colorLabel`, `colorTickFormat`) -- the counterpart of [vg_scale_color()],
+#' which sets the scale's domain, range and colors. It doesn't add a legend;
+#' for that, see [vg_legend_color()].
 #'
-#' This is named `vg_guide_color()` rather than `vg_legend_color()`
-#' because `vg_legend_color()` already exists and means something
-#' different: it adds an actual rendered color legend (a
-#' standalone/embedded legend mark, [vg_legend()]) to the spec.
-#' `vg_guide_color()` only sets these plot attributes -- it neither
-#' shows nor requires a legend to be present.
-#'
-#' `vg_guide_opacity()` sets the axis-guide properties mosaic-spec
-#' exposes for the `opacity` channel -- the counterpart of
-#' [vg_scale_opacity()] for the opacity channel's label/tick
-#' formatting rather than its domain/range.
-#'
-#' It is named `vg_guide_opacity()` rather than `vg_legend_opacity()`
-#' for the same reason: `vg_legend_opacity()` is [vg_legend()]'s actual
-#' rendered legend.
+#' `vg_guide_opacity()` does the same for the opacity scale, the counterpart
+#' of [vg_scale_opacity()]. It doesn't add a legend; for that, see
+#' [vg_legend_opacity()].
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
@@ -159,8 +135,8 @@ vg_guide_fy <- wrapper_function(vg_guide_facet, which = "fy")
 #'   start a new plot fragment with just these attributes.
 #' @param tick_format `<string | NULL | param()>` How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`colorTickFormat`/`opacityTickFormat`).
 #' @param label `<string | NULL | param()>` A textual label to show on the axis or legend; if null, show no label. (`colorLabel`/`opacityLabel`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family guide functions
 #' @rdname vg_guide_color
 #' @export
@@ -187,27 +163,17 @@ vg_guide_opacity <- function(spec = NULL, tick_format = vg_unset, label = vg_uns
 
 #' Set the axis-guide property for the radius scale
 #'
-#' `vg_guide_r()` (aliased as `vg_guide_radius()`) sets the axis-guide
-#' propert(y/ies) mosaic-spec exposes for the `r` channel -- the
-#' counterpart of [vg_scale_r()]/[vg_scale_radius()] for the radius
-#' channel's label rather than its domain/range. Which properties
-#' exist here (just a label, no tick-format) is derived from the
-#' schema, not hand-picked.
-#'
-#' See [vg_guide_color()] for why this is `vg_guide_r()`/
-#' `vg_guide_radius()` rather than `vg_legend_r()`/`vg_legend_radius()`
-#' -- mosaic doesn't have a dedicated `r`-typed legend mark to collide
-#' with here (radius/size is usually shown via [vg_legend_symbol()]
-#' instead), but the naming stays consistent with [vg_guide_color()]/
-#' [vg_guide_opacity()].
+#' `vg_guide_r()` (also called `vg_guide_radius()`) sets the label of the
+#' radius scale -- the counterpart of [vg_scale_r()]. A legend for sizes can
+#' be made with [vg_legend_symbol()].
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
 #' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
 #' @param label `<string | NULL | param()>` A textual label to show on the axis or legend; if null, show no label. (`rLabel`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family guide functions
 #' @export
 #' @examples
@@ -226,13 +192,10 @@ vg_guide_radius <- vg_guide_r
 
 #' Set global default axis-guide properties (all position axes)
 #'
-#' `vg_guide_all()` sets mosaic-spec's plot-wide fallback defaults for
-#' the axis-guide properties -- unlike `xAxis`/`xGrid`/etc. (set via
-#' [vg_guide_position()]) or `fxAxis`/etc. (via [vg_guide_facet()]),
-#' which only affect one axis, these bare attributes are mosaic's own
-#' defaults applied to *every* position axis (`x`, `y`, `fx`, `fy`)
-#' that doesn't set its own value. For the analogous scale defaults,
-#' see [vg_scale_all()].
+#' `vg_guide_all()` sets defaults for all of a plot's position axes (`x`, `y`,
+#' `fx`, `fy`), used by any of them that doesn't set its own value -- unlike
+#' [vg_guide_position()] and [vg_guide_facet()], which set one axis. For
+#' scale defaults, see [vg_scale_all()].
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
@@ -242,8 +205,8 @@ vg_guide_radius <- vg_guide_r
 #' @param grid `<boolean | string | param()>` Whether to show a grid aligned with the scale’s ticks. (`grid`).
 #' @param aria_label `<string | NULL>` The aria-label attribute on the SVG root. (`ariaLabel`).
 #' @param aria_description `<string | NULL>` The aria-description attribute on the SVG root. (`ariaDescription`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
+#' @param ... Additional plot-level attributes not covered above, e.g.
+#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).
 #' @family guide functions
 #' @export
 #' @examples

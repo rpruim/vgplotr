@@ -21,14 +21,10 @@ version of each of \code{duckdb}/\code{nanoarrow}/\code{DBI} (used by
 }
 }
 \description{
-The mosaic JS runtime and DuckDB-Wasm's JS API are vendored into the
-package at a fixed version, chosen when this vgplotr version was built
-(not resolved at install time or view time) -- see \code{vignette("using-databases")}
-and \code{data-raw/js/build.js}. \code{vg_info()} reports exactly which versions
-that is, along with whether the (separately-cached, since it's too large
-to vendor) DuckDB-Wasm engine binary itself is currently cached locally,
-and -- since these aren't vendored at all, but come from whatever the
-user has installed -- the \code{duckdb}/\code{nanoarrow} package versions used by
-\code{\link[=vg_duckdb_connector]{vg_duckdb_connector()}}'s native rendering path, if installed.
+Each version of vgplotr includes a fixed version of Mosaic and of
+DuckDB-Wasm's JavaScript code. \code{vg_info()} reports those versions, whether
+the DuckDB-Wasm database engine is cached locally (see
+\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}), and the versions of the duckdb, nanoarrow and DBI
+packages that \code{\link[=vg_duckdb_connector]{vg_duckdb_connector()}} uses, if they're installed.
 }
 \concept{info functions}

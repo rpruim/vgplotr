@@ -4,12 +4,11 @@
 \alias{vg_value_types}
 \title{What the \verb{<...>} notation in vgplotr's argument docs means}
 \description{
-Every generated \verb{vg_mark_*()}/\verb{vg_*()} (interactor/input) argument, and
-every \verb{vg_scale_*()}/\verb{vg_guide_*()} argument, is documented with a short
-\verb{<option1 | option2 | ...>} notation right after its name, listing what
-mosaic-spec actually accepts there -- derived directly from mosaic's own
-JSON schema. This page is
-the shared vocabulary those notations are built from.
+The arguments of the \verb{vg_mark_*()}, interactor, input, \verb{vg_scale_*()} and
+\verb{vg_guide_*()} functions are documented with a short
+\verb{<option1 | option2 | ...>} notation right after the argument's name,
+listing the kinds of values it accepts (taken from Mosaic's own
+specification). This page explains that notation.
 }
 \section{Channel values}{
 
@@ -42,7 +41,7 @@ read by Mosaic as a column name, for now; write columns as formulas.)}
 an aggregate function (\code{agg()}), for anything a column reference or
 transform can't express. See \code{\link[=sql]{sql()}}.}
 \item{\code{list(value=, ...)}}{The \verb{\{value:, scale:, label:\}} object form
-mosaic-spec's schema allows for overriding a channel's scale/label
+Mosaic's specification allows for overriding a channel's scale/label
 directly, e.g. \code{x = list(value = ~mpg, scale = "shared")}. Mosaic
 0.31.0 doesn't handle this form when rendering yet (the plot fails
 with a SQL error; see
@@ -53,7 +52,7 @@ now.}
 A property whose notation includes \code{list(value=, ...)} (not just
 \code{list}) is one of these \verb{\{value:, scale:, label:\}} channels; a bare
 \code{list} elsewhere means an ordinary named list of sub-options specific to
-that property (its own \verb{@param} text says what goes in it).
+that property (its own description says what goes in it).
 }
 
 \section{Reactive values}{
@@ -61,7 +60,7 @@ that property (its own \verb{@param} text says what goes in it).
 \describe{
 \item{\code{param()}}{A reactive Param or Selection, e.g.
 \code{param(brush)} -- see \code{\link[=param]{param()}}. Appears on almost every argument:
-mosaic-spec lets nearly any scalar option be driven by a live
+Mosaic lets nearly any single-valued option be driven by a live
 \code{param()} instead of a fixed value (a slider-controlled radius, a
 menu-controlled color scheme, ...), not just data-bound channels.}
 }
@@ -82,7 +81,7 @@ more than one type (or doesn't constrain them further).}
 \item{\code{list}}{A named list of sub-options specific to that property,
 e.g. \code{margins = list(left = 5, top = 5, right = 5, bottom = 5)} in
 \code{\link[=vg_plot_defaults]{vg_plot_defaults()}}.}
-\item{\code{any}}{Genuinely unconstrained by mosaic's own schema -- e.g. a
+\item{\code{any}}{Any value -- e.g. a
 \code{\link[=vg_menu]{vg_menu()}}'s initial \code{value}, which can be whatever type its
 \code{options} are.}
 }

@@ -90,13 +90,6 @@ vg_default_connector <- function() {
 #' call; a specific call can still override the session default by passing
 #' its own `connector =` explicitly.
 #'
-#' This changes what *unspecified* `connector =` arguments mean for the
-#' rest of the session -- it's deliberately something you opt into
-#' explicitly, rather than vgplotr inferring it from whether a native
-#' server happens to already be running (which would make a plain
-#' `vg_render(spec)` behave differently depending on unrelated earlier
-#' code, silently losing DuckDB-Wasm's self-contained/shareable output).
-#'
 #' @param connector A `vg_connector` (e.g., `vg_duckdb_connector(con)`) to
 #'   use as the default from now on. Left at the default
 #'   ([vg_wasm_connector()]), or called with no arguments, this resets the

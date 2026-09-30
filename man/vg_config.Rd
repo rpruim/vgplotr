@@ -2,7 +2,7 @@
 % Please edit documentation in R/create.R, R/example-usage-generated.R
 \name{vg_config}
 \alias{vg_config}
-\title{Set mosaic-spec \code{config} options on a vgspec}
+\title{Set database configuration options on a vgspec}
 \usage{
 vg_config(spec, ...)
 }
@@ -13,11 +13,9 @@ vg_config(spec, ...)
 character vector for more than one extension).}
 }
 \description{
-Sets mosaic-spec's top-level \code{config} object: runtime configuration for
-the database connection itself (currently just \code{extensions}, DuckDB
-extensions to load before the spec runs, e.g., \code{"spatial"} for
-geospatial data/marks) -- as opposed to \code{meta} (inert descriptive
-metadata) or any of the spec's actual data/params/graphic content.
+Configures the database the graphic runs against. The one option is
+\code{extensions}: DuckDB extensions to load before the graphic is drawn, e.g.
+\code{"spatial"} for geospatial data and marks.
 }
 \section{Used in examples}{
 

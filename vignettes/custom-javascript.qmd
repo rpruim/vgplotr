@@ -157,7 +157,7 @@ the graphic.
 
 - The code runs once per rendering, in the browser, and can only see what the
   context object gives it.
-- Hooks are not part of mosaic-spec, so `to_json()` and `to_yaml()` leave them
+- Hooks are not part of Mosaic's spec format, so `to_json()` and `to_yaml()` leave them
   out, with a warning. Likewise they apply to a spec built with `vg_create()`,
   not to a JSON or YAML string given to `vg_widget()`.
 - Hooks are for live output. In a non-HTML output, where `vg_render()` falls

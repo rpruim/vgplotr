@@ -12,8 +12,8 @@ performed in the database. The area around a regression line shows a
 95% confidence interval. Select a region to view regression results for
 a data subset.
 
-The brushed selection (`$query`, created via `intervalXY(as = query)`)
-is used only within this one plot, so -- unlike "Sorted Bars" -- it
+The brushed selection (`param(query)`, created by `vg_interval_xy(as =
+param(query))`) is used only within this one plot, so -- unlike "Sorted Bars" -- it
 doesn't need an explicit `vg_params()` declaration; the selection is
 created the moment it's targeted by an `as =`.
 

@@ -10,10 +10,7 @@ Recreates [Cross-Filter Flights
 mosaic/vgplot example gallery. Once loaded, automatic pre-aggregation
 optimizations enable efficient cross-filtered selections.
 
-Note: the underlying `flights-10m.parquet` file is ~10 million rows,
-hosted outside mosaic's usual `data/` directory (see "Linear
-Regression 10M" in the Data Transformation batch for the same data
-source). Rendering this one may be slow.
+Note: the underlying `flights-10m.parquet` file has about 10 million rows. Rendering this one may be slow.
 
 ```{r setup}
 library(vgplotr)

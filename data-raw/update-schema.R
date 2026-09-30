@@ -778,9 +778,9 @@ mark_lines <- c(mark_lines, generate_grouped(sort(names(mark_defs)), "mark", "vg
     prop_types = mark_prop_types,
     extra_formals = c("data_from", "filter_by", "data_optimize"),
     extra_docs = c(
-      "#' @param data_from The name of the data source this mark reads from (see [vg_data()]); a length-1 nonzero R integer (`1L`, `-1L`, ...; note the `L`) giving a 1-based index into the spec's registered data sources instead, negative counting from the end (e.g., `-1L` for the most recently registered one); or a literal vector of values to use as inline data directly (mosaic-spec's `\"data\": [...]` shorthand, e.g., for a single reference line -- a bare double like `0`/`c(0)`, or `0L` itself (never a valid index), means this, not an index). Left unset, defaults to the first registered data source (equivalent to `data_from = 1L`) for any mark type that takes data at all.",
+      "#' @param data_from The data source this mark reads from: a data source's name (see [vg_data()]), or its position as an integer (`1L` for the first, `-1L` for the most recently added; note the `L`). Left unset, a mark that uses data reads the first data source. A vector of numbers, such as `c(0)`, is used as the data itself -- handy for a single reference line.",
       "#' @param filter_by A Param/Selection (e.g., from [param()]) to filter this mark's data by.",
-      "#' @param data_optimize A flag (default `TRUE`) to enable mark-specific query optimizations for this mark's data; set `FALSE` to disable them (mosaic-spec's `data: {optimize: false}`)."
+      "#' @param data_optimize Whether Mosaic may optimize this mark's database queries (default `TRUE`); set `FALSE` to turn that off, e.g. when tracking down a problem."
     ),
     title = docline(mark_defs[[name]]$description, paste0("The `", name, "` mark.")),
     spec_doc = "A plot fragment or `vgspec` to add this mark to, or `NULL` to start a new plot with just this mark.",
@@ -1130,8 +1130,8 @@ generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, 
     which_doc,
     arg_docs,
     inset_docs,
-    "#' @param ... Additional plot-level attributes not covered above, snake_case",
-    "#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.",
+    "#' @param ... Additional plot-level attributes not covered above, e.g.",
+    "#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).",
     sprintf("#' @family %s", family),
     "#' @export",
     examples
@@ -1294,8 +1294,8 @@ scale_guide_page <- function(members, rdname, title, suffixes, family, family_pr
     sprintf("#' @param spec A plot fragment or `vgspec` to set this %s on, or `NULL` to", spec_noun),
     "#'   start a new plot fragment with just these attributes.",
     arg_docs,
-    "#' @param ... Additional plot-level attributes not covered above, snake_case",
-    "#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.",
+    "#' @param ... Additional plot-level attributes not covered above, e.g.",
+    "#'   `x_domain =` (Mosaic's `xDomain`, written in snake_case).",
     sprintf("#' @family %s", family),
     sprintf("#' @rdname %s", rdname),
     "#' @export",
@@ -1332,18 +1332,14 @@ scale_lines <- c(scale_lines, scale_group(
   "vg_scale_position", c("x", "y"), has_inset = TRUE, which_noun = "position scale",
   title = "Set position scale properties (x or y)",
   description = c(
-    "#' `vg_scale_x()`/`vg_scale_y()` set the scale properties mosaic-spec",
-    "#' exposes per positional axis (`xScale`, `xDomain`, ... -- substitute",
-    "#' `y` for the vertical axis). These are already plot-level attributes",
-    "#' that [vg_plot()]/[vg_attributes()] accept directly, snake_case; this",
-    "#' is a discoverable, per-channel convenience layer on top of that.",
-    "#' `vg_scale_x()` and `vg_scale_y()` are thin wrappers around the",
-    "#' generic `vg_scale_position()`.",
+    "#' `vg_scale_x()` and `vg_scale_y()` set the properties of a plot's x and y",
+    "#' scales: type, domain, range, and so on (Mosaic's `xScale`, `xDomain`, ...",
+    "#' attributes, and the same for `y`). The same attributes can also be given",
+    "#' to [vg_plot()] or [vg_attributes()], as `x_domain =` and so on.",
+    "#' `vg_scale_position()` is the general form, taking `which = \"x\"` or `\"y\"`.",
     "#'",
-    "#' Like [vg_plot()], this can be piped in alongside marks/interactors --",
-    "#' it only ever sets attributes on the current plot fragment, so it",
-    "#' never needs to come last in a chain. For the analogous facet scales",
-    "#' (`fx`/`fy`), see [vg_scale_facet()]."
+    "#' Like [vg_plot()], these can be piped in anywhere among a plot's marks and",
+    "#' interactors. For the facet scales (`fx`/`fy`), see [vg_scale_facet()]."
   ),
   examples = c(
     "#' @examples",
@@ -1357,14 +1353,11 @@ scale_lines <- c(scale_lines, scale_group(
   "vg_scale_facet", c("fx", "fy"), has_inset = TRUE, which_noun = "facet scale",
   title = "Set facet scale properties (fx or fy)",
   description = c(
-    "#' `vg_scale_fx()`/`vg_scale_fy()` set the scale properties mosaic-spec",
-    "#' exposes per facet axis (`fxDomain`, `fxPadding`, ... -- substitute",
-    "#' `fy` for the row facet axis). Facet scales are always band scales,",
-    "#' so this covers fewer properties than [vg_scale_position()] (no",
-    "#' `type`, `nice`, `zero`, `clamp`, or the log/pow/symlog-only",
-    "#' properties) -- exactly which ones is derived from the schema, not",
-    "#' hand-picked. `vg_scale_fx()` and `vg_scale_fy()` are thin wrappers",
-    "#' around the generic `vg_scale_facet()`."
+    "#' `vg_scale_fx()` and `vg_scale_fy()` set the properties of a plot's facet",
+    "#' scales (`fxDomain`, `fxPadding`, ..., and the same for `fy`). Facet scales",
+    "#' are always band scales, so they have fewer properties than",
+    "#' [vg_scale_position()] (no `type`, `nice`, `zero`, `clamp`, ...).",
+    "#' `vg_scale_facet()` is the general form, taking `which = \"fx\"` or `\"fy\"`."
   ),
   examples = c(
     "#' @examples",
@@ -1377,16 +1370,10 @@ scale_lines <- c(scale_lines, scale_group(
   "vg_scale_color", "color", has_inset = FALSE,
   title = "Set the color scale's properties",
   description = c(
-    "#' `vg_scale_color()` sets the scale properties mosaic-spec exposes for",
-    "#' the `color` channel (`colorScale`, `colorDomain`, ... -- the scale",
-    "#' that `fill`/`stroke` encodings are bound to unless they're a literal",
-    "#' constant). Unlike `vg_scale_x()`/`vg_scale_y()`, there's only one",
-    "#' color channel, so `vg_scale_color()` isn't built from a `which =`",
-    "#' generic -- it's the whole implementation. For the axis-guide",
-    "#' properties (`colorLabel`/`colorTickFormat`), see [vg_guide_color()];",
-    "#' for an actual rendered color legend, see [vg_legend_color()] -- a",
-    "#' different (if related) thing, a standalone/embedded legend mark",
-    "#' rather than a plot attribute."
+    "#' `vg_scale_color()` sets the properties of the color scale (`colorScale`,",
+    "#' `colorDomain`, ...), used by `fill` and `stroke` when they're mapped to",
+    "#' data. For the scale's label and tick format, see [vg_guide_color()]; to",
+    "#' add a color legend, see [vg_legend_color()]."
   ),
   examples = c(
     "#' @examples",
@@ -1403,15 +1390,10 @@ scale_lines <- c(scale_lines, scale_guide_page(
     list(fn = "vg_scale_r", which_values = "r", alias = "vg_scale_radius",
       title = "Set the radius scale's properties",
       description = c(
-        "#' `vg_scale_r()` (aliased as `vg_scale_radius()`) sets the scale",
-        "#' properties mosaic-spec exposes for the `r` channel (`rScale`,",
-        "#' `rDomain`, ... -- the scale that a `dot`/`circle` mark's `r`",
-        "#' encoding is bound to unless it's a literal constant). Which",
-        "#' properties exist here (e.g., no `reverse` -- mosaic doesn't define",
-        "#' `rReverse`) is derived from the schema, not hand-picked. For the",
-        "#' axis-guide property, see [vg_guide_r()]/[vg_guide_radius()]; for an",
-        "#' actual rendered radius/size legend, see [vg_legend_symbol()]",
-        "#' (mosaic doesn't have a dedicated `r`-typed legend)."
+        "#' `vg_scale_r()` (also called `vg_scale_radius()`) sets the properties of",
+        "#' the radius scale (`rScale`, `rDomain`, ...), used by a `dot` mark's `r`",
+        "#' when it's mapped to data. For the scale's label, see [vg_guide_r()]; a",
+        "#' legend for sizes can be made with [vg_legend_symbol()]."
       ),
       examples = c(
         "#' @examples",
@@ -1422,12 +1404,9 @@ scale_lines <- c(scale_lines, scale_guide_page(
     list(fn = "vg_scale_length", which_values = "length",
       title = "Set the length scale's properties",
       description = c(
-        "#' `vg_scale_length()` sets the scale properties mosaic-spec exposes",
-        "#' for the `length` channel (`lengthScale`, `lengthDomain`, ... -- the",
-        "#' scale that a `vector`/`spike` mark's `length` encoding is bound to",
-        "#' unless it's a literal constant). Mosaic doesn't define a length",
-        "#' axis-guide or legend, so there's no `vg_guide_length()`/",
-        "#' `vg_legend_length()` to pair with this."
+        "#' `vg_scale_length()` sets the properties of the length scale",
+        "#' (`lengthScale`, `lengthDomain`, ...), used by a `vector` or `spike`",
+        "#' mark's `length` when it's mapped to data."
       ),
       examples = c(
         "#' @examples",
@@ -1438,12 +1417,11 @@ scale_lines <- c(scale_lines, scale_guide_page(
     list(fn = "vg_scale_opacity", which_values = "opacity",
       title = "Set the opacity scale's properties",
       description = c(
-        "#' `vg_scale_opacity()` sets the scale properties mosaic-spec exposes",
-        "#' for the `opacity` channel (`opacityScale`, `opacityDomain`, ... --",
-        "#' the scale that `opacity`/`fillOpacity`/`strokeOpacity` encodings are",
-        "#' bound to unless they're a literal constant). For the axis-guide",
-        "#' properties, see [vg_guide_opacity()]; for an actual rendered opacity",
-        "#' legend, see [vg_legend_opacity()]."
+        "#' `vg_scale_opacity()` sets the properties of the opacity scale",
+        "#' (`opacityScale`, `opacityDomain`, ...), used by `opacity`, `fill_opacity`",
+        "#' and `stroke_opacity` when they're mapped to data. For the scale's label",
+        "#' and tick format, see [vg_guide_opacity()]; to add an opacity legend, see",
+        "#' [vg_legend_opacity()]."
       ),
       examples = c(
         "#' @examples",
@@ -1461,11 +1439,9 @@ scale_lines <- c(scale_lines, scale_group(
   "vg_scale_symbol", "symbol", has_inset = FALSE,
   title = "Set the symbol scale's properties",
   description = c(
-    "#' `vg_scale_symbol()` sets the scale properties mosaic-spec exposes",
-    "#' for the `symbol` channel (`symbolScale`, `symbolDomain`,",
-    "#' `symbolRange` -- the scale that a `dot`'s `symbol` encoding is bound",
-    "#' to unless it's a literal constant). Mosaic doesn't define a symbol",
-    "#' axis-guide, but does have a dedicated legend type -- see",
+    "#' `vg_scale_symbol()` sets the properties of the symbol scale",
+    "#' (`symbolScale`, `symbolDomain`, `symbolRange`), used by a `dot` mark's",
+    "#' `symbol` when it's mapped to data. To add a symbol legend, see",
     "#' [vg_legend_symbol()]."
   ),
   examples = c(
@@ -1479,13 +1455,10 @@ scale_lines <- c(scale_lines, scale_group(
   "vg_scale_all", "", has_inset = FALSE,
   title = "Set global default scale properties (all ordinal position scales)",
   description = c(
-    "#' `vg_scale_all()` sets mosaic-spec's plot-wide fallback defaults --",
-    "#' unlike `xAlign`/`xPadding`/etc. (set via [vg_scale_position()]) or",
-    "#' `fxAlign`/etc. (via [vg_scale_facet()]), which only affect one scale,",
-    "#' these bare attributes are mosaic's own defaults applied to *every*",
-    "#' ordinal position scale (`x`, `y`, `fx`, `fy`) that doesn't set its",
-    "#' own value. For the analogous axis-guide defaults, see",
-    "#' [vg_guide_all()]."
+    "#' `vg_scale_all()` sets defaults for all of a plot's ordinal position scales",
+    "#' (`x`, `y`, `fx`, `fy`), used by any of them that doesn't set its own",
+    "#' value -- unlike [vg_scale_position()] and [vg_scale_facet()], which set",
+    "#' one scale. For axis defaults, see [vg_guide_all()]."
   ),
   examples = c(
     "#' @examples",
@@ -1500,22 +1473,15 @@ guide_lines <- c(guide_lines, guide_group(
   "vg_guide_position", c("x", "y"), which_noun = "axis",
   title = "Set axis-guide properties for a position scale (x or y)",
   description = c(
-    "#' `vg_guide_x()`/`vg_guide_y()` set the axis-guide properties",
-    "#' mosaic-spec exposes per positional axis (`xAxis`, `xTicks`, ... --",
-    "#' substitute `y` for the vertical axis). Like the `xScale`/`yScale`",
-    "#' properties handled by [vg_scale_position()], these are already",
-    "#' plot-level attributes that [vg_plot()]/[vg_attributes()] accept",
-    "#' directly, snake_case (e.g., `x_ticks =`).",
+    "#' `vg_guide_x()` and `vg_guide_y()` set the properties of a plot's x and y",
+    "#' axes: labels, ticks, grid lines, and so on (Mosaic's `xAxis`, `xTicks`,",
+    "#' ... attributes, and the same for `y`). The same attributes can also be",
+    "#' given to [vg_plot()] or [vg_attributes()], as `x_ticks =` and so on.",
+    "#' `vg_guide_position()` is the general form, taking `which`.",
     "#'",
-    "#' These are named `vg_guide_*()` rather than `vg_axis_*()` to avoid",
-    "#' colliding with `vg_mark_axis_x()`/`vg_mark_axis_y()`",
-    "#' (mosaic-spec's `axisX`/`axisY` *mark*, a drawable,",
-    "#' independently-styled axis) -- a different (if related) thing from",
-    "#' the plain `xAxis`/`yAxis` guide attributes set here, which appear",
-    "#' automatically alongside a plot's marks. Same story for the",
-    "#' analogous facet guides, [vg_guide_facet()] (vs.",
-    "#' `vg_mark_axis_fx()`/`vg_mark_axis_fy()`, mosaic's `axisFx`/`axisFy`",
-    "#' marks)."
+    "#' These set the axes drawn automatically with a plot's marks. To add an axis",
+    "#' as a mark of its own, styled separately, see [vg_mark_axis_x()]. For the",
+    "#' facet axes, see [vg_guide_facet()]."
   ),
   examples = c(
     "#' @examples",
@@ -1529,16 +1495,11 @@ guide_lines <- c(guide_lines, guide_group(
   "vg_guide_facet", c("fx", "fy"), which_noun = "facet axis",
   title = "Set axis-guide properties for a facet scale (fx or fy)",
   description = c(
-    "#' `vg_guide_fx()`/`vg_guide_fy()` set the axis-guide properties",
-    "#' mosaic-spec exposes per facet axis (`fxAxis`, `fxTicks`, ... --",
-    "#' substitute `fy` for the row facet axis). This is the facet",
-    "#' counterpart of [vg_guide_position()]; the property set (which lacks",
-    "#' `label_arrow`, among others) is derived from the schema, not",
-    "#' hand-picked.",
-    "#'",
-    "#' See [vg_guide_position()] for why these are `vg_guide_*()` rather",
-    "#' than `vg_axis_*()` (to avoid colliding with `vg_mark_axis_fx()`/",
-    "#' `vg_mark_axis_fy()`, mosaic's `axisFx`/`axisFy` marks)."
+    "#' `vg_guide_fx()` and `vg_guide_fy()` set the properties of a plot's facet",
+    "#' axes (`fxAxis`, `fxTicks`, ..., and the same for `fy`) -- the facet",
+    "#' counterpart of [vg_guide_position()], with a few fewer properties (no",
+    "#' `label_arrow`, for example). To add a facet axis as a mark of its own,",
+    "#' see [vg_mark_axis_fx()]."
   ),
   examples = c(
     "#' @examples",
@@ -1554,17 +1515,10 @@ guide_lines <- c(guide_lines, scale_guide_page(
     list(fn = "vg_guide_color", which_values = "color",
       title = "Set axis-guide properties for the color scale",
       description = c(
-        "#' `vg_guide_color()` sets the axis-guide properties mosaic-spec",
-        "#' exposes for the `color` channel (`colorLabel`, `colorTickFormat`) --",
-        "#' the counterpart of [vg_scale_color()] for the color channel's",
-        "#' label/tick formatting rather than its domain/range/palette.",
-        "#'",
-        "#' This is named `vg_guide_color()` rather than `vg_legend_color()`",
-        "#' because `vg_legend_color()` already exists and means something",
-        "#' different: it adds an actual rendered color legend (a",
-        "#' standalone/embedded legend mark, [vg_legend()]) to the spec.",
-        "#' `vg_guide_color()` only sets these plot attributes -- it neither",
-        "#' shows nor requires a legend to be present."
+        "#' `vg_guide_color()` sets the label and tick format of the color scale",
+        "#' (`colorLabel`, `colorTickFormat`) -- the counterpart of [vg_scale_color()],",
+        "#' which sets the scale's domain, range and colors. It doesn't add a legend;",
+        "#' for that, see [vg_legend_color()]."
       ),
       examples = c(
         "#' @examples",
@@ -1575,14 +1529,9 @@ guide_lines <- c(guide_lines, scale_guide_page(
     list(fn = "vg_guide_opacity", which_values = "opacity",
       title = "Set axis-guide properties for the opacity scale",
       description = c(
-        "#' `vg_guide_opacity()` sets the axis-guide properties mosaic-spec",
-        "#' exposes for the `opacity` channel -- the counterpart of",
-        "#' [vg_scale_opacity()] for the opacity channel's label/tick",
-        "#' formatting rather than its domain/range.",
-        "#'",
-        "#' It is named `vg_guide_opacity()` rather than `vg_legend_opacity()`",
-        "#' for the same reason: `vg_legend_opacity()` is [vg_legend()]'s actual",
-        "#' rendered legend."
+        "#' `vg_guide_opacity()` does the same for the opacity scale, the counterpart",
+        "#' of [vg_scale_opacity()]. It doesn't add a legend; for that, see",
+        "#' [vg_legend_opacity()]."
       ),
       examples = c(
         "#' @examples",
@@ -1600,19 +1549,9 @@ guide_lines <- c(guide_lines, guide_group(
   "vg_guide_r", "r", alias = "vg_guide_radius",
   title = "Set the axis-guide property for the radius scale",
   description = c(
-    "#' `vg_guide_r()` (aliased as `vg_guide_radius()`) sets the axis-guide",
-    "#' propert(y/ies) mosaic-spec exposes for the `r` channel -- the",
-    "#' counterpart of [vg_scale_r()]/[vg_scale_radius()] for the radius",
-    "#' channel's label rather than its domain/range. Which properties",
-    "#' exist here (just a label, no tick-format) is derived from the",
-    "#' schema, not hand-picked.",
-    "#'",
-    "#' See [vg_guide_color()] for why this is `vg_guide_r()`/",
-    "#' `vg_guide_radius()` rather than `vg_legend_r()`/`vg_legend_radius()`",
-    "#' -- mosaic doesn't have a dedicated `r`-typed legend mark to collide",
-    "#' with here (radius/size is usually shown via [vg_legend_symbol()]",
-    "#' instead), but the naming stays consistent with [vg_guide_color()]/",
-    "#' [vg_guide_opacity()]."
+    "#' `vg_guide_r()` (also called `vg_guide_radius()`) sets the label of the",
+    "#' radius scale -- the counterpart of [vg_scale_r()]. A legend for sizes can",
+    "#' be made with [vg_legend_symbol()]."
   ),
   examples = c(
     "#' @examples",
@@ -1625,13 +1564,10 @@ guide_lines <- c(guide_lines, guide_group(
   "vg_guide_all", "",
   title = "Set global default axis-guide properties (all position axes)",
   description = c(
-    "#' `vg_guide_all()` sets mosaic-spec's plot-wide fallback defaults for",
-    "#' the axis-guide properties -- unlike `xAxis`/`xGrid`/etc. (set via",
-    "#' [vg_guide_position()]) or `fxAxis`/etc. (via [vg_guide_facet()]),",
-    "#' which only affect one axis, these bare attributes are mosaic's own",
-    "#' defaults applied to *every* position axis (`x`, `y`, `fx`, `fy`)",
-    "#' that doesn't set its own value. For the analogous scale defaults,",
-    "#' see [vg_scale_all()]."
+    "#' `vg_guide_all()` sets defaults for all of a plot's position axes (`x`, `y`,",
+    "#' `fx`, `fy`), used by any of them that doesn't set its own value -- unlike",
+    "#' [vg_guide_position()] and [vg_guide_facet()], which set one axis. For",
+    "#' scale defaults, see [vg_scale_all()]."
   ),
   examples = c(
     "#' @examples",

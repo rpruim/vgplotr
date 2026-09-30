@@ -191,17 +191,16 @@ rm(.name, .spec)
 
 #' Transform functions for use inside mapping formulas
 #'
-#' Transform and aggregate functions from mosaic's SQL layer (binning,
+#' Transform and aggregate functions computed in the database (binning,
 #' aggregates like `vg_avg()`/`vg_count()`/`vg_sum()`, and window functions
 #' like `vg_rank()`/`vg_lag()`), for use as (or inside) a mark's mapping
 #' formula, e.g., `x = ~vg_bin(delay, step = 10)` or `y = ~vg_count()`.
 #'
 #' Each function's first argument(s) are the field(s) (column names or
 #' nested expressions) it operates on; remaining named arguments configure
-#' it (see mosaic's own documentation for what each transform accepts --
-#' these mirror `@uwdata/mosaic-spec`'s `Transform.ts` exactly). All can also
-#' be called directly (outside a formula, no `~` needed) to inspect the
-#' resulting `vg_transform` object.
+#' it (see [Mosaic's documentation](https://idl.uw.edu/mosaic/) for what each
+#' transform accepts). All can also be called directly (outside a formula, no
+#' `~` needed) to see what they produce.
 #'
 #' @param field,x,y,probability,num_buckets,default,n The field(s) a given
 #'   transform operates on; which of these (if any) a specific transform

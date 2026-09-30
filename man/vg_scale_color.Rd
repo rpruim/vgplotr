@@ -61,20 +61,14 @@ start a new plot fragment with just these attributes.}
 
 \item{n}{\verb{<number | param()>} For a \emph{quantile} scale, the number of quantiles (creates \emph{n} - 1 thresholds); for a \emph{quantize} scale, the approximate number of thresholds; defaults to 5. (\code{colorN}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-\code{vg_scale_color()} sets the scale properties mosaic-spec exposes for
-the \code{color} channel (\code{colorScale}, \code{colorDomain}, ... -- the scale
-that \code{fill}/\code{stroke} encodings are bound to unless they're a literal
-constant). Unlike \code{vg_scale_x()}/\code{vg_scale_y()}, there's only one
-color channel, so \code{vg_scale_color()} isn't built from a \verb{which =}
-generic -- it's the whole implementation. For the axis-guide
-properties (\code{colorLabel}/\code{colorTickFormat}), see \code{\link[=vg_guide_color]{vg_guide_color()}};
-for an actual rendered color legend, see \code{\link[=vg_legend_color]{vg_legend_color()}} -- a
-different (if related) thing, a standalone/embedded legend mark
-rather than a plot attribute.
+\code{vg_scale_color()} sets the properties of the color scale (\code{colorScale},
+\code{colorDomain}, ...), used by \code{fill} and \code{stroke} when they're mapped to
+data. For the scale's label and tick format, see \code{\link[=vg_guide_color]{vg_guide_color()}}; to
+add a color legend, see \code{\link[=vg_legend_color]{vg_legend_color()}}.
 }
 \details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.

@@ -12,13 +12,10 @@ vg_meta(spec, ...)
 \item{...}{Named metadata fields, e.g., \verb{title =}, \verb{description =}.}
 }
 \description{
-Mosaic-spec's own \code{meta} is inert as far as mosaic's JS runtime is
-concerned -- it never reads \code{meta} when building the DOM, so this is
-pure metadata (e.g., for a spec browser/gallery tool, or round-tripping
-through \code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}}), not something that appears on the
-rendered graphic by itself. As a vgplotr-level convenience, \code{\link[=vg_render]{vg_render()}}
-\emph{does} render \code{meta$title} (as a caption above the widget); \code{description}/
-\code{credit} remain inert for now.
+Metadata describes a spec -- its title, a description, credits -- and is
+kept with it, e.g. by \code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}}. It isn't drawn as part of
+the graphic, except that \code{\link[=vg_render]{vg_render()}} shows the \code{title} as a caption
+above it.
 }
 \section{Used in examples}{
 

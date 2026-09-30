@@ -22,10 +22,9 @@ vg_interactor_placement <- function(interactor) {
 #' Mosaic distinguishes interactors that live inside a plot, alongside its
 #' marks (e.g., `intervalX`, which brushes a Selection), from inputs that live
 #' in the surrounding layout as standalone widgets (e.g., `slider`, `menu`).
-#' `vg_interactor()` covers both; which kind a given `interactor` is gets
-#' looked up internally (see `vg_interactor_placement()`). One convenience
-#' wrapper per type -- `vg_toggle()`, `vg_menu()`, etc. -- is generated from
-#' mosaic's own JSON schema into `R/interactors-generated.R`.
+#' `vg_interactor()` covers both, taking the type as a string. There is also
+#' one function per type -- `vg_toggle()`, `vg_menu()`, etc. -- which is
+#' usually more convenient.
 #'
 #' A plot-embedded interactor selects on the mark just before it in its plot
 #' -- the columns mapped to that mark's `x`, `y`, `fill`, ... channels -- so
@@ -33,12 +32,6 @@ vg_interactor_placement <- function(interactor) {
 #' then any other marks). Adding one where the mark before it doesn't map the
 #' channel it needs to a data column (or where there is no mark before it)
 #' warns, since the interactor would have nothing to select on.
-#'
-#' The second argument is named `interactor`, not `type`, on purpose: some
-#' interactor/input types have their own unrelated option that mosaic calls
-#' `type` (e.g., `vg_search()`'s `type = "prefix"`, its query mode). Naming
-#' this parameter `type` would collide with that whenever both are supplied
-#' -- `interactor` can never collide with a real mosaic-spec property name.
 #'
 #' @param spec For a plot-embedded interactor: a plot fragment or `vgspec`
 #'   to add it to, or `NULL` to start a new plot with just this interactor.
@@ -49,12 +42,11 @@ vg_interactor_placement <- function(interactor) {
 #' @param ... Options for the interactor/input (e.g., `as = param(brush)`,
 #'   `label = "Bias"`, `min = 0`, `max = 100`), and/or, for plot-embedded
 #'   interactors, plot-level attributes. Like [vg_mark()], `vg_interactor()`
-#'   itself takes each option under mosaic-spec's own camelCase name
-#'   (`filterBy =`), where the generated wrappers take snake_case
-#'   (`filter_by =`). An argument that is neither an option of this
-#'   interactor/input type in mosaic-spec nor (for a plot-embedded
-#'   interactor) a plot-level attribute warns, since mosaic would silently
-#'   ignore it.
+#'   takes each option under Mosaic's own camelCase name (`filterBy =`),
+#'   where the one-per-type functions take snake_case (`filter_by =`). An
+#'   argument that is neither an option of this interactor/input type nor
+#'   (for a plot-embedded interactor) a plot-level attribute gives a warning,
+#'   since it would have no effect.
 #' @family interactor functions
 #' @export
 vg_interactor <- function(spec = NULL, interactor, ...) {

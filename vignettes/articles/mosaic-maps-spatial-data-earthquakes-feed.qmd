@@ -12,8 +12,8 @@ example](https://observablehq.com/@observablehq/plot-live-earthquake-map)).
 To show land masses, this example loads and parses TopoJSON data in
 the database. Requires the DuckDB `spatial` extension.
 
-Both data sources use `vg_data(type = "spatial", ...)` -- mosaic's
-`DataSpatial` source type, which loads GeoJSON/TopoJSON (and other
+Both data sources use `vg_data(type = "spatial", ...)`, a spatial data
+source, which loads GeoJSON/TopoJSON (and other
 spatial formats DuckDB's `spatial` extension understands) directly into
 the database. `layer = "land"` picks out one layer from the TopoJSON
 file.

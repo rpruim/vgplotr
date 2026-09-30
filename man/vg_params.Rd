@@ -11,9 +11,8 @@ vg_params(spec, ...)
 
 \item{...}{Named params, e.g., \code{point = 0}, or selections, e.g., \code{query = vg_selection("intersect")} (see \code{\link[=vg_selection]{vg_selection()}}, which also has
 \code{vg_param_date()} for a date-valued param). A selection can also be
-written out as a list in mosaic-spec's own \code{Selection} shape,
-\code{list(select = "intersect")}, with optional \code{cross}/\code{empty}/\code{include}
-fields.}
+written as a list, \code{list(select = "intersect")}, with optional
+\code{cross}/\code{empty}/\code{include} fields.}
 }
 \description{
 Declare Params/Selections on a vgspec

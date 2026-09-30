@@ -35,16 +35,11 @@ HTML page -- or no active knit at all, e.g., typed directly at the
 console -- gets \code{\link[=vg_widget]{vg_widget()}}'s live widget; a plain-markdown or other
 non-HTML output (\code{github_document}, PDF, Word, ...), which can't run
 embedded JavaScript, gets \code{\link[=vg_snapshot]{vg_snapshot()}}'s static screenshot instead.
-This check is deliberately narrower than \code{knitr::is_html_output()}:
-that function also counts "markdown"/"gfm" as HTML-capable (they do
-support \emph{passing through} raw HTML blocks), but GitHub strips
-\verb{<script>} tags out of a rendered README regardless, so a live widget
-still wouldn't actually run there.
+That includes GitHub-flavored markdown (e.g., a README on GitHub), since
+GitHub removes the scripts a live widget needs.
 
 \code{mode = "iframe"} is never chosen automatically -- ask for it
-explicitly (e.g., for a pkgdown home page built from
-\code{pkgdown/index.md}; see \code{\link[=vg_iframe]{vg_iframe()}} for why that one needs to be
-deliberate).
+explicitly; see \code{\link[=vg_iframe]{vg_iframe()}} for when it's useful.
 
 Use \code{vg_render(spec)} anywhere you'd otherwise write a bare
 \code{\link[=vg_widget]{vg_widget()}} call, in a document meant to be knitted to more than one

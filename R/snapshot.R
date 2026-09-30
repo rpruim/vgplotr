@@ -9,18 +9,12 @@
 #' see [vg_render()].
 #'
 #' @details
-#' knitr/rmarkdown's own built-in mechanism for turning a widget into a
-#' static screenshot (used e.g., for `output: github_document`) doesn't
-#' work for vgplotr: it captures the widget by opening it as a local file
-#' (`file://`), and Chrome refuses to load an ES module script (vgplotr's
-#' JS runtime is one) -- or run `fetch()` at all -- under `file://`, for
-#' security reasons. The result is a blank screenshot no matter how long
-#' you wait, on both the legacy `webshot` (PhantomJS) and modern
-#' `webshot2` (real headless Chrome) backends.
-#'
-#' `vg_snapshot()` works around this by serving the widget over a local
-#' HTTP server (via the `httpuv` package) before screenshotting it (via
-#' the `webshot2` package), which lets the widget's JS actually run.
+#' R Markdown's own way of turning a widget into a screenshot (used e.g.
+#' for `output: github_document`) gives a blank image for vgplotr graphics:
+#' it opens the widget as a local file, where browsers won't run it.
+#' `vg_snapshot()` instead serves the graphic from a temporary local web
+#' server (with the httpuv package) and captures it with the webshot2
+#' package.
 #'
 #' @param spec A `vgspec`, a JSON/YAML spec string (see [vg_widget()]),
 #'   or an already-built widget (i.e., the result of calling

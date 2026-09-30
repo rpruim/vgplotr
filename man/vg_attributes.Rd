@@ -9,26 +9,18 @@ vg_attributes(spec, ...)
 \arguments{
 \item{spec}{A \code{vgspec}.}
 
-\item{...}{Named top-level attributes, e.g., \verb{width =}, \verb{height =},
-\verb{x_domain =} (snake_case -- translated to mosaic's own camelCase key,
-e.g., \code{xDomain}).}
+\item{...}{Named attributes, e.g., \verb{width =}, \verb{height =}, \verb{x_domain =}
+(Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-Sets attributes directly on the spec's own top level -- e.g., for a
-single-plot spec, sibling keys to \verb{plot:} such as \code{width}/\code{height},
-exactly like mosaic's own example specs write them. This is distinct
-from \code{\link[=vg_plot_defaults]{vg_plot_defaults()}} (mosaic-spec's \code{plotDefaults}, applied to
-\emph{every} plot in the spec, including ones nested in a
-\code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}), from a single plot's own attributes (set
-via arguments to \code{\link[=vg_plot]{vg_plot()}}, possibly accumulated from several
-marks/interactors -- see \code{\link[=vg_plot]{vg_plot()}} for that merge policy), and from a
-single mark's encodings.
+Sets attributes on the spec itself -- for a spec that is a single plot,
+such as its \code{width} and \code{height}. To set attributes for every plot in a
+spec, including plots inside \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}, use
+\code{\link[=vg_plot_defaults]{vg_plot_defaults()}}; to set them for one plot, use \code{\link[=vg_plot]{vg_plot()}}.
 }
 \details{
-A name that isn't one of mosaic's own plot attributes triggers a warning,
-since it won't do anything to the rendered graphic (there's nowhere else
-it could still take effect) -- e.g., \code{title}, which belongs in \code{\link[=vg_meta]{vg_meta()}}
-instead.
+A name that isn't a plot attribute gives a warning, since it would have
+no effect -- e.g., \code{title}, which belongs in \code{\link[=vg_meta]{vg_meta()}}.
 }
 \seealso{
 Other spec functions:

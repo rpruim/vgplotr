@@ -61,9 +61,9 @@ A computed param is recomputed asynchronously (it's a small database
 query), so it lags the params it uses by a moment.
 
 Computed params and \code{\link[=vg_on_change]{vg_on_change()}} handlers are vgplotr additions, not
-part of mosaic-spec: \code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}} write them under a top-level
-\code{"vgplotr"} key (unless \code{vgplotr_keys = FALSE}), which Mosaic's own tools
-don't understand.
+part of Mosaic's spec format: \code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}} write them under a
+top-level \code{"vgplotr"} key (unless \code{vgplotr_keys = FALSE}), which Mosaic's
+own tools don't understand.
 }
 \section{Used in examples}{
 

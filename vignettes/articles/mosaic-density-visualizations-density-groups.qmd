@@ -12,8 +12,8 @@ density estimate is scaled by total point mass or normalized by the
 sum or max of the point mass. The `stack` and `offset` parameters
 control stacking of density areas.
 
-`offset`'s initial value is `NULL` (mosaic-spec's `"offset": null`) --
-declared with `vg_params(offset = NULL)`.
+`offset`'s initial value is `NULL`, declared with `vg_params(offset =
+NULL)`.
 
 ```{r setup}
 library(vgplotr)

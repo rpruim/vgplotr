@@ -23,10 +23,10 @@ using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconca
 
 \item{type}{The legend type: \code{"color"}, \code{"opacity"}, or \code{"symbol"}.}
 
-\item{...}{Legend options, e.g., \code{as = param(brush)}, \code{label = "Species"}. Snake_case (matching marks/interactors) or mosaic-spec's
-own exact camelCase key (\verb{tickSize =}) both work. An argument that
-isn't an option of a legend in mosaic-spec warns, since mosaic would
-silently ignore it. Accepted options:
+\item{...}{Legend options, e.g., \code{as = param(brush)}, \code{label = "Species"}. Snake_case (\verb{tick_size =}, as for marks and interactors)
+or Mosaic's own camelCase (\verb{tickSize =}) both work. An argument that
+isn't a legend option gives a warning, since it would have no effect.
+Accepted options:
 \itemize{
 \item \code{as} \verb{<param()>}
 \item \code{columns} \verb{<number>}
@@ -48,7 +48,7 @@ decorates.}
 A legend can be embedded in a plot (added alongside its marks, picking up
 a matching encoding automatically) or, given \code{for_plot}, live as a
 standalone layout item referencing a plot by name (its \verb{name =} attribute,
-see \code{\link[=vg_plot]{vg_plot()}}) -- mirroring mosaic-spec's own two legend forms.
+see \code{\link[=vg_plot]{vg_plot()}}).
 }
 \section{Used in examples}{
 

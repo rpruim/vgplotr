@@ -1,11 +1,10 @@
 #' What the `<...>` notation in vgplotr's argument docs means
 #'
-#' Every generated `vg_mark_*()`/`vg_*()` (interactor/input) argument, and
-#' every `vg_scale_*()`/`vg_guide_*()` argument, is documented with a short
-#' `<option1 | option2 | ...>` notation right after its name, listing what
-#' mosaic-spec actually accepts there -- derived directly from mosaic's own
-#' JSON schema. This page is
-#' the shared vocabulary those notations are built from.
+#' The arguments of the `vg_mark_*()`, interactor, input, `vg_scale_*()` and
+#' `vg_guide_*()` functions are documented with a short
+#' `<option1 | option2 | ...>` notation right after the argument's name,
+#' listing the kinds of values it accepts (taken from Mosaic's own
+#' specification). This page explains that notation.
 #'
 #' @section Channel values:
 #' A handful of tokens describe a *channel value* -- something bound to
@@ -37,7 +36,7 @@
 #'     an aggregate function (`agg()`), for anything a column reference or
 #'     transform can't express. See [sql()].}
 #'   \item{`list(value=, ...)`}{The `{value:, scale:, label:}` object form
-#'     mosaic-spec's schema allows for overriding a channel's scale/label
+#'     Mosaic's specification allows for overriding a channel's scale/label
 #'     directly, e.g. `x = list(value = ~mpg, scale = "shared")`. Mosaic
 #'     0.31.0 doesn't handle this form when rendering yet (the plot fails
 #'     with a SQL error; see
@@ -48,13 +47,13 @@
 #' A property whose notation includes `list(value=, ...)` (not just
 #' `list`) is one of these `{value:, scale:, label:}` channels; a bare
 #' `list` elsewhere means an ordinary named list of sub-options specific to
-#' that property (its own `@param` text says what goes in it).
+#' that property (its own description says what goes in it).
 #'
 #' @section Reactive values:
 #' \describe{
 #'   \item{`param()`}{A reactive Param or Selection, e.g.
 #'     `param(brush)` -- see [param()]. Appears on almost every argument:
-#'     mosaic-spec lets nearly any scalar option be driven by a live
+#'     Mosaic lets nearly any single-valued option be driven by a live
 #'     `param()` instead of a fixed value (a slider-controlled radius, a
 #'     menu-controlled color scheme, ...), not just data-bound channels.}
 #' }
@@ -73,7 +72,7 @@
 #'   \item{`list`}{A named list of sub-options specific to that property,
 #'     e.g. `margins = list(left = 5, top = 5, right = 5, bottom = 5)` in
 #'     [vg_plot_defaults()].}
-#'   \item{`any`}{Genuinely unconstrained by mosaic's own schema -- e.g. a
+#'   \item{`any`}{Any value -- e.g. a
 #'     [vg_menu()]'s initial `value`, which can be whatever type its
 #'     `options` are.}
 #' }

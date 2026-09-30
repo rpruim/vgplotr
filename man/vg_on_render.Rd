@@ -45,7 +45,7 @@ mosaic's global coordinator, a different one.
 The function may be \code{async}, and may be added more than once (they run in
 order). If it throws, the error is shown under the graphic.
 
-Hooks are not part of mosaic-spec, so \code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}} leave them
+Hooks are not part of Mosaic's spec format, so \code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}} leave them
 out (with a warning), and they only apply to a spec built with
 \code{\link[=vg_create]{vg_create()}}, not to a JSON/YAML string given to \code{\link[=vg_widget]{vg_widget()}}.
 

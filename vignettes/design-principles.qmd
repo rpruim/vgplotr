@@ -35,20 +35,20 @@ from the grammar of graphics more generally.
 # What is a graphic?  What is a grammar of graphics?
 
 A **graphic** is a visual^[Perhaps *sensory* would be 
-better than visual, since once could make tactile
+better than visual, since one could make tactile
 representations of data as well. But since vgplotr
 is concerned with *visual* representations, we will
 stick with visual here.] 
-display of data.  Leland Wilkerson proposed a 
+display of data.  Leland Wilkinson proposed a 
 **grammar of graphics** that would allow those 
 fluent in it to use the grammar to flexibly describe all
 sorts of graphics, which a computer could then **render**
 into the desired visual representation.  Indeed,
-the core ideas contained in Wilkerson's grammar of 
+the core ideas contained in Wilkinson's grammar of 
 graphics have been used to design and implement
 a number of computer graphics systems including
 the iNVizN system Wilkinson developed for SPSS,
-Tableu (where Wilkinson lead the graphics team),
+Tableau (where Wilkinson led the graphics team),
 ggplot2 for graphics in R, and 
 vega-lite, which is familiar to Python users via the altair package.
 In some of these systems, the code resembles the grammar
@@ -57,8 +57,8 @@ one of those systems.
 
 Instead of focusing on providing 
 a fixed list of graphic types (histograms, scatter plots, etc.),
-the grammar of graphics approach focus on providing 
-structures, operations, and operations that can be flexibly
+the grammar of graphics approach focuses on providing 
+structures and operations that can be flexibly
 combined to form many types of graphics.
 
 For those familiar with a graphics tool based on the grammar of 
@@ -116,13 +116,13 @@ bins and counts how many values are in each bin.
 interactor
 : An interactor is a component of a graphic that viewers
 can interact with to change some aspect of the graphic.
-Examples: menu, search bar, slides.
+Examples: menu, search bar, sliders.
 
 A **specification** describes the marks, attributes,
 scales, guides, transformations, etc. and how they are 
 to be combined to produce a graphic.  Mosaic specifications
 can be written in JSON, YAML, javascript, or Python.
-vgplotr proivdes a way to produce specifications in R.
+vgplotr provides a way to produce specifications in R.
 
 
 # Code conventions used in vgplotr
@@ -172,7 +172,7 @@ reduces the need for quoting or non-standard evaluation.
 ## Use of the pipe (`|>`)
 
 The first argument for most `vg_*()` functions
-is `spec` (a specification for a graphic or a plot fragment 
+is `spec` (a specification for a graphic or a plot 
 fragment), and most also return a specification.
 This allows a piped workflow to build up the components
 of a graphic specification.

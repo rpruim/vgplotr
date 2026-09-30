@@ -85,7 +85,7 @@ selections, so a brush made in one plot filters the plots in the others
 -- separate \code{vg_render()} calls, e.g. one per Quarto chunk, behaving like
 one \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}. See the "Linking widgets" section of
 \code{vignette("getting-started")}. The default \code{NULL} keeps a widget on its
-own, as before.
+own.
 
 How it works, and what it needs from you: a param/selection is shared by
 \emph{name}. Declare it (see \code{\link[=vg_params]{vg_params()}}) the same way in every widget that
@@ -115,29 +115,18 @@ see \code{\link[=vg_render]{vg_render()}}, which picks automatically between thi
 and \code{\link[=vg_iframe]{vg_iframe()}}.
 }
 \details{
-Renders the spec in the browser using a client-side DuckDB (via
-duckdb-wasm). Most of the JS runtime this needs
-(mosaic-spec/mosaic-core) is vendored with the package
-(\verb{inst/htmlwidgets/lib/}), so it works offline out of the box.
-The one exception is duckdb-wasm's actual database engine --
-a ~35 MB compiled WebAssembly binary, too large to
-ship with the package -- which is fetched from a CDN each time a graphic
-is \emph{viewed}, unless you've called \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}} to cache it locally
-(in which case that cached copy is used instead, and no CDN is involved
-at all -- except on a page opened directly from disk (\verb{file://}), which
-browsers don't allow to load a local engine, so it uses the CDN anyway).
-If the cache doesn't exist, this function will offer to set it
-up for you the first time you call it in an interactive session; see
-\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}} for details, including how to silence that offer.
+The graphic runs in the browser, with its data in DuckDB-Wasm, a version
+of the DuckDB database that runs in the browser. Everything it needs comes
+with the package except DuckDB-Wasm's database engine (about 35 MB), which
+is downloaded from a CDN each time a graphic is \emph{viewed} -- unless you
+keep a local copy with \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}. (A page opened directly from
+a file, \verb{file://}, always uses the CDN: browsers don't let such pages load
+the local copy.) If there's no local copy, \code{vg_widget()} offers to make
+one the first time you call it in an interactive session; see
+\code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}} for details, including how to turn that offer off.
 
-Mosaic-spec's own \code{meta} (title/description/credit -- see \code{\link[=vg_meta]{vg_meta()}})
-isn't rendered by mosaic's JS runtime at all; it's inert, spec-level
-metadata (\verb{@uwdata/mosaic-spec}'s own
-\code{astToDOM()} never reads it). Since a title is nonetheless the
-most commonly expected use of it, \code{vg_widget()} renders \code{meta$title}
-itself -- as a caption prepended above the widget -- as a vgplotr-level
-convenience layered on top of what mosaic itself does; \code{description}/
-\code{credit} remain inert for now.
+The spec's title, if it has one (see \code{\link[=vg_meta]{vg_meta()}}), is shown as a caption
+above the graphic.
 }
 \seealso{
 \code{\link[=vg_cache_duckdb]{vg_cache_duckdb()}}, \code{\link[=vg_duckdb_cache_status]{vg_duckdb_cache_status()}}

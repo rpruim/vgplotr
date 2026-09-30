@@ -8,10 +8,9 @@ engine: knitr
 Recreates [Sorted Bars](https://idl.uw.edu/mosaic/examples/sorted-bars.html)
 from the mosaic/vgplot example gallery.
 
-The menu's `as = query` output is a mosaic **Selection**
-(`vg.Selection.intersect()` on the JS side), not a plain Param -- declared
-in `vg_params()` as a list with a `select` field (mosaic-spec's `Selection`
-shape, `{"select": "intersect"}`) rather than a bare value. The bar mark
+The menu's `as = query` output is a **selection**, not a plain param --
+declared in `vg_params()` as a list with a `select` field,
+`list(select = "intersect")` (`vg_selection("intersect")` is the same). The bar mark
 then reads `filter_by = query` to filter by the menu's current selection.
 
 ```{r setup}

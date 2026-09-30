@@ -22,15 +22,13 @@ start a new plot fragment with just these attributes.}
 
 \item{range}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s outputs (visual values). (\code{symbolRange}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-\code{vg_scale_symbol()} sets the scale properties mosaic-spec exposes
-for the \code{symbol} channel (\code{symbolScale}, \code{symbolDomain},
-\code{symbolRange} -- the scale that a \code{dot}'s \code{symbol} encoding is bound
-to unless it's a literal constant). Mosaic doesn't define a symbol
-axis-guide, but does have a dedicated legend type -- see
+\code{vg_scale_symbol()} sets the properties of the symbol scale
+(\code{symbolScale}, \code{symbolDomain}, \code{symbolRange}), used by a \code{dot} mark's
+\code{symbol} when it's mapped to data. To add a symbol legend, see
 \code{\link[=vg_legend_symbol]{vg_legend_symbol()}}.
 }
 \details{

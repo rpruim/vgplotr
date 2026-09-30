@@ -125,23 +125,19 @@ start a new plot fragment with just these attributes.}
 
 \item{inset_top, inset_bottom}{\verb{<number | param()>} Pixel inset at the top/bottom end of the range; only meaningful for \code{which = "y"} (\code{yInsetTop}/\code{yInsetBottom}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-\code{vg_scale_x()}/\code{vg_scale_y()} set the scale properties mosaic-spec
-exposes per positional axis (\code{xScale}, \code{xDomain}, ... -- substitute
-\code{y} for the vertical axis). These are already plot-level attributes
-that \code{\link[=vg_plot]{vg_plot()}}/\code{\link[=vg_attributes]{vg_attributes()}} accept directly, snake_case; this
-is a discoverable, per-channel convenience layer on top of that.
-\code{vg_scale_x()} and \code{vg_scale_y()} are thin wrappers around the
-generic \code{vg_scale_position()}.
+\code{vg_scale_x()} and \code{vg_scale_y()} set the properties of a plot's x and y
+scales: type, domain, range, and so on (Mosaic's \code{xScale}, \code{xDomain}, ...
+attributes, and the same for \code{y}). The same attributes can also be given
+to \code{\link[=vg_plot]{vg_plot()}} or \code{\link[=vg_attributes]{vg_attributes()}}, as \verb{x_domain =} and so on.
+\code{vg_scale_position()} is the general form, taking \code{which = "x"} or \code{"y"}.
 }
 \details{
-Like \code{\link[=vg_plot]{vg_plot()}}, this can be piped in alongside marks/interactors --
-it only ever sets attributes on the current plot fragment, so it
-never needs to come last in a chain. For the analogous facet scales
-(\code{fx}/\code{fy}), see \code{\link[=vg_scale_facet]{vg_scale_facet()}}.
+Like \code{\link[=vg_plot]{vg_plot()}}, these can be piped in anywhere among a plot's marks and
+interactors. For the facet scales (\code{fx}/\code{fy}), see \code{\link[=vg_scale_facet]{vg_scale_facet()}}.
 
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }

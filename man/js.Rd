@@ -14,9 +14,9 @@ value wanted, e.g., \code{"() => 0.7"} or \code{"(d, i) => i \% 2 ? 1 : 0.3"}.}
 Wraps a piece of JavaScript source so it reaches the browser as a real
 JavaScript value -- most usefully a function -- instead of as a string:
 \code{opacity = js("() => 0.7")} becomes \verb{opacity: () => 0.7} in the rendered
-plot. Use it where mosaic-spec's own JSON can only name a column or hold
-a literal, but the underlying vgplot/Observable Plot API also accepts a
-function (or other JavaScript value).
+plot. Use it where a spec can only name a column or hold a constant, but
+the underlying vgplot/Observable Plot API also accepts a function (or
+other JavaScript value).
 }
 \details{
 The code is evaluated once, in the browser, when the plot is rendered by
@@ -24,9 +24,9 @@ The code is evaluated once, in the browser, when the plot is rendered by
 with the page's own privileges, so -- like any JavaScript you would put
 in a page -- only use code you wrote or trust.
 
-This is a vgplotr extension to mosaic-spec: \code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}} write
-it as \code{{js: "<code>"}}, which vgplotr's renderer understands but mosaic's
-own \code{parseSpec()} does not.
+\code{js()} is a vgplotr addition to Mosaic's spec format: \code{\link[=to_json]{to_json()}}/\code{\link[=to_yaml]{to_yaml()}}
+write it as \code{{js: "<code>"}}, which vgplotr understands but Mosaic's own
+tools don't.
 
 A function is called by Observable Plot as \verb{(d, i, data)}, but mosaic
 holds a table as columns, not row objects: \code{d} is \code{undefined}, and only

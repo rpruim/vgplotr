@@ -4,12 +4,11 @@
 #' declared elsewhere in the spec, e.g., via `vg_params()` or as the `as =`
 #' target of an interactor) is written in valid R. `$brush` alone is not
 #' parseable R, so `param()` captures the bare name you give it and returns an
-#' object that serializes as `$brush`.
+#' object that stands for `$brush`.
 #'
-#' Like `dplyr::n()`, `param()` is only meaningful where the package's own
-#' translation code interprets it (formulas passed as mark/interactor
-#' encodings, and inside `sql()` expressions) -- calling it and printing the
-#' result directly just shows the `$name` form for inspection.
+#' `param()` is meant for use in the arguments of marks, interactors and
+#' inputs, in formulas, and inside `sql()` expressions. Printing it just
+#' shows the `$name` form.
 #'
 #' @param name The name of the param/selection, unquoted.
 #' @family spec functions

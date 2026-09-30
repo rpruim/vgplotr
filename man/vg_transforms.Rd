@@ -63,7 +63,7 @@ from the current row: how far the frame reaches before it, then after it
 \code{\link[=vg_days]{vg_days()}}; see \link{vg_intervals}).}
 }
 \description{
-Transform and aggregate functions from mosaic's SQL layer (binning,
+Transform and aggregate functions computed in the database (binning,
 aggregates like \code{vg_avg()}/\code{vg_count()}/\code{vg_sum()}, and window functions
 like \code{vg_rank()}/\code{vg_lag()}), for use as (or inside) a mark's mapping
 formula, e.g., \code{x = ~vg_bin(delay, step = 10)} or \code{y = ~vg_count()}.
@@ -71,10 +71,9 @@ formula, e.g., \code{x = ~vg_bin(delay, step = 10)} or \code{y = ~vg_count()}.
 \details{
 Each function's first argument(s) are the field(s) (column names or
 nested expressions) it operates on; remaining named arguments configure
-it (see mosaic's own documentation for what each transform accepts --
-these mirror \verb{@uwdata/mosaic-spec}'s \code{Transform.ts} exactly). All can also
-be called directly (outside a formula, no \code{~} needed) to inspect the
-resulting \code{vg_transform} object.
+it (see \href{https://idl.uw.edu/mosaic/}{Mosaic's documentation} for what each
+transform accepts). All can also be called directly (outside a formula, no
+\code{~} needed) to see what they produce.
 }
 \section{Used in examples}{
 

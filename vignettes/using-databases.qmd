@@ -8,12 +8,17 @@ format: html
 engine: knitr
 ---
 
-```{r setup}
-library(vgplotr)
+```{r}
+#| label: setup-options
+#| include: false
 # Always reference DuckDB-Wasm from the CDN in this vignette's built,
 # shipped output -- see the same note in getting-started.qmd's setup
 # chunk, or ?vg_widget's `use_cache` docs.
 options(vgplotr.use_cache = FALSE)
+```
+
+```{r setup}
+library(vgplotr)
 ```
 
 Every graphic vgplotr renders is ultimately a response to a live SQL 

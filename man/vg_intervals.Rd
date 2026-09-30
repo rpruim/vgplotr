@@ -32,13 +32,13 @@ vg_microseconds(n)
 \item{n}{A single non-negative number of units, or a \code{\link[=param]{param()}}.}
 }
 \value{
-A \code{vg_interval} object, serialized as \verb{\{<unit>: n\}}.
+A \code{vg_interval} object.
 }
 \description{
 \code{vg_years()}, \code{vg_months()}, \code{vg_days()}, \code{vg_hours()}, \code{vg_minutes()},
 \code{vg_seconds()}, \code{vg_milliseconds()} and \code{vg_microseconds()} write a span of
-time -- mosaic-spec's interval transforms (\code{{days: 7}}) -- where a window
-frame wants an offset in time units instead of a row count. The frame
+time, for a window frame that measures its offsets in time rather than in
+rows. The frame
 options \code{rows}, \code{range} and \code{groups} of a window or aggregate transform
 (see \link{vg_transforms}) each take a pair of offsets, measured from the
 current row: how far the frame reaches \emph{before} it, then how far \emph{after}

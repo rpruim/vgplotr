@@ -12,10 +12,9 @@ coordinates in the database upon load. Select a region in one plot to
 filter the other. What spatial patterns can you find? Requires the
 DuckDB `spatial` extension.
 
-`vg_config(extensions = "spatial")` loads the DuckDB extension mosaic's
-`ST_Transform()`/`ST_Point()`/etc. spatial functions need -- mosaic-spec's
-top-level `config` object, distinct from `vg_meta()`'s inert descriptive
-metadata. All three plots (pickups, dropoffs, and the pickup-hour
+`vg_config(extensions = "spatial")` loads the DuckDB extension that
+provides the spatial functions used here (`ST_Transform()`, `ST_Point()`,
+...). All three plots (pickups, dropoffs, and the pickup-hour
 histogram) share one `crossfilter` Selection (`filter`), each
 contributing its own `intervalX`/`intervalXY` brush to it.
 

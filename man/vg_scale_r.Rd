@@ -92,8 +92,8 @@ start a new plot fragment with just these attributes.}
 
 \item{percent}{\verb{<boolean | param()>} If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{rPercent}/\code{lengthPercent}/\code{opacityPercent}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 
 \item{reverse}{\verb{<boolean | param()>} Whether to reverse the scale’s encoding; equivalent to reversing either the \strong{domain} or \strong{range}. (\code{opacityReverse}). Only for \code{vg_scale_opacity()}.}
 }
@@ -101,29 +101,20 @@ start a new plot fragment with just these attributes.}
 \code{vg_scale_r()}, \code{vg_scale_length()}, and \code{vg_scale_opacity()} set the scale properties of the \code{r}, \code{length}, and \code{opacity} channels. They take the same arguments, except those noted below as belonging to only some of them; each is described below.
 }
 \details{
-\code{vg_scale_r()} (aliased as \code{vg_scale_radius()}) sets the scale
-properties mosaic-spec exposes for the \code{r} channel (\code{rScale},
-\code{rDomain}, ... -- the scale that a \code{dot}/\code{circle} mark's \code{r}
-encoding is bound to unless it's a literal constant). Which
-properties exist here (e.g., no \code{reverse} -- mosaic doesn't define
-\code{rReverse}) is derived from the schema, not hand-picked. For the
-axis-guide property, see \code{\link[=vg_guide_r]{vg_guide_r()}}/\code{\link[=vg_guide_radius]{vg_guide_radius()}}; for an
-actual rendered radius/size legend, see \code{\link[=vg_legend_symbol]{vg_legend_symbol()}}
-(mosaic doesn't have a dedicated \code{r}-typed legend).
+\code{vg_scale_r()} (also called \code{vg_scale_radius()}) sets the properties of
+the radius scale (\code{rScale}, \code{rDomain}, ...), used by a \code{dot} mark's \code{r}
+when it's mapped to data. For the scale's label, see \code{\link[=vg_guide_r]{vg_guide_r()}}; a
+legend for sizes can be made with \code{\link[=vg_legend_symbol]{vg_legend_symbol()}}.
 
-\code{vg_scale_length()} sets the scale properties mosaic-spec exposes
-for the \code{length} channel (\code{lengthScale}, \code{lengthDomain}, ... -- the
-scale that a \code{vector}/\code{spike} mark's \code{length} encoding is bound to
-unless it's a literal constant). Mosaic doesn't define a length
-axis-guide or legend, so there's no \code{vg_guide_length()}/
-\code{vg_legend_length()} to pair with this.
+\code{vg_scale_length()} sets the properties of the length scale
+(\code{lengthScale}, \code{lengthDomain}, ...), used by a \code{vector} or \code{spike}
+mark's \code{length} when it's mapped to data.
 
-\code{vg_scale_opacity()} sets the scale properties mosaic-spec exposes
-for the \code{opacity} channel (\code{opacityScale}, \code{opacityDomain}, ... --
-the scale that \code{opacity}/\code{fillOpacity}/\code{strokeOpacity} encodings are
-bound to unless they're a literal constant). For the axis-guide
-properties, see \code{\link[=vg_guide_opacity]{vg_guide_opacity()}}; for an actual rendered opacity
-legend, see \code{\link[=vg_legend_opacity]{vg_legend_opacity()}}.
+\code{vg_scale_opacity()} sets the properties of the opacity scale
+(\code{opacityScale}, \code{opacityDomain}, ...), used by \code{opacity}, \code{fill_opacity}
+and \code{stroke_opacity} when they're mapped to data. For the scale's label
+and tick format, see \code{\link[=vg_guide_opacity]{vg_guide_opacity()}}; to add an opacity legend, see
+\code{\link[=vg_legend_opacity]{vg_legend_opacity()}}.
 
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }

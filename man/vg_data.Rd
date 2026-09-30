@@ -10,24 +10,20 @@ vg_data(spec, name = NULL, data = NULL, ...)
 \item{spec}{A \code{vgspec}.}
 
 \item{name}{The name other parts of the spec use to refer to this data
-(via \verb{data_from =}/\verb{filter_by =} on marks and interactors). Optional --
-if omitted, an unused name is generated (\code{"data1"}, \code{"data2"}, ...),
-e.g., for the shorthand described in \code{\link[=vg_mark]{vg_mark()}}. This is unique
-across the whole R session, not just within this spec: every
-\code{vg_render()} call on the same page shares one DuckDB instance (see
-\code{vignette("getting-started")}), so two \emph{separate} specs that both
-omit \code{name} -- e.g., two \code{some_df |> vg_mark_dot(...)} shortcuts in one
-document -- still get distinct names instead of silently clobbering
-each other's table once rendered together.}
+(via \verb{data_from =}/\verb{filter_by =} on marks and interactors). If omitted,
+a new name is generated (\code{"data1"}, \code{"data2"}, ...). Generated names are
+unique across the R session, so specs rendered on the same page -- which
+share one database -- never overwrite each other's data.}
 
 \item{data}{An optional data frame to use as this data source.}
 
 \item{...}{Data source options, e.g., \verb{file =}, \verb{query =}, \verb{where =}.}
 }
 \description{
-A data frame passed as \code{data} is loaded into DuckDB directly (see
-\code{\link[=vg_render]{vg_render()}}); other arguments (\verb{file =}, \verb{query =}, \verb{where =}, ...)
-describe a source for mosaic's own data loading instead.
+A data frame passed as \code{data} is loaded into the database when the graphic
+is rendered (see \code{\link[=vg_render]{vg_render()}}). Other arguments describe data for Mosaic
+to load itself: a file or URL (\verb{file =}), or a SQL query (\verb{query =}), for
+example.
 }
 \section{Used in examples}{
 

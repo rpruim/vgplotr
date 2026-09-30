@@ -1,9 +1,8 @@
 #' Define a Selection, or a date-valued Param, for `vg_params()`
 #'
-#' `vg_selection()` writes mosaic-spec's `Selection` definition,
-#' `vg_selection("crossfilter", include = param(other))`, where
-#' `vg_params(brush = list(select = "crossfilter"))` would otherwise be typed
-#' out by hand. It checks the pieces and spells the `include` references for
+#' `vg_selection()` defines a selection, e.g.
+#' `vg_selection("crossfilter", include = param(other))`, which could also be
+#' written by hand as a list, `list(select = "crossfilter", ...)`. It checks the pieces and spells the `include` references for
 #' you. `vg_param_date()` writes a date-valued param: a plain `Date` in
 #' `vg_params()` reaches mosaic as an ordinary string, not a date.
 #'

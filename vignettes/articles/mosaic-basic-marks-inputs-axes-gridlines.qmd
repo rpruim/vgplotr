@@ -9,8 +9,8 @@ Recreates [Axes &
 Gridlines](https://idl.uw.edu/mosaic/examples/axes.html) from the
 mosaic/vgplot example gallery. Demonstrates `axisX`/`axisY`/`gridX`/`gridY`
 as standalone marks (for full control over placement/styling), and a
-`ruleY` mark fed a literal inline data array (`data_from = c(0)`, mosaic's
-`"data": [0]` shorthand) rather than a named data source.
+`ruleY` mark fed a vector used as its data (`data_from = c(0)`) rather than a named data
+source.
 
 ```{r setup}
 library(vgplotr)

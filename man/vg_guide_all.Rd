@@ -25,17 +25,14 @@ start a new plot fragment with just these attributes.}
 
 \item{aria_description}{\verb{<string | NULL>} The aria-description attribute on the SVG root. (\code{ariaDescription}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-\code{vg_guide_all()} sets mosaic-spec's plot-wide fallback defaults for
-the axis-guide properties -- unlike \code{xAxis}/\code{xGrid}/etc. (set via
-\code{\link[=vg_guide_position]{vg_guide_position()}}) or \code{fxAxis}/etc. (via \code{\link[=vg_guide_facet]{vg_guide_facet()}}),
-which only affect one axis, these bare attributes are mosaic's own
-defaults applied to \emph{every} position axis (\code{x}, \code{y}, \code{fx}, \code{fy})
-that doesn't set its own value. For the analogous scale defaults,
-see \code{\link[=vg_scale_all]{vg_scale_all()}}.
+\code{vg_guide_all()} sets defaults for all of a plot's position axes (\code{x}, \code{y},
+\code{fx}, \code{fy}), used by any of them that doesn't set its own value -- unlike
+\code{\link[=vg_guide_position]{vg_guide_position()}} and \code{\link[=vg_guide_facet]{vg_guide_facet()}}, which set one axis. For
+scale defaults, see \code{\link[=vg_scale_all]{vg_scale_all()}}.
 }
 \details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.

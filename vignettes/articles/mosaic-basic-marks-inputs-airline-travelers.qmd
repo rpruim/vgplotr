@@ -11,11 +11,8 @@ the mosaic/vgplot example gallery (adapted from an [Observable Plot
 example](https://observablehq.com/@observablehq/plot-labeled-line-chart)).
 
 Demonstrates a `query`-only data source (a derived temporary table
-computed with a raw SQL query, no file behind it) and a literal,
-per-mark constant text label -- `text = list("2019")`, not a formula --
-which is mosaic's `["2019"]` array-literal-channel convention (an array
-forces a literal value; a bare string would be interpreted as a column
-name instead).
+computed with a raw SQL query, no file behind it) and a constant text label, `text = list("2019")`. Wrapping the string in
+a list makes it a label; a bare string would be read as a column name.
 
 ```{r setup}
 library(vgplotr)

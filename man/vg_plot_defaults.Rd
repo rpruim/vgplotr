@@ -2,31 +2,24 @@
 % Please edit documentation in R/create.R, R/example-usage-generated.R
 \name{vg_plot_defaults}
 \alias{vg_plot_defaults}
-\title{Set mosaic-spec \code{plotDefaults} on a vgspec}
+\title{Set attributes for every plot in a vgspec}
 \usage{
 vg_plot_defaults(spec, ...)
 }
 \arguments{
 \item{spec}{A \code{vgspec}.}
 
-\item{...}{Named plot-default attributes, e.g., \verb{width =}, \verb{height =},
-\verb{x_domain =} (snake_case -- translated to mosaic's own camelCase key,
-e.g., \code{xDomain}).}
+\item{...}{Named attributes, e.g., \verb{width =}, \verb{height =}, \verb{x_domain =}
+(Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-Sets mosaic-spec's top-level \code{plotDefaults}: attributes applied to \emph{every}
-plot in the spec, including ones nested inside a
-\code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}} layout -- not just the spec's own top level
-(see \code{\link[=vg_attributes]{vg_attributes()}} for that). This is distinct from a single plot's
-own attributes (set via arguments to \code{\link[=vg_plot]{vg_plot()}}, possibly accumulated
-from several marks/interactors -- see \code{\link[=vg_plot]{vg_plot()}} for that merge policy)
-and from a single mark's encodings. If per-plot or per-mark
-attribute-setting is needed later, that should get its own function
-rather than overloading this one.
+Sets attributes applied to \emph{every} plot in the spec, including plots
+inside a \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}} layout. To set attributes for one
+plot, use \code{\link[=vg_plot]{vg_plot()}}; for the spec itself, \code{\link[=vg_attributes]{vg_attributes()}}.
 }
 \details{
-A name that isn't one of mosaic's own plot attributes triggers a warning,
-since it won't do anything to the rendered graphic -- see \code{\link[=vg_attributes]{vg_attributes()}}.
+A name that isn't a plot attribute gives a warning, since it would have
+no effect.
 }
 \section{Used in examples}{
 

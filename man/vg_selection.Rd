@@ -38,10 +38,9 @@ A \code{vg_selection} or \code{vg_param_date} object, for use as a named
 argument to \code{\link[=vg_params]{vg_params()}}.
 }
 \description{
-\code{vg_selection()} writes mosaic-spec's \code{Selection} definition,
-\code{vg_selection("crossfilter", include = param(other))}, where
-\code{vg_params(brush = list(select = "crossfilter"))} would otherwise be typed
-out by hand. It checks the pieces and spells the \code{include} references for
+\code{vg_selection()} defines a selection, e.g.
+\code{vg_selection("crossfilter", include = param(other))}, which could also be
+written by hand as a list, \code{list(select = "crossfilter", ...)}. It checks the pieces and spells the \code{include} references for
 you. \code{vg_param_date()} writes a date-valued param: a plain \code{Date} in
 \code{vg_params()} reaches mosaic as an ordinary string, not a date.
 }

@@ -85,18 +85,15 @@ start a new plot fragment with just these attributes.}
 
 \item{inset_top, inset_bottom}{\verb{<number | param()>} Pixel inset at the top/bottom end of the range; only meaningful for \code{which = "fy"} (\code{fyInsetTop}/\code{fyInsetBottom}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
-\code{vg_scale_fx()}/\code{vg_scale_fy()} set the scale properties mosaic-spec
-exposes per facet axis (\code{fxDomain}, \code{fxPadding}, ... -- substitute
-\code{fy} for the row facet axis). Facet scales are always band scales,
-so this covers fewer properties than \code{\link[=vg_scale_position]{vg_scale_position()}} (no
-\code{type}, \code{nice}, \code{zero}, \code{clamp}, or the log/pow/symlog-only
-properties) -- exactly which ones is derived from the schema, not
-hand-picked. \code{vg_scale_fx()} and \code{vg_scale_fy()} are thin wrappers
-around the generic \code{vg_scale_facet()}.
+\code{vg_scale_fx()} and \code{vg_scale_fy()} set the properties of a plot's facet
+scales (\code{fxDomain}, \code{fxPadding}, ..., and the same for \code{fy}). Facet scales
+are always band scales, so they have fewer properties than
+\code{\link[=vg_scale_position]{vg_scale_position()}} (no \code{type}, \code{nice}, \code{zero}, \code{clamp}, ...).
+\code{vg_scale_facet()} is the general form, taking \code{which = "fx"} or \code{"fy"}.
 }
 \details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.

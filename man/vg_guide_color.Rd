@@ -17,33 +17,21 @@ start a new plot fragment with just these attributes.}
 
 \item{label}{\verb{<string | NULL | param()>} A textual label to show on the axis or legend; if null, show no label. (\code{colorLabel}/\code{opacityLabel}).}
 
-\item{...}{Additional plot-level attributes not covered above, snake_case
-(e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+\item{...}{Additional plot-level attributes not covered above, e.g.
+\verb{x_domain =} (Mosaic's \code{xDomain}, written in snake_case).}
 }
 \description{
 \code{vg_guide_color()} and \code{vg_guide_opacity()} set the axis-guide properties of the \code{color} and \code{opacity} channels. They take the same arguments; each is described below.
 }
 \details{
-\code{vg_guide_color()} sets the axis-guide properties mosaic-spec
-exposes for the \code{color} channel (\code{colorLabel}, \code{colorTickFormat}) --
-the counterpart of \code{\link[=vg_scale_color]{vg_scale_color()}} for the color channel's
-label/tick formatting rather than its domain/range/palette.
+\code{vg_guide_color()} sets the label and tick format of the color scale
+(\code{colorLabel}, \code{colorTickFormat}) -- the counterpart of \code{\link[=vg_scale_color]{vg_scale_color()}},
+which sets the scale's domain, range and colors. It doesn't add a legend;
+for that, see \code{\link[=vg_legend_color]{vg_legend_color()}}.
 
-This is named \code{vg_guide_color()} rather than \code{vg_legend_color()}
-because \code{vg_legend_color()} already exists and means something
-different: it adds an actual rendered color legend (a
-standalone/embedded legend mark, \code{\link[=vg_legend]{vg_legend()}}) to the spec.
-\code{vg_guide_color()} only sets these plot attributes -- it neither
-shows nor requires a legend to be present.
-
-\code{vg_guide_opacity()} sets the axis-guide properties mosaic-spec
-exposes for the \code{opacity} channel -- the counterpart of
-\code{\link[=vg_scale_opacity]{vg_scale_opacity()}} for the opacity channel's label/tick
-formatting rather than its domain/range.
-
-It is named \code{vg_guide_opacity()} rather than \code{vg_legend_opacity()}
-for the same reason: \code{vg_legend_opacity()} is \code{\link[=vg_legend]{vg_legend()}}'s actual
-rendered legend.
+\code{vg_guide_opacity()} does the same for the opacity scale, the counterpart
+of \code{\link[=vg_scale_opacity]{vg_scale_opacity()}}. It doesn't add a legend; for that, see
+\code{\link[=vg_legend_opacity]{vg_legend_opacity()}}.
 
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }

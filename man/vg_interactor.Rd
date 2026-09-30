@@ -19,21 +19,19 @@ on its own -- combine it with plots using \code{\link[=vg_vconcat]{vg_vconcat()}
 \item{...}{Options for the interactor/input (e.g., \code{as = param(brush)},
 \code{label = "Bias"}, \code{min = 0}, \code{max = 100}), and/or, for plot-embedded
 interactors, plot-level attributes. Like \code{\link[=vg_mark]{vg_mark()}}, \code{vg_interactor()}
-itself takes each option under mosaic-spec's own camelCase name
-(\verb{filterBy =}), where the generated wrappers take snake_case
-(\verb{filter_by =}). An argument that is neither an option of this
-interactor/input type in mosaic-spec nor (for a plot-embedded
-interactor) a plot-level attribute warns, since mosaic would silently
-ignore it.}
+takes each option under Mosaic's own camelCase name (\verb{filterBy =}),
+where the one-per-type functions take snake_case (\verb{filter_by =}). An
+argument that is neither an option of this interactor/input type nor
+(for a plot-embedded interactor) a plot-level attribute gives a warning,
+since it would have no effect.}
 }
 \description{
 Mosaic distinguishes interactors that live inside a plot, alongside its
 marks (e.g., \code{intervalX}, which brushes a Selection), from inputs that live
 in the surrounding layout as standalone widgets (e.g., \code{slider}, \code{menu}).
-\code{vg_interactor()} covers both; which kind a given \code{interactor} is gets
-looked up internally (see \code{vg_interactor_placement()}). One convenience
-wrapper per type -- \code{vg_toggle()}, \code{vg_menu()}, etc. -- is generated from
-mosaic's own JSON schema into \code{R/interactors-generated.R}.
+\code{vg_interactor()} covers both, taking the type as a string. There is also
+one function per type -- \code{vg_toggle()}, \code{vg_menu()}, etc. -- which is
+usually more convenient.
 }
 \details{
 A plot-embedded interactor selects on the mark just before it in its plot
@@ -42,12 +40,6 @@ add it right after the mark it's for (\code{vg_mark_dot(...) |> vg_interval_x(..
 then any other marks). Adding one where the mark before it doesn't map the
 channel it needs to a data column (or where there is no mark before it)
 warns, since the interactor would have nothing to select on.
-
-The second argument is named \code{interactor}, not \code{type}, on purpose: some
-interactor/input types have their own unrelated option that mosaic calls
-\code{type} (e.g., \code{vg_search()}'s \code{type = "prefix"}, its query mode). Naming
-this parameter \code{type} would collide with that whenever both are supplied
--- \code{interactor} can never collide with a real mosaic-spec property name.
 }
 \seealso{
 Other interactor functions:

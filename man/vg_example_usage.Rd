@@ -24,9 +24,7 @@ example on the package website calls.
 }
 \details{
 The same information appears as a "Used in examples" section, with links,
-in the help page of each function an example uses. Both are regenerated
-from the example articles by \code{data-raw/update-example-usage.R} in the
-package's source repository.
+in the help page of each function an example uses.
 }
 \examples{
 # Examples that use vg_mark_geo()

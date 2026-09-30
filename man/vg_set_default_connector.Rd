@@ -24,14 +24,6 @@ and don't want to repeat \code{connector = vg_duckdb_connector(con)} on every
 call; a specific call can still override the session default by passing
 its own \verb{connector =} explicitly.
 }
-\details{
-This changes what \emph{unspecified} \verb{connector =} arguments mean for the
-rest of the session -- it's deliberately something you opt into
-explicitly, rather than vgplotr inferring it from whether a native
-server happens to already be running (which would make a plain
-\code{vg_render(spec)} behave differently depending on unrelated earlier
-code, silently losing DuckDB-Wasm's self-contained/shareable output).
-}
 \seealso{
 Other connector functions:
 \code{\link[=vg_duckdb_connector]{vg_duckdb_connector()}},

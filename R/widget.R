@@ -20,29 +20,18 @@ spec_top_level_size <- function(x) {
 #' see [vg_render()], which picks automatically between this function, [vg_snapshot()],
 #' and [vg_iframe()].
 #'
-#' Renders the spec in the browser using a client-side DuckDB (via
-#' duckdb-wasm). Most of the JS runtime this needs
-#' (mosaic-spec/mosaic-core) is vendored with the package
-#' (`inst/htmlwidgets/lib/`), so it works offline out of the box.
-#' The one exception is duckdb-wasm's actual database engine --
-#' a ~35 MB compiled WebAssembly binary, too large to
-#' ship with the package -- which is fetched from a CDN each time a graphic
-#' is *viewed*, unless you've called [vg_cache_duckdb()] to cache it locally
-#' (in which case that cached copy is used instead, and no CDN is involved
-#' at all -- except on a page opened directly from disk (`file://`), which
-#' browsers don't allow to load a local engine, so it uses the CDN anyway).
-#' If the cache doesn't exist, this function will offer to set it
-#' up for you the first time you call it in an interactive session; see
-#' [vg_cache_duckdb()] for details, including how to silence that offer.
+#' The graphic runs in the browser, with its data in DuckDB-Wasm, a version
+#' of the DuckDB database that runs in the browser. Everything it needs comes
+#' with the package except DuckDB-Wasm's database engine (about 35 MB), which
+#' is downloaded from a CDN each time a graphic is *viewed* -- unless you
+#' keep a local copy with [vg_cache_duckdb()]. (A page opened directly from
+#' a file, `file://`, always uses the CDN: browsers don't let such pages load
+#' the local copy.) If there's no local copy, `vg_widget()` offers to make
+#' one the first time you call it in an interactive session; see
+#' [vg_cache_duckdb()] for details, including how to turn that offer off.
 #'
-#' Mosaic-spec's own `meta` (title/description/credit -- see [vg_meta()])
-#' isn't rendered by mosaic's JS runtime at all; it's inert, spec-level
-#' metadata (`@uwdata/mosaic-spec`'s own
-#' `astToDOM()` never reads it). Since a title is nonetheless the
-#' most commonly expected use of it, `vg_widget()` renders `meta$title`
-#' itself -- as a caption prepended above the widget -- as a vgplotr-level
-#' convenience layered on top of what mosaic itself does; `description`/
-#' `credit` remain inert for now.
+#' The spec's title, if it has one (see [vg_meta()]), is shown as a caption
+#' above the graphic.
 #'
 #' @param spec A `vgspec` with a layout of plots/vconcat()/hconcat(), or a
 #'   single JSON or YAML string holding an already-complete mosaic spec --
@@ -106,7 +95,7 @@ spec_top_level_size <- function(x) {
 #'   -- separate `vg_render()` calls, e.g. one per Quarto chunk, behaving like
 #'   one [vg_vconcat()]/[vg_hconcat()]. See the "Linking widgets" section of
 #'   `vignette("getting-started")`. The default `NULL` keeps a widget on its
-#'   own, as before.
+#'   own.
 #'
 #'   How it works, and what it needs from you: a param/selection is shared by
 #'   *name*. Declare it (see [vg_params()]) the same way in every widget that
