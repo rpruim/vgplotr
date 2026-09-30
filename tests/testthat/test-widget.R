@@ -101,7 +101,7 @@ test_that("vg_widget() picks up vg_attributes(width=, height=) on a multi-plot l
 })
 
 test_that("vg_widget() ignores a param()-driven width/height instead of erroring", {
-  spec <- vg_create() |> vg_attributes(width = param(w)) |> vg_mark_dot(x = ~a, y = ~b)
+  spec <- vg_create() |> vg_params(w = 400) |> vg_attributes(width = param(w)) |> vg_mark_dot(x = ~a, y = ~b)
 
   expect_no_error(w <- vg_widget(spec))
   expect_null(w$width)

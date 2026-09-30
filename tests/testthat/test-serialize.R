@@ -180,7 +180,7 @@ test_that("a plot-level attribute value that's a param() reference serializes as
   # weren't run through serialize_value() at all before, so a vg_param
   # value reached jsonlite as a raw, unserializable object.
   rotate_p <- param(rotate)
-  spec <- vg_create() |> vg_mark_dot(x = ~a) |> vg_plot(projection_rotate = rotate_p)
+  spec <- vg_create() |> vg_params(rotate = 0) |> vg_mark_dot(x = ~a) |> vg_plot(projection_rotate = rotate_p)
 
   json <- to_json(spec)
   expect_match(as.character(json), '"projectionRotate":\\s*"\\$rotate"', perl = TRUE)
@@ -188,10 +188,10 @@ test_that("a plot-level attribute value that's a param() reference serializes as
   payload <- as_spec_payload(spec)
   expect_equal(payload$spec$projectionRotate, "$rotate")
 
-  spec2 <- vg_create() |> vg_mark_dot(x = ~a) |> vg_plot_defaults(projection_rotate = rotate_p)
+  spec2 <- vg_create() |> vg_params(rotate = 0) |> vg_mark_dot(x = ~a) |> vg_plot_defaults(projection_rotate = rotate_p)
   expect_true(grepl("\\$rotate", to_yaml(spec2)))
 
-  spec3 <- vg_create() |> vg_mark_dot(x = ~a) |> vg_attributes(projection_rotate = rotate_p)
+  spec3 <- vg_create() |> vg_params(rotate = 0) |> vg_mark_dot(x = ~a) |> vg_attributes(projection_rotate = rotate_p)
   expect_equal(as_spec_payload(spec3)$spec$projectionRotate, "$rotate")
 })
 

@@ -20,6 +20,13 @@ object that stands for \verb{$brush}.
 \code{param()} is meant for use in the arguments of marks, interactors and
 inputs, in formulas, and inside \code{sql()} expressions. Printing it just
 shows the \verb{$name} form.
+
+A param can be kept in an R variable, e.g. \code{xp <- param(x)}, and used by
+that name, including inside a formula (\code{~ vg_column(xp)}). So avoid giving
+such a variable the name of a column: after \code{sport <- param(sport)},
+\code{stroke = ~sport} refers to the param, not the column. A param that is
+used but never given a value -- by \code{\link[=vg_params]{vg_params()}}, or by an interactor or
+input's \verb{as =} -- is warned about when the graphic is rendered.
 }
 \section{Used in examples}{
 

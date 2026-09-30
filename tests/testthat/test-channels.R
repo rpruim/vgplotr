@@ -46,7 +46,10 @@ test_that("a formula with a number or TRUE/FALSE is a scaled constant too", {
 
 test_that("a variable holding a param() is still sent as a param reference", {
   square <- param(square)
-  expect_identical(mark_json(symbol = ~square)$symbol, "$square")
+  # ... and since this param is never given a value, that's warned about
+  # (warn_unset_params(), R/param.R)
+  expect_warning(json <- mark_json(symbol = ~square), "Param `square` is used by `symbol`")
+  expect_identical(json$symbol, "$square")
 })
 
 test_that("to_json() and to_yaml() use the same channel handling", {
