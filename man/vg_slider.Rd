@@ -69,6 +69,7 @@ Examples on the package website that use this function:
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html}{Flights Density}
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-line-density.html}{Line Density}
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html}{Earthquakes Globe}
+\item \href{https://rpruim.github.io/vgplotr/articles/params-computed-params.html}{Computed Params}
 }
 }
 

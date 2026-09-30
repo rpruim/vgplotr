@@ -54,7 +54,7 @@ setting \code{mode} appropriately.
 }
 \section{Used in examples}{
 
-Used in every example on the package website. See the \href{https://rpruim.github.io/vgplotr/articles/mosaic-examples.html}{Mosaic Examples}.
+Used in every example on the package website. See the \href{https://rpruim.github.io/vgplotr/articles/mosaic-examples.html}{Mosaic Examples} and the \href{https://rpruim.github.io/vgplotr/articles/other-examples.html}{Other Examples}.
 }
 
 \seealso{

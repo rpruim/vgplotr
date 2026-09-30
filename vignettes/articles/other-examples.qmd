@@ -21,4 +21,8 @@ To add an example:
    it and `vg_example_usage` includes it.
 -->
 
-No examples yet.
+## Params & Interaction
+
+Params that stay up to date as other params, selections and data change.
+
+- [Computed Params](params-computed-params.html)

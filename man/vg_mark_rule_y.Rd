@@ -194,6 +194,7 @@ Examples on the package website that use this function:
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-presidential-opinion.html}{Presidential Opinion}
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-seattle-temperatures.html}{Seattle Temperatures}
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-line-multi-series.html}{Line Multi-Series}
+\item \href{https://rpruim.github.io/vgplotr/articles/params-computed-params.html}{Computed Params}
 }
 }
 

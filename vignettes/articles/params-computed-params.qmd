@@ -1,0 +1,105 @@
+---
+title: "Computed Params"
+subtitle: "Params computed from other params and data, and updated when they change."
+format: html
+engine: knitr
+---
+
+Some values in an interactive graphic depend on others: a reference line
+at the average of the selected points, a target some factor above it, a
+setting that should reset when the selection changes. In Mosaic's
+JavaScript API this means attaching event listeners to params. In vgplotr,
+`vg_computed_param()` and `vg_on_change()` do the same thing from R.
+
+Brush a range of horsepower in the plot below. The solid line is the
+average mpg of the cars inside the brush (of all cars when nothing is
+brushed); the dashed line is that average times the factor chosen with the
+slider. Brushing a new range resets the factor to 1.
+
+```{r setup}
+library(vgplotr)
+```
+
+```{r}
+spec <-
+  vg_create() |>
+  vg_meta(
+    title = "Computed Params",
+    description = paste(
+      "The average mpg of the brushed cars, and a target that is a chosen",
+      "factor times that average, both recomputed as the brush and slider change."
+    )
+  ) |>
+  vg_data(name = "cars", data = mtcars) |>
+  vg_params(factor = 1, brush = list(select = "intersect")) |>
+  # The mean mpg of the cars the brush selects. With `from`, the formula can
+  # use the data source's columns; with `filter_by`, only the selected rows
+  # count, and the value is recomputed whenever the brush changes.
+  vg_computed_param(
+    sel_mean = ~ mean(mpg),
+    from = "cars",
+    filter_by = param(brush)
+  ) |>
+  # `factor` and `sel_mean` are params, so this is recomputed when either
+  # one changes -- including when sel_mean itself was just recomputed.
+  vg_computed_param(target = ~ factor * sel_mean) |>
+  # When the brush changes, reset the slider's factor to 1.
+  vg_on_change(param(brush), vg_set_param(param(factor), 1)) |>
+  vg_vconcat(
+    vg_slider(label = "Factor", as = param(factor), min = 0.5, max = 1.5, step = 0.05),
+    vg_mark_dot(data_from = "cars", x = ~hp, y = ~mpg, fill = "steelblue") |>
+      # An interactor brushes the mark just before it -- here the dots.
+      vg_interval_x(as = param(brush)) |>
+      vg_mark_rule_y(y = param(sel_mean), stroke = "firebrick", stroke_width = 2) |>
+      vg_mark_rule_y(y = param(target), stroke = "firebrick", stroke_dasharray = "6 4") |>
+      vg_plot(
+        width = 600, height = 350,
+        y_domain = c(0, 50),
+        x_label = "Horsepower →",
+        y_label = "↑ Miles per gallon"
+      )
+  )
+
+vg_render(spec)
+```
+
+## How it works
+
+A computed param's formula is ordinary R, translated to SQL and run by
+DuckDB in the browser:
+
+* A bare name is a param if one of that name has been declared with
+  `vg_params()` (or is another computed param) -- here `factor` and
+  `sel_mean`. Any other name is a column of the `from` data source -- here
+  `mpg`.
+* Aggregates such as `mean()`, `max()` or `n()` summarize the `from` data,
+  restricted to the rows `filter_by` selects.
+* When a param and a column share a name, write `param(name)` or
+  `.data$name` to say which one you mean.
+
+`vg_on_change()` runs its actions whenever its trigger (a param or a
+selection) changes; each action is a `vg_set_param()`, with a constant or a
+formula for the new value. See `?vg_computed_param` and `?vg_on_change` for
+details.
+
+<details>
+<summary>JSON specification</summary>
+
+```{r}
+spec |> to_json(suppress_data = TRUE) |> cat()
+```
+
+Computed params and change handlers aren't part of Mosaic's spec, so they
+are written under a top-level `"vgplotr"` key, and each computed param is
+declared in `"params"` with an initial value of `null`. Use
+`to_json(spec, vgplotr_keys = FALSE)` for a spec to use with Mosaic's own
+tools. (`suppress_data = TRUE` leaves out the `mtcars` rows.)
+</details>
+
+<details>
+<summary>YAML specification</summary>
+
+```{r}
+spec |> to_yaml(suppress_data = TRUE) |> cat()
+```
+</details>

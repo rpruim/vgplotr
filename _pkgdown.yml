@@ -164,6 +164,13 @@ articles:
   - articles/mosaic-examples
   - articles/other-examples
 
+- title: "Other Examples: Params & Interaction"
+  desc: >
+    Params that stay up to date as other params, selections and data
+    change.
+  contents:
+  - articles/params-computed-params
+
 - title: Basic Marks & Inputs
   desc: >
     Core mark types, encodings, and layout-level input widgets (menus,

@@ -45,6 +45,7 @@ Examples on the package website that use this function:
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-flights-200k.html}{Cross-Filter Flights (200k)}
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html}{Gaia Star Catalog}
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html}{Seattle Weather}
+\item \href{https://rpruim.github.io/vgplotr/articles/params-computed-params.html}{Computed Params}
 }
 }
 
