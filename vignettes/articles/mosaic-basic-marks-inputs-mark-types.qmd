@@ -106,7 +106,7 @@ vg_render(spec)
 <summary>Comparing to mosaic's own JSON spec</summary>
 
 ```{r}
-cat(to_json(spec))
+spec |> to_json() |> cat()
 ```
 
 This matches [mosaic's own JSON
@@ -117,4 +117,12 @@ collapses a single-mark, no-extra-attributes plot fragment inside a
 while vgplotr always wraps it in `{"plot": [...]}`; and object key order
 differs (alphabetical vs. call-argument order). Both are valid mosaic-spec
 JSON and should render identically.
+</details>
+
+<details>
+<summary>YAML specification</summary>
+
+```{r}
+spec |> to_yaml() |> cat()
+```
 </details>

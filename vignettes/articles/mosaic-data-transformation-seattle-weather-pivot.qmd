@@ -45,7 +45,7 @@ vg_render(spec)
 <summary>Comparing to mosaic's own JSON spec</summary>
 
 ```{r}
-cat(to_json(spec))
+spec |> to_json() |> cat()
 ```
 
 Mosaic's own JSON spec puts the `table` input directly at the top level
@@ -54,4 +54,12 @@ always wraps in `"vconcat": [...]`, even for a single child. Aside from
 that and `data.seattle_weather.file` (`vg_example_url()` vs. a relative
 path), this matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/seattle-weather-pivot.html).
+</details>
+
+<details>
+<summary>YAML specification</summary>
+
+```{r}
+spec |> to_yaml() |> cat()
+```
 </details>

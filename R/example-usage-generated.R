@@ -60,6 +60,7 @@ NULL
 #' Examples on the package website that use these functions:
 #'
 #' * `to_json()`: every example (see the [Mosaic Examples](https://rpruim.github.io/vgplotr/articles/mosaic-examples.html))
+#' * `to_yaml()`: every example (see the [Mosaic Examples](https://rpruim.github.io/vgplotr/articles/mosaic-examples.html))
 #' @name to_json
 #' @rdname to_json
 NULL

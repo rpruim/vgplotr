@@ -74,7 +74,7 @@ vg_render(spec)
 <summary>Comparing to mosaic's own JSON spec</summary>
 
 ```{r}
-cat(to_json(spec))
+spec |> to_json() |> cat()
 ```
 
 Matches [mosaic's own JSON
@@ -82,4 +82,12 @@ spec](https://idl.uw.edu/mosaic/examples/aeromagnetic-survey.html)
 exactly, aside from `data.ca55.file` (a full URL from `vg_example_url()`),
 object key order, and (cosmetically) how the multi-line `meta.description`
 is assembled in R.
+</details>
+
+<details>
+<summary>YAML specification</summary>
+
+```{r}
+spec |> to_yaml() |> cat()
+```
 </details>

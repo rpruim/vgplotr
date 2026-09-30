@@ -99,7 +99,7 @@ vg_render(spec)
 <summary>Comparing to mosaic's own JSON spec</summary>
 
 ```{r}
-cat(to_json(spec))
+spec |> to_json() |> cat()
 ```
 
 Matches [mosaic's own JSON
@@ -107,4 +107,12 @@ spec](https://idl.uw.edu/mosaic/examples/nyc-taxi-rides.html) exactly
 (this example's data is already a fully-qualified external URL, not
 under mosaic's own `data/` directory, so no `vg_example_url()` difference
 here), aside from object key order.
+</details>
+
+<details>
+<summary>YAML specification</summary>
+
+```{r}
+spec |> to_yaml() |> cat()
+```
 </details>

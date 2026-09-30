@@ -56,6 +56,7 @@ plain reference rather than having its content read and embedded.
 Examples on the package website that use these functions:
 \itemize{
 \item \code{to_json()}: every example (see the \href{https://rpruim.github.io/vgplotr/articles/mosaic-examples.html}{Mosaic Examples})
+\item \code{to_yaml()}: every example (see the \href{https://rpruim.github.io/vgplotr/articles/mosaic-examples.html}{Mosaic Examples})
 }
 }
 

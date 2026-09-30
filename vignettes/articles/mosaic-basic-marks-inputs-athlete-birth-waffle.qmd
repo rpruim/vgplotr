@@ -64,11 +64,19 @@ vg_render(spec)
 <summary>Comparing to mosaic's own JSON spec</summary>
 
 ```{r}
-cat(to_json(spec))
+spec |> to_json() |> cat()
 ```
 
 Matches [mosaic's own JSON
 spec](https://idl.uw.edu/mosaic/examples/athlete-birth-waffle.html)
 exactly, aside from `data.athletes.file` (`vg_example_url()` vs. a relative
 path) and object key order.
+</details>
+
+<details>
+<summary>YAML specification</summary>
+
+```{r}
+spec |> to_yaml() |> cat()
+```
 </details>
