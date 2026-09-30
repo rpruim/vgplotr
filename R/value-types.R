@@ -4,8 +4,7 @@
 #' every `vg_scale_*()`/`vg_guide_*()` argument, is documented with a short
 #' `<option1 | option2 | ...>` notation right after its name, listing what
 #' mosaic-spec actually accepts there -- derived directly from mosaic's own
-#' JSON schema (`data-raw/update-schema.R`), not hand-written, so it can't
-#' drift from what the running mosaic version really supports. This page is
+#' JSON schema. This page is
 #' the shared vocabulary those notations are built from.
 #'
 #' @section Channel values:
@@ -71,9 +70,8 @@
 #'   \item{numeric vector / character vector / vector}{A plain R vector,
 #'     e.g. `range = c(0, 20)`; `vector` when mosaic accepts elements of
 #'     more than one type (or doesn't constrain them further).}
-#'   \item{`list`}{A named list of sub-options specific to that property
-#'     (see its own `@param` text) -- not a `{value:, scale:, label:}`
-#'     channel (that's `list(value=, ...)` above).}
+#'   \item{`list`}{A named list of sub-options specific to that property. 
+#'     Example: `[vg_plot_defaults](margins = list(left = 5, top = 5, right = 5, bottom = 5))`.
 #'   \item{`any`}{Genuinely unconstrained by mosaic's own schema -- e.g. a
 #'     [vg_menu()]'s initial `value`, which can be whatever type its
 #'     `options` are.}
