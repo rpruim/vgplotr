@@ -37,7 +37,7 @@ spec <-
     )
   ) |>
   vg_table(
-    from = "weatherByYear",
+    data_from = "weatherByYear",
     align = list(year = "left"),
     width = list(year = 80),
     height = 180

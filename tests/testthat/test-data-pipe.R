@@ -216,7 +216,15 @@ test_that("data_from = 0L is never an index -- it's literal inline data, like da
 
 test_that("an integer data_from index with no data source registered yet errors clearly", {
   reset_auto_data_names()
-  expect_error(vg_mark_dot(data_from = 1L, x = ~a), "needs at least one")
+  # a spec with no data yet: an error right away
+  expect_error(vg_create() |> vg_mark_dot(data_from = 1L, x = ~a), "needs at least one")
+  # a mark not attached to a spec yet (e.g., inside vg_vconcat()) is fine
+  # until the graphic is rendered, when the index must fit the spec's data
+  m <- vg_mark_dot(data_from = 1L, x = ~a)
+  expect_equal(m$items[[1]]$encodings$data_from, 1L)
+  expect_error(to_json(vg_create() |> vg_vconcat(m)), "not a valid data source index")
+  s <- vg_create() |> vg_data(name = "d", data = data.frame(a = 1)) |> vg_vconcat(m)
+  expect_identical(jsonlite::fromJSON(to_json(s), simplifyVector = FALSE)$vconcat[[1]]$plot[[1]]$data, list(from = "d"))
 })
 
 test_that("a bare (double) numeric data_from is still mosaic's literal inline-data shorthand, not an index", {

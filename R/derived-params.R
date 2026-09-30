@@ -12,7 +12,7 @@
 #'
 #' * A bare name is a param if one of that name is declared with
 #'   [vg_params()] (or is itself a computed param) -- declare params before
-#'   using them here. Any other bare name is a column of the `from` data
+#'   using them here. Any other bare name is a column of the `data_from` data
 #'   source.
 #' * `param(name)` is always a param, and `.data$name` always a column, for
 #'   when a param and a column share a name.
@@ -27,7 +27,7 @@
 #'   `median()`, `quantile_cont()`.
 #' * [sql()] inserts raw SQL, with params written as `$name`.
 #'
-#' With `from`, the expression is evaluated over that data source, so it can
+#' With `data_from`, the expression is evaluated over that data source, so it can
 #' use aggregates of its columns -- e.g. `~ scale * max(price)`. With
 #' `filter_by`, only the rows the given selection currently includes are
 #' used, and the param is also recomputed whenever the selection changes --
@@ -44,9 +44,10 @@
 #' @param spec A `vgspec`.
 #' @param ... Named one-sided formulas (or [sql()] expressions), one per
 #'   computed param, e.g. `area = ~ width * height`.
-#' @param from Optional name of a data source (see [vg_data()]) whose columns
-#'   the expressions can use.
-#' @param filter_by Optional selection (a [param()]) restricting `from` to
+#' @param data_from Optional data source (see [vg_data()]) whose columns the
+#'   expressions can use: its name, or its position as an integer (`1L` for
+#'   the first; note the `L`).
+#' @param filter_by Optional selection (a [param()]) restricting `data_from` to
 #'   the rows it includes.
 #' @return The updated `vgspec`.
 #' @seealso [vg_on_change()] to update params when another one changes.
@@ -61,14 +62,14 @@
 #' vg_create() |>
 #'   vg_data(name = "sales", data = data.frame(price = c(3, 8, 5))) |>
 #'   vg_params(scale = 2) |>
-#'   vg_computed_param(top = ~ scale * max(price), from = "sales")
-vg_computed_param <- function(spec, ..., from = NULL, filter_by = NULL) {
+#'   vg_computed_param(top = ~ scale * max(price), data_from = "sales")
+vg_computed_param <- function(spec, ..., data_from = NULL, filter_by = NULL) {
   check_is_vgspec(spec)
   defs <- list(...)
   if (length(defs) == 0 || is.null(names(defs)) || any(!nzchar(names(defs)))) {
     stop("Give each computed param a name, e.g. `area = ~ width * height`.", call. = FALSE)
   }
-  check_from(spec, from)
+  from <- check_from(spec, data_from)
   filter_name <- selection_name(filter_by, "filter_by")
   for (name in names(defs)) {
     if (name %in% names(spec$params) || name %in% names(spec$computed_params)) {
@@ -128,7 +129,7 @@ vg_on_change <- function(spec, trigger, ...) {
     if (!a$target %in% names(spec$params)) {
       stop("`", a$target, "` isn't a declared param; declare it with vg_params() first.", call. = FALSE)
     }
-    check_from(spec, a$from)
+    a$from <- check_from(spec, a$from)
     out <- list(target = a$target)
     if (is_derived_expr(a$value)) {
       out <- c(out, translate_derived(a$value, known, a$from, paste0("vg_set_param(", a$target, ")")),
@@ -147,17 +148,17 @@ vg_on_change <- function(spec, trigger, ...) {
 #' @param param The param to set, e.g. `param(zoom)`.
 #' @param value Its new value: a constant (`1`, `"all"`, `TRUE`), or an
 #'   expression computed like [vg_computed_param()]'s, e.g. `~ clicks + 1`.
-#' @param from,filter_by As for [vg_computed_param()], for a `value`
+#' @param data_from,filter_by As for [vg_computed_param()], for a `value`
 #'   computed from a data source.
 #' @export
-vg_set_param <- function(param, value, from = NULL, filter_by = NULL) {
+vg_set_param <- function(param, value, data_from = NULL, filter_by = NULL) {
   target <- selection_name(param, "param")
   if (is.null(target)) stop("`param` must be a param, e.g. `param(zoom)`.", call. = FALSE)
   if (!is_derived_expr(value) && !(is.atomic(value) && length(value) == 1)) {
     stop("`value` must be a single constant or a formula, e.g. `~ clicks + 1`.", call. = FALSE)
   }
   structure(
-    list(target = target, value = value, from = from, filter_by = selection_name(filter_by, "filter_by")),
+    list(target = target, value = value, from = data_from, filter_by = selection_name(filter_by, "filter_by")),
     class = "vg_set_param"
   )
 }
@@ -175,14 +176,17 @@ check_is_vgspec <- function(spec) {
   if (!is_vgspec(spec)) stop("`spec` must be a vgspec, e.g., from vg_create().", call. = FALSE)
 }
 
+# `data_from` as a data source name (an integer index resolved), or NULL.
 check_from <- function(spec, from) {
-  if (is.null(from)) return(invisible())
+  if (is.null(from)) return(NULL)
+  if (is.integer(from) && length(from) == 1) return(resolve_data_from_index(from, names(spec$data)))
   if (!is.character(from) || length(from) != 1) {
-    stop("`from` must be the name of a data source, e.g. `from = \"sales\"`.", call. = FALSE)
+    stop("`data_from` must be a data source's name or position, e.g. `data_from = \"sales\"`.", call. = FALSE)
   }
   if (!from %in% names(spec$data)) {
     stop("There's no data source named `", from, "`; add it with vg_data() first.", call. = FALSE)
   }
+  from
 }
 
 # The name of a param()/selection argument, a string naming one, or NULL.
@@ -215,7 +219,7 @@ translate_derived <- function(x, known, from, where) {
       stop(
         "In ", where, ": ", paste0("`", unique(ctx$columns), "`", collapse = ", "),
         " isn't a declared param. If it's a column, give the data source with ",
-        "`from = `; if it's a param, declare it with vg_params() first.",
+        "`data_from = `; if it's a param, declare it with vg_params() first.",
         call. = FALSE
       )
     }

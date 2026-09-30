@@ -5,7 +5,7 @@
 #' interactors, and layout. Marks and interactors can be piped directly onto
 #' a freshly created spec (e.g., `vg_create() |> vg_mark_dot(x = ~a, y = ~b)`) as
 #' long as the spec only needs a single plot. The same goes for a single
-#' layout-level input (e.g., `vg_create() |> vg_table(from = "flights")`); a
+#' layout-level input (e.g., `vg_create() |> vg_table(data_from = "flights")`); a
 #' spec with several plots, or with inputs alongside plots, needs an
 #' explicit layout (see [vg_vconcat()]/[vg_hconcat()]).
 #'
@@ -99,7 +99,7 @@ vg_config <- function(spec, ...) {
 #' example.
 #' @param spec A `vgspec`.
 #' @param name The name other parts of the spec use to refer to this data
-#'   (via `data_from =`/`filter_by =` on marks and interactors). If omitted,
+#'   (via `data_from =`/`filter_by =` on marks, inputs and interactors). If omitted,
 #'   a new name is generated (`"data1"`, `"data2"`, ...). Generated names are
 #'   unique across the R session, so specs rendered on the same page -- which
 #'   share one database -- never overwrite each other's data.

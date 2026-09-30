@@ -48,7 +48,7 @@ spec <-
           select = "interval",
           as = query,
           column = "batch",
-          from = "athletesBatched",
+          data_from = "athletesBatched",
           step = 10,
           value = 20,
           label = "Max Samples"

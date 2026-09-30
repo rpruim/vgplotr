@@ -29,10 +29,10 @@ pae_domain <- param(pae_domain)
 scheme <- param(scheme)
 
 controls <- vg_hconcat(
-  vg_menu(from = "proteins", column = "partial_t", label = "Partial t", as = query),
-  vg_menu(from = "proteins", column = "noise", label = "Noise", as = query),
-  vg_menu(from = "proteins", column = "gradient_decay_function", label = "Gradient Decay", as = query),
-  vg_menu(from = "proteins", column = "gradient_scale", label = "Gradient Scale", as = query)
+  vg_menu(data_from = "proteins", column = "partial_t", label = "Partial t", as = query),
+  vg_menu(data_from = "proteins", column = "noise", label = "Noise", as = query),
+  vg_menu(data_from = "proteins", column = "gradient_decay_function", label = "Gradient Decay", as = query),
+  vg_menu(data_from = "proteins", column = "gradient_scale", label = "Gradient Scale", as = query)
 )
 
 top_hist <-
@@ -79,7 +79,7 @@ right_hist <-
   )
 
 tbl <- vg_table(
-  as = point, filter_by = query, from = "proteins",
+  as = point, filter_by = query, data_from = "proteins",
   columns = c(
     "version", "pae_interaction", "plddt_total", "noise",
     "gradient_decay_function", "gradient_scale", "movement"

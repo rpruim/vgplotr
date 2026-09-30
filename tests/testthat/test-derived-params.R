@@ -4,19 +4,19 @@ base_spec <- function() {
     vg_params(width = 10, height = 5, scale = 2, dataset = "a", zoom = 3, clicks = 0) |>
     vg_mark_dot(data_from = "sales", x = ~x, y = ~price)
 }
-computed_sql <- function(f, from = NULL) {
-  vg_computed_param(base_spec(), out = f, from = from)$computed_params$out$sql
+computed_sql <- function(f, data_from = NULL) {
+  vg_computed_param(base_spec(), out = f, data_from = data_from)$computed_params$out$sql
 }
 
 test_that("expressions translate to SQL, with bare names as params or columns", {
   expect_identical(computed_sql(~ width * height), "($width * $height)")
-  expect_identical(computed_sql(~ scale * max(price), from = "sales"), "($scale * max(\"price\"))")
+  expect_identical(computed_sql(~ scale * max(price), data_from = "sales"), "($scale * max(\"price\"))")
   expect_identical(computed_sql(~ -width + 2^height), "(-($width) + power(2, $height))")
   expect_identical(computed_sql(~ width %% 3 == 1 & !(height > 2)),
                    "((($width % 3) = 1) AND (NOT (($height > 2))))")
   expect_identical(computed_sql(~ ifelse(dataset == "a", 1, NA)),
                    "(CASE WHEN ($dataset = 'a') THEN 1 ELSE NULL END)")
-  expect_identical(computed_sql(~ mean(price) + n(), from = "sales"), "(avg(\"price\") + count(*))")
+  expect_identical(computed_sql(~ mean(price) + n(), data_from = "sales"), "(avg(\"price\") + count(*))")
   expect_identical(computed_sql(~ pmax(width, height)), "greatest($width, $height)")
   expect_identical(computed_sql(~ round(sqrt(width), 2)), "round(sqrt($width), 2)")
   expect_identical(computed_sql(~ is.na(width)), "($width IS NULL)")
@@ -26,7 +26,7 @@ test_that("param() and .data$ say which one is meant when names are shared", {
   spec <- vg_create() |>
     vg_data(name = "d", data = data.frame(width = 1:3)) |>
     vg_params(width = 2)
-  f <- function(expr) vg_computed_param(spec, out = expr, from = "d")$computed_params$out$sql
+  f <- function(expr) vg_computed_param(spec, out = expr, data_from = "d")$computed_params$out$sql
   expect_identical(f(~ width), "$width")
   expect_identical(f(~ max(.data$width)), "max(\"width\")")
   expect_identical(f(~ max(.data[["width"]]) * param(width)), "(max(\"width\") * $width)")
@@ -47,10 +47,10 @@ test_that("a computed param records the params it uses, and can use earlier ones
 
 test_that("vg_computed_param() errors clearly", {
   spec <- base_spec()
-  expect_error(vg_computed_param(spec, out = ~ width * price), "`price` isn't a declared param.*from = ")
+  expect_error(vg_computed_param(spec, out = ~ width * price), "`price` isn't a declared param.*data_from = ")
   expect_error(vg_computed_param(spec, width = ~ height), "`width` already exists")
   expect_error(vg_computed_param(spec, ~ height), "Give each computed param a name")
-  expect_error(vg_computed_param(spec, out = ~ price, from = "nope"), "no data source named `nope`")
+  expect_error(vg_computed_param(spec, out = ~ price, data_from = "nope"), "no data source named `nope`")
   expect_error(vg_computed_param(spec, out = ~ f(a = 1)), "named arguments")
   expect_error(vg_computed_param(spec, out = sql("$nope + 1")), "`nope` isn't a declared param")
   expect_error(vg_computed_param(spec, out = 3), "one-sided formula")
@@ -82,7 +82,7 @@ test_that("vg_on_change() rejects self-updates, computed targets, unknown params
 spec_with_derived <- function() {
   base_spec() |>
     vg_computed_param(area = ~ width * height) |>
-    vg_computed_param(top = ~ scale * max(price), from = "sales", filter_by = param(brush)) |>
+    vg_computed_param(top = ~ scale * max(price), data_from = "sales", filter_by = param(brush)) |>
     vg_on_change(param(dataset), vg_set_param(param(zoom), 1))
 }
 

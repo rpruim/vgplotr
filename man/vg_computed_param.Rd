@@ -4,7 +4,7 @@
 \alias{vg_computed_param}
 \title{Params computed from other params and data}
 \usage{
-vg_computed_param(spec, ..., from = NULL, filter_by = NULL)
+vg_computed_param(spec, ..., data_from = NULL, filter_by = NULL)
 }
 \arguments{
 \item{spec}{A \code{vgspec}.}
@@ -12,10 +12,11 @@ vg_computed_param(spec, ..., from = NULL, filter_by = NULL)
 \item{...}{Named one-sided formulas (or \code{\link[=sql]{sql()}} expressions), one per
 computed param, e.g. \code{area = ~ width * height}.}
 
-\item{from}{Optional name of a data source (see \code{\link[=vg_data]{vg_data()}}) whose columns
-the expressions can use.}
+\item{data_from}{Optional data source (see \code{\link[=vg_data]{vg_data()}}) whose columns the
+expressions can use: its name, or its position as an integer (\code{1L} for
+the first; note the \code{L}).}
 
-\item{filter_by}{Optional selection (a \code{\link[=param]{param()}}) restricting \code{from} to
+\item{filter_by}{Optional selection (a \code{\link[=param]{param()}}) restricting \code{data_from} to
 the rows it includes.}
 }
 \value{
@@ -35,7 +36,7 @@ translated to SQL and evaluated by DuckDB in the browser:
 \itemize{
 \item A bare name is a param if one of that name is declared with
 \code{\link[=vg_params]{vg_params()}} (or is itself a computed param) -- declare params before
-using them here. Any other bare name is a column of the \code{from} data
+using them here. Any other bare name is a column of the \code{data_from} data
 source.
 \item \code{param(name)} is always a param, and \code{.data$name} always a column, for
 when a param and a column share a name.
@@ -51,7 +52,7 @@ logic (\verb{& | !}) work as in R. So do \code{ifelse()}/\code{if_else()}, \code
 \item \code{\link[=sql]{sql()}} inserts raw SQL, with params written as \verb{$name}.
 }
 
-With \code{from}, the expression is evaluated over that data source, so it can
+With \code{data_from}, the expression is evaluated over that data source, so it can
 use aggregates of its columns -- e.g. \code{~ scale * max(price)}. With
 \code{filter_by}, only the rows the given selection currently includes are
 used, and the param is also recomputed whenever the selection changes --
@@ -82,7 +83,7 @@ vg_create() |>
 vg_create() |>
   vg_data(name = "sales", data = data.frame(price = c(3, 8, 5))) |>
   vg_params(scale = 2) |>
-  vg_computed_param(top = ~ scale * max(price), from = "sales")
+  vg_computed_param(top = ~ scale * max(price), data_from = "sales")
 }
 \seealso{
 \code{\link[=vg_on_change]{vg_on_change()}} to update params when another one changes.

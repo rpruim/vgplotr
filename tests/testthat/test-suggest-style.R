@@ -54,7 +54,8 @@ test_that("every property of every interactor and input has a snake_case argumen
     wrapper <- get0(paste0("vg_", camel_to_snake(type)), envir = asNamespace("vgplotr"), mode = "function")
     expect_false(is.null(wrapper), info = paste("no wrapper for", type))
     if (is.null(wrapper)) next
-    missing <- setdiff(camel_to_snake(.vg_interactor_own_props[[type]]), names(formals(wrapper)))
+    # (arg_name(): an input's `from` is its `data_from` argument)
+    missing <- setdiff(arg_name(.vg_interactor_own_props[[type]]), names(formals(wrapper)))
     expect_equal(missing, character(0), info = type)
   }
 })

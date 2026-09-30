@@ -95,7 +95,10 @@ build_mark <- function(spec, mark, formula, args, style) {
       length(args$data_from) == 1 &&
       args$data_from != 0L
   ) {
-    if (!is_vgspec(spec) || length(spec$data) == 0) {
+    if (!is_vgspec(spec)) {
+      # not attached to a spec yet (e.g., inside vg_vconcat()): resolved
+      # when the graphic is rendered (resolve_data_sources())
+    } else if (length(spec$data) == 0) {
       stop(
         "`data_from = ",
         args$data_from,
@@ -104,7 +107,7 @@ build_mark <- function(spec, mark, formula, args, style) {
         call. = FALSE
       )
     }
-    args$data_from <- resolve_data_from_index(args$data_from, names(spec$data))
+    if (is_vgspec(spec)) args$data_from <- resolve_data_from_index(args$data_from, names(spec$data))
   }
 
   # A mark that takes data at all (not e.g., frame/sphere/hexgrid/the axis
@@ -151,7 +154,7 @@ build_mark <- function(spec, mark, formula, args, style) {
 # spec's first): it has no `data_from` of its own, its type takes data, and
 # it actually uses some (see above). Checked when the mark is added to a
 # spec that already has data, and again when the whole spec is rendered or
-# exported (fill_default_data_from()), for marks built on their own -- e.g.
+# exported (resolve_data_sources()), for marks built on their own -- e.g.
 # inside vg_vconcat() -- before there was any data to default to.
 needs_default_data <- function(mark, args) {
   is.null(args$data_from) &&
@@ -159,19 +162,42 @@ needs_default_data <- function(mark, args) {
     (mark %in% .vg_mark_implicit_data || args_reference_data(args))
 }
 
-# The layout with every mark that needs_default_data() given `data_from =
-# first`, the spec's first data source.
-fill_default_data_from <- function(layout, first) {
-  if (is.null(first)) return(layout)
-  if (is_vg_plot_fragment(layout)) {
-    layout$items <- lapply(layout$items, function(item) {
-      if (inherits(item, "vg_mark") && needs_default_data(item$mark, item$encodings)) {
-        item$encodings$data_from <- first
+# Whether an input with these options reads data: a table always does; a
+# menu, search box or slider does when it's given a `column` to draw its
+# options or range from.
+input_needs_default_data <- function(type, opts) {
+  is.null(opts$from) && (type == "table" || (type %in% c("menu", "search", "slider") && !is.null(opts$column)))
+}
+
+# Settles every mark's `data_from` and input's `data_from` (`from`, as sent)
+# once the spec's data sources (`data_names`) are known, when it's rendered
+# or exported: an integer index becomes that source's name, and one that
+# needs data but names none gets the first source. Marks and inputs built on
+# their own -- e.g. inside vg_vconcat() -- only get these here.
+resolve_data_sources <- function(layout, data_names) {
+  is_index <- function(x) is.integer(x) && length(x) == 1 && x != 0L
+  fix_item <- function(item) {
+    if (inherits(item, "vg_mark")) {
+      if (is_index(item$encodings$data_from)) {
+        item$encodings$data_from <- resolve_data_from_index(item$encodings$data_from, data_names)
+      } else if (length(data_names) && needs_default_data(item$mark, item$encodings)) {
+        item$encodings$data_from <- data_names[[1]]
       }
-      item
-    })
+    } else if (inherits(item, "vg_input")) {
+      if (is_index(item$options$from)) {
+        item$options$from <- resolve_data_from_index(item$options$from, data_names)
+      } else if (length(data_names) && input_needs_default_data(item$type, item$options)) {
+        item$options$from <- data_names[[1]]
+      }
+    }
+    item
+  }
+  if (is_vg_plot_fragment(layout)) {
+    layout$items <- lapply(layout$items, fix_item)
   } else if (is_vg_concat(layout)) {
-    layout$children <- lapply(layout$children, fill_default_data_from, first = first)
+    layout$children <- lapply(layout$children, resolve_data_sources, data_names = data_names)
+  } else {
+    layout <- fix_item(layout)
   }
   layout
 }

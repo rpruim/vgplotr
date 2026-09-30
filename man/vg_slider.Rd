@@ -11,7 +11,7 @@ vg_slider(
   column = vg_unset,
   field = vg_unset,
   filter_by = vg_unset,
-  from = vg_unset,
+  data_from = vg_unset,
   label = vg_unset,
   max = vg_unset,
   min = vg_unset,
@@ -33,7 +33,7 @@ vg_slider(
 
 \item{filter_by}{\verb{<param()>} A selection to filter the database table indicated by the \code{from} property.}
 
-\item{from}{\verb{<string>} The name of a database table to use as a data source for this widget.}
+\item{data_from}{\verb{<string | integer>} The data source this input reads (see \code{\link[=vg_data]{vg_data()}}): its name, or its position as an integer (\code{1L} for the first, \code{-1L} for the most recently added; note the \code{L}). Left unset, an input that needs data -- a table, or a menu, search box or slider given \verb{column =} -- uses the first data source.}
 
 \item{label}{\verb{<string>} A text label for this input.}
 

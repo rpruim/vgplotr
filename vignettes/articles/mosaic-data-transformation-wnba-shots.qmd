@@ -50,8 +50,8 @@ spec <-
   vg_params(filter = list(select = "crossfilter"), binWidth = 18) |>
   vg_vconcat(
     vg_hconcat(
-      vg_menu(from = "shots", column = "team_name", as = filter_p, label = "Team"),
-      vg_menu(from = "shots", column = "athlete_name", filter_by = filter_p, as = filter_p, label = "Athlete")
+      vg_menu(data_from = "shots", column = "team_name", as = filter_p, label = "Team"),
+      vg_menu(data_from = "shots", column = "athlete_name", filter_by = filter_p, as = filter_p, label = "Athlete")
     ),
     vg_vspace(5),
     vg_mark_frame(stroke_opacity = 0.5) |>

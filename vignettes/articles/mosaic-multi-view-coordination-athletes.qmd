@@ -23,11 +23,11 @@ query <- param(query)
 hover <- param(hover)
 
 controls <- vg_hconcat(
-  vg_menu(label = "Sport", as = category, from = "athletes", column = "sport"),
-  vg_menu(label = "Sex", as = category, from = "athletes", column = "sex"),
+  vg_menu(label = "Sport", as = category, data_from = "athletes", column = "sport"),
+  vg_menu(label = "Sex", as = category, data_from = "athletes", column = "sex"),
   vg_search(
     label = "Name", filter_by = category, as = query,
-    from = "athletes", column = "name", type = "contains"
+    data_from = "athletes", column = "name", type = "contains"
   )
 )
 
@@ -47,7 +47,7 @@ scatter <-
   )
 
 tbl <- vg_table(
-  from = "athletes", max_width = 570, height = 250, filter_by = query, as = hover,
+  data_from = "athletes", max_width = 570, height = 250, filter_by = query, as = hover,
   columns = c("name", "nationality", "sex", "height", "weight", "sport"),
   width = list(name = 180, nationality = 100, sex = 50, height = 50, weight = 50, sport = 100)
 )

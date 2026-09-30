@@ -24,7 +24,7 @@ source (equivalent to following up with \code{vg_data(data = data)} -- see
 interactors, and layout. Marks and interactors can be piped directly onto
 a freshly created spec (e.g., \code{vg_create() |> vg_mark_dot(x = ~a, y = ~b)}) as
 long as the spec only needs a single plot. The same goes for a single
-layout-level input (e.g., \code{vg_create() |> vg_table(from = "flights")}); a
+layout-level input (e.g., \code{vg_create() |> vg_table(data_from = "flights")}); a
 spec with several plots, or with inputs alongside plots, needs an
 explicit layout (see \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}).
 }

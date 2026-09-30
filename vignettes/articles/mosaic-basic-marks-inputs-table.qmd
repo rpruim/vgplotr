@@ -31,7 +31,7 @@ spec <-
     )
   ) |>
   vg_data(name = "flights", file = vg_example_url("flights-200k.parquet")) |>
-  vg_table(from = "flights", height = 300)
+  vg_table(data_from = "flights", height = 300)
 
 vg_render(spec)
 ```

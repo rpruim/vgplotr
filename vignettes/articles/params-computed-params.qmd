@@ -32,12 +32,12 @@ spec <-
   ) |>
   vg_data(name = "cars", data = mtcars) |>
   vg_params(factor = 1, brush = list(select = "intersect")) |>
-  # The mean mpg of the cars the brush selects. With `from`, the formula can
+  # The mean mpg of the cars the brush selects. With `data_from`, the formula can
   # use the data source's columns; with `filter_by`, only the selected rows
   # count, and the value is recomputed whenever the brush changes.
   vg_computed_param(
     sel_mean = ~ mean(mpg),
-    from = "cars",
+    data_from = "cars",
     filter_by = param(brush)
   ) |>
   # `factor` and `sel_mean` are params, so this is recomputed when either
@@ -89,9 +89,9 @@ DuckDB in the browser:
 
 * A bare name is a param if one of that name has been declared with
   `vg_params()` (or is another computed param) -- here `factor` and
-  `sel_mean`. Any other name is a column of the `from` data source -- here
+  `sel_mean`. Any other name is a column of the `data_from` data source -- here
   `mpg`.
-* Aggregates such as `mean()`, `max()` or `n()` summarize the `from` data,
+* Aggregates such as `mean()`, `max()` or `n()` summarize the `data_from` data,
   restricted to the rows `filter_by` selects.
 * When a param and a column share a name, write `param(name)` or
   `.data$name` to say which one you mean.

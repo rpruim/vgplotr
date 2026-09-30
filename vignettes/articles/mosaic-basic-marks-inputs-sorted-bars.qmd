@@ -32,7 +32,7 @@ spec <-
     vg_menu(
       label = "Sport",
       as = query,
-      from = "athletes",
+      data_from = "athletes",
       column = "sport",
       value = "aquatics"
     ),

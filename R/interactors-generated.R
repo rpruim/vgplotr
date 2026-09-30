@@ -239,7 +239,7 @@ vg_toggle_color <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 #' @param column `<string>` The name of a database column from which to pull menu options.
 #' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
 #' @param filter_by `<param()>` A selection to filter the database table indicated by the `from` property.
-#' @param from `<string>` The name of a database table to use as a data source for this widget.
+#' @param data_from `<string | integer>` The data source this input reads (see [vg_data()]): its name, or its position as an integer (`1L` for the first, `-1L` for the most recently added; note the `L`). Left unset, an input that needs data -- a table, or a menu, search box or slider given `column =` -- uses the first data source.
 #' @param label `<string>` A text label for this input.
 #' @param list_match `<"any" | "all">` Required if the database column is an list, this property determines how to match the selected menu option against the list values.
 #' @param options `<vector>` An array of menu options, as literal values or option objects.
@@ -247,8 +247,8 @@ vg_toggle_color <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
-vg_menu <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, list_match = vg_unset, options = vg_unset, value = vg_unset, ...) {
-  vg_interactor_(spec, "menu", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, listMatch = list_match, options = options, value = value, ...)
+vg_menu <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, data_from = vg_unset, label = vg_unset, list_match = vg_unset, options = vg_unset, value = vg_unset, ...) {
+  vg_interactor_(spec, "menu", as = as, column = column, field = field, filterBy = filter_by, from = data_from, label = label, listMatch = list_match, options = options, value = value, ...)
 }
 
 #' A search input component.
@@ -260,14 +260,14 @@ vg_menu <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_un
 #' @param column `<string>` The name of a database column from which to pull menu options.
 #' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
 #' @param filter_by `<param()>` A selection to filter the database table indicated by the `from` property.
-#' @param from `<string>` The name of a database table to use as a data source for this widget.
+#' @param data_from `<string | integer>` The data source this input reads (see [vg_data()]): its name, or its position as an integer (`1L` for the first, `-1L` for the most recently added; note the `L`). Left unset, an input that needs data -- a table, or a menu, search box or slider given `column =` -- uses the first data source.
 #' @param label `<string>` A text label for this input.
 #' @param type `<"contains" | "prefix" | "suffix" | "regexp">` The type of text search query to perform.
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
-vg_search <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, type = vg_unset, ...) {
-  vg_interactor_(spec, "search", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, type = type, ...)
+vg_search <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, data_from = vg_unset, label = vg_unset, type = vg_unset, ...) {
+  vg_interactor_(spec, "search", as = as, column = column, field = field, filterBy = filter_by, from = data_from, label = label, type = type, ...)
 }
 
 #' A slider input component.
@@ -279,7 +279,7 @@ vg_search <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_
 #' @param column `<string>` The name of a database column from which to pull menu options.
 #' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
 #' @param filter_by `<param()>` A selection to filter the database table indicated by the `from` property.
-#' @param from `<string>` The name of a database table to use as a data source for this widget.
+#' @param data_from `<string | integer>` The data source this input reads (see [vg_data()]): its name, or its position as an integer (`1L` for the first, `-1L` for the most recently added; note the `L`). Left unset, an input that needs data -- a table, or a menu, search box or slider given `column =` -- uses the first data source.
 #' @param label `<string>` A text label for this input.
 #' @param max `<number>` The maximum slider value.
 #' @param min `<number>` The minimum slider value.
@@ -290,8 +290,8 @@ vg_search <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
-vg_slider <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, max = vg_unset, min = vg_unset, select = vg_unset, step = vg_unset, value = vg_unset, width = vg_unset, ...) {
-  vg_interactor_(spec, "slider", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, max = max, min = min, select = select, step = step, value = value, width = width, ...)
+vg_slider <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, data_from = vg_unset, label = vg_unset, max = vg_unset, min = vg_unset, select = vg_unset, step = vg_unset, value = vg_unset, width = vg_unset, ...) {
+  vg_interactor_(spec, "slider", as = as, column = column, field = field, filterBy = filter_by, from = data_from, label = label, max = max, min = min, select = select, step = step, value = value, width = width, ...)
 }
 
 #' A table grid view component.
@@ -303,7 +303,7 @@ vg_slider <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_
 #' @param as `<param()>` The output selection.
 #' @param columns `<character vector>` A list of column names to include in the table grid.
 #' @param filter_by `<param()>` A selection to filter the database table indicated by the `from` property.
-#' @param from `<string>` The name of a database table to use as a data source for this widget.
+#' @param data_from `<string | integer>` The data source this input reads (see [vg_data()]): its name, or its position as an integer (`1L` for the first, `-1L` for the most recently added; note the `L`). Left unset, an input that needs data -- a table, or a menu, search box or slider given `column =` -- uses the first data source.
 #' @param height `<number>` The height of the table widget, in pixels.
 #' @param max_width `<number>` The maximum width of the table widget, in pixels.
 #' @param row_batch `<number>` The number of rows load in a new batch upon table scroll.
@@ -311,7 +311,7 @@ vg_slider <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
-vg_table <- function(spec = NULL, align = vg_unset, as = vg_unset, columns = vg_unset, filter_by = vg_unset, from = vg_unset, height = vg_unset, max_width = vg_unset, row_batch = vg_unset, width = vg_unset, ...) {
-  vg_interactor_(spec, "table", align = align, as = as, columns = columns, filterBy = filter_by, from = from, height = height, maxWidth = max_width, rowBatch = row_batch, width = width, ...)
+vg_table <- function(spec = NULL, align = vg_unset, as = vg_unset, columns = vg_unset, filter_by = vg_unset, data_from = vg_unset, height = vg_unset, max_width = vg_unset, row_batch = vg_unset, width = vg_unset, ...) {
+  vg_interactor_(spec, "table", align = align, as = as, columns = columns, filterBy = filter_by, from = data_from, height = height, maxWidth = max_width, rowBatch = row_batch, width = width, ...)
 }
 

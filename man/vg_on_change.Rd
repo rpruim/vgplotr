@@ -7,7 +7,7 @@
 \usage{
 vg_on_change(spec, trigger, ...)
 
-vg_set_param(param, value, from = NULL, filter_by = NULL)
+vg_set_param(param, value, data_from = NULL, filter_by = NULL)
 }
 \arguments{
 \item{spec}{A \code{vgspec}.}
@@ -21,7 +21,7 @@ vg_set_param(param, value, from = NULL, filter_by = NULL)
 \item{value}{Its new value: a constant (\code{1}, \code{"all"}, \code{TRUE}), or an
 expression computed like \code{\link[=vg_computed_param]{vg_computed_param()}}'s, e.g. \code{~ clicks + 1}.}
 
-\item{from, filter_by}{As for \code{\link[=vg_computed_param]{vg_computed_param()}}, for a \code{value}
+\item{data_from, filter_by}{As for \code{\link[=vg_computed_param]{vg_computed_param()}}, for a \code{value}
 computed from a data source.}
 }
 \value{

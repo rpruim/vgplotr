@@ -16,7 +16,7 @@ test_that("a layout-level input warns too, and is called an input", {
 test_that("several unrecognized options produce a single warning naming all of them", {
   w <- character()
   withCallingHandlers(
-    vg_table(from = "d", bogus = 1, nope = 2),
+    vg_table(data_from = "d", bogus = 1, nope = 2),
     warning = function(cnd) {
       w <<- c(w, conditionMessage(cnd))
       invokeRestart("muffleWarning")

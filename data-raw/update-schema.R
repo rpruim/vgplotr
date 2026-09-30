@@ -588,10 +588,18 @@ enum_props <- property_enums(c(mark_defs, interactor_defs), defs)
 
 generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, prop_types, extra_formals = character(),
                               extra_docs = character(), title, spec_doc, family, required = character(),
-                              formula_arg = FALSE, doc = NULL) {
+                              formula_arg = FALSE, doc = NULL, renamed = list()) {
   props <- names(properties)
   props <- c(intersect(required, props), setdiff(props, required))
   snake_props <- camel_to_snake(props)
+  # `renamed`: properties whose R argument has its own name and docs, e.g.
+  # list(from = list(arg = "data_from", type = "`<...>`", doc = "...")); the
+  # value is still sent under the property's own key.
+  for (p in intersect(names(renamed), props)) {
+    snake_props[props == p] <- renamed[[p]]$arg
+    prop_types[[p]] <- renamed[[p]]$type
+    prop_docs[[p]] <- renamed[[p]]$doc
+  }
   has_spec <- !is.null(spec_doc)
   formals_str <- paste(c(
     if (has_spec) "spec = NULL",
@@ -826,6 +834,18 @@ inter_lines <- c(inter_lines, generate_grouped(interactor_types, "interactor", "
     spec_doc = "A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.",
     family = "interactor functions"
 ), families = interactor_families))
+# An input's `from` (the table it reads) is `data_from` in R, as for marks.
+input_renamed <- list(from = list(
+  arg = "data_from",
+  type = "`<string | integer>`",
+  doc = paste(
+    "The data source this input reads (see [vg_data()]): its name, or its",
+    "position as an integer (`1L` for the first, `-1L` for the most recently",
+    "added; note the `L`). Left unset, an input that needs data -- a table, or",
+    "a menu, search box or slider given `column =` -- uses the first data",
+    "source."
+  )
+))
 for (type in input_types) {
   fn <- paste0("vg_", camel_to_snake(type))
   inter_lines <- c(inter_lines, generate_wrapper(
@@ -836,6 +856,7 @@ for (type in input_types) {
     prop_docs = interactor_prop_docs,
     prop_types = interactor_prop_types,
     title = docline(interactor_defs[[type]]$description, paste0("A `", type, "` input.")),
+    renamed = input_renamed,
     spec_doc = paste(
       "A `vgspec` with no layout yet, to make this input its whole layout",
       "(e.g., a spec that is just one table), or `NULL` (the default) to return",

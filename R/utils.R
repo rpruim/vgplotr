@@ -210,7 +210,18 @@ camel_to_snake <- function(x) tolower(gsub("([a-z0-9])([A-Z])", "\\1_\\2", x))
 # vg_mark()/vg_interactor(), and every legend). Suggesting a spelling that then
 # warns again would be worse than not suggesting it.
 spell_names <- function(names, style) {
-  if (identical(style, "snake")) camel_to_snake(names) else names
+  if (identical(style, "snake")) arg_name(names) else names
+}
+
+# The R argument name the wrappers use for a Mosaic property: its snake_case
+# form, except for the few renamed to match the rest of vgplotr -- an
+# input's `from` (the table it reads) is `data_from`, as for marks.
+.vg_renamed_args <- c(from = "data_from")
+arg_name <- function(props) {
+  out <- camel_to_snake(props)
+  renamed <- props %in% names(.vg_renamed_args)
+  out[renamed] <- .vg_renamed_args[props[renamed]]
+  out
 }
 
 # Warns on an argument that mosaic-spec doesn't list as a property of the

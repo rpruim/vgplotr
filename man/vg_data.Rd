@@ -10,7 +10,7 @@ vg_data(spec, name = NULL, data = NULL, ...)
 \item{spec}{A \code{vgspec}.}
 
 \item{name}{The name other parts of the spec use to refer to this data
-(via \verb{data_from =}/\verb{filter_by =} on marks and interactors). If omitted,
+(via \verb{data_from =}/\verb{filter_by =} on marks, inputs and interactors). If omitted,
 a new name is generated (\code{"data1"}, \code{"data2"}, ...). Generated names are
 unique across the R session, so specs rendered on the same page -- which
 share one database -- never overwrite each other's data.}
