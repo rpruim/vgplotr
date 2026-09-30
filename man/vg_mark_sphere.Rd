@@ -154,6 +154,7 @@ See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column
 Examples on the package website that use this function:
 \itemize{
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html}{Earthquakes Feed}
+\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html}{Earthquakes Globe}
 }
 }
 

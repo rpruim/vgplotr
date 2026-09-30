@@ -591,6 +591,7 @@ NULL
 #' Examples on the package website that use this function:
 #'
 #' * [Earthquakes Feed](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html)
+#' * [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html)
 #' @name vg_mark_sphere
 #' @rdname vg_mark_sphere
 NULL

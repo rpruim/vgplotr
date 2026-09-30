@@ -60,10 +60,13 @@ spec |> to_json() |> cat()
 ```
 
 Matches [mosaic's own JSON
-spec](https://idl.uw.edu/mosaic/examples/walmart-openings.html)
-exactly, aside from `data.states.file`/`data.nation.file`/
-`data.walmarts.file` (`vg_example_url()` vs. a relative path) and object
-key order.
+spec](https://idl.uw.edu/mosaic/examples/walmart-openings.html), aside
+from `data.states.file`/`data.nation.file`/`data.walmarts.file`
+(`vg_example_url()` vs. a relative path), object key order, and one
+structural difference: Mosaic's spec wraps its single plot in a one-item
+`"vconcat": [...]`, while this example builds the plot directly (no
+`vg_vconcat()`), so it appears at the top level. Both render the same
+single plot.
 </details>
 
 <details>

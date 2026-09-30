@@ -65,9 +65,12 @@ spec |> to_json() |> cat()
 ```
 
 Matches [mosaic's own JSON
-spec](https://idl.uw.edu/mosaic/examples/sorted-bars.html) exactly, aside
-from `data.athletes.file` (`vg_example_url()` vs. a relative path) and object
-key order.
+spec](https://idl.uw.edu/mosaic/examples/sorted-bars.html), aside from
+`data.athletes.file` (`vg_example_url()` vs. a relative path), object key
+order, and `params`: this spec declares the `query` selection
+(`"params": {"query": {"select": "intersect"}}`), while Mosaic's leaves it
+out and lets Mosaic create it when `$query` is first used, which also makes
+an intersect selection. The two behave the same.
 </details>
 
 <details>
