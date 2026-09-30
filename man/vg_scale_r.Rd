@@ -3,7 +3,9 @@
 \name{vg_scale_r}
 \alias{vg_scale_r}
 \alias{vg_scale_radius}
-\title{Set the radius scale's properties}
+\alias{vg_scale_length}
+\alias{vg_scale_opacity}
+\title{Set the radius, length, and opacity scales' properties}
 \usage{
 vg_scale_r(
   spec = NULL,
@@ -34,35 +36,71 @@ vg_scale_radius(
   percent = vg_unset,
   ...
 )
+
+vg_scale_length(
+  spec = NULL,
+  type = vg_unset,
+  domain = vg_unset,
+  range = vg_unset,
+  nice = vg_unset,
+  zero = vg_unset,
+  clamp = vg_unset,
+  base = vg_unset,
+  exponent = vg_unset,
+  constant = vg_unset,
+  percent = vg_unset,
+  ...
+)
+
+vg_scale_opacity(
+  spec = NULL,
+  type = vg_unset,
+  domain = vg_unset,
+  range = vg_unset,
+  nice = vg_unset,
+  zero = vg_unset,
+  reverse = vg_unset,
+  clamp = vg_unset,
+  base = vg_unset,
+  exponent = vg_unset,
+  constant = vg_unset,
+  percent = vg_unset,
+  ...
+)
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to set this scale on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{type}{\verb{<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>} The \emph{r} (radius) scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{rScale}).}
+\item{type}{\verb{<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>} The scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (\code{rScale}/\code{lengthScale}/\code{opacityScale}).}
 
-\item{domain}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s inputs (abstract values). (\code{rDomain}).}
+\item{domain}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s inputs (abstract values). (\code{rDomain}/\code{lengthDomain}/\code{opacityDomain}).}
 
-\item{range}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s outputs (visual values). (\code{rRange}).}
+\item{range}{\verb{<vector | "Fixed" | param()>} The extent of the scale’s outputs (visual values). (\code{rRange}/\code{lengthRange}/\code{opacityRange}).}
 
-\item{nice}{\verb{<boolean | number | "day"/"week"/"month"/... | param()>} If true, or a tick count or interval, extend the domain to nice round values. (\code{rNice}).}
+\item{nice}{\verb{<boolean | number | "day"/"week"/"month"/... | param()>} If true, or a tick count or interval, extend the domain to nice round values. (\code{rNice}/\code{lengthNice}/\code{opacityNice}).}
 
-\item{zero}{\verb{<boolean | param()>} Whether the \strong{domain} must include zero. (\code{rZero}).}
+\item{zero}{\verb{<boolean | param()>} Whether the \strong{domain} must include zero. (\code{rZero}/\code{lengthZero}/\code{opacityZero}).}
 
-\item{clamp}{\verb{<any>} If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{rClamp}).}
+\item{clamp}{\verb{<any>} (\code{vg_scale_r()}, \code{vg_scale_length()}) or \verb{<boolean | param()>} (\code{vg_scale_opacity()}) If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (\code{rClamp}/\code{lengthClamp}/\code{opacityClamp}).}
 
-\item{base}{\verb{<number | param()>} A log scale’s base; defaults to 10. (\code{rBase}).}
+\item{base}{\verb{<number | param()>} A log scale’s base; defaults to 10. (\code{rBase}/\code{lengthBase}/\code{opacityBase}).}
 
-\item{exponent}{\verb{<number | param()>} A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{rExponent}).}
+\item{exponent}{\verb{<number | param()>} A power scale’s exponent (\emph{e.g.}, 0.5 for sqrt); defaults to 1 for a linear scale. (\code{rExponent}/\code{lengthExponent}/\code{opacityExponent}).}
 
-\item{constant}{\verb{<number | param()>} A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{rConstant}).}
+\item{constant}{\verb{<number | param()>} A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (\code{rConstant}/\code{lengthConstant}/\code{opacityConstant}).}
 
-\item{percent}{\verb{<boolean | param()>} If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{rPercent}).}
+\item{percent}{\verb{<boolean | param()>} If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (\code{rPercent}/\code{lengthPercent}/\code{opacityPercent}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
+
+\item{reverse}{\verb{<boolean | param()>} Whether to reverse the scale’s encoding; equivalent to reversing either the \strong{domain} or \strong{range}. (\code{opacityReverse}). Only for \code{vg_scale_opacity()}.}
 }
 \description{
+\code{vg_scale_r()}, \code{vg_scale_length()}, and \code{vg_scale_opacity()} set the scale properties of the \code{r}, \code{length}, and \code{opacity} channels. They take the same arguments, except those noted below as belonging to only some of them; each is described below.
+}
+\details{
 \code{vg_scale_r()} (aliased as \code{vg_scale_radius()}) sets the scale
 properties mosaic-spec exposes for the \code{r} channel (\code{rScale},
 \code{rDomain}, ... -- the scale that a \code{dot}/\code{circle} mark's \code{r}
@@ -72,21 +110,36 @@ properties exist here (e.g., no \code{reverse} -- mosaic doesn't define
 axis-guide property, see \code{\link[=vg_guide_r]{vg_guide_r()}}/\code{\link[=vg_guide_radius]{vg_guide_radius()}}; for an
 actual rendered radius/size legend, see \code{\link[=vg_legend_symbol]{vg_legend_symbol()}}
 (mosaic doesn't have a dedicated \code{r}-typed legend).
-}
-\details{
+
+\code{vg_scale_length()} sets the scale properties mosaic-spec exposes
+for the \code{length} channel (\code{lengthScale}, \code{lengthDomain}, ... -- the
+scale that a \code{vector}/\code{spike} mark's \code{length} encoding is bound to
+unless it's a literal constant). Mosaic doesn't define a length
+axis-guide or legend, so there's no \code{vg_guide_length()}/
+\code{vg_legend_length()} to pair with this.
+
+\code{vg_scale_opacity()} sets the scale properties mosaic-spec exposes
+for the \code{opacity} channel (\code{opacityScale}, \code{opacityDomain}, ... --
+the scale that \code{opacity}/\code{fillOpacity}/\code{strokeOpacity} encodings are
+bound to unless they're a literal constant). For the axis-guide
+properties, see \code{\link[=vg_guide_opacity]{vg_guide_opacity()}}; for an actual rendered opacity
+legend, see \code{\link[=vg_legend_opacity]{vg_legend_opacity()}}.
+
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \examples{
 vg_mark_dot(x = ~a, y = ~b, r = ~g) |>
   vg_scale_r(range = c(0, 20), zero = TRUE)
+vg_mark_vector(x = ~a, y = ~b, length = ~g) |>
+  vg_scale_length(range = c(0, 20))
+vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
+  vg_scale_opacity(range = c(0.2, 1))
 }
 \seealso{
 Other scale functions:
 \code{\link[=vg_scale_all]{vg_scale_all()}},
 \code{\link[=vg_scale_color]{vg_scale_color()}},
 \code{\link[=vg_scale_facet]{vg_scale_facet()}},
-\code{\link[=vg_scale_length]{vg_scale_length()}},
-\code{\link[=vg_scale_opacity]{vg_scale_opacity()}},
 \code{\link[=vg_scale_position]{vg_scale_position()}},
 \code{\link[=vg_scale_symbol]{vg_scale_symbol()}}
 }

@@ -45,7 +45,6 @@ Other guide functions:
 \code{\link[=vg_guide_all]{vg_guide_all()}},
 \code{\link[=vg_guide_color]{vg_guide_color()}},
 \code{\link[=vg_guide_facet]{vg_guide_facet()}},
-\code{\link[=vg_guide_opacity]{vg_guide_opacity()}},
 \code{\link[=vg_guide_position]{vg_guide_position()}}
 }
 \concept{guide functions}

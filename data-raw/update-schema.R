@@ -642,14 +642,42 @@ generate_wrapper <- function(fn, helper, type_arg, properties, prop_docs, prop_t
 variant_suffixes <- c("", "X", "Y", "XY", "Fx", "Fy", "Z", "Color")
 variant_stem <- function(type) sub("(XY|X|Y|Z|Fx|Fy|Color)$", "", type)
 
-# Groups of `types` sharing a stem, each ordered base, X, Y, XY, Fx, Fy, Z,
-# Color; a type with no variants is a group of one.
-variant_groups <- function(types) {
-  groups <- split(types, variant_stem(types))
-  lapply(groups, function(g) {
+# Further families that share a page although their names don't share a
+# stem: shorthands (circle/hexagon for dot, spike for vector) and closely
+# related marks. Each is a list of stems (with all their suffixed variants),
+# named by the shared page. Listed in page order.
+mark_families <- list(
+  vg_mark_dot = c("dot", "circle", "hexagon"),
+  vg_mark_vector = c("vector", "spike"),
+  vg_mark_delaunay = c("delaunayLink", "delaunayMesh", "hull", "voronoi", "voronoiMesh"),
+  vg_mark_geo = c("geo", "sphere", "graticule"),
+  vg_mark_raster = c("raster", "rasterTile", "heatmap"),
+  vg_mark_contour = c("contour", "denseLine")
+)
+interactor_families <- list(
+  vg_pan = c("pan", "panZoom")
+)
+
+# Groups of `types`, named by their shared page: types sharing a stem (each
+# ordered base, X, Y, XY, Fx, Fy, Z, Color), merged per `families`; a type
+# with nothing to share a page with is a group of one. `rd_prefix` names a
+# stem's page ("vg_mark_" + "dot").
+variant_groups <- function(types, rd_prefix, families = list()) {
+  stems <- variant_stem(types)
+  by_stem <- lapply(split(types, stems), function(g) {
     suffix <- substring(g, nchar(variant_stem(g[[1]])) + 1)
     g[order(match(suffix, variant_suffixes))]
   })
+  names(by_stem) <- paste0(rd_prefix, camel_to_snake(names(by_stem)))
+  for (page in names(families)) {
+    fam <- paste0(rd_prefix, camel_to_snake(families[[page]]))
+    missing <- setdiff(fam, names(by_stem))
+    if (length(missing)) stop("Page ", page, " lists unknown types: ", paste(missing, collapse = ", "))
+    merged <- unlist(by_stem[fam], use.names = FALSE)
+    by_stem <- by_stem[setdiff(names(by_stem), fam)]
+    by_stem[[page]] <- merged
+  }
+  by_stem
 }
 
 english_list <- function(x) {
@@ -692,8 +720,8 @@ group_doc <- function(members, rdname, kind, prop_docs, prop_types, extra_docs, 
 # together where its first member appears), giving each group of variants one
 # shared page. `wrapper_args(type)` returns generate_wrapper()'s arguments for
 # one type; `rd_prefix` is the function-name prefix ("vg_mark_" or "vg_").
-generate_grouped <- function(types, kind, rd_prefix, wrapper_args) {
-  groups <- variant_groups(types)
+generate_grouped <- function(types, kind, rd_prefix, wrapper_args, families = list()) {
+  groups <- variant_groups(types, rd_prefix, families)
   group_of <- setNames(rep(names(groups), lengths(groups)), unlist(groups))
   out <- character()
   done <- character()
@@ -706,7 +734,7 @@ generate_grouped <- function(types, kind, rd_prefix, wrapper_args) {
       next
     }
     args <- lapply(g, wrapper_args)
-    rdname <- paste0(rd_prefix, camel_to_snake(variant_stem(g[[1]])))
+    rdname <- group_of[[type]]
     members <- lapply(args, function(a) {
       props <- names(a$properties)
       list(fn = a$fn, type = a$type_arg, props = c(intersect(a$required, props), setdiff(props, a$required)))
@@ -757,7 +785,7 @@ mark_lines <- c(mark_lines, generate_grouped(sort(names(mark_defs)), "mark", "vg
     family = "mark functions",
     required = mark_defs[[name]]$required,
     formula_arg = TRUE
-)))
+), families = mark_families))
 writeLines(mark_lines, "R/marks-generated.R")
 
 # --- R/interactors-generated.R --------------------------------------------
@@ -795,7 +823,7 @@ inter_lines <- c(inter_lines, generate_grouped(interactor_types, "interactor", "
     title = docline(interactor_defs[[type]]$description, paste0("A `", type, "` interactor.")),
     spec_doc = "A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.",
     family = "interactor functions"
-)))
+), families = interactor_families))
 for (type in input_types) {
   fn <- paste0("vg_", camel_to_snake(type))
   inter_lines <- c(inter_lines, generate_wrapper(
@@ -1005,7 +1033,7 @@ attr_names_doc <- function(which_values, suffix) {
 # property).
 generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, family_prefix,
                                   which_noun = NULL, spec_noun, title, description, examples,
-                                  alias = NULL) {
+                                  alias = NULL, doc = NULL, rdname = fn) {
   has_which <- length(which_values) > 1
   common <- setdiff(channel_suffixes(which_values[1], suffixes), if (has_inset) inset_suffixes else character())
   args <- vapply(common, suffix_arg_name, character(1))
@@ -1087,7 +1115,7 @@ generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, 
     "  apply_plot_attrs(spec, attrs, list(...), context)"
   )
 
-  main <- c(
+  if (is.null(doc)) doc <- c(
     paste0("#' ", title),
     "#'",
     description,
@@ -1104,7 +1132,10 @@ generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, 
     "#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.",
     sprintf("#' @family %s", family),
     "#' @export",
-    examples,
+    examples
+  )
+  main <- c(
+    doc,
     sprintf("%s <- function(%s) {", fn, formals_str),
     body,
     "}",
@@ -1126,7 +1157,7 @@ generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, 
       }
       aliases <- c(
         aliases,
-        sprintf("#' @rdname %s", fn),
+        sprintf("#' @rdname %s", rdname),
         "#' @export",
         sprintf('%s <- wrapper_function(%s, which = "%s"%s)', paste0(family_prefix, w), fn, w, drop_arg),
         ""
@@ -1134,7 +1165,7 @@ generate_scale_guide <- function(fn, which_values, suffixes, has_inset, family, 
     }
   }
   if (!is.null(alias)) {
-    aliases <- c(aliases, sprintf("#' @rdname %s", fn), "#' @export", sprintf("%s <- %s", alias, fn), "")
+    aliases <- c(aliases, sprintf("#' @rdname %s", rdname), "#' @export", sprintf("%s <- %s", alias, fn), "")
   }
 
   c(main, aliases)
@@ -1201,6 +1232,84 @@ guide_lines <- c(
   "NULL",
   ""
 )
+
+# One shared page for several single-channel scale or guide functions (e.g.
+# vg_scale_r()/vg_scale_length()/vg_scale_opacity(), which take the same
+# arguments). `members` are lists of scale_group()/guide_group()'s arguments
+# (fn, which_values, title, description, examples, alias); the page gets
+# `title`, the members' descriptions and examples in turn, and each argument
+# once, naming every member's own attribute (`rDomain`/`lengthDomain`/...).
+# An argument's text must be the same for all members once the channel name
+# is dropped from it ("The *opacity* scale type" -> "The scale type"), or this
+# stops rather than pick one.
+scale_guide_page <- function(members, rdname, title, suffixes, family, family_prefix, spec_noun) {
+  fns <- vapply(members, `[[`, "", "fn")
+  whiches <- vapply(members, `[[`, "", "which_values")
+  commons <- lapply(whiches, channel_suffixes, suffixes = suffixes)
+  all_common <- unique(unlist(commons))
+  generic <- function(text) gsub(r"(\*[A-Za-z]+\*( \([a-z]+\))? )", "", text)
+  arg_docs <- vapply(all_common, function(sfx) {
+    ws <- whiches[vapply(commons, function(cm) sfx %in% cm, logical(1))]
+    names_ <- vapply(ws, plot_attr_name, "", suffix = sfx)
+    texts <- unique(generic(plot_attr_docs[names_]))
+    if (length(texts) > 1) {
+      stop("scale_guide_page(", rdname, "): `", sfx, "` is documented differently for ",
+           paste(fns, collapse = ", "), "; it can't share one page as is.")
+    }
+    # The schema occasionally types one channel's attribute differently
+    # (e.g. `<any>` vs `<boolean | param()>` for rClamp vs opacityClamp):
+    # show each type with the functions it applies to.
+    member_types <- unname(plot_attr_types[names_])
+    types <- unique(member_types)
+    if (length(types) > 1) {
+      fns_with <- fns[whiches %in% ws]
+      types <- paste(vapply(types, function(t) {
+        sprintf("%s (%s)", t, paste0("`", fns_with[member_types == t], "()`", collapse = ", "))
+      }, character(1)), collapse = " or ")
+    }
+    only <- if (length(ws) < length(whiches)) {
+      sprintf(" Only for %s.", english_list(paste0("`", fns[whiches %in% ws], "()`")))
+    } else ""
+    sprintf("#' @param %s %s %s (%s).%s", suffix_arg_name(sfx), types, texts,
+            paste0("`", names_, "`", collapse = "/"), only)
+  }, character(1))
+  examples <- unlist(lapply(members, function(m) setdiff(m$examples, "#' @examples")))
+  what <- if (spec_noun == "scale") "scale properties" else "axis-guide properties"
+  lead <- sprintf(
+    "#' %s set the %s of the %s channels. They take the same arguments%s; each is described below.",
+    english_list(paste0("`", fns, "()`")), what, english_list(paste0("`", whiches, "`")),
+    if (any(lengths(commons) < length(all_common))) ", except those noted below as belonging to only some of them" else ""
+  )
+  head_doc <- c(
+    paste0("#' ", title),
+    "#'",
+    lead,
+    "#'",
+    unlist(lapply(seq_along(members), function(i) c(if (i > 1) "#'", members[[i]]$description))),
+    "#'",
+    "#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.",
+    "#'",
+    sprintf("#' @param spec A plot fragment or `vgspec` to set this %s on, or `NULL` to", spec_noun),
+    "#'   start a new plot fragment with just these attributes.",
+    arg_docs,
+    "#' @param ... Additional plot-level attributes not covered above, snake_case",
+    "#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.",
+    sprintf("#' @family %s", family),
+    sprintf("#' @rdname %s", rdname),
+    "#' @export",
+    "#' @examples",
+    examples
+  )
+  unlist(lapply(seq_along(members), function(i) {
+    m <- members[[i]]
+    generate_scale_guide(
+      m$fn, m$which_values, suffixes, has_inset = FALSE, family = family,
+      family_prefix = family_prefix, spec_noun = spec_noun, title = "", description = character(),
+      examples = character(), alias = m$alias, rdname = rdname,
+      doc = if (i == 1) head_doc else c(sprintf("#' @rdname %s", rdname), "#' @export")
+    )
+  }))
+}
 
 scale_group <- function(fn, which_values, has_inset, which_noun = NULL, title, description, examples, alias = NULL) {
   generate_scale_guide(
@@ -1284,61 +1393,66 @@ scale_lines <- c(scale_lines, scale_group(
   )
 ))
 
-scale_lines <- c(scale_lines, scale_group(
-  "vg_scale_opacity", "opacity", has_inset = FALSE,
-  title = "Set the opacity scale's properties",
-  description = c(
-    "#' `vg_scale_opacity()` sets the scale properties mosaic-spec exposes",
-    "#' for the `opacity` channel (`opacityScale`, `opacityDomain`, ... --",
-    "#' the scale that `opacity`/`fillOpacity`/`strokeOpacity` encodings are",
-    "#' bound to unless they're a literal constant). For the axis-guide",
-    "#' properties, see [vg_guide_opacity()]; for an actual rendered opacity",
-    "#' legend, see [vg_legend_opacity()]."
-  ),
-  examples = c(
-    "#' @examples",
-    "#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>",
-    "#'   vg_scale_opacity(range = c(0.2, 1))"
-  )
-))
 
-scale_lines <- c(scale_lines, scale_group(
-  "vg_scale_r", "r", has_inset = FALSE, alias = "vg_scale_radius",
-  title = "Set the radius scale's properties",
-  description = c(
-    "#' `vg_scale_r()` (aliased as `vg_scale_radius()`) sets the scale",
-    "#' properties mosaic-spec exposes for the `r` channel (`rScale`,",
-    "#' `rDomain`, ... -- the scale that a `dot`/`circle` mark's `r`",
-    "#' encoding is bound to unless it's a literal constant). Which",
-    "#' properties exist here (e.g., no `reverse` -- mosaic doesn't define",
-    "#' `rReverse`) is derived from the schema, not hand-picked. For the",
-    "#' axis-guide property, see [vg_guide_r()]/[vg_guide_radius()]; for an",
-    "#' actual rendered radius/size legend, see [vg_legend_symbol()]",
-    "#' (mosaic doesn't have a dedicated `r`-typed legend)."
-  ),
-  examples = c(
-    "#' @examples",
-    "#' vg_mark_dot(x = ~a, y = ~b, r = ~g) |>",
-    "#'   vg_scale_r(range = c(0, 20), zero = TRUE)"
-  )
-))
 
-scale_lines <- c(scale_lines, scale_group(
-  "vg_scale_length", "length", has_inset = FALSE,
-  title = "Set the length scale's properties",
-  description = c(
-    "#' `vg_scale_length()` sets the scale properties mosaic-spec exposes",
-    "#' for the `length` channel (`lengthScale`, `lengthDomain`, ... -- the",
-    "#' scale that a `vector`/`spike` mark's `length` encoding is bound to",
-    "#' unless it's a literal constant). Mosaic doesn't define a length",
-    "#' axis-guide or legend, so there's no `vg_guide_length()`/",
-    "#' `vg_legend_length()` to pair with this."
+
+scale_lines <- c(scale_lines, scale_guide_page(
+  list(
+    list(fn = "vg_scale_r", which_values = "r", alias = "vg_scale_radius",
+      title = "Set the radius scale's properties",
+      description = c(
+        "#' `vg_scale_r()` (aliased as `vg_scale_radius()`) sets the scale",
+        "#' properties mosaic-spec exposes for the `r` channel (`rScale`,",
+        "#' `rDomain`, ... -- the scale that a `dot`/`circle` mark's `r`",
+        "#' encoding is bound to unless it's a literal constant). Which",
+        "#' properties exist here (e.g., no `reverse` -- mosaic doesn't define",
+        "#' `rReverse`) is derived from the schema, not hand-picked. For the",
+        "#' axis-guide property, see [vg_guide_r()]/[vg_guide_radius()]; for an",
+        "#' actual rendered radius/size legend, see [vg_legend_symbol()]",
+        "#' (mosaic doesn't have a dedicated `r`-typed legend)."
+      ),
+      examples = c(
+        "#' @examples",
+        "#' vg_mark_dot(x = ~a, y = ~b, r = ~g) |>",
+        "#'   vg_scale_r(range = c(0, 20), zero = TRUE)"
+      )
+    ),
+    list(fn = "vg_scale_length", which_values = "length",
+      title = "Set the length scale's properties",
+      description = c(
+        "#' `vg_scale_length()` sets the scale properties mosaic-spec exposes",
+        "#' for the `length` channel (`lengthScale`, `lengthDomain`, ... -- the",
+        "#' scale that a `vector`/`spike` mark's `length` encoding is bound to",
+        "#' unless it's a literal constant). Mosaic doesn't define a length",
+        "#' axis-guide or legend, so there's no `vg_guide_length()`/",
+        "#' `vg_legend_length()` to pair with this."
+      ),
+      examples = c(
+        "#' @examples",
+        "#' vg_mark_vector(x = ~a, y = ~b, length = ~g) |>",
+        "#'   vg_scale_length(range = c(0, 20))"
+      )
+    ),
+    list(fn = "vg_scale_opacity", which_values = "opacity",
+      title = "Set the opacity scale's properties",
+      description = c(
+        "#' `vg_scale_opacity()` sets the scale properties mosaic-spec exposes",
+        "#' for the `opacity` channel (`opacityScale`, `opacityDomain`, ... --",
+        "#' the scale that `opacity`/`fillOpacity`/`strokeOpacity` encodings are",
+        "#' bound to unless they're a literal constant). For the axis-guide",
+        "#' properties, see [vg_guide_opacity()]; for an actual rendered opacity",
+        "#' legend, see [vg_legend_opacity()]."
+      ),
+      examples = c(
+        "#' @examples",
+        "#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>",
+        "#'   vg_scale_opacity(range = c(0.2, 1))"
+      )
+    )
   ),
-  examples = c(
-    "#' @examples",
-    "#' vg_mark_vector(x = ~a, y = ~b, length = ~g) |>",
-    "#'   vg_scale_length(range = c(0, 20))"
-  )
+  rdname = "vg_scale_r",
+  title = "Set the radius, length, and opacity scales' properties",
+  suffixes = scale_suffixes, family = "scale functions", family_prefix = "vg_scale_", spec_noun = "scale"
 ))
 
 scale_lines <- c(scale_lines, scale_group(
@@ -1431,47 +1545,53 @@ guide_lines <- c(guide_lines, guide_group(
   )
 ))
 
-guide_lines <- c(guide_lines, guide_group(
-  "vg_guide_color", "color",
-  title = "Set axis-guide properties for the color scale",
-  description = c(
-    "#' `vg_guide_color()` sets the axis-guide properties mosaic-spec",
-    "#' exposes for the `color` channel (`colorLabel`, `colorTickFormat`) --",
-    "#' the counterpart of [vg_scale_color()] for the color channel's",
-    "#' label/tick formatting rather than its domain/range/palette.",
-    "#'",
-    "#' This is named `vg_guide_color()` rather than `vg_legend_color()`",
-    "#' because `vg_legend_color()` already exists and means something",
-    "#' different: it adds an actual rendered color legend (a",
-    "#' standalone/embedded legend mark, [vg_legend()]) to the spec.",
-    "#' `vg_guide_color()` only sets these plot attributes -- it neither",
-    "#' shows nor requires a legend to be present."
-  ),
-  examples = c(
-    "#' @examples",
-    "#' vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>",
-    "#'   vg_guide_color(label = \"Group\")"
-  )
-))
 
-guide_lines <- c(guide_lines, guide_group(
-  "vg_guide_opacity", "opacity",
-  title = "Set axis-guide properties for the opacity scale",
-  description = c(
-    "#' `vg_guide_opacity()` sets the axis-guide properties mosaic-spec",
-    "#' exposes for the `opacity` channel -- the counterpart of",
-    "#' [vg_scale_opacity()] for the opacity channel's label/tick",
-    "#' formatting rather than its domain/range.",
-    "#'",
-    "#' See [vg_guide_color()] for why this is `vg_guide_opacity()` rather",
-    "#' than `vg_legend_opacity()` (already taken by [vg_legend()]'s actual",
-    "#' rendered legend)."
+
+guide_lines <- c(guide_lines, scale_guide_page(
+  list(
+    list(fn = "vg_guide_color", which_values = "color",
+      title = "Set axis-guide properties for the color scale",
+      description = c(
+        "#' `vg_guide_color()` sets the axis-guide properties mosaic-spec",
+        "#' exposes for the `color` channel (`colorLabel`, `colorTickFormat`) --",
+        "#' the counterpart of [vg_scale_color()] for the color channel's",
+        "#' label/tick formatting rather than its domain/range/palette.",
+        "#'",
+        "#' This is named `vg_guide_color()` rather than `vg_legend_color()`",
+        "#' because `vg_legend_color()` already exists and means something",
+        "#' different: it adds an actual rendered color legend (a",
+        "#' standalone/embedded legend mark, [vg_legend()]) to the spec.",
+        "#' `vg_guide_color()` only sets these plot attributes -- it neither",
+        "#' shows nor requires a legend to be present."
+      ),
+      examples = c(
+        "#' @examples",
+        "#' vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>",
+        "#'   vg_guide_color(label = \"Group\")"
+      )
+    ),
+    list(fn = "vg_guide_opacity", which_values = "opacity",
+      title = "Set axis-guide properties for the opacity scale",
+      description = c(
+        "#' `vg_guide_opacity()` sets the axis-guide properties mosaic-spec",
+        "#' exposes for the `opacity` channel -- the counterpart of",
+        "#' [vg_scale_opacity()] for the opacity channel's label/tick",
+        "#' formatting rather than its domain/range.",
+        "#'",
+        "#' It is named `vg_guide_opacity()` rather than `vg_legend_opacity()`",
+        "#' for the same reason: `vg_legend_opacity()` is [vg_legend()]'s actual",
+        "#' rendered legend."
+      ),
+      examples = c(
+        "#' @examples",
+        "#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>",
+        "#'   vg_guide_opacity(label = \"Group\")"
+      )
+    )
   ),
-  examples = c(
-    "#' @examples",
-    "#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>",
-    "#'   vg_guide_opacity(label = \"Group\")"
-  )
+  rdname = "vg_guide_color",
+  title = "Set axis-guide properties for the color and opacity scales",
+  suffixes = guide_suffixes, family = "guide functions", family_prefix = "vg_guide_", spec_noun = "guide"
 ))
 
 guide_lines <- c(guide_lines, guide_group(

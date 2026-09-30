@@ -181,7 +181,26 @@ vg_scale_color <- function(spec = NULL, type = vg_unset, domain = vg_unset, rang
   apply_plot_attrs(spec, attrs, list(...), context)
 }
 
-#' Set the opacity scale's properties
+#' Set the radius, length, and opacity scales' properties
+#'
+#' `vg_scale_r()`, `vg_scale_length()`, and `vg_scale_opacity()` set the scale properties of the `r`, `length`, and `opacity` channels. They take the same arguments, except those noted below as belonging to only some of them; each is described below.
+#'
+#' `vg_scale_r()` (aliased as `vg_scale_radius()`) sets the scale
+#' properties mosaic-spec exposes for the `r` channel (`rScale`,
+#' `rDomain`, ... -- the scale that a `dot`/`circle` mark's `r`
+#' encoding is bound to unless it's a literal constant). Which
+#' properties exist here (e.g., no `reverse` -- mosaic doesn't define
+#' `rReverse`) is derived from the schema, not hand-picked. For the
+#' axis-guide property, see [vg_guide_r()]/[vg_guide_radius()]; for an
+#' actual rendered radius/size legend, see [vg_legend_symbol()]
+#' (mosaic doesn't have a dedicated `r`-typed legend).
+#'
+#' `vg_scale_length()` sets the scale properties mosaic-spec exposes
+#' for the `length` channel (`lengthScale`, `lengthDomain`, ... -- the
+#' scale that a `vector`/`spike` mark's `length` encoding is bound to
+#' unless it's a literal constant). Mosaic doesn't define a length
+#' axis-guide or legend, so there's no `vg_guide_length()`/
+#' `vg_legend_length()` to pair with this.
 #'
 #' `vg_scale_opacity()` sets the scale properties mosaic-spec exposes
 #' for the `opacity` channel (`opacityScale`, `opacityDomain`, ... --
@@ -194,64 +213,29 @@ vg_scale_color <- function(spec = NULL, type = vg_unset, domain = vg_unset, rang
 #'
 #' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param type `<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>` The *opacity* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`opacityScale`).
-#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`opacityDomain`).
-#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`opacityRange`).
-#' @param nice `<boolean | number | "day"/"week"/"month"/... | param()>` If true, or a tick count or interval, extend the domain to nice round values. (`opacityNice`).
-#' @param zero `<boolean | param()>` Whether the **domain** must include zero. (`opacityZero`).
-#' @param reverse `<boolean | param()>` Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`opacityReverse`).
-#' @param clamp `<boolean | param()>` If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`opacityClamp`).
-#' @param base `<number | param()>` A log scale’s base; defaults to 10. (`opacityBase`).
-#' @param exponent `<number | param()>` A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`opacityExponent`).
-#' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`opacityConstant`).
-#' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`opacityPercent`).
+#' @param type `<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>` The scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`rScale`/`lengthScale`/`opacityScale`).
+#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`rDomain`/`lengthDomain`/`opacityDomain`).
+#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`rRange`/`lengthRange`/`opacityRange`).
+#' @param nice `<boolean | number | "day"/"week"/"month"/... | param()>` If true, or a tick count or interval, extend the domain to nice round values. (`rNice`/`lengthNice`/`opacityNice`).
+#' @param zero `<boolean | param()>` Whether the **domain** must include zero. (`rZero`/`lengthZero`/`opacityZero`).
+#' @param clamp `<any>` (`vg_scale_r()`, `vg_scale_length()`) or `<boolean | param()>` (`vg_scale_opacity()`) If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`rClamp`/`lengthClamp`/`opacityClamp`).
+#' @param base `<number | param()>` A log scale’s base; defaults to 10. (`rBase`/`lengthBase`/`opacityBase`).
+#' @param exponent `<number | param()>` A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`rExponent`/`lengthExponent`/`opacityExponent`).
+#' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`rConstant`/`lengthConstant`/`opacityConstant`).
+#' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`rPercent`/`lengthPercent`/`opacityPercent`).
+#' @param reverse `<boolean | param()>` Whether to reverse the scale’s encoding; equivalent to reversing either the **domain** or **range**. (`opacityReverse`). Only for `vg_scale_opacity()`.
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family scale functions
-#' @export
-#' @examples
-#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
-#'   vg_scale_opacity(range = c(0.2, 1))
-vg_scale_opacity <- function(spec = NULL, type = vg_unset, domain = vg_unset, range = vg_unset, nice = vg_unset, zero = vg_unset, reverse = vg_unset, clamp = vg_unset, base = vg_unset, exponent = vg_unset, constant = vg_unset, percent = vg_unset, ...) {
-  context <- "vg_scale_opacity()"
-  suffixes <- c(type = "Scale", domain = "Domain", range = "Range", nice = "Nice", zero = "Zero", reverse = "Reverse", clamp = "Clamp", base = "Base", exponent = "Exponent", constant = "Constant", percent = "Percent")
-  attrs <- prefixed_attrs("opacity", suffixes, environment())
-  apply_plot_attrs(spec, attrs, list(...), context)
-}
-
-#' Set the radius scale's properties
-#'
-#' `vg_scale_r()` (aliased as `vg_scale_radius()`) sets the scale
-#' properties mosaic-spec exposes for the `r` channel (`rScale`,
-#' `rDomain`, ... -- the scale that a `dot`/`circle` mark's `r`
-#' encoding is bound to unless it's a literal constant). Which
-#' properties exist here (e.g., no `reverse` -- mosaic doesn't define
-#' `rReverse`) is derived from the schema, not hand-picked. For the
-#' axis-guide property, see [vg_guide_r()]/[vg_guide_radius()]; for an
-#' actual rendered radius/size legend, see [vg_legend_symbol()]
-#' (mosaic doesn't have a dedicated `r`-typed legend).
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
-#'   start a new plot fragment with just these attributes.
-#' @param type `<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>` The *r* (radius) scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`rScale`).
-#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`rDomain`).
-#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`rRange`).
-#' @param nice `<boolean | number | "day"/"week"/"month"/... | param()>` If true, or a tick count or interval, extend the domain to nice round values. (`rNice`).
-#' @param zero `<boolean | param()>` Whether the **domain** must include zero. (`rZero`).
-#' @param clamp `<any>` If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`rClamp`).
-#' @param base `<number | param()>` A log scale’s base; defaults to 10. (`rBase`).
-#' @param exponent `<number | param()>` A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`rExponent`).
-#' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`rConstant`).
-#' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`rPercent`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
-#' @family scale functions
+#' @rdname vg_scale_r
 #' @export
 #' @examples
 #' vg_mark_dot(x = ~a, y = ~b, r = ~g) |>
 #'   vg_scale_r(range = c(0, 20), zero = TRUE)
+#' vg_mark_vector(x = ~a, y = ~b, length = ~g) |>
+#'   vg_scale_length(range = c(0, 20))
+#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
+#'   vg_scale_opacity(range = c(0.2, 1))
 vg_scale_r <- function(spec = NULL, type = vg_unset, domain = vg_unset, range = vg_unset, nice = vg_unset, zero = vg_unset, clamp = vg_unset, base = vg_unset, exponent = vg_unset, constant = vg_unset, percent = vg_unset, ...) {
   context <- "vg_scale_r()"
   suffixes <- c(type = "Scale", domain = "Domain", range = "Range", nice = "Nice", zero = "Zero", clamp = "Clamp", base = "Base", exponent = "Exponent", constant = "Constant", percent = "Percent")
@@ -263,40 +247,21 @@ vg_scale_r <- function(spec = NULL, type = vg_unset, domain = vg_unset, range = 
 #' @export
 vg_scale_radius <- vg_scale_r
 
-#' Set the length scale's properties
-#'
-#' `vg_scale_length()` sets the scale properties mosaic-spec exposes
-#' for the `length` channel (`lengthScale`, `lengthDomain`, ... -- the
-#' scale that a `vector`/`spike` mark's `length` encoding is bound to
-#' unless it's a literal constant). Mosaic doesn't define a length
-#' axis-guide or legend, so there's no `vg_guide_length()`/
-#' `vg_legend_length()` to pair with this.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to set this scale on, or `NULL` to
-#'   start a new plot fragment with just these attributes.
-#' @param type `<"linear" | "pow" | "sqrt" | "log" | "symlog" | "utc" | "time" | "identity" | NULL | param()>` The *length* scale type, affecting how the scale encodes abstract data, say by applying a mathematical transformation. (`lengthScale`).
-#' @param domain `<vector | "Fixed" | param()>` The extent of the scale’s inputs (abstract values). (`lengthDomain`).
-#' @param range `<vector | "Fixed" | param()>` The extent of the scale’s outputs (visual values). (`lengthRange`).
-#' @param nice `<boolean | number | "day"/"week"/"month"/... | param()>` If true, or a tick count or interval, extend the domain to nice round values. (`lengthNice`).
-#' @param zero `<boolean | param()>` Whether the **domain** must include zero. (`lengthZero`).
-#' @param clamp `<any>` If true, values below the domain minimum are treated as the domain minimum, and values above the domain maximum are treated as the domain maximum. (`lengthClamp`).
-#' @param base `<number | param()>` A log scale’s base; defaults to 10. (`lengthBase`).
-#' @param exponent `<number | param()>` A power scale’s exponent (*e.g.*, 0.5 for sqrt); defaults to 1 for a linear scale. (`lengthExponent`).
-#' @param constant `<number | param()>` A symlog scale’s constant, expressing the magnitude of the linear region around the origin; defaults to 1. (`lengthConstant`).
-#' @param percent `<boolean | param()>` If true, shorthand for a transform suitable for percentages, mapping proportions in 0, 1 to 0, 100. (`lengthPercent`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
-#' @family scale functions
+#' @rdname vg_scale_r
 #' @export
-#' @examples
-#' vg_mark_vector(x = ~a, y = ~b, length = ~g) |>
-#'   vg_scale_length(range = c(0, 20))
 vg_scale_length <- function(spec = NULL, type = vg_unset, domain = vg_unset, range = vg_unset, nice = vg_unset, zero = vg_unset, clamp = vg_unset, base = vg_unset, exponent = vg_unset, constant = vg_unset, percent = vg_unset, ...) {
   context <- "vg_scale_length()"
   suffixes <- c(type = "Scale", domain = "Domain", range = "Range", nice = "Nice", zero = "Zero", clamp = "Clamp", base = "Base", exponent = "Exponent", constant = "Constant", percent = "Percent")
   attrs <- prefixed_attrs("length", suffixes, environment())
+  apply_plot_attrs(spec, attrs, list(...), context)
+}
+
+#' @rdname vg_scale_r
+#' @export
+vg_scale_opacity <- function(spec = NULL, type = vg_unset, domain = vg_unset, range = vg_unset, nice = vg_unset, zero = vg_unset, reverse = vg_unset, clamp = vg_unset, base = vg_unset, exponent = vg_unset, constant = vg_unset, percent = vg_unset, ...) {
+  context <- "vg_scale_opacity()"
+  suffixes <- c(type = "Scale", domain = "Domain", range = "Range", nice = "Nice", zero = "Zero", reverse = "Reverse", clamp = "Clamp", base = "Base", exponent = "Exponent", constant = "Constant", percent = "Percent")
+  attrs <- prefixed_attrs("opacity", suffixes, environment())
   apply_plot_attrs(spec, attrs, list(...), context)
 }
 

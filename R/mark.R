@@ -249,9 +249,9 @@ print.vg_mark <- function(x, ...) {
 #' join them into one data source with `vg_data(query = ...)`. For point
 #' geometries, `r` sizes the points.
 #'
-#' Marks that draw purely computed geometry and take no data at all, such
-#' as the outline of the globe or a grid of meridians and parallels, are
-#' [vg_mark_sphere()] and [vg_mark_graticule()].
+#' The other two marks on this page, `vg_mark_sphere()` and
+#' `vg_mark_graticule()`, draw purely computed geometry -- the outline of
+#' the globe and a grid of meridians and parallels -- and take no data.
 #' @examples
 #' \dontrun{
 #' vg_create() |>

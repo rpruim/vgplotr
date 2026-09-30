@@ -2,7 +2,8 @@
 % Please edit documentation in R/example-usage-generated.R, R/marks-generated.R
 \name{vg_mark_contour}
 \alias{vg_mark_contour}
-\title{The contour mark.}
+\alias{vg_mark_dense_line}
+\title{The \code{contour} and \code{denseLine} marks}
 \usage{
 vg_mark_contour(
   spec = NULL,
@@ -56,6 +57,66 @@ vg_mark_contour(
   width = vg_unset,
   x = vg_unset,
   y = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
+
+vg_mark_dense_line(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  bandwidth = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  height = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  image_rendering = vg_unset,
+  interpolate = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  mix_blend_mode = vg_unset,
+  normalize = vg_unset,
+  opacity = vg_unset,
+  pad = vg_unset,
+  paint_order = vg_unset,
+  pixel_size = vg_unset,
+  pointer_events = vg_unset,
+  reverse = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  target = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  width = vg_unset,
+  x = vg_unset,
+  y = vg_unset,
+  z = vg_unset,
   ...,
   data_from = vg_unset,
   filter_by = vg_unset,
@@ -153,7 +214,7 @@ vg_mark_contour(
 
 \item{target}{\verb{<string | param()>} The target; a constant string specifying the target window (\emph{e.g.}, \emph{_blank}) for clickable links; used in conjunction with the \strong{href} option.}
 
-\item{thresholds}{\verb{<number | numeric vector | param()>} The number of contour thresholds to subdivide the domain into discrete level sets; defaults to 10.}
+\item{thresholds}{\verb{<number | numeric vector | param()>} The number of contour thresholds to subdivide the domain into discrete level sets; defaults to 10. (Only for \code{vg_mark_contour()}.)}
 
 \item{tip}{\verb{<boolean | "x" | "y" | "xy" | list | param()>} Whether to generate a tooltip for this mark, and any tip options.}
 
@@ -172,17 +233,25 @@ vg_mark_contour(
 \item{filter_by}{A Param/Selection (e.g., from \code{\link[=param]{param()}}) to filter this mark's data by.}
 
 \item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
+
+\item{image_rendering}{\verb{<string | param()>} The image-rendering attribute; defaults to \emph{auto} (bilinear). (Only for \code{vg_mark_dense_line()}.)}
+
+\item{normalize}{\verb{<boolean | param()>} Flag to perform approximate arc length normalization of line segments to prevent artifacts due to overcounting steep lines. (Only for \code{vg_mark_dense_line()}.)}
+
+\item{z}{\verb{<column | literal | transform() | sql()/agg()>} An optional ordinal channel for grouping data into (possibly stacked) series to be drawn as separate areas; defaults to \strong{fill} if a channel, or \strong{stroke} if a channel. (Only for \code{vg_mark_dense_line()}.)}
 }
 \description{
+Each function adds one type of Mosaic mark: \code{vg_mark_contour()} adds \code{contour} and \code{vg_mark_dense_line()} adds \code{denseLine}. They take the same arguments, except those noted below as belonging to only some of them.
+}
+\details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 
-Examples on the package website that use this function:
+Examples on the package website that use these functions:
 \itemize{
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html}{Mark Types}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html}{Contour Plot}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html}{Flights Density}
+\item \code{vg_mark_contour()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html}{Mark Types}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html}{Contour Plot}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html}{Flights Density}
+\item \code{vg_mark_dense_line()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html}{Mark Types}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-line-density.html}{Line Density}
 }
 }
 
@@ -194,37 +263,25 @@ Other mark functions:
 \code{\link[=vg_mark_axis_x]{vg_mark_axis_x()}},
 \code{\link[=vg_mark_bar_x]{vg_mark_bar_x()}},
 \code{\link[=vg_mark_cell]{vg_mark_cell()}},
-\code{\link[=vg_mark_circle]{vg_mark_circle()}},
 \code{\link[=vg_mark_delaunay_link]{vg_mark_delaunay_link()}},
-\code{\link[=vg_mark_delaunay_mesh]{vg_mark_delaunay_mesh()}},
-\code{\link[=vg_mark_dense_line]{vg_mark_dense_line()}},
 \code{\link[=vg_mark_density]{vg_mark_density()}},
 \code{\link[=vg_mark_dot]{vg_mark_dot()}},
 \code{\link[=vg_mark_errorbar_x]{vg_mark_errorbar_x()}},
 \code{\link[=vg_mark_frame]{vg_mark_frame()}},
 \code{\link[=vg_mark_geo]{vg_mark_geo()}},
-\code{\link[=vg_mark_graticule]{vg_mark_graticule()}},
 \code{\link[=vg_mark_grid_x]{vg_mark_grid_x()}},
-\code{\link[=vg_mark_heatmap]{vg_mark_heatmap()}},
-\code{\link[=vg_mark_hexagon]{vg_mark_hexagon()}},
 \code{\link[=vg_mark_hexbin]{vg_mark_hexbin()}},
 \code{\link[=vg_mark_hexgrid]{vg_mark_hexgrid()}},
-\code{\link[=vg_mark_hull]{vg_mark_hull()}},
 \code{\link[=vg_mark_image]{vg_mark_image()}},
 \code{\link[=vg_mark_line]{vg_mark_line()}},
 \code{\link[=vg_mark_link]{vg_mark_link()}},
 \code{\link[=vg_mark_raster]{vg_mark_raster()}},
-\code{\link[=vg_mark_raster_tile]{vg_mark_raster_tile()}},
 \code{\link[=vg_mark_rect]{vg_mark_rect()}},
 \code{\link[=vg_mark_regression_y]{vg_mark_regression_y()}},
 \code{\link[=vg_mark_rule_x]{vg_mark_rule_x()}},
-\code{\link[=vg_mark_sphere]{vg_mark_sphere()}},
-\code{\link[=vg_mark_spike]{vg_mark_spike()}},
 \code{\link[=vg_mark_text]{vg_mark_text()}},
 \code{\link[=vg_mark_tick_x]{vg_mark_tick_x()}},
 \code{\link[=vg_mark_vector]{vg_mark_vector()}},
-\code{\link[=vg_mark_voronoi]{vg_mark_voronoi()}},
-\code{\link[=vg_mark_voronoi_mesh]{vg_mark_voronoi_mesh()}},
 \code{\link[=vg_mark_waffle_x]{vg_mark_waffle_x()}}
 }
 \concept{mark functions}

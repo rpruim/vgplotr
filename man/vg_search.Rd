@@ -55,7 +55,6 @@ Other interactor functions:
 \code{\link[=vg_menu]{vg_menu()}},
 \code{\link[=vg_nearest]{vg_nearest()}},
 \code{\link[=vg_pan]{vg_pan()}},
-\code{\link[=vg_pan_zoom]{vg_pan_zoom()}},
 \code{\link[=vg_region]{vg_region()}},
 \code{\link[=vg_slider]{vg_slider()}},
 \code{\link[=vg_table]{vg_table()}},

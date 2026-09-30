@@ -200,9 +200,9 @@ NULL
 NULL
 
 #' @section Used in examples:
-#' Examples on the package website that use this function:
+#' Examples on the package website that use these functions:
 #'
-#' * [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html)
+#' * `vg_guide_color()`: [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html)
 #' @name vg_guide_color
 #' @rdname vg_guide_color
 NULL
@@ -292,30 +292,22 @@ NULL
 NULL
 
 #' @section Used in examples:
-#' Examples on the package website that use this function:
+#' Examples on the package website that use these functions:
 #'
-#' * [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html)
-#' * [Contour Plot](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html)
-#' * [Flights Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html)
+#' * `vg_mark_contour()`: [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html), [Contour Plot](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html), [Flights Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html)
+#' * `vg_mark_dense_line()`: [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html), [Line Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-line-density.html)
 #' @name vg_mark_contour
 #' @rdname vg_mark_contour
 NULL
 
 #' @section Used in examples:
-#' Examples on the package website that use this function:
+#' Examples on the package website that use these functions:
 #'
-#' * [Voronoi Diagram](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html)
-#' @name vg_mark_delaunay_mesh
-#' @rdname vg_mark_delaunay_mesh
-NULL
-
-#' @section Used in examples:
-#' Examples on the package website that use this function:
-#'
-#' * [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html)
-#' * [Line Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-line-density.html)
-#' @name vg_mark_dense_line
-#' @rdname vg_mark_dense_line
+#' * `vg_mark_delaunay_mesh()`: [Voronoi Diagram](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html)
+#' * `vg_mark_hull()`: [Voronoi Diagram](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html)
+#' * `vg_mark_voronoi()`: [Voronoi Diagram](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html)
+#' @name vg_mark_delaunay_link
+#' @rdname vg_mark_delaunay
 NULL
 
 #' @section Used in examples:
@@ -357,14 +349,10 @@ NULL
 NULL
 
 #' @section Used in examples:
-#' Examples on the package website that use this function:
+#' Examples on the package website that use these functions:
 #'
-#' * [Earthquakes Feed](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html)
-#' * [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html)
-#' * [U.S. Unemployment](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-unemployment.html)
-#' * [U.S. Counties](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-county-map.html)
-#' * [U.S. States](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-state-map.html)
-#' * [Walmart Openings](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-walmart-openings.html)
+#' * `vg_mark_geo()`: [Earthquakes Feed](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html), [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html), [U.S. Unemployment](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-unemployment.html), [U.S. Counties](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-county-map.html), [U.S. States](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-state-map.html), [Walmart Openings](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-walmart-openings.html)
+#' * `vg_mark_sphere()`: [Earthquakes Feed](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html), [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html)
 #' @name vg_mark_geo
 #' @rdname vg_mark_geo
 NULL
@@ -376,16 +364,6 @@ NULL
 #' * `vg_mark_grid_y()`: [Axes & Gridlines](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html)
 #' @name vg_mark_grid_x
 #' @rdname vg_mark_grid
-NULL
-
-#' @section Used in examples:
-#' Examples on the package website that use this function:
-#'
-#' * [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html)
-#' * [Contour Plot](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html)
-#' * [Flights Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html)
-#' @name vg_mark_heatmap
-#' @rdname vg_mark_heatmap
 NULL
 
 #' @section Used in examples:
@@ -411,14 +389,6 @@ NULL
 #' @section Used in examples:
 #' Examples on the package website that use this function:
 #'
-#' * [Voronoi Diagram](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html)
-#' @name vg_mark_hull
-#' @rdname vg_mark_hull
-NULL
-
-#' @section Used in examples:
-#' Examples on the package website that use this function:
-#'
 #' * [Presidential Opinion](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-presidential-opinion.html)
 #' @name vg_mark_image
 #' @rdname vg_mark_image
@@ -434,14 +404,10 @@ NULL
 NULL
 
 #' @section Used in examples:
-#' Examples on the package website that use this function:
+#' Examples on the package website that use these functions:
 #'
-#' * [Aeromagnetic Survey](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-aeromagnetic-survey.html)
-#' * [Linear Regression 10M](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-linear-regression-10m.html)
-#' * [NYC Taxi Rides](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html)
-#' * [Gaia Star Catalog](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html)
-#' * [Observable Latency](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html)
-#' * [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html)
+#' * `vg_mark_heatmap()`: [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html), [Contour Plot](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html), [Flights Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html)
+#' * `vg_mark_raster()`: [Aeromagnetic Survey](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-aeromagnetic-survey.html), [Linear Regression 10M](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-linear-regression-10m.html), [NYC Taxi Rides](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html), [Gaia Star Catalog](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html), [Observable Latency](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html), [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html)
 #' @name vg_mark_raster
 #' @rdname vg_mark_raster
 NULL
@@ -476,15 +442,6 @@ NULL
 NULL
 
 #' @section Used in examples:
-#' Examples on the package website that use this function:
-#'
-#' * [Earthquakes Feed](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html)
-#' * [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html)
-#' @name vg_mark_sphere
-#' @rdname vg_mark_sphere
-NULL
-
-#' @section Used in examples:
 #' Examples on the package website that use these functions:
 #'
 #' * `vg_mark_text()`: [Airline Travelers](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-airline-travelers.html), [Driving Shifts into Reverse](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html), [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html), [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html), [Athlete Height Intervals](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-athlete-height.html), [Line Multi-Series](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-line-multi-series.html), [Normalized Stock Prices](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-normalize.html), [NYC Taxi Rides](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html)
@@ -507,14 +464,6 @@ NULL
 #' * `vg_mark_vector()`: [Wind Map](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wind-map.html)
 #' @name vg_mark_vector
 #' @rdname vg_mark_vector
-NULL
-
-#' @section Used in examples:
-#' Examples on the package website that use this function:
-#'
-#' * [Voronoi Diagram](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html)
-#' @name vg_mark_voronoi
-#' @rdname vg_mark_voronoi
 NULL
 
 #' @section Used in examples:
@@ -574,8 +523,8 @@ NULL
 #' Examples on the package website that use these functions:
 #'
 #' * `vg_pan_zoom()`: [Pan & Zoom](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html)
-#' @name vg_pan_zoom
-#' @rdname vg_pan_zoom
+#' @name vg_pan
+#' @rdname vg_pan
 NULL
 
 #' @section Used in examples:

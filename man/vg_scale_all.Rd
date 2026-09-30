@@ -54,8 +54,6 @@ vg_mark_dot(x = ~a, y = ~b) |>
 Other scale functions:
 \code{\link[=vg_scale_color]{vg_scale_color()}},
 \code{\link[=vg_scale_facet]{vg_scale_facet()}},
-\code{\link[=vg_scale_length]{vg_scale_length()}},
-\code{\link[=vg_scale_opacity]{vg_scale_opacity()}},
 \code{\link[=vg_scale_position]{vg_scale_position()}},
 \code{\link[=vg_scale_r]{vg_scale_r()}},
 \code{\link[=vg_scale_symbol]{vg_scale_symbol()}}

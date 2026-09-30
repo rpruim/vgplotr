@@ -128,7 +128,9 @@ vg_guide_fx <- wrapper_function(vg_guide_facet, which = "fx")
 #' @export
 vg_guide_fy <- wrapper_function(vg_guide_facet, which = "fy")
 
-#' Set axis-guide properties for the color scale
+#' Set axis-guide properties for the color and opacity scales
+#'
+#' `vg_guide_color()` and `vg_guide_opacity()` set the axis-guide properties of the `color` and `opacity` channels. They take the same arguments; each is described below.
 #'
 #' `vg_guide_color()` sets the axis-guide properties mosaic-spec
 #' exposes for the `color` channel (`colorLabel`, `colorTickFormat`) --
@@ -142,19 +144,31 @@ vg_guide_fy <- wrapper_function(vg_guide_facet, which = "fy")
 #' `vg_guide_color()` only sets these plot attributes -- it neither
 #' shows nor requires a legend to be present.
 #'
+#' `vg_guide_opacity()` sets the axis-guide properties mosaic-spec
+#' exposes for the `opacity` channel -- the counterpart of
+#' [vg_scale_opacity()] for the opacity channel's label/tick
+#' formatting rather than its domain/range.
+#'
+#' It is named `vg_guide_opacity()` rather than `vg_legend_opacity()`
+#' for the same reason: `vg_legend_opacity()` is [vg_legend()]'s actual
+#' rendered legend.
+#'
 #' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
 #'
 #' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
 #'   start a new plot fragment with just these attributes.
-#' @param tick_format `<string | NULL | param()>` How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`colorTickFormat`).
-#' @param label `<string | NULL | param()>` A textual label to show on the axis or legend; if null, show no label. (`colorLabel`).
+#' @param tick_format `<string | NULL | param()>` How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`colorTickFormat`/`opacityTickFormat`).
+#' @param label `<string | NULL | param()>` A textual label to show on the axis or legend; if null, show no label. (`colorLabel`/`opacityLabel`).
 #' @param ... Additional plot-level attributes not covered above, snake_case
 #'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
 #' @family guide functions
+#' @rdname vg_guide_color
 #' @export
 #' @examples
 #' vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>
 #'   vg_guide_color(label = "Group")
+#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
+#'   vg_guide_opacity(label = "Group")
 vg_guide_color <- function(spec = NULL, tick_format = vg_unset, label = vg_unset, ...) {
   context <- "vg_guide_color()"
   suffixes <- c(tick_format = "TickFormat", label = "Label")
@@ -162,30 +176,8 @@ vg_guide_color <- function(spec = NULL, tick_format = vg_unset, label = vg_unset
   apply_plot_attrs(spec, attrs, list(...), context)
 }
 
-#' Set axis-guide properties for the opacity scale
-#'
-#' `vg_guide_opacity()` sets the axis-guide properties mosaic-spec
-#' exposes for the `opacity` channel -- the counterpart of
-#' [vg_scale_opacity()] for the opacity channel's label/tick
-#' formatting rather than its domain/range.
-#'
-#' See [vg_guide_color()] for why this is `vg_guide_opacity()` rather
-#' than `vg_legend_opacity()` (already taken by [vg_legend()]'s actual
-#' rendered legend).
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`number`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to set this guide on, or `NULL` to
-#'   start a new plot fragment with just these attributes.
-#' @param tick_format `<string | NULL | param()>` How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (`opacityTickFormat`).
-#' @param label `<string | NULL | param()>` A textual label to show on the axis or legend; if null, show no label. (`opacityLabel`).
-#' @param ... Additional plot-level attributes not covered above, snake_case
-#'   (e.g., `x_domain =`) -- translated to mosaic's own camelCase key.
-#' @family guide functions
+#' @rdname vg_guide_color
 #' @export
-#' @examples
-#' vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
-#'   vg_guide_opacity(label = "Group")
 vg_guide_opacity <- function(spec = NULL, tick_format = vg_unset, label = vg_unset, ...) {
   context <- "vg_guide_opacity()"
   suffixes <- c(tick_format = "TickFormat", label = "Label")

@@ -2,28 +2,33 @@
 % Please edit documentation in R/example-usage-generated.R, R/guide-generated.R
 \name{vg_guide_color}
 \alias{vg_guide_color}
-\title{Set axis-guide properties for the color scale}
+\alias{vg_guide_opacity}
+\title{Set axis-guide properties for the color and opacity scales}
 \usage{
 vg_guide_color(spec = NULL, tick_format = vg_unset, label = vg_unset, ...)
+
+vg_guide_opacity(spec = NULL, tick_format = vg_unset, label = vg_unset, ...)
 }
 \arguments{
 \item{spec}{A plot fragment or \code{vgspec} to set this guide on, or \code{NULL} to
 start a new plot fragment with just these attributes.}
 
-\item{tick_format}{\verb{<string | NULL | param()>} How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (\code{colorTickFormat}).}
+\item{tick_format}{\verb{<string | NULL | param()>} How to format inputs (abstract values) for axis tick labels; one of: - a d3-format string for numeric scales - a d3-time-format string for temporal scales : https://d3js.org/d3-time : https://d3js.org/d3-time-format (\code{colorTickFormat}/\code{opacityTickFormat}).}
 
-\item{label}{\verb{<string | NULL | param()>} A textual label to show on the axis or legend; if null, show no label. (\code{colorLabel}).}
+\item{label}{\verb{<string | NULL | param()>} A textual label to show on the axis or legend; if null, show no label. (\code{colorLabel}/\code{opacityLabel}).}
 
 \item{...}{Additional plot-level attributes not covered above, snake_case
 (e.g., \verb{x_domain =}) -- translated to mosaic's own camelCase key.}
 }
 \description{
+\code{vg_guide_color()} and \code{vg_guide_opacity()} set the axis-guide properties of the \code{color} and \code{opacity} channels. They take the same arguments; each is described below.
+}
+\details{
 \code{vg_guide_color()} sets the axis-guide properties mosaic-spec
 exposes for the \code{color} channel (\code{colorLabel}, \code{colorTickFormat}) --
 the counterpart of \code{\link[=vg_scale_color]{vg_scale_color()}} for the color channel's
 label/tick formatting rather than its domain/range/palette.
-}
-\details{
+
 This is named \code{vg_guide_color()} rather than \code{vg_legend_color()}
 because \code{vg_legend_color()} already exists and means something
 different: it adds an actual rendered color legend (a
@@ -31,25 +36,35 @@ standalone/embedded legend mark, \code{\link[=vg_legend]{vg_legend()}}) to the s
 \code{vg_guide_color()} only sets these plot attributes -- it neither
 shows nor requires a legend to be present.
 
+\code{vg_guide_opacity()} sets the axis-guide properties mosaic-spec
+exposes for the \code{opacity} channel -- the counterpart of
+\code{\link[=vg_scale_opacity]{vg_scale_opacity()}} for the opacity channel's label/tick
+formatting rather than its domain/range.
+
+It is named \code{vg_guide_opacity()} rather than \code{vg_legend_opacity()}
+for the same reason: \code{vg_legend_opacity()} is \code{\link[=vg_legend]{vg_legend()}}'s actual
+rendered legend.
+
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 
-Examples on the package website that use this function:
+Examples on the package website that use these functions:
 \itemize{
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html}{Population Change Arrows}
+\item \code{vg_guide_color()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html}{Population Change Arrows}
 }
 }
 
 \examples{
 vg_mark_dot(x = ~a, y = ~b, fill = ~g) |>
   vg_guide_color(label = "Group")
+vg_mark_dot(x = ~a, y = ~b, opacity = ~g) |>
+  vg_guide_opacity(label = "Group")
 }
 \seealso{
 Other guide functions:
 \code{\link[=vg_guide_all]{vg_guide_all()}},
 \code{\link[=vg_guide_facet]{vg_guide_facet()}},
-\code{\link[=vg_guide_opacity]{vg_guide_opacity()}},
 \code{\link[=vg_guide_position]{vg_guide_position()}},
 \code{\link[=vg_guide_r]{vg_guide_r()}}
 }

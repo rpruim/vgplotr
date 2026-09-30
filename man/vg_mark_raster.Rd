@@ -2,9 +2,128 @@
 % Please edit documentation in R/example-usage-generated.R, R/marks-generated.R
 \name{vg_mark_raster}
 \alias{vg_mark_raster}
-\title{The raster mark.}
+\alias{vg_mark_raster_tile}
+\alias{vg_mark_heatmap}
+\title{The \code{raster}, \code{rasterTile}, and \code{heatmap} marks}
 \usage{
 vg_mark_raster(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  bandwidth = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  height = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  image_rendering = vg_unset,
+  interpolate = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  mix_blend_mode = vg_unset,
+  opacity = vg_unset,
+  pad = vg_unset,
+  paint_order = vg_unset,
+  pixel_size = vg_unset,
+  pointer_events = vg_unset,
+  reverse = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  target = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  width = vg_unset,
+  x = vg_unset,
+  y = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
+
+vg_mark_raster_tile(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  bandwidth = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  height = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  image_rendering = vg_unset,
+  interpolate = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  mix_blend_mode = vg_unset,
+  opacity = vg_unset,
+  origin = vg_unset,
+  pad = vg_unset,
+  paint_order = vg_unset,
+  pixel_size = vg_unset,
+  pointer_events = vg_unset,
+  reverse = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  target = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  width = vg_unset,
+  x = vg_unset,
+  y = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
+
+vg_mark_heatmap(
   spec = NULL,
   formula = vg_unset,
   aria_description = vg_unset,
@@ -172,20 +291,21 @@ vg_mark_raster(
 \item{filter_by}{A Param/Selection (e.g., from \code{\link[=param]{param()}}) to filter this mark's data by.}
 
 \item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
+
+\item{origin}{\verb{<numeric vector | param()>} The coordinates of the tile origin in the \strong{x} and \strong{y} data domains. (Only for \code{vg_mark_raster_tile()}.)}
 }
 \description{
+Each function adds one type of Mosaic mark: \code{vg_mark_raster()} adds \code{raster}, \code{vg_mark_raster_tile()} adds \code{rasterTile}, and \code{vg_mark_heatmap()} adds \code{heatmap}. They take the same arguments, except those noted below as belonging to only some of them.
+}
+\details{
 See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 
-Examples on the package website that use this function:
+Examples on the package website that use these functions:
 \itemize{
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-aeromagnetic-survey.html}{Aeromagnetic Survey}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-linear-regression-10m.html}{Linear Regression 10M}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html}{NYC Taxi Rides}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html}{Gaia Star Catalog}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html}{Observable Latency}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html}{Protein Design Explorer}
+\item \code{vg_mark_heatmap()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html}{Mark Types}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html}{Contour Plot}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html}{Flights Density}
+\item \code{vg_mark_raster()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-aeromagnetic-survey.html}{Aeromagnetic Survey}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-linear-regression-10m.html}{Linear Regression 10M}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html}{NYC Taxi Rides}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html}{Gaia Star Catalog}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html}{Observable Latency}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html}{Protein Design Explorer}
 }
 }
 
@@ -197,37 +317,25 @@ Other mark functions:
 \code{\link[=vg_mark_axis_x]{vg_mark_axis_x()}},
 \code{\link[=vg_mark_bar_x]{vg_mark_bar_x()}},
 \code{\link[=vg_mark_cell]{vg_mark_cell()}},
-\code{\link[=vg_mark_circle]{vg_mark_circle()}},
 \code{\link[=vg_mark_contour]{vg_mark_contour()}},
 \code{\link[=vg_mark_delaunay_link]{vg_mark_delaunay_link()}},
-\code{\link[=vg_mark_delaunay_mesh]{vg_mark_delaunay_mesh()}},
-\code{\link[=vg_mark_dense_line]{vg_mark_dense_line()}},
 \code{\link[=vg_mark_density]{vg_mark_density()}},
 \code{\link[=vg_mark_dot]{vg_mark_dot()}},
 \code{\link[=vg_mark_errorbar_x]{vg_mark_errorbar_x()}},
 \code{\link[=vg_mark_frame]{vg_mark_frame()}},
 \code{\link[=vg_mark_geo]{vg_mark_geo()}},
-\code{\link[=vg_mark_graticule]{vg_mark_graticule()}},
 \code{\link[=vg_mark_grid_x]{vg_mark_grid_x()}},
-\code{\link[=vg_mark_heatmap]{vg_mark_heatmap()}},
-\code{\link[=vg_mark_hexagon]{vg_mark_hexagon()}},
 \code{\link[=vg_mark_hexbin]{vg_mark_hexbin()}},
 \code{\link[=vg_mark_hexgrid]{vg_mark_hexgrid()}},
-\code{\link[=vg_mark_hull]{vg_mark_hull()}},
 \code{\link[=vg_mark_image]{vg_mark_image()}},
 \code{\link[=vg_mark_line]{vg_mark_line()}},
 \code{\link[=vg_mark_link]{vg_mark_link()}},
-\code{\link[=vg_mark_raster_tile]{vg_mark_raster_tile()}},
 \code{\link[=vg_mark_rect]{vg_mark_rect()}},
 \code{\link[=vg_mark_regression_y]{vg_mark_regression_y()}},
 \code{\link[=vg_mark_rule_x]{vg_mark_rule_x()}},
-\code{\link[=vg_mark_sphere]{vg_mark_sphere()}},
-\code{\link[=vg_mark_spike]{vg_mark_spike()}},
 \code{\link[=vg_mark_text]{vg_mark_text()}},
 \code{\link[=vg_mark_tick_x]{vg_mark_tick_x()}},
 \code{\link[=vg_mark_vector]{vg_mark_vector()}},
-\code{\link[=vg_mark_voronoi]{vg_mark_voronoi()}},
-\code{\link[=vg_mark_voronoi_mesh]{vg_mark_voronoi_mesh()}},
 \code{\link[=vg_mark_waffle_x]{vg_mark_waffle_x()}}
 }
 \concept{mark functions}

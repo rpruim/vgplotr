@@ -3,7 +3,9 @@
 %   R/marks-generated.R
 \name{vg_mark_geo}
 \alias{vg_mark_geo}
-\title{The geo mark.}
+\alias{vg_mark_sphere}
+\alias{vg_mark_graticule}
+\title{The \code{geo}, \code{sphere}, and \code{graticule} marks}
 \usage{
 vg_mark_geo(
   spec = NULL,
@@ -35,6 +37,104 @@ vg_mark_geo(
   paint_order = vg_unset,
   pointer_events = vg_unset,
   r = vg_unset,
+  reverse = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  target = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
+
+vg_mark_sphere(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  mix_blend_mode = vg_unset,
+  opacity = vg_unset,
+  paint_order = vg_unset,
+  pointer_events = vg_unset,
+  reverse = vg_unset,
+  select = vg_unset,
+  shape_rendering = vg_unset,
+  sort = vg_unset,
+  stroke = vg_unset,
+  stroke_dasharray = vg_unset,
+  stroke_dashoffset = vg_unset,
+  stroke_linecap = vg_unset,
+  stroke_linejoin = vg_unset,
+  stroke_miterlimit = vg_unset,
+  stroke_opacity = vg_unset,
+  stroke_width = vg_unset,
+  target = vg_unset,
+  tip = vg_unset,
+  title = vg_unset,
+  ...,
+  data_from = vg_unset,
+  filter_by = vg_unset,
+  data_optimize = vg_unset
+)
+
+vg_mark_graticule(
+  spec = NULL,
+  formula = vg_unset,
+  aria_description = vg_unset,
+  aria_hidden = vg_unset,
+  aria_label = vg_unset,
+  channels = vg_unset,
+  clip = vg_unset,
+  dx = vg_unset,
+  dy = vg_unset,
+  facet = vg_unset,
+  facet_anchor = vg_unset,
+  fill = vg_unset,
+  fill_opacity = vg_unset,
+  filter = vg_unset,
+  fx = vg_unset,
+  fy = vg_unset,
+  href = vg_unset,
+  image_filter = vg_unset,
+  margin = vg_unset,
+  margin_bottom = vg_unset,
+  margin_left = vg_unset,
+  margin_right = vg_unset,
+  margin_top = vg_unset,
+  mix_blend_mode = vg_unset,
+  opacity = vg_unset,
+  paint_order = vg_unset,
+  pointer_events = vg_unset,
   reverse = vg_unset,
   select = vg_unset,
   shape_rendering = vg_unset,
@@ -89,7 +189,7 @@ vg_mark_geo(
 
 \item{fy}{\verb{<column | literal | transform() | sql()/agg()>} The vertical facet position channel, for mark-level faceting, bound to the \emph{fy} scale.}
 
-\item{geometry}{\verb{<column | literal | transform() | sql()/agg()>} A required channel for the geometry to render; defaults to identity, assuming \emph{data} is a GeoJSON object or an iterable of GeoJSON objects.}
+\item{geometry}{\verb{<column | literal | transform() | sql()/agg()>} A required channel for the geometry to render; defaults to identity, assuming \emph{data} is a GeoJSON object or an iterable of GeoJSON objects. (Only for \code{vg_mark_geo()}.)}
 
 \item{href}{\verb{<column | literal | transform() | sql()/agg()>} The href; a channel specifying URLs for clickable links.}
 
@@ -113,7 +213,7 @@ vg_mark_geo(
 
 \item{pointer_events}{\verb{<string | param()>} The pointer-events property; a constant string such as \emph{none}.}
 
-\item{r}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | number | param()>} The radius of dots; either a channel or constant.}
+\item{r}{\verb{<column | literal | transform() | sql()/agg() | list(value=, ...) | number | param()>} The radius of dots; either a channel or constant. (Only for \code{vg_mark_geo()}.)}
 
 \item{reverse}{\verb{<boolean | param()>} Applies a transform to reverse the order of the mark’s index, say for reverse input order.}
 
@@ -154,7 +254,7 @@ vg_mark_geo(
 \item{data_optimize}{A flag (default \code{TRUE}) to enable mark-specific query optimizations for this mark's data; set \code{FALSE} to disable them (mosaic-spec's \code{data: {optimize: false}}).}
 }
 \description{
-See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
+Each function adds one type of Mosaic mark: \code{vg_mark_geo()} adds \code{geo}, \code{vg_mark_sphere()} adds \code{sphere}, and \code{vg_mark_graticule()} adds \code{graticule}. They take the same arguments, except those noted below as belonging to only some of them.
 }
 \details{
 \subsection{How a geo mark uses data}{
@@ -187,21 +287,19 @@ values from another table (e.g., county shapes with unemployment rates),
 join them into one data source with \code{vg_data(query = ...)}. For point
 geometries, \code{r} sizes the points.
 
-Marks that draw purely computed geometry and take no data at all, such
-as the outline of the globe or a grid of meridians and parallels, are
-\code{\link[=vg_mark_sphere]{vg_mark_sphere()}} and \code{\link[=vg_mark_graticule]{vg_mark_graticule()}}.
+The other two marks on this page, \code{vg_mark_sphere()} and
+\code{vg_mark_graticule()}, draw purely computed geometry -- the outline of
+the globe and a grid of meridians and parallels -- and take no data.
 }
+
+See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 
-Examples on the package website that use this function:
+Examples on the package website that use these functions:
 \itemize{
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html}{Earthquakes Feed}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html}{Earthquakes Globe}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-unemployment.html}{U.S. Unemployment}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-county-map.html}{U.S. Counties}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-state-map.html}{U.S. States}
-\item \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-walmart-openings.html}{Walmart Openings}
+\item \code{vg_mark_geo()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html}{Earthquakes Feed}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html}{Earthquakes Globe}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-unemployment.html}{U.S. Unemployment}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-county-map.html}{U.S. Counties}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-state-map.html}{U.S. States}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-walmart-openings.html}{Walmart Openings}
+\item \code{vg_mark_sphere()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html}{Earthquakes Feed}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html}{Earthquakes Globe}
 }
 }
 
@@ -226,37 +324,25 @@ Other mark functions:
 \code{\link[=vg_mark_axis_x]{vg_mark_axis_x()}},
 \code{\link[=vg_mark_bar_x]{vg_mark_bar_x()}},
 \code{\link[=vg_mark_cell]{vg_mark_cell()}},
-\code{\link[=vg_mark_circle]{vg_mark_circle()}},
 \code{\link[=vg_mark_contour]{vg_mark_contour()}},
 \code{\link[=vg_mark_delaunay_link]{vg_mark_delaunay_link()}},
-\code{\link[=vg_mark_delaunay_mesh]{vg_mark_delaunay_mesh()}},
-\code{\link[=vg_mark_dense_line]{vg_mark_dense_line()}},
 \code{\link[=vg_mark_density]{vg_mark_density()}},
 \code{\link[=vg_mark_dot]{vg_mark_dot()}},
 \code{\link[=vg_mark_errorbar_x]{vg_mark_errorbar_x()}},
 \code{\link[=vg_mark_frame]{vg_mark_frame()}},
-\code{\link[=vg_mark_graticule]{vg_mark_graticule()}},
 \code{\link[=vg_mark_grid_x]{vg_mark_grid_x()}},
-\code{\link[=vg_mark_heatmap]{vg_mark_heatmap()}},
-\code{\link[=vg_mark_hexagon]{vg_mark_hexagon()}},
 \code{\link[=vg_mark_hexbin]{vg_mark_hexbin()}},
 \code{\link[=vg_mark_hexgrid]{vg_mark_hexgrid()}},
-\code{\link[=vg_mark_hull]{vg_mark_hull()}},
 \code{\link[=vg_mark_image]{vg_mark_image()}},
 \code{\link[=vg_mark_line]{vg_mark_line()}},
 \code{\link[=vg_mark_link]{vg_mark_link()}},
 \code{\link[=vg_mark_raster]{vg_mark_raster()}},
-\code{\link[=vg_mark_raster_tile]{vg_mark_raster_tile()}},
 \code{\link[=vg_mark_rect]{vg_mark_rect()}},
 \code{\link[=vg_mark_regression_y]{vg_mark_regression_y()}},
 \code{\link[=vg_mark_rule_x]{vg_mark_rule_x()}},
-\code{\link[=vg_mark_sphere]{vg_mark_sphere()}},
-\code{\link[=vg_mark_spike]{vg_mark_spike()}},
 \code{\link[=vg_mark_text]{vg_mark_text()}},
 \code{\link[=vg_mark_tick_x]{vg_mark_tick_x()}},
 \code{\link[=vg_mark_vector]{vg_mark_vector()}},
-\code{\link[=vg_mark_voronoi]{vg_mark_voronoi()}},
-\code{\link[=vg_mark_voronoi_mesh]{vg_mark_voronoi_mesh()}},
 \code{\link[=vg_mark_waffle_x]{vg_mark_waffle_x()}}
 }
 \concept{mark functions}

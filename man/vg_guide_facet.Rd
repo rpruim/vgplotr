@@ -129,7 +129,6 @@ vg_mark_dot(x = ~a, y = ~b, fx = ~g) |>
 Other guide functions:
 \code{\link[=vg_guide_all]{vg_guide_all()}},
 \code{\link[=vg_guide_color]{vg_guide_color()}},
-\code{\link[=vg_guide_opacity]{vg_guide_opacity()}},
 \code{\link[=vg_guide_position]{vg_guide_position()}},
 \code{\link[=vg_guide_r]{vg_guide_r()}}
 }

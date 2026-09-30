@@ -123,9 +123,9 @@ vg_nearest_y <- function(spec = NULL, as = vg_unset, channels = vg_unset, fields
   vg_interactor_(spec, "nearestY", as = as, channels = channels, fields = fields, maxRadius = max_radius, ...)
 }
 
-#' The `pan`, `panX`, and `panY` interactors
+#' The `pan`, `panX`, `panY`, `panZoom`, `panZoomX`, and `panZoomY` interactors
 #'
-#' Each function adds one type of Mosaic interactor: `vg_pan()` adds `pan`, `vg_pan_x()` adds `panX`, and `vg_pan_y()` adds `panY`.
+#' Each function adds one type of Mosaic interactor: `vg_pan()` adds `pan`, `vg_pan_x()` adds `panX`, `vg_pan_y()` adds `panY`, `vg_pan_zoom()` adds `panZoom`, `vg_pan_zoom_x()` adds `panZoomX`, and `vg_pan_zoom_y()` adds `panZoomY`.
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
 #'
@@ -154,32 +154,19 @@ vg_pan_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset,
   vg_interactor_(spec, "panY", x = x, xfield = xfield, y = y, yfield = yfield, ...)
 }
 
-#' The `panZoom`, `panZoomX`, and `panZoomY` interactors
-#'
-#' Each function adds one type of Mosaic interactor: `vg_pan_zoom()` adds `panZoom`, `vg_pan_zoom_x()` adds `panZoomX`, and `vg_pan_zoom_y()` adds `panZoomY`.
-#'
-#' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
-#'
-#' @param spec A plot fragment or `vgspec` to add this interactor to, or `NULL` to start a new plot with just this interactor.
-#' @param x `<param()>` The output selection for the `x` domain.
-#' @param xfield `<string>` The name of the field (database column) over which the `x`-component of the interval selection should be defined.
-#' @param y `<param()>` The output selection for the `y` domain.
-#' @param yfield `<string>` The name of the field (database column) over which the `y`-component of the interval selection should be defined.
-#' @param ... Additional options or plot-level attributes.
-#' @family interactor functions
-#' @rdname vg_pan_zoom
+#' @rdname vg_pan
 #' @export
 vg_pan_zoom <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panZoom", x = x, xfield = xfield, y = y, yfield = yfield, ...)
 }
 
-#' @rdname vg_pan_zoom
+#' @rdname vg_pan
 #' @export
 vg_pan_zoom_x <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panZoomX", x = x, xfield = xfield, y = y, yfield = yfield, ...)
 }
 
-#' @rdname vg_pan_zoom
+#' @rdname vg_pan
 #' @export
 vg_pan_zoom_y <- function(spec = NULL, x = vg_unset, xfield = vg_unset, y = vg_unset, yfield = vg_unset, ...) {
   vg_interactor_(spec, "panZoomY", x = x, xfield = xfield, y = y, yfield = yfield, ...)
