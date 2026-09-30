@@ -18,6 +18,9 @@ gallery (listed first); the rest are additional ones.}
 A value is \code{1} if the example calls the function anywhere in its R code
 (including inside a formula, e.g., \code{~ vg_centroid_x(geom)}), \code{0} if not.
 }
+\usage{
+data(vg_example_usage)
+}
 \description{
 A 0-1 matrix recording which of vgplotr's exported functions each worked
 example on the package website calls.

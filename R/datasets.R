@@ -79,4 +79,5 @@
 #' @docType data
 #' @keywords datasets
 #' @name vg_example_usage
+#' @usage data(vg_example_usage)
 NULL
