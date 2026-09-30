@@ -34,7 +34,11 @@ as_spec_payload <- function(spec) {
     parsed <- parse_spec_string(spec)
     lifted <- lift_inline_data_sources(parsed$data)
     parsed$data <- if (length(lifted$remaining)) lifted$remaining
-    return(list(spec = parsed, tables = lifted$tables, files = list()))
+    # vgplotr's own additions (vg_computed_param()/vg_on_change(), written
+    # by to_json()/to_yaml()) aren't mosaic-spec, so Mosaic mustn't see them.
+    derived <- parsed$vgplotr
+    parsed$vgplotr <- NULL
+    return(list(spec = parsed, tables = lifted$tables, files = list(), derived = derived))
   }
   stopifnot(is_vgspec(spec))
   if (is.null(spec$layout)) {
@@ -63,7 +67,8 @@ as_spec_payload <- function(spec) {
   if (length(spec$meta)) out$meta <- spec$meta
   if (length(spec$config)) out$config <- spec$config
   if (length(data_entries)) out$data <- data_entries
-  if (length(spec$params)) out$params <- serialize_params(spec$params)
+  params <- params_with_computed(spec)
+  if (length(params)) out$params <- serialize_params(params)
   out <- c(out, serialize_layout(spec$layout, spec$plot_defaults))
   # spec$attrs (from vg_attributes()) are the spec's own top-level
   # attributes -- merged once here, at the very top, as opposed to
@@ -71,7 +76,7 @@ as_spec_payload <- function(spec) {
   # threaded into *every* plot in the tree.
   if (length(spec$attrs)) out <- merge_attrs(out, lapply(spec$attrs, serialize_value), context = "vg_attributes()")
 
-  list(spec = out, tables = tables, files = files)
+  list(spec = out, tables = tables, files = files, derived = derived_payload(spec))
 }
 
 # Parses a length-1 JSON or YAML string -- an already-complete mosaic-spec
@@ -576,7 +581,7 @@ serialize_transform <- function(x) {
 # spec$attrs (the spec's own top-level attrs, from vg_attributes()) are a
 # separate thing again, merged in once at the very top, exactly like
 # as_spec_payload() does.
-spec_to_list <- function(spec, suppress_data = FALSE) {
+spec_to_list <- function(spec, suppress_data = FALSE, vgplotr_keys = TRUE) {
   if (is_vgspec(spec)) {
     if (is.null(spec$layout)) {
       stop("This vgspec doesn't have any plots yet.", call. = FALSE)
@@ -587,10 +592,12 @@ spec_to_list <- function(spec, suppress_data = FALSE) {
     data_sources <- spec$data
     if (suppress_data) data_sources <- Filter(Negate(is_inline_data_source), data_sources)
     if (length(data_sources)) out$data <- Map(serialize_data_source, data_sources, names(data_sources))
-    if (length(spec$params)) out$params <- serialize_params(spec$params)
+    params <- params_with_computed(spec)
+    if (length(params)) out$params <- serialize_params(params)
     if (length(spec$plot_defaults)) out$plotDefaults <- lapply(spec$plot_defaults, serialize_value)
     out <- c(out, serialize_layout(spec$layout))
     if (length(spec$attrs)) out <- merge_attrs(out, lapply(spec$attrs, serialize_value), context = "vg_attributes()")
+    if (vgplotr_keys) out$vgplotr <- derived_payload(spec)
     out
   } else {
     serialize_layout(spec)

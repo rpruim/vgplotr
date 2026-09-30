@@ -26,6 +26,12 @@
 #'   `query =`, `type = "spatial"`, ...) are left alone either way, since
 #'   they're already just a reference, not embedded content. Default
 #'   `FALSE`.
+#' @param vgplotr_keys If `TRUE` (the default), include vgplotr's own
+#'   additions to the spec -- params made with [vg_computed_param()] and
+#'   handlers made with [vg_on_change()] -- under a top-level `"vgplotr"`
+#'   key. They aren't part of mosaic-spec, so set this to `FALSE` for a spec
+#'   to use with Mosaic's own tools, which don't know that key (a spec with
+#'   it may fail to load there). [vg_render()] reads the key back.
 #' @param ... Additional arguments passed on to [jsonlite::toJSON()] (for
 #'   `to_json()`) or [yaml::as.yaml()] (for `to_yaml()`).
 #' @return `to_json()` returns a `json` object (see [jsonlite::toJSON()]);
@@ -35,7 +41,7 @@
 #'   save either to disk.
 #' @family spec export functions
 #' @export
-to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, ...) {
+to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, vgplotr_keys = TRUE, ...) {
   warn_on_render_dropped(spec)
   # Built via modifyList()/do.call() rather than passed as literal named
   # arguments alongside `...`, so a caller who explicitly supplies one of
@@ -51,7 +57,7 @@ to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, ...) {
   # mosaic's own JSON loading assumes never happens.
   args <- utils::modifyList(
     list(
-      x = spec_to_list(spec, suppress_data = suppress_data),
+      x = spec_to_list(spec, suppress_data = suppress_data, vgplotr_keys = vgplotr_keys),
       auto_unbox = TRUE, dataframe = "rows", null = "null", na = "null", pretty = pretty
     ),
     list(...)
@@ -61,7 +67,7 @@ to_json <- function(spec, pretty = TRUE, suppress_data = FALSE, ...) {
 
 #' @rdname to_json
 #' @export
-to_yaml <- function(spec, suppress_data = FALSE, ...) {
+to_yaml <- function(spec, suppress_data = FALSE, vgplotr_keys = TRUE, ...) {
   warn_on_render_dropped(spec)
   # yaml::as.yaml() defaults to YAML 1.1's `yes`/`no` for logicals, which a
   # YAML-1.2-core-schema parser (e.g., the JS `js-yaml` library mosaic itself
@@ -93,7 +99,7 @@ to_yaml <- function(spec, suppress_data = FALSE, ...) {
   # `handlers =`/`column.major =` in `...` overrides these defaults instead
   # of colliding with them.
   args <- utils::modifyList(
-    list(x = spec_to_list(spec, suppress_data = suppress_data), handlers = handlers, column.major = FALSE),
+    list(x = spec_to_list(spec, suppress_data = suppress_data, vgplotr_keys = vgplotr_keys), handlers = handlers, column.major = FALSE),
     list(...)
   )
   new_vg_yaml(do.call(yaml::as.yaml, args))

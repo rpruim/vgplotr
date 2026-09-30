@@ -29,11 +29,13 @@ Used in every example on the package website. See the \href{https://rpruim.githu
 Other spec functions:
 \code{\link[=param]{param()}},
 \code{\link[=vg_attributes]{vg_attributes()}},
+\code{\link[=vg_computed_param]{vg_computed_param()}},
 \code{\link[=vg_config]{vg_config()}},
 \code{\link[=vg_create]{vg_create()}},
 \code{\link[=vg_data]{vg_data()}},
 \code{\link[=vg_data_registry]{vg_data_registry()}},
 \code{\link[=vg_example_url]{vg_example_url()}},
+\code{\link[=vg_on_change]{vg_on_change()}},
 \code{\link[=vg_on_render]{vg_on_render()}},
 \code{\link[=vg_params]{vg_params()}},
 \code{\link[=vg_plot_defaults]{vg_plot_defaults()}},

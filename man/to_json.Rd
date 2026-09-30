@@ -5,9 +5,9 @@
 \alias{to_yaml}
 \title{Convert a vgspec (or plot fragment) to mosaic-spec JSON or YAML}
 \usage{
-to_json(spec, pretty = TRUE, suppress_data = FALSE, ...)
+to_json(spec, pretty = TRUE, suppress_data = FALSE, vgplotr_keys = TRUE, ...)
 
-to_yaml(spec, suppress_data = FALSE, ...)
+to_yaml(spec, suppress_data = FALSE, vgplotr_keys = TRUE, ...)
 }
 \arguments{
 \item{spec}{A \code{vgspec}, or a bare layout fragment.}
@@ -23,6 +23,13 @@ the point. Data sources specified \emph{by name} elsewhere (\verb{file =},
 \verb{query =}, \code{type = "spatial"}, ...) are left alone either way, since
 they're already just a reference, not embedded content. Default
 \code{FALSE}.}
+
+\item{vgplotr_keys}{If \code{TRUE} (the default), include vgplotr's own
+additions to the spec -- params made with \code{\link[=vg_computed_param]{vg_computed_param()}} and
+handlers made with \code{\link[=vg_on_change]{vg_on_change()}} -- under a top-level \code{"vgplotr"}
+key. They aren't part of mosaic-spec, so set this to \code{FALSE} for a spec
+to use with Mosaic's own tools, which don't know that key (a spec with
+it may fail to load there). \code{\link[=vg_render]{vg_render()}} reads the key back.}
 
 \item{...}{Additional arguments passed on to \code{\link[jsonlite:toJSON]{jsonlite::toJSON()}} (for
 \code{to_json()}) or \code{\link[yaml:as.yaml]{yaml::as.yaml()}} (for \code{to_yaml()}).}

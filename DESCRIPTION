@@ -55,6 +55,7 @@ Collate:
     'create.R'
     'data.R'
     'datasets.R'
+    'derived-params.R'
     'duckdb_cache.R'
     'duckdb_server.R'
     'example-usage-generated.R'

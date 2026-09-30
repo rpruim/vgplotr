@@ -368,6 +368,8 @@
     });
     el.appendChild(app.element);
 
+    await setupDerived(x.derived, app.params, coord, api);
+
     await runOnRender(x, {
       element: app.element,
       params: app.params,
@@ -379,6 +381,100 @@
       makeClient: function (options) {
         return mod.mosaicCore.makeClient(Object.assign({ coordinator: coord }, options));
       },
+    });
+  }
+
+  // vg_computed_param() and vg_on_change() (R/derived-params.R), sent as
+  // `x.derived` = {computedParams: [...], onChange: [...]}. Each value is a
+  // SQL expression, with other params written as `$name`, evaluated by this
+  // widget's database -- over a data source (`from`), filtered by a
+  // selection (`filterBy`), if given. A computed param is recomputed whenever
+  // a param it uses (or its selection) changes; a handler's actions run
+  // whenever its trigger changes. Param.update() only notifies listeners
+  // when the value actually changes, and R rejects handlers that would set
+  // params in a loop.
+  async function setupDerived(derived, params, coord, api) {
+    if (!derived) return;
+    var getParam = function (name, what) {
+      var p = params.get(name);
+      if (!p) throw new Error("vgplotr: " + what + " refers to an unknown param `" + name + "`.");
+      return p;
+    };
+    // The expression as a Mosaic SQL expression: each $name becomes that
+    // Param, whose current value Mosaic writes into the query as a literal.
+    var expression = function (def) {
+      var parts = def.sql.split(/(\$[A-Za-z_][A-Za-z0-9_]*)/);
+      var spans = [], values = [];
+      parts.forEach(function (part, i) {
+        if (i % 2 === 0) spans.push(part);
+        else values.push(getParam(part.slice(1), "an expression"));
+      });
+      return api.sql.apply(null, [spans].concat(values));
+    };
+    var evaluate = async function (def) {
+      var q = def.from
+        ? api.Query.from(def.from).select({ value: expression(def) })
+        : api.Query.select({ value: expression(def) });
+      if (def.filterBy) {
+        var predicate = getParam(def.filterBy, "filter_by").predicate(null);
+        if (predicate && (!Array.isArray(predicate) || predicate.length)) q.where(predicate);
+      }
+      var rows = await coord.query(q, { type: "json" });
+      if (rows && typeof rows.toArray === "function") rows = rows.toArray();
+      var value = rows && rows.length ? rows[0].value : null;
+      return typeof value === "bigint" ? Number(value) : value;
+    };
+    // Recomputes a value, dropping a result if a newer one was started since.
+    var keepLatest = function (compute, apply) {
+      var latest = 0;
+      return async function () {
+        var run = ++latest;
+        var value = await compute();
+        if (run === latest) apply(value);
+      };
+    };
+    var report = function (label) {
+      return function (err) { console.error("vgplotr: " + label + " failed:", err); };
+    };
+
+    var computed = derived.computedParams || [];
+    for (var i = 0; i < computed.length; i++) {
+      (function (def) {
+        var target = getParam(def.name, "vg_computed_param()");
+        var label = "computing param `" + def.name + "`";
+        var recompute = keepLatest(
+          function () { return evaluate(def); },
+          function (value) { target.update(value); }
+        );
+        [].concat(def.params || [], def.filterBy ? [def.filterBy] : []).forEach(function (name) {
+          getParam(name, "vg_computed_param(" + def.name + ")").addEventListener("value", function () {
+            recompute().catch(report(label));
+          });
+        });
+        computed[i].initial = recompute().catch(function (err) {
+          throw new Error("vgplotr: " + label + " failed: " + ((err && err.message) || err));
+        });
+      })(computed[i]);
+      // Computed params can use earlier ones, so compute them in order.
+      await computed[i].initial;
+    }
+
+    (derived.onChange || []).forEach(function (handler) {
+      var trigger = getParam(handler.trigger, "vg_on_change()");
+      var actions = handler.actions.map(function (action) {
+        var target = getParam(action.target, "vg_set_param()");
+        var label = "vg_on_change(" + handler.trigger + ") setting `" + action.target + "`";
+        return {
+          label: label,
+          run: keepLatest(
+            function () { return "sql" in action ? evaluate(action) : Promise.resolve(action.value); },
+            function (value) { target.update(value); }
+          ),
+        };
+      });
+      trigger.addEventListener("value", function () {
+        actions.forEach(function (action) { action.run().catch(report(action.label)); });
+      });
     });
   }
 
