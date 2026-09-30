@@ -306,7 +306,9 @@ resolve_formula_call <- function(expr) {
 # its field arguments -- `delay` in `vg_bin(delay)`, or a nested transform --
 # are followed, exactly as serialize_transform() does.
 check_formula_expr <- function(expr) {
-  if (is.call(expr)) {
+  if (!is.null(formula_literal(expr))) {
+    # a constant, e.g. `~5` or `~-2.5` (serialize_channel_value(), R/channels.R)
+  } else if (is.call(expr)) {
     resolved <- resolve_formula_call(expr)
     if (resolved$kind == "transform") {
       supplied <- as.list(resolved$mc)[-1]

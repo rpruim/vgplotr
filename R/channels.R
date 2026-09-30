@@ -12,11 +12,12 @@
 # instead, which Mosaic always reads as a column; other column names are left
 # as plain strings, so specs stay the same as Mosaic's own.
 #
-# A formula with a string literal, `~"b"`, is a constant that goes through
-# the channel's scale -- drawn with the symbol/color the scale gives "b" --
-# unlike the string "b", a constant used as is. Mosaic has no direct way to
-# say that, but a SQL literal (`{sql: "'b'"}`) works: Mosaic treats it like a
-# column whose every value is "b", and scales it.
+# A formula with a literal, `~"b"` or `~5`, is a constant that goes through
+# the channel's scale -- drawn with the symbol/color the scale gives "b", or
+# at the radius the scale gives 5 -- unlike the plain "b" or 5, a constant
+# used as is. Mosaic has no direct way to say that, but a SQL literal
+# (`{sql: "'b'"}`, `{sql: "5"}`) works: Mosaic treats it like a column whose
+# every value is that constant, and scales it.
 
 # Mosaic's constant-only channel options (mosaic-plot's
 # src/marks/util/is-constant-option.js, 0.31.0).
@@ -93,19 +94,38 @@ mosaic_reads_as_constant <- function(channel, value) {
     (channel == "symbol" && tolower(value) %in% .mosaic_symbols)
 }
 
-# A string as a SQL string literal ('it''s').
-sql_string_literal <- function(x) paste0("'", gsub("'", "''", x, fixed = TRUE), "'")
+# The constant a formula's right-hand side holds -- a single string, number or
+# TRUE/FALSE, or a negated number (`~-2.5` is a call to unary minus, not a
+# number) -- or NULL if it isn't one.
+formula_literal <- function(expr) {
+  if (is.call(expr) && identical(expr[[1]], as.name("-")) && length(expr) == 2) {
+    inner <- formula_literal(expr[[2]])
+    return(if (is.numeric(inner)) -inner)
+  }
+  if ((is.character(expr) || is.numeric(expr) || is.logical(expr)) &&
+      length(expr) == 1 && !is.na(expr)) {
+    expr
+  }
+}
+
+# A single string, number or TRUE/FALSE as a SQL literal: 'it''s', 5, TRUE.
+sql_literal <- function(x) {
+  if (is.character(x)) paste0("'", gsub("'", "''", x, fixed = TRUE), "'")
+  else if (is.logical(x)) if (x) "TRUE" else "FALSE"
+  else format(x, digits = 15, scientific = FALSE, trim = TRUE)
+}
 
 # Serializes one mark option, `channel` being its mosaic key. A one-sided
 # formula whose right-hand side is a bare column name that Mosaic would read
 # as a constant becomes `{column: name}`, and one whose right-hand side is a
-# string literal becomes a SQL literal (see the top of this file); everything
-# else is serialized as usual.
+# literal string, number or TRUE/FALSE becomes a SQL literal (see the top of
+# this file); everything else is serialized as usual.
 serialize_channel_value <- function(channel, x) {
   if (inherits(x, "formula") && length(x) == 2) {
     rhs <- x[[2]]
-    if (is.character(rhs) && length(rhs) == 1) {
-      return(list(sql = sql_string_literal(rhs)))
+    literal <- formula_literal(rhs)
+    if (!is.null(literal)) {
+      return(list(sql = sql_literal(literal)))
     }
     if (is.symbol(rhs)) {
       # A symbol can also be a variable holding a param() -- serialized as

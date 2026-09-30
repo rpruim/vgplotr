@@ -35,6 +35,15 @@ test_that("a formula with a string literal is a scaled constant, sent as a SQL l
   expect_identical(mark_json(fill = ~"it's")$fill, list(sql = "'it''s'"))
 })
 
+test_that("a formula with a number or TRUE/FALSE is a scaled constant too", {
+  expect_identical(mark_json(r = ~5)$r, list(sql = "5"))
+  expect_identical(mark_json(y = ~-2.5)$y, list(sql = "-2.5"))
+  expect_identical(mark_json(y = ~1e6)$y, list(sql = "1000000"))
+  expect_identical(mark_json(fill = ~TRUE)$fill, list(sql = "TRUE"))
+  # while a plain number is still a constant used as is
+  expect_identical(mark_json(r = 5)$r, 5)
+})
+
 test_that("a variable holding a param() is still sent as a param reference", {
   square <- param(square)
   expect_identical(mark_json(symbol = ~square)$symbol, "$square")

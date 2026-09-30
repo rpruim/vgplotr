@@ -24,11 +24,13 @@
 #'     used as is, not passed through the scale. (A string that isn't a
 #'     valid constant for the channel, e.g. `fill = "species"`, is still
 #'     read by Mosaic as a column name, for now; write columns as formulas.)}
-#'   \item{scaled constant}{A one-sided formula holding a string, e.g.
-#'     `fill = ~"medium"`: a constant that *does* go through the scale, so
-#'     it gets the same color (or symbol, ...) the scale gives `"medium"` in
-#'     the data -- e.g., to label a group in its own color. (Sent to Mosaic
-#'     as the SQL literal `sql("'medium'")`.)}
+#'   \item{scaled constant}{A one-sided formula holding a single string,
+#'     number or `TRUE`/`FALSE`, e.g. `fill = ~"medium"` or \code{r = ~5}: a
+#'     constant that *does* go through the scale, so it gets the same color
+#'     (or radius, symbol, ...) the scale gives `"medium"` (or 5) in the data
+#'     -- e.g., to label a group in its own color. Compare \code{r = 5}, a radius
+#'     of 5 pixels. (Sent to Mosaic as a SQL literal, e.g.
+#'     `sql("'medium'")`.)}
 #'   \item{`transform()`}{A vgplotr transform function, e.g. `vg_bin()`,
 #'     `vg_count()`, `vg_avg()` -- computed by DuckDB, not R. See
 #'     [vg_transforms] for the full set.}
