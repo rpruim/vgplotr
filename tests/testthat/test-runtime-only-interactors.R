@@ -19,7 +19,7 @@ test_that("vg_toggle_z() takes exactly toggleY's options", {
 
 test_that("they serialize as the select value mosaic's parser expects", {
   spec <- vg_create() |>
-    vg_mark_dot(x = ~a, y = ~b) |>
+    vg_mark_dot(x = ~a, y = ~b, z = ~c) |>
     vg_nearest(as = param(hover), max_radius = 20) |>
     vg_toggle_z(as = param(pick))
   out <- spec_to_list(spec)$plot
@@ -28,7 +28,7 @@ test_that("they serialize as the select value mosaic's parser expects", {
 })
 
 test_that("the generic constructor accepts them too, and still warns on a bad option", {
-  expect_no_warning(vg_interactor(interactor = "nearest", as = param(h)))
-  expect_warning(vg_interactor(interactor = "toggleZ", as = param(h), bogus = 1), "not a property")
-  expect_warning(vg_nearest(as = param(h), maxradius = 3), "max_radius")
+  expect_no_warning(vg_interactor(vg_mark_dot(x = ~a, y = ~b), interactor = "nearest", as = param(h)))
+  expect_warning(vg_interactor(vg_mark_dot(x = ~a, y = ~b, z = ~c), interactor = "toggleZ", as = param(h), bogus = 1), "not a property")
+  expect_warning(vg_mark_dot(x = ~a, y = ~b) |> vg_nearest(as = param(h), maxradius = 3), "max_radius")
 })

@@ -115,7 +115,7 @@ test_that("a warning makes no suggestion when nothing is similar", {
 test_that("color on a thing with no fill/stroke warns without a suggestion, not an unrelated one", {
   w <- character()
   withCallingHandlers(
-    vg_interval_x(as = param(sel), color = "red"),
+    vg_mark_dot(x = ~a, y = ~b) |> vg_interval_x(as = param(sel), color = "red"),
     warning = function(cnd) {
       w <<- c(w, conditionMessage(cnd))
       invokeRestart("muffleWarning")

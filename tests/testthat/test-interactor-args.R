@@ -35,7 +35,7 @@ test_that("`color =` on an interactor gets the fill/stroke hint only where it ha
   # ...whereas a brush has neither, so there's nothing sensible to suggest
   w <- character()
   withCallingHandlers(
-    vg_interval_x(as = param(sel), color = "red"),
+    vg_mark_dot(x = ~a, y = ~b) |> vg_interval_x(as = param(sel), color = "red"),
     warning = function(cnd) {
       w <<- c(w, conditionMessage(cnd))
       invokeRestart("muffleWarning")
@@ -48,16 +48,16 @@ test_that("`color =` on an interactor gets the fill/stroke hint only where it ha
 
 test_that("the generic vg_interactor() takes camelCase; a snake_case name warns and points at the real one", {
   expect_warning(
-    vg_interactor(interactor = "intervalX", as = param(sel), pixel_size = 2),
+    vg_interactor(vg_mark_dot(x = ~a, y = ~b), interactor = "intervalX", as = param(sel), pixel_size = 2),
     "`pixel_size` is not a property.*Did you perhaps mean `pixelSize`\\?"
   )
   expect_warning(
     vg_interactor(interactor = "menu", column = "a", filter_by = param(sel)),
     "`filter_by` is not a property.*Did you perhaps mean `filterBy`\\?"
   )
-  expect_no_warning(vg_interactor(interactor = "intervalX", as = param(sel), pixelSize = 2))
+  expect_no_warning(vg_interactor(vg_mark_dot(x = ~a, y = ~b), interactor = "intervalX", as = param(sel), pixelSize = 2))
   # ...while the wrappers take snake_case
-  expect_no_warning(vg_interval_x(as = param(sel), pixel_size = 2))
+  expect_no_warning(vg_mark_dot(x = ~a, y = ~b) |> vg_interval_x(as = param(sel), pixel_size = 2))
   expect_no_warning(vg_menu(column = "a", filter_by = param(sel)))
 })
 
@@ -65,7 +65,7 @@ test_that("recognized options and plot-level attributes on an interactor never w
   expect_no_warning(vg_pan_zoom(x = param(xs), y = param(ys)))
   expect_no_warning(vg_highlight(by = param(sel), fill_opacity = 0.2, opacity = 0.1))
   # a plot attribute riding along on a plot-embedded interactor
-  expect_no_warning(vg_interval_x(as = param(sel), width = 400, x_domain = c(0, 1)))
+  expect_no_warning(vg_mark_dot(x = ~a, y = ~b) |> vg_interval_x(as = param(sel), width = 400, x_domain = c(0, 1)))
   # an input's own `width`/`type` are real properties, not plot attributes
   expect_no_warning(vg_slider(column = "a", label = "A", min = 0, max = 1, width = 200))
   expect_no_warning(vg_search(column = "a", type = "prefix"))
