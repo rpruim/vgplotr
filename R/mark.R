@@ -134,6 +134,7 @@ build_mark <- function(spec, mark, formula, args, style) {
   warn_unrecognized_mark_args(split$local_args, mark, style)
   warn_unrecognized_enum_values(args, style)
   check_transform_calls(args, paste0("mark `", mark, "`"), style)
+  check_param_definitions(args, paste0("mark `", mark, "`"))
 
   mark_obj <- structure(
     list(mark = mark, encodings = split$local_args),

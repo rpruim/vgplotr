@@ -488,7 +488,11 @@ serialize_params <- function(params) {
 }
 
 serialize_value <- function(x) {
-  if (inherits(x, "formula")) {
+  if (is_param_definition(x)) {
+    # a definition anywhere but vg_params() (the constructors catch most
+    # cases earlier, with the argument's name)
+    stop(param_definition_message(x, "value"), call. = FALSE)
+  } else if (inherits(x, "formula")) {
     serialize_formula(x)
   } else if (is_vg_param(x)) {
     format(x)

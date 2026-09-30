@@ -63,6 +63,7 @@ build_interactor <- function(spec, interactor, args, style) {
     warn_unrecognized_interactor_args(split$local_args, interactor, style = style)
     warn_unrecognized_enum_values(args, style)
     check_transform_calls(args, paste0("interactor `", interactor, "`"), style)
+    check_param_definitions(args, paste0("interactor `", interactor, "`"))
     interactor_obj <- structure(
       list(type = interactor, options = split$local_args),
       class = "vg_interactor"
@@ -97,6 +98,7 @@ build_interactor <- function(spec, interactor, args, style) {
     warn_unrecognized_interactor_args(args, interactor, kind = "input", style = style)
     warn_unrecognized_enum_values(args, style)
     check_transform_calls(args, paste0("input `", interactor, "`"), style)
+    check_param_definitions(args, paste0("input `", interactor, "`"))
     input <- structure(list(type = interactor, options = args), class = "vg_input")
     if (is_vgspec(spec)) {
       spec$layout <- input

@@ -39,6 +39,7 @@ vg_legend <- function(spec = NULL, type, ..., for_plot = NULL) {
   args <- canonicalize_legend_prop_names(list(...))
   warn_unrecognized_legend_args(args, type)
   check_transform_calls(args, paste0("legend `", type, "`"), style = "snake")
+  check_param_definitions(args, paste0("legend `", type, "`"))
   legend_obj <- structure(
     list(type = type, for_plot = for_plot, options = args),
     class = "vg_legend"

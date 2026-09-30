@@ -103,3 +103,29 @@ print.vg_param_date <- function(x, ...) {
   cat("<vg_param_date: ", x$date, ">\n", sep = "")
   invisible(x)
 }
+
+# A selection or date param *definition* (from vg_selection()/
+# vg_param_date()) belongs in vg_params(); everywhere else -- an interactor's
+# `as =`, a mark's `filter_by =`, a channel -- needs a reference to a
+# declared one, param(name). Passing the definition itself would otherwise
+# fail much later, when the spec is serialized, with an obscure jsonlite
+# error. Called by each constructor on its arguments; `where` says what was
+# being built, e.g. "mark `line`".
+check_param_definitions <- function(args, where) {
+  for (nm in names(args)) {
+    if (is_param_definition(args[[nm]])) stop(param_definition_message(args[[nm]], nm, where), call. = FALSE)
+  }
+  invisible()
+}
+
+is_param_definition <- function(x) inherits(x, c("vg_selection", "vg_param_date"))
+
+param_definition_message <- function(x, arg, where = NULL) {
+  what <- if (inherits(x, "vg_selection")) "selection" else "date param"
+  fn <- if (inherits(x, "vg_selection")) "vg_selection(...)" else "vg_param_date(...)"
+  sprintf(
+    paste0("`%s`%s is a %s *definition* (from %s), but it needs a reference to one. ",
+           "Declare the %s with `vg_params(name = %s)`, then use `param(name)` here."),
+    arg, if (!is.null(where)) paste0(" (in ", where, ")") else "", what, sub("\\(\\.\\.\\.\\)", "()", fn), what, fn
+  )
+}
