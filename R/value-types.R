@@ -25,7 +25,7 @@
 #'     -- e.g., to label a group in its own color. Compare \code{r = 5}, a radius
 #'     of 5 pixels. (Sent to Mosaic as a SQL literal, e.g.
 #'     `sql("'medium'")`.)}
-#'   \item{`literal`}{A constant value applied to every row, e.g.
+#'   \item{`constant`}{A constant value applied to every row, e.g.
 #'     `fill = "steelblue"`, `symbol = "square"` or `opacity = 0.5`. It is
 #'     used as is, not passed through the scale. (A string that isn't a
 #'     valid constant for the channel, e.g. `fill = "species"`, is still

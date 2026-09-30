@@ -415,9 +415,9 @@ type_tokens <- function(node, defs, depth = 0) {
     if (rn == "ParamRef") return("param()")
     # `~column`/`~constant` are written with the tilde because that's how
     # they're typed: a formula (see ?vg_value_types).
-    if (rn == "ChannelValue") return(c("~column", "~constant", "literal", "transform()", "sql()/agg()"))
+    if (rn == "ChannelValue") return(c("~column", "~constant", "constant", "transform()", "sql()/agg()"))
     if (rn %in% c("ChannelValueSpec", "ChannelValueIntervalSpec")) {
-      return(c("~column", "~constant", "literal", "transform()", "sql()/agg()", "list(value=, ...)"))
+      return(c("~column", "~constant", "constant", "transform()", "sql()/agg()", "list(value=, ...)"))
     }
     if (rn == "Fixed") return('"Fixed"')
     if (rn %in% c("Interval", "LiteralTimeInterval")) return(c('"day"/"week"/"month"/...', "number"))

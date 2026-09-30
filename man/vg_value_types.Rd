@@ -30,7 +30,7 @@ constant that \emph{does} go through the scale, so it gets the same color
 -- e.g., to label a group in its own color. Compare \code{r = 5}, a radius
 of 5 pixels. (Sent to Mosaic as a SQL literal, e.g.
 \code{sql("'medium'")}.)}
-\item{\code{literal}}{A constant value applied to every row, e.g.
+\item{\code{constant}}{A constant value applied to every row, e.g.
 \code{fill = "steelblue"}, \code{symbol = "square"} or \code{opacity = 0.5}. It is
 used as is, not passed through the scale. (A string that isn't a
 valid constant for the channel, e.g. \code{fill = "species"}, is still
