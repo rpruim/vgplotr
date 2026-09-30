@@ -317,6 +317,7 @@ NULL
 #' Examples on the package website that use this function:
 #'
 #' * [Axes & Gridlines](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html)
+#' * [Computed Params](https://rpruim.github.io/vgplotr/articles/params-computed-params.html)
 #' @name vg_mark_axis_x
 #' @rdname vg_mark_axis_x
 NULL
@@ -325,6 +326,7 @@ NULL
 #' Examples on the package website that use this function:
 #'
 #' * [Axes & Gridlines](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html)
+#' * [Computed Params](https://rpruim.github.io/vgplotr/articles/params-computed-params.html)
 #' @name vg_mark_axis_y
 #' @rdname vg_mark_axis_y
 NULL
@@ -583,6 +585,7 @@ NULL
 #' Examples on the package website that use this function:
 #'
 #' * [Normalized Stock Prices](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-normalize.html)
+#' * [Computed Params](https://rpruim.github.io/vgplotr/articles/params-computed-params.html)
 #' @name vg_mark_rule_x
 #' @rdname vg_mark_rule_x
 NULL

@@ -190,6 +190,7 @@ See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column
 Examples on the package website that use this function:
 \itemize{
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-normalize.html}{Normalized Stock Prices}
+\item \href{https://rpruim.github.io/vgplotr/articles/params-computed-params.html}{Computed Params}
 }
 }
 

@@ -274,6 +274,7 @@ See \link{vg_value_types} for what the \verb{<...>} notation below (\code{column
 Examples on the package website that use this function:
 \itemize{
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html}{Axes & Gridlines}
+\item \href{https://rpruim.github.io/vgplotr/articles/params-computed-params.html}{Computed Params}
 }
 }
 
