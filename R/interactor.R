@@ -35,8 +35,9 @@ vg_interactor_placement <- function(interactor) {
 #'
 #' @param spec For a plot-embedded interactor: a plot fragment or `vgspec`
 #'   to add it to, or `NULL` to start a new plot with just this interactor.
-#'   Layout-level inputs (e.g., `"slider"`) don't take a `spec` -- combine
-#'   them with plots using [vg_vconcat()]/[vg_hconcat()] instead.
+#'   For a layout-level input (e.g., `"slider"`): a `vgspec` with no layout
+#'   yet, to make the input its whole layout, or `NULL` to return the input
+#'   on its own -- combine it with plots using [vg_vconcat()]/[vg_hconcat()].
 #' @param interactor The interactor/input type, e.g., `"intervalX"`, `"slider"`.
 #' @param ... Options for the interactor/input (e.g., `as = param(brush)`,
 #'   `label = "Bias"`, `min = 0`, `max = 100`), and/or, for plot-embedded
@@ -72,18 +73,37 @@ build_interactor <- function(spec, interactor, args, style) {
     fragment$attrs <- merge_attrs(fragment$attrs, split$plot_attrs, context = paste0("interactor `", interactor, "`"))
     update_layout(spec, fragment)
   } else {
-    if (!is.null(spec)) {
+    # A layout-level input is either returned on its own (spec = NULL), to go
+    # into vg_vconcat()/vg_hconcat(), or becomes the whole layout of a spec
+    # that doesn't have one yet -- Mosaic's own form for a spec that is just,
+    # say, one table (`{"input": "table", ...}` at the top level).
+    fn <- paste0("vg_", camel_to_snake(interactor))
+    if (!is.null(spec) && !is_vgspec(spec)) {
       stop(
         "`", interactor, "` is a layout-level input; it doesn't take a spec/plot ",
-        "to extend. Combine it with plots using vg_vconcat()/vg_hconcat() ",
-        "instead, e.g., vg_vconcat(vg_", interactor, "(...), your_plot).",
+        "to extend -- it can't go inside a plot. Combine it with plots using ",
+        "vg_vconcat()/vg_hconcat() instead, e.g., vg_vconcat(", fn, "(...), your_plot).",
+        call. = FALSE
+      )
+    }
+    if (is_vgspec(spec) && !is.null(spec$layout)) {
+      stop(
+        "This spec already has a layout, so the `", interactor, "` input can't ",
+        "become its whole layout. Add it to the existing layout with ",
+        "vg_vconcat()/vg_hconcat() instead, e.g., spec |> vg_vconcat(", fn, "(...)).",
         call. = FALSE
       )
     }
     warn_unrecognized_interactor_args(args, interactor, kind = "input", style = style)
     warn_unrecognized_enum_values(args, style)
     check_transform_calls(args, paste0("input `", interactor, "`"), style)
-    structure(list(type = interactor, options = args), class = "vg_input")
+    input <- structure(list(type = interactor, options = args), class = "vg_input")
+    if (is_vgspec(spec)) {
+      spec$layout <- input
+      spec
+    } else {
+      input
+    }
   }
 }
 

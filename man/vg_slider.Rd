@@ -6,6 +6,7 @@
 \title{A slider input component.}
 \usage{
 vg_slider(
+  spec = NULL,
   as = vg_unset,
   column = vg_unset,
   field = vg_unset,
@@ -22,6 +23,8 @@ vg_slider(
 )
 }
 \arguments{
+\item{spec}{A \code{vgspec} with no layout yet, to make this input its whole layout (e.g., a spec that is just one table), or \code{NULL} (the default) to return the input on its own, to combine with plots and other inputs using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}. It is an error to pass a spec that already has a layout, or a plot: use \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}} to add the input to those.}
+
 \item{as}{\verb{<param()>} The output selection.}
 
 \item{column}{\verb{<string>} The name of a database column from which to pull menu options.}

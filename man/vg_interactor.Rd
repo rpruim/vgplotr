@@ -10,8 +10,9 @@ vg_interactor(spec = NULL, interactor, ...)
 \arguments{
 \item{spec}{For a plot-embedded interactor: a plot fragment or \code{vgspec}
 to add it to, or \code{NULL} to start a new plot with just this interactor.
-Layout-level inputs (e.g., \code{"slider"}) don't take a \code{spec} -- combine
-them with plots using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}} instead.}
+For a layout-level input (e.g., \code{"slider"}): a \code{vgspec} with no layout
+yet, to make the input its whole layout, or \code{NULL} to return the input
+on its own -- combine it with plots using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}.}
 
 \item{interactor}{The interactor/input type, e.g., \code{"intervalX"}, \code{"slider"}.}
 

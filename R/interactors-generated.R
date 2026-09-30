@@ -345,6 +345,7 @@ vg_toggle_z <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
 #'
+#' @param spec A `vgspec` with no layout yet, to make this input its whole layout (e.g., a spec that is just one table), or `NULL` (the default) to return the input on its own, to combine with plots and other inputs using [vg_vconcat()]/[vg_hconcat()]. It is an error to pass a spec that already has a layout, or a plot: use [vg_vconcat()]/[vg_hconcat()] to add the input to those.
 #' @param as `<param()>` The output selection.
 #' @param column `<string>` The name of a database column from which to pull menu options.
 #' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
@@ -357,14 +358,15 @@ vg_toggle_z <- function(spec = NULL, as = vg_unset, peers = vg_unset, ...) {
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
-vg_menu <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, list_match = vg_unset, options = vg_unset, value = vg_unset, ...) {
-  vg_interactor_(NULL, "menu", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, listMatch = list_match, options = options, value = value, ...)
+vg_menu <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, list_match = vg_unset, options = vg_unset, value = vg_unset, ...) {
+  vg_interactor_(spec, "menu", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, listMatch = list_match, options = options, value = value, ...)
 }
 
 #' A search input component.
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
 #'
+#' @param spec A `vgspec` with no layout yet, to make this input its whole layout (e.g., a spec that is just one table), or `NULL` (the default) to return the input on its own, to combine with plots and other inputs using [vg_vconcat()]/[vg_hconcat()]. It is an error to pass a spec that already has a layout, or a plot: use [vg_vconcat()]/[vg_hconcat()] to add the input to those.
 #' @param as `<param()>` The output selection.
 #' @param column `<string>` The name of a database column from which to pull menu options.
 #' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
@@ -375,14 +377,15 @@ vg_menu <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter_b
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
-vg_search <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, type = vg_unset, ...) {
-  vg_interactor_(NULL, "search", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, type = type, ...)
+vg_search <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, type = vg_unset, ...) {
+  vg_interactor_(spec, "search", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, type = type, ...)
 }
 
 #' A slider input component.
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
 #'
+#' @param spec A `vgspec` with no layout yet, to make this input its whole layout (e.g., a spec that is just one table), or `NULL` (the default) to return the input on its own, to combine with plots and other inputs using [vg_vconcat()]/[vg_hconcat()]. It is an error to pass a spec that already has a layout, or a plot: use [vg_vconcat()]/[vg_hconcat()] to add the input to those.
 #' @param as `<param()>` The output selection.
 #' @param column `<string>` The name of a database column from which to pull menu options.
 #' @param field `<string>` The name of the field (database column) over which the interval selection should be defined.
@@ -398,14 +401,15 @@ vg_search <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
-vg_slider <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, max = vg_unset, min = vg_unset, select = vg_unset, step = vg_unset, value = vg_unset, width = vg_unset, ...) {
-  vg_interactor_(NULL, "slider", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, max = max, min = min, select = select, step = step, value = value, width = width, ...)
+vg_slider <- function(spec = NULL, as = vg_unset, column = vg_unset, field = vg_unset, filter_by = vg_unset, from = vg_unset, label = vg_unset, max = vg_unset, min = vg_unset, select = vg_unset, step = vg_unset, value = vg_unset, width = vg_unset, ...) {
+  vg_interactor_(spec, "slider", as = as, column = column, field = field, filterBy = filter_by, from = from, label = label, max = max, min = min, select = select, step = step, value = value, width = width, ...)
 }
 
 #' A table grid view component.
 #'
 #' See [vg_value_types] for what the `<...>` notation below (`column`, `param()`, ...) means.
 #'
+#' @param spec A `vgspec` with no layout yet, to make this input its whole layout (e.g., a spec that is just one table), or `NULL` (the default) to return the input on its own, to combine with plots and other inputs using [vg_vconcat()]/[vg_hconcat()]. It is an error to pass a spec that already has a layout, or a plot: use [vg_vconcat()]/[vg_hconcat()] to add the input to those.
 #' @param align `<list>` An object of per-column alignment values.
 #' @param as `<param()>` The output selection.
 #' @param columns `<character vector>` A list of column names to include in the table grid.
@@ -418,7 +422,7 @@ vg_slider <- function(as = vg_unset, column = vg_unset, field = vg_unset, filter
 #' @param ... Additional options or plot-level attributes.
 #' @family interactor functions
 #' @export
-vg_table <- function(align = vg_unset, as = vg_unset, columns = vg_unset, filter_by = vg_unset, from = vg_unset, height = vg_unset, max_width = vg_unset, row_batch = vg_unset, width = vg_unset, ...) {
-  vg_interactor_(NULL, "table", align = align, as = as, columns = columns, filterBy = filter_by, from = from, height = height, maxWidth = max_width, rowBatch = row_batch, width = width, ...)
+vg_table <- function(spec = NULL, align = vg_unset, as = vg_unset, columns = vg_unset, filter_by = vg_unset, from = vg_unset, height = vg_unset, max_width = vg_unset, row_batch = vg_unset, width = vg_unset, ...) {
+  vg_interactor_(spec, "table", align = align, as = as, columns = columns, filterBy = filter_by, from = from, height = height, maxWidth = max_width, rowBatch = row_batch, width = width, ...)
 }
 

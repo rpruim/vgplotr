@@ -6,6 +6,7 @@
 \title{A table grid view component.}
 \usage{
 vg_table(
+  spec = NULL,
   align = vg_unset,
   as = vg_unset,
   columns = vg_unset,
@@ -19,6 +20,8 @@ vg_table(
 )
 }
 \arguments{
+\item{spec}{A \code{vgspec} with no layout yet, to make this input its whole layout (e.g., a spec that is just one table), or \code{NULL} (the default) to return the input on its own, to combine with plots and other inputs using \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}}. It is an error to pass a spec that already has a layout, or a plot: use \code{\link[=vg_vconcat]{vg_vconcat()}}/\code{\link[=vg_hconcat]{vg_hconcat()}} to add the input to those.}
+
 \item{align}{\verb{<list>} An object of per-column alignment values.}
 
 \item{as}{\verb{<param()>} The output selection.}

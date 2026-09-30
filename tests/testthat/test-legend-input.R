@@ -79,6 +79,33 @@ test_that("a layout-level input refuses a spec argument", {
   expect_error(vg_interactor(vg_mark_dot(x = ~a, y = ~b), "slider"), "doesn't take a spec")
 })
 
+test_that("an input piped onto a spec with no layout becomes its whole layout", {
+  spec <- vg_create() |>
+    vg_data(name = "flights", data = data.frame(a = 1:3)) |>
+    vg_table(from = "flights", height = 300)
+  expect_s3_class(spec$layout, "vg_input")
+  expect_identical(
+    jsonlite::fromJSON(to_json(spec), simplifyVector = FALSE)[c("input", "from", "height")],
+    list(input = "table", from = "flights", height = 300L)
+  )
+  expect_identical(as_spec_payload(spec)$spec$input, "table")
+
+  # every input, and the generic constructor, work the same way
+  for (fn in list(vg_menu, vg_search, vg_slider, vg_table)) {
+    expect_s3_class((vg_create() |> fn(from = "d"))$layout, "vg_input")
+  }
+  expect_s3_class((vg_create() |> vg_interactor("slider", label = "x"))$layout, "vg_input")
+})
+
+test_that("an input refuses a spec that already has a layout, pointing to vg_vconcat()", {
+  spec <- vg_create() |> vg_mark_dot(x = ~a, y = ~b)
+  expect_error(vg_table(spec, from = "d"), "already has a layout.*vg_vconcat\\(vg_table")
+  spec2 <- vg_create() |> vg_slider(label = "x")
+  expect_error(vg_menu(spec2, label = "y"), "already has a layout.*vg_vconcat\\(vg_menu")
+  # the suggested fix works
+  expect_s3_class((spec |> vg_vconcat(vg_table(from = "d")))$layout, "vg_concat")
+})
+
 test_that("as_spec_payload() serializes a layout-level input alongside a plot", {
   spec <- vg_create() |>
     vg_vconcat(

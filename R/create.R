@@ -4,8 +4,9 @@
 #' `vg_*()` functions are piped through to add data sources, params, marks,
 #' interactors, and layout. Marks and interactors can be piped directly onto
 #' a freshly created spec (e.g., `vg_create() |> vg_mark_dot(x = ~a, y = ~b)`) as
-#' long as the spec only needs a single plot; a spec with multiple plots, or
-#' with layout-level inputs (e.g., [vg_menu()], [vg_table()]), needs an
+#' long as the spec only needs a single plot. The same goes for a single
+#' layout-level input (e.g., `vg_create() |> vg_table(from = "flights")`); a
+#' spec with several plots, or with inputs alongside plots, needs an
 #' explicit layout (see [vg_vconcat()]/[vg_hconcat()]).
 #'
 #' @param data An optional data frame to register as this spec's first data

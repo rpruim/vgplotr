@@ -716,7 +716,14 @@ for (type in input_types) {
     prop_docs = interactor_prop_docs,
     prop_types = interactor_prop_types,
     title = docline(interactor_defs[[type]]$description, paste0("A `", type, "` input.")),
-    spec_doc = NULL,
+    spec_doc = paste(
+      "A `vgspec` with no layout yet, to make this input its whole layout",
+      "(e.g., a spec that is just one table), or `NULL` (the default) to return",
+      "the input on its own, to combine with plots and other inputs using",
+      "[vg_vconcat()]/[vg_hconcat()]. It is an error to pass a spec that",
+      "already has a layout, or a plot: use [vg_vconcat()]/[vg_hconcat()] to",
+      "add the input to those."
+    ),
     family = "interactor functions"
   ))
 }
