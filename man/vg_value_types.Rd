@@ -34,6 +34,9 @@ of 5 pixels. (Sent to Mosaic as a SQL literal, e.g.
 used as is, not passed through the scale. (A string that isn't a
 valid constant for the channel, e.g. \code{fill = "species"}, is still
 read by Mosaic as a column name, for now; write columns as formulas.)}
+\item{\code{column}}{A column name written bare (unquoted) as an argument of
+a transform function, e.g. \code{delay} in \code{x = ~ vg_bin(delay)}. See
+\link{vg_transforms}.}
 \item{\code{transform()}}{A vgplotr transform function, e.g. \code{vg_bin()},
 \code{vg_count()}, \code{vg_avg()} -- computed by DuckDB, not R. See
 \link{vg_transforms} for the full set.}

@@ -29,6 +29,9 @@
 #'     used as is, not passed through the scale. (A string that isn't a
 #'     valid constant for the channel, e.g. `fill = "species"`, is still
 #'     read by Mosaic as a column name, for now; write columns as formulas.)}
+#'   \item{`column`}{A column name written bare (unquoted) as an argument of
+#'     a transform function, e.g. `delay` in `x = ~ vg_bin(delay)`. See
+#'     [vg_transforms].}
 #'   \item{`transform()`}{A vgplotr transform function, e.g. `vg_bin()`,
 #'     `vg_count()`, `vg_avg()` -- computed by DuckDB, not R. See
 #'     [vg_transforms] for the full set.}

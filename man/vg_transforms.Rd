@@ -43,24 +43,104 @@
 \alias{vg_last_value}
 \alias{vg_nth_value}
 \title{Transform functions for use inside mapping formulas}
+\usage{
+vg_bin(field, interval, step, steps, minstep, nice, offset)
+vg_column(field)
+vg_date_month(field)
+vg_date_month_day(field)
+vg_date_day(field)
+vg_centroid(field)
+vg_centroid_x(field)
+vg_centroid_y(field)
+vg_geojson(field)
+vg_argmax(x, y, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_argmin(x, y, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_avg(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_count(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_covariance(x, y, distinct, orderby, partitionby, rows, range, groups,
+  exclude)
+vg_covar_pop(x, y, distinct, orderby, partitionby, rows, range, groups,
+  exclude)
+vg_first(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_geomean(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_last(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_max(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_min(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_median(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_mode(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_product(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_quantile(field, probability, distinct, orderby, partitionby, rows, range,
+  groups, exclude)
+vg_stddev(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_stddev_pop(field, distinct, orderby, partitionby, rows, range, groups,
+  exclude)
+vg_sum(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_variance(field, distinct, orderby, partitionby, rows, range, groups,
+  exclude)
+vg_var_pop(field, distinct, orderby, partitionby, rows, range, groups, exclude)
+vg_row_number(orderby, partitionby, rows, range, groups, exclude)
+vg_rank(orderby, partitionby, rows, range, groups, exclude)
+vg_dense_rank(orderby, partitionby, rows, range, groups, exclude)
+vg_percent_rank(orderby, partitionby, rows, range, groups, exclude)
+vg_cume_dist(orderby, partitionby, rows, range, groups, exclude)
+vg_ntile(num_buckets, orderby, partitionby, rows, range, groups, exclude)
+vg_lag(field, offset, default, orderby, partitionby, rows, range, groups,
+  exclude)
+vg_lead(field, offset, default, orderby, partitionby, rows, range, groups,
+  exclude)
+vg_first_value(field, orderby, partitionby, rows, range, groups, exclude)
+vg_last_value(field, orderby, partitionby, rows, range, groups, exclude)
+vg_nth_value(field, n, orderby, partitionby, rows, range, groups, exclude)
+}
 \arguments{
-\item{field, x, y, probability, num_buckets, default, n}{The field(s) a given
-transform operates on; which of these (if any) a specific transform
-accepts is shown in its own Usage line above.}
+\item{field}{\verb{<column | param()>} The column the transform operates on.}
 
-\item{interval, step, steps, minstep, nice, offset}{Binning options, for
-\code{vg_bin()} only.}
+\item{x, y}{\verb{<column | param()>} The two columns of a two-column aggregate
+(\code{\link[=vg_argmax]{vg_argmax()}}, \code{\link[=vg_argmin]{vg_argmin()}}, \code{\link[=vg_covariance]{vg_covariance()}}, \code{\link[=vg_covar_pop]{vg_covar_pop()}}).}
 
-\item{distinct}{Only for aggregate transforms: compute over distinct
-values only.}
+\item{probability}{\verb{<number | param()>} For \code{\link[=vg_quantile]{vg_quantile()}}: the quantile
+to compute, between 0 and 1 (e.g., \code{0.5} for the median).}
 
-\item{orderby, partitionby, rows, range, groups, exclude}{Window options,
-shared by aggregate and window transforms: control the ordering,
-partitioning, and frame of the window the transform is computed over.
-\code{rows}, \code{range} and \code{groups} each take a pair of frame offsets, measured
-from the current row: how far the frame reaches before it, then after it
+\item{num_buckets}{\verb{<number | param()>} For \code{\link[=vg_ntile]{vg_ntile()}}: how many
+groups to divide the rows into.}
+
+\item{offset}{\verb{<number | param()>} For \code{\link[=vg_lag]{vg_lag()}}/\code{\link[=vg_lead]{vg_lead()}}: how many
+rows back or ahead to look (default 1). For \code{\link[=vg_bin]{vg_bin()}}: a shift of the
+bin boundaries.}
+
+\item{default}{\verb{<constant | param()>} For \code{\link[=vg_lag]{vg_lag()}}/\code{\link[=vg_lead]{vg_lead()}}: the value
+to use when there is no row that far back or ahead.}
+
+\item{n}{\verb{<number | param()>} For \code{\link[=vg_nth_value]{vg_nth_value()}}: which row of the
+window frame to take (1 for the first).}
+
+\item{interval}{\verb{<"date" | "number" | "millisecond" | "second" | "minute" | "hour" | "day" | "month" | "year">} For \code{\link[=vg_bin]{vg_bin()}}: the kind of bins,
+numeric or a unit of time.}
+
+\item{step, steps, minstep}{\verb{<number>} For \code{\link[=vg_bin]{vg_bin()}}: the exact bin width
+(\code{step}), or else the approximate number of bins (\code{steps}), with a
+minimum bin width (\code{minstep}).}
+
+\item{nice}{\verb{<boolean>} For \code{\link[=vg_bin]{vg_bin()}}: whether to line the bins up on
+round values.}
+
+\item{distinct}{\verb{<boolean>} For aggregate transforms: compute over
+distinct values only.}
+
+\item{orderby, partitionby}{\verb{<string | character vector | param()>} Window
+options, for aggregate and window transforms: the column(s), as strings,
+that order the rows (\code{orderby}) and split them into separate windows
+(\code{partitionby}).}
+
+\item{rows, range, groups}{\verb{<list | numeric vector | param()>} Window
+options: the window frame, as a pair of offsets measured from the
+current row -- how far the frame reaches before it, then after it
 (numbers, \code{NULL} for unbounded, or date/time intervals such as
-\code{\link[=vg_days]{vg_days()}}; see \link{vg_intervals}).}
+\code{\link[=vg_days]{vg_days()}}; see \link{vg_intervals}). \code{rows} counts rows, \code{range} measures
+along the \code{orderby} column, and \code{groups} counts groups of tied rows.}
+
+\item{exclude}{\verb{<"CURRENT ROW" | "GROUP" | "TIES" | "NO OTHERS">} Window
+option: rows to leave out of the frame.}
 }
 \description{
 Transform and aggregate functions computed in the database (binning,
@@ -69,11 +149,15 @@ like \code{vg_rank()}/\code{vg_lag()}), for use as (or inside) a mark's mapping
 formula, e.g., \code{x = ~vg_bin(delay, step = 10)} or \code{y = ~vg_count()}.
 }
 \details{
-Each function's first argument(s) are the field(s) (column names or
-nested expressions) it operates on; remaining named arguments configure
-it (see \href{https://idl.uw.edu/mosaic/}{Mosaic's documentation} for what each
-transform accepts). All can also be called directly (outside a formula, no
-\code{~} needed) to see what they produce.
+Each function's first argument(s) are the column(s) it operates on,
+written bare (unquoted); the remaining arguments configure it. Which
+arguments a transform takes is shown in the Usage section; see
+\href{https://idl.uw.edu/mosaic/}{Mosaic's documentation} for more about each
+one. All can also be called directly (outside a formula, no \code{~} needed) to
+see what they produce.
+
+See \link{vg_value_types} for what the \verb{<...>} notation in the Arguments
+section (\code{column}, \code{param()}, ...) means.
 }
 \section{Used in examples}{
 

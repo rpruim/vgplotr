@@ -189,6 +189,29 @@ for (.name in names(vg_transform_specs)) {
 }
 rm(.name, .spec)
 
+# The \usage lines for ?vg_transforms (via @eval below): the functions are
+# created in a loop above, so roxygen can't see their definitions. Built
+# from the same table, so it always matches their real arguments; wrapped
+# to keep each line under 80 characters.
+transform_usage_doc <- function() {
+  one <- function(name) {
+    args <- names(formals(get(name)))
+    lines <- character()
+    cur <- paste0(name, "(")
+    for (i in seq_along(args)) {
+      piece <- paste0(args[[i]], if (i < length(args)) ", " else "")
+      if (nchar(cur) + nchar(piece) > 78 && !grepl("\\($", cur)) {
+        lines <- c(lines, sub(" $", "", cur))
+        cur <- "  "
+      }
+      cur <- paste0(cur, piece)
+    }
+    c(lines, paste0(cur, ")"))
+  }
+  usage <- unlist(lapply(names(vg_transform_specs), one))
+  c(paste("@usage", usage[[1]]), usage[-1])
+}
+
 #' Transform functions for use inside mapping formulas
 #'
 #' Transform and aggregate functions computed in the database (binning,
@@ -196,26 +219,53 @@ rm(.name, .spec)
 #' like `vg_rank()`/`vg_lag()`), for use as (or inside) a mark's mapping
 #' formula, e.g., `x = ~vg_bin(delay, step = 10)` or `y = ~vg_count()`.
 #'
-#' Each function's first argument(s) are the field(s) (column names or
-#' nested expressions) it operates on; remaining named arguments configure
-#' it (see [Mosaic's documentation](https://idl.uw.edu/mosaic/) for what each
-#' transform accepts). All can also be called directly (outside a formula, no
-#' `~` needed) to see what they produce.
+#' Each function's first argument(s) are the column(s) it operates on,
+#' written bare (unquoted); the remaining arguments configure it. Which
+#' arguments a transform takes is shown in the Usage section; see
+#' [Mosaic's documentation](https://idl.uw.edu/mosaic/) for more about each
+#' one. All can also be called directly (outside a formula, no `~` needed) to
+#' see what they produce.
 #'
-#' @param field,x,y,probability,num_buckets,default,n The field(s) a given
-#'   transform operates on; which of these (if any) a specific transform
-#'   accepts is shown in its own Usage line above.
-#' @param interval,step,steps,minstep,nice,offset Binning options, for
-#'   `vg_bin()` only.
-#' @param distinct Only for aggregate transforms: compute over distinct
-#'   values only.
-#' @param orderby,partitionby,rows,range,groups,exclude Window options,
-#'   shared by aggregate and window transforms: control the ordering,
-#'   partitioning, and frame of the window the transform is computed over.
-#'   `rows`, `range` and `groups` each take a pair of frame offsets, measured
-#'   from the current row: how far the frame reaches before it, then after it
+#' See [vg_value_types] for what the `<...>` notation in the Arguments
+#' section (`column`, `param()`, ...) means.
+#'
+#' @eval transform_usage_doc()
+#' @param field `<column | param()>` The column the transform operates on.
+#' @param x,y `<column | param()>` The two columns of a two-column aggregate
+#'   ([vg_argmax()], [vg_argmin()], [vg_covariance()], [vg_covar_pop()]).
+#' @param probability `<number | param()>` For [vg_quantile()]: the quantile
+#'   to compute, between 0 and 1 (e.g., `0.5` for the median).
+#' @param num_buckets `<number | param()>` For [vg_ntile()]: how many
+#'   groups to divide the rows into.
+#' @param offset `<number | param()>` For [vg_lag()]/[vg_lead()]: how many
+#'   rows back or ahead to look (default 1). For [vg_bin()]: a shift of the
+#'   bin boundaries.
+#' @param default `<constant | param()>` For [vg_lag()]/[vg_lead()]: the value
+#'   to use when there is no row that far back or ahead.
+#' @param n `<number | param()>` For [vg_nth_value()]: which row of the
+#'   window frame to take (1 for the first).
+#' @param interval `<"date" | "number" | "millisecond" | "second" | "minute" |
+#'   "hour" | "day" | "month" | "year">` For [vg_bin()]: the kind of bins,
+#'   numeric or a unit of time.
+#' @param step,steps,minstep `<number>` For [vg_bin()]: the exact bin width
+#'   (`step`), or else the approximate number of bins (`steps`), with a
+#'   minimum bin width (`minstep`).
+#' @param nice `<boolean>` For [vg_bin()]: whether to line the bins up on
+#'   round values.
+#' @param distinct `<boolean>` For aggregate transforms: compute over
+#'   distinct values only.
+#' @param orderby,partitionby `<string | character vector | param()>` Window
+#'   options, for aggregate and window transforms: the column(s), as strings,
+#'   that order the rows (`orderby`) and split them into separate windows
+#'   (`partitionby`).
+#' @param rows,range,groups `<list | numeric vector | param()>` Window
+#'   options: the window frame, as a pair of offsets measured from the
+#'   current row -- how far the frame reaches before it, then after it
 #'   (numbers, `NULL` for unbounded, or date/time intervals such as
-#'   [vg_days()]; see [vg_intervals]).
+#'   [vg_days()]; see [vg_intervals]). `rows` counts rows, `range` measures
+#'   along the `orderby` column, and `groups` counts groups of tied rows.
+#' @param exclude `<"CURRENT ROW" | "GROUP" | "TIES" | "NO OTHERS">` Window
+#'   option: rows to leave out of the frame.
 #' @family transform functions
 #' @name vg_transforms
 #' @aliases vg_bin vg_column vg_date_month vg_date_month_day vg_date_day vg_centroid vg_centroid_x vg_centroid_y vg_geojson vg_argmax vg_argmin vg_avg vg_count vg_covariance vg_covar_pop vg_first vg_geomean vg_last vg_max vg_min vg_median vg_mode vg_product vg_quantile vg_stddev vg_stddev_pop vg_sum vg_variance vg_var_pop vg_row_number vg_rank vg_dense_rank vg_percent_rank vg_cume_dist vg_ntile vg_lag vg_lead vg_first_value vg_last_value vg_nth_value
