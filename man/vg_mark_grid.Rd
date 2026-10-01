@@ -410,7 +410,7 @@ See \link{vg_value_types} for what the \verb{<...>} notation below (\code{~colum
 
 Examples on the package website that use these functions:
 \itemize{
-\item \code{vg_mark_grid_x()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html}{Axes & Gridlines}
+\item \code{vg_mark_grid_x()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html}{Axes & Gridlines}, \href{https://rpruim.github.io/vgplotr/articles/ecdf.html}{ECDF Plot for athlete heights}
 \item \code{vg_mark_grid_y()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html}{Axes & Gridlines}
 }
 }

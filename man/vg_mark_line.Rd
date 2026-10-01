@@ -301,7 +301,7 @@ See \link{vg_value_types} for what the \verb{<...>} notation below (\code{~colum
 
 Examples on the package website that use these functions:
 \itemize{
-\item \code{vg_mark_line()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html}{Driving Shifts into Reverse}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html}{WNBA Shot Chart}
+\item \code{vg_mark_line()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html}{Driving Shifts into Reverse}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html}{WNBA Shot Chart}, \href{https://rpruim.github.io/vgplotr/articles/ecdf.html}{ECDF Plot for athlete heights}
 \item \code{vg_mark_line_y()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-airline-travelers.html}{Airline Travelers}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html}{Mark Types}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-line-multi-series.html}{Line Multi-Series}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-moving-average.html}{Moving Average}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-normalize.html}{Normalized Stock Prices}
 }
 }

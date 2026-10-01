@@ -81,6 +81,7 @@ Examples on the package website that use this function:
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html}{Pan & Zoom}
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html}{Protein Design Explorer}
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html}{Seattle Weather}
+\item \href{https://rpruim.github.io/vgplotr/articles/ecdf.html}{ECDF Plot for athlete heights}
 \item \href{https://rpruim.github.io/vgplotr/articles/params-computed-params.html}{Computed Params}
 }
 }

@@ -164,12 +164,18 @@ articles:
   - articles/mosaic-examples
   - articles/other-examples
 
-- title: "Other Examples: Params & Interaction"
+- title: "Other Examples: Params, Interaction, and Selection"
   desc: >
-    Params that stay up to date as other params, selections and data
-    change.
+    Params and selections that link inputs, plots and computed values.
   contents:
   - articles/params-computed-params
+  - articles/ecdf
+
+- title: "Other Examples: Transform functions"
+  desc: >
+    Binning, aggregation and window functions computed in the database.
+  contents:
+  - articles/ecdf
 
 - title: Basic Marks & Inputs
   desc: >

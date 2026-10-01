@@ -78,6 +78,7 @@ See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number
 Examples on the package website that use this function:
 \itemize{
 \item \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html}{Population Change Arrows}
+\item \href{https://rpruim.github.io/vgplotr/articles/ecdf.html}{ECDF Plot for athlete heights}
 }
 }
 

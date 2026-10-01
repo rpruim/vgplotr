@@ -270,7 +270,7 @@ See \link{vg_value_types} for what the \verb{<...>} notation below (\code{~colum
 
 Examples on the package website that use these functions:
 \itemize{
-\item \code{vg_mark_bar_x()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-sorted-bars.html}{Sorted Bars}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html}{Observable Latency}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html}{Seattle Weather}
+\item \code{vg_mark_bar_x()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-sorted-bars.html}{Sorted Bars}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html}{Observable Latency}, \href{https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html}{Seattle Weather}, \href{https://rpruim.github.io/vgplotr/articles/ecdf.html}{ECDF Plot for athlete heights}
 \item \code{vg_mark_bar_y()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html}{Mark Types}
 }
 }

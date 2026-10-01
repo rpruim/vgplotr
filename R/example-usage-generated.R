@@ -44,6 +44,7 @@
 #' * [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html)
 #' * [Scatter Plot Matrix (SPLOM)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-splom.html)
 #' * [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' * [Computed Params](https://rpruim.github.io/vgplotr/articles/params-computed-params.html)
 #' @name param
 #' @rdname param
@@ -52,7 +53,7 @@ NULL
 #' @section Used in examples:
 #' Examples on the package website that use these functions:
 #'
-#' * `sql()`: [Athlete Birth Waffle](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-athlete-birth-waffle.html), [Driving Shifts into Reverse](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html), [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html), [Presidential Opinion](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-presidential-opinion.html), [Bias Parameter](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-bias.html), [Moving Average](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-moving-average.html), [Normalized Stock Prices](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-normalize.html), [Wind Map](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wind-map.html), [Earthquakes Feed](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html), [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html), [U.S. Unemployment](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-unemployment.html), [Walmart Openings](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-walmart-openings.html)
+#' * `sql()`: [Athlete Birth Waffle](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-athlete-birth-waffle.html), [Driving Shifts into Reverse](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html), [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html), [Presidential Opinion](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-presidential-opinion.html), [Bias Parameter](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-bias.html), [Moving Average](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-moving-average.html), [Normalized Stock Prices](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-normalize.html), [Wind Map](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wind-map.html), [Earthquakes Feed](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html), [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html), [U.S. Unemployment](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-unemployment.html), [Walmart Openings](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-walmart-openings.html), [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' @name sql
 #' @rdname sql
 NULL
@@ -137,6 +138,7 @@ NULL
 #' * [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html)
 #' * [Scatter Plot Matrix (SPLOM)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-splom.html)
 #' * [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' * [Computed Params](https://rpruim.github.io/vgplotr/articles/params-computed-params.html)
 #' @name vg_data
 #' @rdname vg_data
@@ -185,6 +187,7 @@ NULL
 #' * [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html)
 #' * [Scatter Plot Matrix (SPLOM)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-splom.html)
 #' * [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' @name vg_example_url
 #' @rdname vg_example_url
 NULL
@@ -210,8 +213,8 @@ NULL
 #' @section Used in examples:
 #' Examples on the package website that use these functions:
 #'
-#' * `vg_guide_x()`: [Driving Shifts into Reverse](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html), [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html), [Seattle Temperatures](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-seattle-temperatures.html), [Symbol Plots](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html)
-#' * `vg_guide_y()`: [Airline Travelers](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-airline-travelers.html), [Driving Shifts into Reverse](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html), [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html), [Seattle Temperatures](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-seattle-temperatures.html), [Symbol Plots](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html)
+#' * `vg_guide_x()`: [Driving Shifts into Reverse](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html), [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html), [Seattle Temperatures](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-seattle-temperatures.html), [Symbol Plots](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html), [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
+#' * `vg_guide_y()`: [Airline Travelers](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-airline-travelers.html), [Driving Shifts into Reverse](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html), [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html), [Seattle Temperatures](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-seattle-temperatures.html), [Symbol Plots](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html), [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' @name vg_guide_position
 #' @rdname vg_guide_position
 NULL
@@ -224,6 +227,7 @@ NULL
 #' * [Observable Latency](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html)
 #' * [Scatter Plot Matrix (SPLOM)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-splom.html)
 #' * [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' @name vg_highlight
 #' @rdname vg_highlight
 NULL
@@ -285,7 +289,7 @@ NULL
 #' @section Used in examples:
 #' Examples on the package website that use these functions:
 #'
-#' * `vg_mark_bar_x()`: [Sorted Bars](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-sorted-bars.html), [Observable Latency](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html), [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * `vg_mark_bar_x()`: [Sorted Bars](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-sorted-bars.html), [Observable Latency](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html), [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html), [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' * `vg_mark_bar_y()`: [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html)
 #' @name vg_mark_bar_x
 #' @rdname vg_mark_bar
@@ -344,6 +348,7 @@ NULL
 #' * [Pan & Zoom](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html)
 #' * [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html)
 #' * [Scatter Plot Matrix (SPLOM)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-splom.html)
+#' * [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' @name vg_mark_frame
 #' @rdname vg_mark_frame
 NULL
@@ -360,7 +365,7 @@ NULL
 #' @section Used in examples:
 #' Examples on the package website that use these functions:
 #'
-#' * `vg_mark_grid_x()`: [Axes & Gridlines](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html)
+#' * `vg_mark_grid_x()`: [Axes & Gridlines](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html), [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' * `vg_mark_grid_y()`: [Axes & Gridlines](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html)
 #' @name vg_mark_grid_x
 #' @rdname vg_mark_grid
@@ -397,7 +402,7 @@ NULL
 #' @section Used in examples:
 #' Examples on the package website that use these functions:
 #'
-#' * `vg_mark_line()`: [Driving Shifts into Reverse](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html), [WNBA Shot Chart](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html)
+#' * `vg_mark_line()`: [Driving Shifts into Reverse](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html), [WNBA Shot Chart](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html), [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' * `vg_mark_line_y()`: [Airline Travelers](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-airline-travelers.html), [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html), [Line Multi-Series](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-line-multi-series.html), [Moving Average](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-moving-average.html), [Normalized Stock Prices](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-normalize.html)
 #' @name vg_mark_line
 #' @rdname vg_mark_line
@@ -497,7 +502,56 @@ NULL
 NULL
 
 #' @section Used in examples:
-#' Used in every example on the package website. See the [Mosaic Examples](https://rpruim.github.io/vgplotr/articles/mosaic-examples.html) and the [Other Examples](https://rpruim.github.io/vgplotr/articles/other-examples.html).
+#' Examples on the package website that use this function:
+#'
+#' * [Aeromagnetic Survey](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-aeromagnetic-survey.html)
+#' * [Airline Travelers](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-airline-travelers.html)
+#' * [Athlete Birth Waffle](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-athlete-birth-waffle.html)
+#' * [Axes & Gridlines](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-axes-gridlines.html)
+#' * [Driving Shifts into Reverse](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-driving-shifts.html)
+#' * [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html)
+#' * [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html)
+#' * [Presidential Opinion](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-presidential-opinion.html)
+#' * [Seattle Temperatures](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-seattle-temperatures.html)
+#' * [Sorted Bars](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-sorted-bars.html)
+#' * [Symbol Plots](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html)
+#' * [Sortable Table](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-table.html)
+#' * [Voronoi Diagram](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html)
+#' * [Athlete Height Intervals](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-athlete-height.html)
+#' * [Bias Parameter](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-bias.html)
+#' * [Line Multi-Series](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-line-multi-series.html)
+#' * [Linear Regression 10M](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-linear-regression-10m.html)
+#' * [Linear Regression](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-linear-regression.html)
+#' * [Moving Average](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-moving-average.html)
+#' * [Normalized Stock Prices](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-normalize.html)
+#' * [Overview + Detail](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-overview-detail.html)
+#' * [Seattle Weather Pivot](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-seattle-weather-pivot.html)
+#' * [Wind Map](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wind-map.html)
+#' * [WNBA Shot Chart](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html)
+#' * [Contour Plot](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html)
+#' * [Density Groups](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density-groups.html)
+#' * [Density 1D](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density1d.html)
+#' * [Density 2D](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density2d.html)
+#' * [Flights Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html)
+#' * [Flights Hexbin](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-hexbin.html)
+#' * [Line Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-line-density.html)
+#' * [Earthquakes Feed](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-feed.html)
+#' * [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html)
+#' * [NYC Taxi Rides](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html)
+#' * [U.S. Unemployment](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-unemployment.html)
+#' * [U.S. Counties](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-county-map.html)
+#' * [U.S. States](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-state-map.html)
+#' * [Walmart Openings](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-walmart-openings.html)
+#' * [Olympic Athletes](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-athletes.html)
+#' * [Cross-Filter Flights (10M)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-flights-10m.html)
+#' * [Cross-Filter Flights (200k)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-flights-200k.html)
+#' * [Gaia Star Catalog](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html)
+#' * [Observable Latency](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html)
+#' * [Pan & Zoom](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html)
+#' * [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html)
+#' * [Scatter Plot Matrix (SPLOM)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-splom.html)
+#' * [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * [Computed Params](https://rpruim.github.io/vgplotr/articles/params-computed-params.html)
 #' @name vg_meta
 #' @rdname vg_meta
 NULL
@@ -561,6 +615,7 @@ NULL
 #' * [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html)
 #' * [Scatter Plot Matrix (SPLOM)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-splom.html)
 #' * [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' * [Computed Params](https://rpruim.github.io/vgplotr/articles/params-computed-params.html)
 #' @name vg_params
 #' @rdname vg_params
@@ -612,6 +667,7 @@ NULL
 #' * [Pan & Zoom](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html)
 #' * [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html)
 #' * [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' * [Computed Params](https://rpruim.github.io/vgplotr/articles/params-computed-params.html)
 #' @name vg_plot
 #' @rdname vg_plot
@@ -653,6 +709,7 @@ NULL
 #' Examples on the package website that use this function:
 #'
 #' * [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html)
+#' * [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' @name vg_scale_color
 #' @rdname vg_scale_color
 NULL
@@ -661,6 +718,7 @@ NULL
 #' Examples on the package website that use these functions:
 #'
 #' * `vg_scale_x()`: [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html)
+#' * `vg_scale_y()`: [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' @name vg_scale_position
 #' @rdname vg_scale_position
 NULL
@@ -671,6 +729,14 @@ NULL
 #' * [Olympic Athletes](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-athletes.html)
 #' @name vg_search
 #' @rdname vg_search
+NULL
+
+#' @section Used in examples:
+#' Examples on the package website that use these functions:
+#'
+#' * `vg_selection()`: [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
+#' @name vg_selection
+#' @rdname vg_selection
 NULL
 
 #' @section Used in examples:
@@ -706,7 +772,7 @@ NULL
 #' @section Used in examples:
 #' Examples on the package website that use these functions:
 #'
-#' * `vg_toggle_y()`: [Observable Latency](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html), [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * `vg_toggle_y()`: [Observable Latency](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html), [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html), [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' @name vg_toggle
 #' @rdname vg_toggle
 NULL
@@ -720,7 +786,8 @@ NULL
 #' * `vg_centroid_x()`: [U.S. Counties](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-county-map.html), [U.S. States](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-state-map.html)
 #' * `vg_centroid_y()`: [U.S. Counties](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-county-map.html), [U.S. States](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-us-state-map.html)
 #' * `vg_column()`: [Symbol Plots](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html)
-#' * `vg_count()`: [Athlete Birth Waffle](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-athlete-birth-waffle.html), [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html), [Athlete Height Intervals](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-athlete-height.html), [WNBA Shot Chart](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html), [Flights Hexbin](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-hexbin.html), [NYC Taxi Rides](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html), [Cross-Filter Flights (10M)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-flights-10m.html), [Cross-Filter Flights (200k)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-flights-200k.html), [Gaia Star Catalog](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html), [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html), [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * `vg_count()`: [Athlete Birth Waffle](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-athlete-birth-waffle.html), [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html), [Athlete Height Intervals](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-athlete-height.html), [WNBA Shot Chart](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html), [Flights Hexbin](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-hexbin.html), [NYC Taxi Rides](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html), [Cross-Filter Flights (10M)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-flights-10m.html), [Cross-Filter Flights (200k)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-flights-200k.html), [Gaia Star Catalog](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html), [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html), [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html), [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
+#' * `vg_cume_dist()`: [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' * `vg_date_month()`: [Seattle Temperatures](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-seattle-temperatures.html)
 #' * `vg_date_month_day()`: [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
 #' * `vg_geojson()`: [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html)
@@ -734,7 +801,7 @@ NULL
 #' @section Used in examples:
 #' Examples on the package website that use these functions:
 #'
-#' * `vg_hconcat()`: [Aeromagnetic Survey](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-aeromagnetic-survey.html), [Athlete Birth Waffle](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-athlete-birth-waffle.html), [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html), [Symbol Plots](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html), [Voronoi Diagram](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html), [Athlete Height Intervals](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-athlete-height.html), [WNBA Shot Chart](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html), [Contour Plot](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html), [Density Groups](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density-groups.html), [Density 2D](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density2d.html), [Flights Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html), [Flights Hexbin](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-hexbin.html), [Line Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-line-density.html), [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html), [NYC Taxi Rides](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html), [Olympic Athletes](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-athletes.html), [Gaia Star Catalog](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html), [Pan & Zoom](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html), [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html), [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html)
+#' * `vg_hconcat()`: [Aeromagnetic Survey](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-aeromagnetic-survey.html), [Athlete Birth Waffle](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-athlete-birth-waffle.html), [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html), [Symbol Plots](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html), [Voronoi Diagram](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html), [Athlete Height Intervals](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-athlete-height.html), [WNBA Shot Chart](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html), [Contour Plot](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html), [Density Groups](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density-groups.html), [Density 2D](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density2d.html), [Flights Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html), [Flights Hexbin](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-hexbin.html), [Line Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-line-density.html), [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html), [NYC Taxi Rides](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html), [Olympic Athletes](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-athletes.html), [Gaia Star Catalog](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html), [Pan & Zoom](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html), [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html), [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html), [ECDF Plot for athlete heights](https://rpruim.github.io/vgplotr/articles/ecdf.html)
 #' * `vg_vconcat()`: [Aeromagnetic Survey](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-aeromagnetic-survey.html), [Athlete Birth Waffle](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-athlete-birth-waffle.html), [Mark Types](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-mark-types.html), [Population Change Arrows](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html), [Presidential Opinion](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-presidential-opinion.html), [Sorted Bars](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-sorted-bars.html), [Symbol Plots](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-symbol-plots.html), [Voronoi Diagram](https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-voronoi.html), [Athlete Height Intervals](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-athlete-height.html), [Bias Parameter](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-bias.html), [Linear Regression 10M](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-linear-regression-10m.html), [Moving Average](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-moving-average.html), [Overview + Detail](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-overview-detail.html), [Wind Map](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wind-map.html), [WNBA Shot Chart](https://rpruim.github.io/vgplotr/articles/mosaic-data-transformation-wnba-shots.html), [Contour Plot](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-contours.html), [Density Groups](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density-groups.html), [Density 1D](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density1d.html), [Density 2D](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-density2d.html), [Flights Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-density.html), [Flights Hexbin](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-flights-hexbin.html), [Line Density](https://rpruim.github.io/vgplotr/articles/mosaic-density-visualizations-line-density.html), [Earthquakes Globe](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-earthquakes-globe.html), [NYC Taxi Rides](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-nyc-taxi-rides.html), [U.S. Unemployment](https://rpruim.github.io/vgplotr/articles/mosaic-maps-spatial-data-unemployment.html), [Olympic Athletes](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-athletes.html), [Cross-Filter Flights (10M)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-flights-10m.html), [Cross-Filter Flights (200k)](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-flights-200k.html), [Gaia Star Catalog](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-gaia.html), [Observable Latency](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-observable-latency.html), [Pan & Zoom](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-pan-zoom.html), [Protein Design Explorer](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-protein-design.html), [Seattle Weather](https://rpruim.github.io/vgplotr/articles/mosaic-multi-view-coordination-weather.html), [Computed Params](https://rpruim.github.io/vgplotr/articles/params-computed-params.html)
 #' @name vg_vconcat
 #' @rdname vg_vconcat

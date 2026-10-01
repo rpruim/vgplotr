@@ -146,6 +146,7 @@ See \link{vg_value_types} for what the \verb{<...>} notation below (\code{number
 Examples on the package website that use these functions:
 \itemize{
 \item \code{vg_scale_x()}: \href{https://rpruim.github.io/vgplotr/articles/mosaic-basic-marks-inputs-population-arrows.html}{Population Change Arrows}
+\item \code{vg_scale_y()}: \href{https://rpruim.github.io/vgplotr/articles/ecdf.html}{ECDF Plot for athlete heights}
 }
 }
 

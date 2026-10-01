@@ -21,8 +21,15 @@ To add an example:
    it and `vg_example_usage` includes it.
 -->
 
-## Params & Interaction
+## Params, Interaction, and Selection
 
-Params that stay up to date as other params, selections and data change.
+Params and selections that link inputs, plots and computed values.
 
 - [Computed Params](params-computed-params.html)
+- [ECDF Plot for athlete heights](ecdf.html)
+
+## Transform functions
+
+Binning, aggregation and window functions computed in the database.
+
+- [ECDF Plot for athlete heights](ecdf.html)
