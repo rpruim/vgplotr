@@ -48,7 +48,7 @@ the current day and the 6 before it.
 \details{
 Unlike the transforms in \link{vg_transforms}, the argument is a plain value,
 not a column, so \code{vg_days(6)} is evaluated as ordinary R. An offset is a
-distance, so it can't be negative. A \code{range} frame also needs \code{orderby}
+distance, so it can't be negative. A \code{range} frame also needs \code{order_by}
 (a column name, as a string) to say which column the distances are
 measured along.
 
@@ -57,7 +57,7 @@ Either offset can also be a plain number (\code{0} means the current row) or
 }
 \examples{
 # a 7-day trailing average
-y <- ~ vg_avg(close, orderby = "date", range = list(vg_days(6), 0))
+y <- ~ vg_avg(close, order_by = "date", range = list(vg_days(6), 0))
 }
 \seealso{
 Other transform functions:

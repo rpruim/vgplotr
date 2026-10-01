@@ -20,10 +20,10 @@ test_that("an interval count must be one finite number (or a param())", {
 })
 
 test_that("a window frame can mix numbers, NULL and intervals", {
-  t <- vg_avg(close, orderby = "date", range = list(vg_days(6), vg_days(0)))
+  t <- vg_avg(close, order_by = "date", range = list(vg_days(6), vg_days(0)))
   expect_equal(serialize_transform(t), list(avg = "close", orderby = "date", range = list(list(days = 6), list(days = 0))))
 
-  t <- vg_avg(close, orderby = "date", range = list(vg_hours(2), NULL))
+  t <- vg_avg(close, order_by = "date", range = list(vg_hours(2), NULL))
   expect_equal(serialize_transform(t)$range, list(list(hours = 2), NULL))
 
   # plain numbers are untouched
@@ -32,7 +32,7 @@ test_that("a window frame can mix numbers, NULL and intervals", {
 
 test_that("an interval frame works inside a mapping formula, and survives to_json()", {
   spec <- vg_create() |>
-    vg_mark_line_y(x = ~date, y = ~ vg_avg(close, orderby = "date", range = list(vg_days(6), vg_days(0))))
+    vg_mark_line_y(x = ~date, y = ~ vg_avg(close, order_by = "date", range = list(vg_days(6), vg_days(0))))
   out <- jsonlite::fromJSON(as.character(to_json(spec)), simplifyVector = FALSE)
   expect_equal(out$plot[[1]]$y$range, list(list(days = 6), list(days = 0)))
 })

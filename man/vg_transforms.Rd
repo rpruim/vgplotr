@@ -44,53 +44,71 @@
 \alias{vg_nth_value}
 \title{Transform functions for use inside mapping formulas}
 \usage{
-vg_bin(field, interval, step, steps, minstep, nice, offset)
-vg_column(field)
-vg_date_month(field)
-vg_date_month_day(field)
-vg_date_day(field)
-vg_centroid(field)
-vg_centroid_x(field)
-vg_centroid_y(field)
-vg_geojson(field)
-vg_argmax(x, y, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_argmin(x, y, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_avg(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_count(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_covariance(x, y, distinct, orderby, partitionby, rows, range, groups,
-  exclude)
-vg_covar_pop(x, y, distinct, orderby, partitionby, rows, range, groups,
-  exclude)
-vg_first(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_geomean(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_last(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_max(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_min(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_median(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_mode(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_product(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_quantile(field, probability, distinct, orderby, partitionby, rows, range,
-  groups, exclude)
-vg_stddev(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_stddev_pop(field, distinct, orderby, partitionby, rows, range, groups,
-  exclude)
-vg_sum(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_variance(field, distinct, orderby, partitionby, rows, range, groups,
-  exclude)
-vg_var_pop(field, distinct, orderby, partitionby, rows, range, groups, exclude)
-vg_row_number(orderby, partitionby, rows, range, groups, exclude)
-vg_rank(orderby, partitionby, rows, range, groups, exclude)
-vg_dense_rank(orderby, partitionby, rows, range, groups, exclude)
-vg_percent_rank(orderby, partitionby, rows, range, groups, exclude)
-vg_cume_dist(orderby, partitionby, rows, range, groups, exclude)
-vg_ntile(num_buckets, orderby, partitionby, rows, range, groups, exclude)
-vg_lag(field, offset, default, orderby, partitionby, rows, range, groups,
-  exclude)
-vg_lead(field, offset, default, orderby, partitionby, rows, range, groups,
-  exclude)
-vg_first_value(field, orderby, partitionby, rows, range, groups, exclude)
-vg_last_value(field, orderby, partitionby, rows, range, groups, exclude)
-vg_nth_value(field, n, orderby, partitionby, rows, range, groups, exclude)
+vg_bin(field, interval, step, steps, min_step, nice, offset, ...)
+vg_column(field, ...)
+vg_date_month(field, ...)
+vg_date_month_day(field, ...)
+vg_date_day(field, ...)
+vg_centroid(field, ...)
+vg_centroid_x(field, ...)
+vg_centroid_y(field, ...)
+vg_geojson(field, ...)
+vg_argmax(x, y, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_argmin(x, y, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_avg(field, distinct, order_by, partition_by, rows, range, groups, exclude,
+  ...)
+vg_count(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_covariance(x, y, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_covar_pop(x, y, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_first(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_geomean(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_last(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_max(field, distinct, order_by, partition_by, rows, range, groups, exclude,
+  ...)
+vg_min(field, distinct, order_by, partition_by, rows, range, groups, exclude,
+  ...)
+vg_median(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_mode(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_product(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_quantile(field, probability, distinct, order_by, partition_by, rows,
+  range, groups, exclude, ...)
+vg_stddev(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_stddev_pop(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_sum(field, distinct, order_by, partition_by, rows, range, groups, exclude,
+  ...)
+vg_variance(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_var_pop(field, distinct, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_row_number(order_by, partition_by, rows, range, groups, exclude, ...)
+vg_rank(order_by, partition_by, rows, range, groups, exclude, ...)
+vg_dense_rank(order_by, partition_by, rows, range, groups, exclude, ...)
+vg_percent_rank(order_by, partition_by, rows, range, groups, exclude, ...)
+vg_cume_dist(order_by, partition_by, rows, range, groups, exclude, ...)
+vg_ntile(num_buckets, order_by, partition_by, rows, range, groups, exclude,
+  ...)
+vg_lag(field, offset, default, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_lead(field, offset, default, order_by, partition_by, rows, range, groups,
+  exclude, ...)
+vg_first_value(field, order_by, partition_by, rows, range, groups, exclude,
+  ...)
+vg_last_value(field, order_by, partition_by, rows, range, groups, exclude, ...)
+vg_nth_value(field, n, order_by, partition_by, rows, range, groups, exclude,
+  ...)
 }
 \arguments{
 \item{field}{\verb{<column | param()>} The column the transform operates on.}
@@ -117,9 +135,9 @@ window frame to take (1 for the first).}
 \item{interval}{\verb{<"date" | "number" | "millisecond" | "second" | "minute" | "hour" | "day" | "month" | "year">} For \code{\link[=vg_bin]{vg_bin()}}: the kind of bins,
 numeric or a unit of time.}
 
-\item{step, steps, minstep}{\verb{<number>} For \code{\link[=vg_bin]{vg_bin()}}: the exact bin width
+\item{step, steps, min_step}{\verb{<number>} For \code{\link[=vg_bin]{vg_bin()}}: the exact bin width
 (\code{step}), or else the approximate number of bins (\code{steps}), with a
-minimum bin width (\code{minstep}).}
+minimum bin width (\code{min_step}).}
 
 \item{nice}{\verb{<boolean>} For \code{\link[=vg_bin]{vg_bin()}}: whether to line the bins up on
 round values.}
@@ -127,20 +145,24 @@ round values.}
 \item{distinct}{\verb{<boolean>} For aggregate transforms: compute over
 distinct values only.}
 
-\item{orderby, partitionby}{\verb{<string | character vector | param()>} Window
+\item{order_by, partition_by}{\verb{<string | character vector | param()>} Window
 options, for aggregate and window transforms: the column(s), as strings,
-that order the rows (\code{orderby}) and split them into separate windows
-(\code{partitionby}).}
+that order the rows (\code{order_by}) and split them into separate windows
+(\code{partition_by}).}
 
 \item{rows, range, groups}{\verb{<list | numeric vector | param()>} Window
 options: the window frame, as a pair of offsets measured from the
 current row -- how far the frame reaches before it, then after it
 (numbers, \code{NULL} for unbounded, or date/time intervals such as
 \code{\link[=vg_days]{vg_days()}}; see \link{vg_intervals}). \code{rows} counts rows, \code{range} measures
-along the \code{orderby} column, and \code{groups} counts groups of tied rows.}
+along the \code{order_by} column, and \code{groups} counts groups of tied rows.}
 
 \item{exclude}{\verb{<"CURRENT ROW" | "GROUP" | "TIES" | "NO OTHERS">} Window
 option: rows to leave out of the frame.}
+
+\item{...}{Mosaic's own spellings of \code{order_by}, \code{partition_by} and
+\code{min_step} -- \code{orderby}, \code{partitionby} and \code{minstep} -- are also
+accepted.}
 }
 \description{
 Transform and aggregate functions computed in the database (binning,

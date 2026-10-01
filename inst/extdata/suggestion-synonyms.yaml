@@ -211,7 +211,7 @@ transform_options:
   bins: [steps]
   n_bins: [steps]
   bin_width: [step]
-  group_by: [partitionby]
+  group_by: [partition_by]
   unique: [distinct]
 
 transform_names:

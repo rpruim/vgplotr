@@ -10,17 +10,21 @@
 # on) are captured unevaluated via match.call() -- this is what lets the
 # exact same function calls be recognized syntactically when they appear,
 # still unevaluated, inside a formula's RHS (see serialize_expr() in
-# serialize.R). "Option" arguments (interval, step, distinct, orderby, ...)
+# serialize.R). "Option" arguments (interval, step, distinct, order_by, ...)
 # are evaluated normally.
 
 # AggregateOptions + WindowOptions from Transform.ts, shared by every
 # aggregate transform; window transforms take only the WindowOptions.
-.vg_window_options <- c("orderby", "partitionby", "rows", "range", "groups", "exclude")
+.vg_window_options <- c("order_by", "partition_by", "rows", "range", "groups", "exclude")
+
+# Options whose R name differs from Mosaic's key (which run words together):
+# R name -> Mosaic key. Mosaic's spelling is also accepted, through `...`.
+.vg_transform_option_keys <- c(order_by = "orderby", partition_by = "partitionby", min_step = "minstep")
 .vg_aggregate_options <- c("distinct", .vg_window_options)
 
 new_vg_transform_fn <- function(key, field_names, option_names) {
   spec <- list(key = key, field_names = field_names, option_names = option_names)
-  arg_names <- c(field_names, option_names)
+  arg_names <- c(field_names, option_names, "...")
   args <- stats::setNames(rep(list(quote(expr = )), length(arg_names)), arg_names)
   rlang::new_function(
     args,
@@ -30,18 +34,66 @@ new_vg_transform_fn <- function(key, field_names, option_names) {
 }
 
 build_vg_transform <- function(spec, mc, env) {
-  supplied <- as.list(mc)[-1]
+  supplied <- normalize_transform_args(spec, as.list(mc)[-1])
 
   field_names_supplied <- spec$field_names[spec$field_names %in% names(supplied)]
   field <- unname(supplied[field_names_supplied])
 
   option_names_supplied <- spec$option_names[spec$option_names %in% names(supplied)]
   options <- lapply(supplied[option_names_supplied], function(e) serialize_value(eval(e, envir = env)))
+  renamed <- names(options) %in% names(.vg_transform_option_keys)
+  names(options)[renamed] <- .vg_transform_option_keys[names(options)[renamed]]
 
   structure(list(key = spec$key, field = field, env = env, options = options), class = "vg_transform")
 }
 
 is_vg_transform <- function(x) inherits(x, "vg_transform")
+
+# A transform's arguments (a matched call's, as a named list), with Mosaic's
+# own spellings (`orderby =`) renamed to vgplotr's (`order_by =`). Anything
+# else that ended up in `...` is an error: an unrecognized name (with a
+# suggestion) or a stray positional argument.
+normalize_transform_args <- function(spec, supplied) {
+  nms <- names(supplied) %||% rep("", length(supplied))
+  valid <- c(spec$field_names, spec$option_names)
+  aliases <- stats::setNames(names(.vg_transform_option_keys), .vg_transform_option_keys)
+  is_alias <- nms %in% names(aliases) & aliases[nms] %in% valid
+  nms[is_alias] <- aliases[nms[is_alias]]
+  names(supplied) <- nms
+  fn_name <- transform_fn_name(spec)
+  if (any(!nzchar(nms))) {
+    stop(sprintf("In `%s()`: too many unnamed arguments -- its arguments are %s.",
+                 fn_name, paste0("`", valid, "`", collapse = ", ")), call. = FALSE)
+  }
+  unknown <- nms[!nms %in% valid]
+  if (length(unknown)) stop(unknown_transform_args_message(fn_name, valid, setdiff(nms, unknown), unknown), call. = FALSE)
+  supplied
+}
+
+transform_fn_name <- function(spec) {
+  names(vg_transform_specs)[vapply(vg_transform_specs, function(s) identical(s$key, spec$key), logical(1))][1]
+}
+
+# "In `vg_bin()`: `stp` is not an argument of this transform. Did you
+# perhaps mean `step`?"
+unknown_transform_args_message <- function(fn_name, valid, present, unknown) {
+  names_str <- paste0("`", unknown, "`", collapse = ", ")
+  subject <- if (length(unknown) == 1) {
+    paste0(names_str, " is not an argument of this transform.")
+  } else {
+    paste0(names_str, " are not arguments of this transform.")
+  }
+  suggestions <- unlist(lapply(unknown, function(nm) {
+    format_suggestion(
+      suggest_names(nm, valid, present = present, table = synonym_section("transform_options")),
+      arg = if (length(unknown) > 1) nm
+    )
+  }))
+  if (length(suggestions) == 0) {
+    suggestions <- paste0("Its arguments are ", paste0("`", valid, "`", collapse = ", "), ".")
+  }
+  paste(c(sprintf("In `%s()`: %s", fn_name, subject), suggestions), collapse = " ")
+}
 
 # A transform written inside a mapping formula (`~vg_bin(delay, step = 10)`)
 # is never *called* -- serialize_expr() (R/serialize.R) reads it
@@ -66,24 +118,7 @@ match_transform_call <- function(fn_name, fn, expr) {
       is_partial <- vapply(supplied, function(s) sum(startsWith(valid, s)) == 1, logical(1))
       unknown <- supplied[!(supplied %in% valid) & !is_partial]
       if (length(unknown) == 0) stop(e)
-
-      names_str <- paste0("`", unknown, "`", collapse = ", ")
-      subject <- if (length(unknown) == 1) {
-        paste0(names_str, " is not an argument of this transform.")
-      } else {
-        paste0(names_str, " are not arguments of this transform.")
-      }
-      suggestions <- lapply(unknown, function(nm) {
-        format_suggestion(
-          suggest_names(nm, valid, present = setdiff(supplied, unknown), table = synonym_section("transform_options")),
-          arg = if (length(unknown) > 1) nm
-        )
-      })
-      suggestions <- unlist(suggestions)
-      if (length(suggestions) == 0) {
-        suggestions <- paste0("Its arguments are ", paste0("`", valid, "`", collapse = ", "), ".")
-      }
-      stop(paste(c(sprintf("In `%s()`: %s", fn_name, subject), suggestions), collapse = " "), call. = FALSE)
+      stop(unknown_transform_args_message(fn_name, valid, setdiff(supplied, unknown), unknown), call. = FALSE)
     }
   )
 }
@@ -139,7 +174,7 @@ print.vg_transform <- function(x, ...) {
 # name (the R function name, and the lookup key used when recognizing an
 # unevaluated call inside a formula) -> list(key, field_names, option_names)
 vg_transform_specs <- list(
-  vg_bin = list(key = "bin", field_names = "field", option_names = c("interval", "step", "steps", "minstep", "nice", "offset")),
+  vg_bin = list(key = "bin", field_names = "field", option_names = c("interval", "step", "steps", "min_step", "nice", "offset")),
   vg_column = list(key = "column", field_names = "field", option_names = character()),
   vg_date_month = list(key = "dateMonth", field_names = "field", option_names = character()),
   vg_date_month_day = list(key = "dateMonthDay", field_names = "field", option_names = character()),
@@ -247,25 +282,28 @@ transform_usage_doc <- function() {
 #' @param interval `<"date" | "number" | "millisecond" | "second" | "minute" |
 #'   "hour" | "day" | "month" | "year">` For [vg_bin()]: the kind of bins,
 #'   numeric or a unit of time.
-#' @param step,steps,minstep `<number>` For [vg_bin()]: the exact bin width
+#' @param step,steps,min_step `<number>` For [vg_bin()]: the exact bin width
 #'   (`step`), or else the approximate number of bins (`steps`), with a
-#'   minimum bin width (`minstep`).
+#'   minimum bin width (`min_step`).
 #' @param nice `<boolean>` For [vg_bin()]: whether to line the bins up on
 #'   round values.
 #' @param distinct `<boolean>` For aggregate transforms: compute over
 #'   distinct values only.
-#' @param orderby,partitionby `<string | character vector | param()>` Window
+#' @param order_by,partition_by `<string | character vector | param()>` Window
 #'   options, for aggregate and window transforms: the column(s), as strings,
-#'   that order the rows (`orderby`) and split them into separate windows
-#'   (`partitionby`).
+#'   that order the rows (`order_by`) and split them into separate windows
+#'   (`partition_by`).
 #' @param rows,range,groups `<list | numeric vector | param()>` Window
 #'   options: the window frame, as a pair of offsets measured from the
 #'   current row -- how far the frame reaches before it, then after it
 #'   (numbers, `NULL` for unbounded, or date/time intervals such as
 #'   [vg_days()]; see [vg_intervals]). `rows` counts rows, `range` measures
-#'   along the `orderby` column, and `groups` counts groups of tied rows.
+#'   along the `order_by` column, and `groups` counts groups of tied rows.
 #' @param exclude `<"CURRENT ROW" | "GROUP" | "TIES" | "NO OTHERS">` Window
 #'   option: rows to leave out of the frame.
+#' @param ... Mosaic's own spellings of `order_by`, `partition_by` and
+#'   `min_step` -- `orderby`, `partitionby` and `minstep` -- are also
+#'   accepted.
 #' @family transform functions
 #' @name vg_transforms
 #' @aliases vg_bin vg_column vg_date_month vg_date_month_day vg_date_day vg_centroid vg_centroid_x vg_centroid_y vg_geojson vg_argmax vg_argmin vg_avg vg_count vg_covariance vg_covar_pop vg_first vg_geomean vg_last vg_max vg_min vg_median vg_mode vg_product vg_quantile vg_stddev vg_stddev_pop vg_sum vg_variance vg_var_pop vg_row_number vg_rank vg_dense_rank vg_percent_rank vg_cume_dist vg_ntile vg_lag vg_lead vg_first_value vg_last_value vg_nth_value
@@ -360,7 +398,7 @@ check_formula_expr <- function(expr) {
   } else if (is.call(expr)) {
     resolved <- resolve_formula_call(expr)
     if (resolved$kind == "transform") {
-      supplied <- as.list(resolved$mc)[-1]
+      supplied <- normalize_transform_args(resolved$spec, as.list(resolved$mc)[-1])
       fields <- supplied[resolved$spec$field_names[resolved$spec$field_names %in% names(supplied)]]
       for (field in fields) check_formula_expr(field)
     }

@@ -279,7 +279,7 @@ test_that("several misspelled options each get their own suggestion", {
 test_that("with nothing similar, the error lists the transform's arguments instead", {
   expect_error(
     serialize_unchecked(x = ~vg_bin(delay, bogus = 10), y = ~vg_count()),
-    "`bogus` is not an argument of this transform\\. Its arguments are `field`, `interval`, `step`, `steps`, `minstep`, `nice`, `offset`\\."
+    "`bogus` is not an argument of this transform\\. Its arguments are `field`, `interval`, `step`, `steps`, `min_step`, `nice`, `offset`\\."
   )
 })
 
@@ -303,13 +303,14 @@ test_that("valid transform calls -- including an unambiguous partial argument na
   expect_no_error(serialize_with(x = ~delay, y = ~vg_count()))
 })
 
-test_that("a transform error that isn't about an unrecognized name keeps R's own message", {
-  # too many positional arguments: nothing to suggest
-  expect_error(serialize_with(x = ~vg_bin(delay, 1, 2, 3, 4, 5, 6, 7, 8), y = ~vg_count()), "unused argument")
+test_that("too many positional arguments to a transform is an error naming its arguments", {
+  # nothing to suggest, so it lists the arguments
+  expect_error(serialize_with(x = ~vg_bin(delay, 1, 2, 3, 4, 5, 6, 7, 8), y = ~vg_count()),
+               "In `vg_bin\\(\\)`: too many unnamed arguments")
 })
 
-test_that("a direct call with a misspelled option is R's own error (which already names the call)", {
-  expect_error(vg_bin(delay, stp = 10), "unused argument")
+test_that("a direct call with a misspelled option gets the same suggestion as in a formula", {
+  expect_error(vg_bin(delay, stp = 10), "In `vg_bin\\(\\)`: `stp` is not an argument.*Did you perhaps mean `step`")
 })
 
 test_that("match_transform_call() is match.call() when nothing is wrong", {

@@ -19,17 +19,17 @@ test_that("a two-arg transform (vg_quantile()) serializes as an array", {
 
 test_that("window options are recognized on both aggregate and window transforms", {
   expect_equal(
-    serialize_transform(vg_sum(amount, orderby = "t", distinct = TRUE)),
+    serialize_transform(vg_sum(amount, order_by = "t", distinct = TRUE)),
     list(sum = "amount", distinct = TRUE, orderby = "t")
   )
   expect_equal(
-    serialize_transform(vg_rank(orderby = "amount")),
+    serialize_transform(vg_rank(order_by = "amount")),
     list(rank = NULL, orderby = "amount")
   )
 })
 
 test_that("param() works as a transform option value", {
-  t <- vg_count(orderby = param(brush))
+  t <- vg_count(order_by = param(brush))
   expect_equal(serialize_transform(t), list(count = NULL, orderby = "$brush"))
 })
 
@@ -78,4 +78,27 @@ test_that("as_spec_payload() serializes a histogram mark using vg_bin()/vg_count
 
   expect_equal(mark$x, list(bin = "delay", step = 1))
   expect_equal(mark$y, list(count = NULL))
+})
+
+test_that("order_by, partition_by and min_step are sent under Mosaic's keys, and Mosaic's spellings work too", {
+  expect_equal(
+    serialize_transform(vg_cume_dist(order_by = "height", partition_by = "sport")),
+    list(cume_dist = NULL, orderby = "height", partitionby = "sport")
+  )
+  expect_equal(serialize_transform(vg_bin(x, min_step = 2)), list(bin = "x", minstep = 2))
+  # Mosaic's own spellings, called directly and inside a formula
+  expect_equal(
+    serialize_transform(vg_cume_dist(orderby = "height", partitionby = "sport")),
+    list(cume_dist = NULL, orderby = "height", partitionby = "sport")
+  )
+  s <- vg_create() |> vg_data(name = "d", data = data.frame(a = 1, h = 2)) |>
+    vg_mark_line(x = ~h, y = ~ vg_cume_dist(orderby = "h", partitionby = "a"))
+  expect_equal(as_spec_payload(s)$spec$plot[[1]]$y, list(cume_dist = NULL, orderby = "h", partitionby = "a"))
+})
+
+test_that("an unknown or stray argument to a transform is still an error, called directly or in a formula", {
+  expect_error(vg_bin(x, stp = 2), "In `vg_bin\\(\\)`: `stp` is not an argument.*`step`")
+  expect_error(vg_column(a, b), "In `vg_column\\(\\)`: too many unnamed arguments")
+  expect_error(vg_mark_dot(x = ~ vg_bin(a, stp = 2)), "In `vg_bin\\(\\)`: `stp` is not an argument")
+  expect_error(vg_mark_dot(x = ~ vg_cume_dist(orderby_x = "a")), "`orderby_x` is not an argument.*`order_by`")
 })

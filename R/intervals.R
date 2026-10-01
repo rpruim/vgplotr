@@ -12,7 +12,7 @@
 #'
 #' Unlike the transforms in [vg_transforms], the argument is a plain value,
 #' not a column, so `vg_days(6)` is evaluated as ordinary R. An offset is a
-#' distance, so it can't be negative. A `range` frame also needs `orderby`
+#' distance, so it can't be negative. A `range` frame also needs `order_by`
 #' (a column name, as a string) to say which column the distances are
 #' measured along.
 #'
@@ -25,7 +25,7 @@
 #' @name vg_intervals
 #' @examples
 #' # a 7-day trailing average
-#' y <- ~ vg_avg(close, orderby = "date", range = list(vg_days(6), 0))
+#' y <- ~ vg_avg(close, order_by = "date", range = list(vg_days(6), 0))
 NULL
 
 new_vg_interval_fn <- function(unit) {

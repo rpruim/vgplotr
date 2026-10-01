@@ -37,7 +37,7 @@ spec <-
     ) |>
       vg_mark_line_y(
         data_from = "cases", x = ~ sql("day + 0.5"),
-        y = ~ vg_avg(cases, orderby = "day", rows = frame),
+        y = ~ vg_avg(cases, order_by = "day", rows = frame),
         curve = "monotone-x", stroke = "currentColor"
       ) |>
       vg_plot(x_label = "day", width = 680, height = 300),
