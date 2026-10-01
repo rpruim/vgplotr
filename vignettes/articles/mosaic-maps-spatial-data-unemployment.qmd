@@ -14,11 +14,10 @@ Requires the DuckDB `spatial` extension.
 `combined` is a table defined by a SQL query, joining the spatial `counties` geometry with
 the `rates` unemployment data by county id.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 spec <-
   vg_create() |>
   vg_meta(
@@ -57,7 +56,7 @@ spec <-
       )
   )
 
-vg_render(spec)
+vg_render(spec, height = 450)
 ```
 
 <details>

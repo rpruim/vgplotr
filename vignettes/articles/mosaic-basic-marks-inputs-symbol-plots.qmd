@@ -10,11 +10,10 @@ from the mosaic/vgplot example gallery. Demonstrates dynamic column
 selection: `x =`/`y =` are bound to `vg_column(param(...))`, so the menu
 inputs change which data column each axis encodes at runtime.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 x_param <- param(x)
 y_param <- param(y)
 columns <- c("body_mass", "flipper_length", "bill_depth", "bill_length")
@@ -66,7 +65,7 @@ spec <-
     vg_hconcat(filled, vg_legend_symbol(for_plot = "filled", columns = 1))
   )
 
-vg_render(spec)
+vg_render(spec, height = 850)
 ```
 
 <details>

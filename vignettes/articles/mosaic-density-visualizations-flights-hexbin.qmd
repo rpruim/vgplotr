@@ -12,11 +12,10 @@ histograms to filter the density display.
 `scale`'s initial value is written as `list(value = "log")`, which is the
 same as `scale = "log"`.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 scale <- param(scale)
 query <- param(query)
 
@@ -66,7 +65,7 @@ spec <-
     vg_hconcat(hexbins, delay_hist)
   )
 
-vg_render(spec)
+vg_render(spec, height = 560)
 ```
 
 <details>

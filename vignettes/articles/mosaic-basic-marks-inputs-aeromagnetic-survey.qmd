@@ -20,11 +20,10 @@ both raster interpolation and smoothing (blur) options -- a menu and a
 slider bind two `param()`s that are passed directly as mark option values
 (`interpolate =`/`bandwidth =`), not just as encodings.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 interp <- param(interp)
 blur <- param(blur)
 
@@ -67,7 +66,7 @@ spec <-
       vg_plot(color_scale = "diverging", color_domain = "Fixed")
   )
 
-vg_render(spec)
+vg_render(spec, height = 440)
 ```
 
 <details>

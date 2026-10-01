@@ -11,11 +11,10 @@ from the mosaic/vgplot example gallery.
 Row 1: `barY`, `lineY`, `text`, `tickY`, `areaY`.
 Row 2: `regressionY`, `hexbin`, `contour`, `heatmap`, `denseLine`.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 md <- data.frame(
   i = 0:7,
   u = LETTERS[1:8],
@@ -99,7 +98,7 @@ spec <-
     y_domain = c(0, 9)
   )
 
-vg_render(spec)
+vg_render(spec, height = 200)
 ```
 
 <details>

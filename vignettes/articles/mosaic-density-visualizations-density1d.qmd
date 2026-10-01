@@ -11,11 +11,10 @@ in-database, subsequent smoothing in-browser. The distance density
 uses a log-scaled domain. To change the amount of smoothing, use the
 slider to set the kernel bandwidth.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 brush <- param(brush)
 bandwidth <- param(bandwidth)
 
@@ -51,7 +50,7 @@ spec <-
     delay_plot, distance_plot
   )
 
-vg_render(spec)
+vg_render(spec, height = 430)
 ```
 
 <details>

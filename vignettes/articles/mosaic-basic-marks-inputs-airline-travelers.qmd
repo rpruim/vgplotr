@@ -14,11 +14,10 @@ Demonstrates a `query`-only data source (a derived temporary table
 computed with a raw SQL query, no file behind it) and a constant text label, `text = list("2019")`. Wrapping the string in
 a list makes it a label; a bare string would be read as a column name.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 spec <-
   vg_create() |>
   vg_meta(
@@ -58,7 +57,7 @@ spec <-
   ) |>
   vg_guide_y(grid = TRUE, label = "↑ Travelers per day", tick_format = "s")
 
-vg_render(spec)
+vg_render(spec, height = 400)
 ```
 
 <details>

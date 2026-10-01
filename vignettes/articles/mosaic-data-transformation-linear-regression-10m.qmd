@@ -17,11 +17,10 @@ Note: the underlying `flights-10m.parquet` file has about 10 million rows.
 It is stored elsewhere than Mosaic's other example data, so the SQL query
 below refers to its URL directly rather than using `vg_example_url()`. Rendering this one may be slow.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 data_p <- param(data)
 query <- param(query)
 
@@ -71,7 +70,7 @@ spec <-
       )
   )
 
-vg_render(spec)
+vg_render(spec, height = 430)
 ```
 
 <details>

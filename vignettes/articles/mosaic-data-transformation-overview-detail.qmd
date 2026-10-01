@@ -13,11 +13,10 @@ apply M4 optimization to reduce the number of data points returned:
 rather than draw all points, a dramatically smaller subset can still
 faithfully represent these area charts.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 brush <- param(brush)
 
 spec <-
@@ -41,7 +40,7 @@ spec <-
       vg_plot(y_domain = "Fixed", width = 680, height = 200)
   )
 
-vg_render(spec)
+vg_render(spec, height = 400)
 ```
 
 <details>

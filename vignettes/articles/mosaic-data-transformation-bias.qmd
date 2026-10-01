@@ -9,11 +9,10 @@ Recreates [Bias Parameter](https://idl.uw.edu/mosaic/examples/bias.html)
 from the mosaic/vgplot example gallery. The SQL expression is
 re-computed in the database upon updates.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 point <- param(point)
 
 spec <-
@@ -33,7 +32,7 @@ spec <-
       vg_plot(width = 680, height = 200)
   )
 
-vg_render(spec)
+vg_render(spec, height = 230)
 ```
 
 <details>

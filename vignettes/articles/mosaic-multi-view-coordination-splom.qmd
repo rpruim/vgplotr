@@ -16,11 +16,10 @@ built with a small loop over the four measurement columns instead
 with only the leftmost column and bottommost row needing per-cell
 overrides for axis labels and margins).
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 brush <- param(brush)
 columns <- c("bill_length", "bill_depth", "flipper_length", "body_mass")
 rows <- rev(columns)
@@ -68,7 +67,7 @@ spec <-
   )
 spec <- do.call(vg_vconcat, c(list(spec), grid_rows))
 
-vg_render(spec)
+vg_render(spec, height = 630)
 ```
 
 <details>

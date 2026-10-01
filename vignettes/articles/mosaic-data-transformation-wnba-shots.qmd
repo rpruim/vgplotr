@@ -17,11 +17,10 @@ athlete menu both filters by it (`filter_by = filter_p`, respecting the
 team menu's choice) and contributes its own clause to it (`as =
 filter_p`), so team and athlete filters combine.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 filter_p <- param(filter)
 bin_width <- param(binWidth)
 
@@ -71,7 +70,7 @@ spec <-
     vg_legend_color(for_plot = "shot-chart")
   )
 
-vg_render(spec)
+vg_render(spec, height = 480)
 ```
 
 <details>

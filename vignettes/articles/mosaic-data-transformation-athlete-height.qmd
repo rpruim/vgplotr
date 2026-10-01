@@ -12,11 +12,10 @@ intervals update as the sample size increases (as in online
 aggregation). For each sport, the numbers on the right show the maximum
 number of athletes in the full dataset.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 ci <- param(ci)
 query <- param(query)
 
@@ -96,7 +95,7 @@ spec <-
     )
   )
 
-vg_render(spec)
+vg_render(spec, height = 480)
 ```
 
 <details>

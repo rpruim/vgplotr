@@ -17,11 +17,10 @@ directly as a mark encoding (`x = point`, with no `~` formula needed,
 since a `param()` reference is already a self-contained value) and
 interpolated inside `sql()` expressions.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 point <- param(point)
 
 spec <-
@@ -59,7 +58,7 @@ spec <-
     y_tick_format = "%", width = 680, height = 400, margin_right = 35
   )
 
-vg_render(spec)
+vg_render(spec, height = 400)
 ```
 
 <details>

@@ -10,11 +10,10 @@ from the mosaic/vgplot example gallery. County name tooltips are
 anchored to invisible centroid dot marks. Requires the DuckDB
 `spatial` extension.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 spec <-
   vg_create() |>
   vg_meta(
@@ -57,7 +56,7 @@ spec <-
   ) |>
   vg_plot(margin = 0, projection_type = "albers")
 
-vg_render(spec)
+vg_render(spec, height = 410)
 ```
 
 <details>

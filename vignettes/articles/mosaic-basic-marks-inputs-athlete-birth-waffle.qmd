@@ -15,11 +15,10 @@ The inputs enable adjustment of waffle mark design options (`unit =`,
 x-axis grouping uses a raw `sql()` expression (`year()` isn't one of
 vgplotr's own transform functions).
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 unit <- param(unit)
 round <- param(round)
 gap <- param(gap)
@@ -57,7 +56,7 @@ spec <-
       vg_plot(x_label = NULL, x_tick_size = 0, x_tick_format = "d")
   )
 
-vg_render(spec)
+vg_render(spec, height = 440)
 ```
 
 <details>

@@ -12,11 +12,10 @@ to the pointer and its associated series is highlighted. Highlighting
 of series is performed using `nearestX` and `highlight` interactors.
 Point and text annotations instead use the mark `select` filter option.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 curr <- param(curr)
 
 spec <-
@@ -57,7 +56,7 @@ spec <-
     style = "overflow: visible;", width = 680
   )
 
-vg_render(spec)
+vg_render(spec, height = 400)
 ```
 
 <details>

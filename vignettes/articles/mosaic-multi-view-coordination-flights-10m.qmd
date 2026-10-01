@@ -12,11 +12,10 @@ optimizations enable efficient cross-filtered selections.
 
 Note: the underlying `flights-10m.parquet` file has about 10 million rows. Rendering this one may be slow.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 brush <- param(brush)
 
 flights_url <- "https://pub-1da360b43ceb401c809f68ca37c7f8a4.r2.dev/data/flights-10m.parquet"
@@ -65,7 +64,7 @@ spec <-
   vg_params(brush = list(select = "crossfilter")) |>
   vg_vconcat(delay_plot, time_plot, distance_plot)
 
-vg_render(spec)
+vg_render(spec, height = 600)
 ```
 
 <details>

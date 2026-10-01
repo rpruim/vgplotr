@@ -12,11 +12,10 @@ as standalone marks (for full control over placement/styling), and a
 `ruleY` mark fed a vector used as its data (`data_from = c(0)`) rather than a named data
 source.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 spec <-
   vg_create() |>
   vg_meta(
@@ -50,7 +49,7 @@ spec <-
     width = 680
   )
 
-vg_render(spec)
+vg_render(spec, height = 400)
 ```
 
 <details>

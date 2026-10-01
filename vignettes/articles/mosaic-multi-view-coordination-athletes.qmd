@@ -13,11 +13,10 @@ display and are automatically populated by backing data columns.
 The `query` selection declares `include = category`, so it also includes
 the clauses of the `category` selection: one selection builds on another.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 category <- param(category)
 query <- param(query)
 hover <- param(hover)
@@ -71,7 +70,7 @@ spec <-
     vg_vconcat(controls, vg_vspace(10), scatter, vg_vspace(5), tbl)
   )
 
-vg_render(spec)
+vg_render(spec, height = 640)
 ```
 
 <details>

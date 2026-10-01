@@ -17,11 +17,10 @@ The color legend itself is a filter control here (`vg_legend_color(as
 = query)`): clicking a legend entry toggles that version in/out of the
 shared `query` crossfilter, same as the menus above it.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 query <- param(query)
 point <- param(point)
 plddt_domain <- param(plddt_domain)
@@ -114,7 +113,7 @@ spec <-
   ) |>
   vg_vconcat(controls, vg_vspace("1.5em"), legend_row, vg_hconcat(scatter, right_hist), vg_vspace("1em"), tbl)
 
-vg_render(spec)
+vg_render(spec, height = 780)
 ```
 
 <details>

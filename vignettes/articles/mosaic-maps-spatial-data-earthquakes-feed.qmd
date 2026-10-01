@@ -18,11 +18,10 @@ spatial formats DuckDB's `spatial` extension understands) directly into
 the database. `layer = "land"` picks out one layer from the TopoJSON
 file.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 spec <-
   vg_create() |>
   vg_meta(
@@ -58,7 +57,7 @@ spec <-
   ) |>
   vg_plot(margin = 2, projection_type = "equirectangular")
 
-vg_render(spec)
+vg_render(spec, height = 330)
 ```
 
 <details>

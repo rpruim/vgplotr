@@ -15,11 +15,10 @@ control stacking of density areas.
 `offset`'s initial value is `NULL`, declared with `vg_params(offset =
 NULL)`.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 bandwidth <- param(bandwidth)
 normalize <- param(normalize)
 stack <- param(stack)
@@ -58,7 +57,7 @@ spec <-
       vg_plot(margin_left = 50, height = 200)
   )
 
-vg_render(spec)
+vg_render(spec, height = 220)
 ```
 
 <details>

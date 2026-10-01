@@ -11,11 +11,10 @@ mosaic/vgplot example gallery. Select a histogram region to
 cross-filter the charts. Each plot uses an `intervalX` interactor to
 populate a shared Selection with `crossfilter` resolution.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 brush <- param(brush)
 
 delay_plot <-
@@ -60,7 +59,7 @@ spec <-
   vg_params(brush = list(select = "crossfilter")) |>
   vg_vconcat(delay_plot, time_plot, distance_plot)
 
-vg_render(spec)
+vg_render(spec, height = 600)
 ```
 
 <details>

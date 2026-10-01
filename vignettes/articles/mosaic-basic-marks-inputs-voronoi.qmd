@@ -14,11 +14,10 @@ The `voronoi` mark shows the regions closest to each point. It is
 dual](https://observablehq.com/@mbostock/the-delaunays-dual), a Delaunay
 triangle mesh. Reveal triangulations or convex hulls using the dropdowns.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 mesh <- param(mesh)
 hull <- param(hull)
 
@@ -93,7 +92,7 @@ spec <-
     )
   )
 
-vg_render(spec)
+vg_render(spec, height = 420)
 ```
 
 <details>

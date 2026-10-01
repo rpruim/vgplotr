@@ -17,11 +17,10 @@ on the right.
 control point (here just a param, not wired to a visible input in this
 example) to switch every linked plot's scale type at once.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 brush <- param(brush)
 bandwidth <- param(bandwidth)
 pixel_size <- param(pixelSize)
@@ -105,7 +104,7 @@ spec <-
     hr_plot
   )
 
-vg_render(spec)
+vg_render(spec, height = 370)
 ```
 
 <details>

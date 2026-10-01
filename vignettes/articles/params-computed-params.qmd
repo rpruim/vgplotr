@@ -16,11 +16,10 @@ average mpg of the cars inside the brush (of all cars when nothing is
 brushed); the dashed line is that average times the factor chosen with the
 slider. Brushing a new range resets the factor to 1.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 spec <-
   vg_create() |>
   vg_meta(
@@ -79,7 +78,7 @@ spec <-
       )
   )
 
-vg_render(spec)
+vg_render(spec, height = 380)
 ```
 
 ## How it works

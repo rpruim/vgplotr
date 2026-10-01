@@ -19,11 +19,10 @@ standing alone -- clicking a legend entry toggles that weather type.
 category order and palette, referenced from both plots'
 `color_domain`/`color_range`.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 click <- param(click)
 range_p <- param(range)
 domain <- param(domain)
@@ -71,7 +70,7 @@ spec <-
   ) |>
   vg_vconcat(vg_hconcat(scatter), bars)
 
-vg_render(spec)
+vg_render(spec, height = 460)
 ```
 
 <details>

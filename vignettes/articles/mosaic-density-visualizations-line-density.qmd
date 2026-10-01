@@ -13,11 +13,10 @@ visible in the unnormalized plot below. Select a region in the lower
 plot to zoom the upper plot. The bandwidth slider smooths the data,
 while the pixel size menu adjusts the raster resolution.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 brush <- param(brush)
 bandwidth <- param(bandwidth)
 pixel_size <- param(pixelSize)
@@ -76,7 +75,7 @@ spec <-
     top_plot, bottom_plot
   )
 
-vg_render(spec)
+vg_render(spec, height = 520)
 ```
 
 <details>

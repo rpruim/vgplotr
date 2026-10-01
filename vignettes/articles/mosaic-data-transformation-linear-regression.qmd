@@ -17,11 +17,10 @@ param(query))`) is used only within this one plot, so -- unlike "Sorted Bars" --
 doesn't need an explicit `vg_params()` declaration; the selection is
 created the moment it's targeted by an `as =`.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 query <- param(query)
 
 spec <-
@@ -41,7 +40,7 @@ spec <-
   vg_interval_xy(as = query, brush = list(fillOpacity = 0, stroke = "currentColor")) |>
   vg_plot(xy_domain = "Fixed", color_domain = "Fixed")
 
-vg_render(spec)
+vg_render(spec, height = 400)
 ```
 
 <details>

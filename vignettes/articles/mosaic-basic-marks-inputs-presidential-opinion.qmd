@@ -15,11 +15,10 @@ label/value pairs (`list(label = ..., value = ...)`) rather than a plain
 vector -- the selected value feeds into a `sql()` expression as an
 interpolated `param()`.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 sign <- param(sign)
 
 spec <-
@@ -70,7 +69,7 @@ spec <-
     )
   )
 
-vg_render(spec)
+vg_render(spec, height = 420)
 ```
 
 <details>

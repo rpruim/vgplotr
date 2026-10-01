@@ -15,11 +15,10 @@ Like "Linear Regression"'s brush, the four axis selections (`xs`/`ys`/
 `panZoom(x =, y =)` call -- no `vg_params()` declaration needed, since
 each is used only within the plots that reference it.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 xs <- param(xs)
 ys <- param(ys)
 zs <- param(zs)
@@ -65,7 +64,7 @@ spec <-
     vg_vconcat(plot3, vg_vspace(10), plot4)
   )
 
-vg_render(spec)
+vg_render(spec, height = 490)
 ```
 
 <details>

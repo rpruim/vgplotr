@@ -12,11 +12,10 @@ example](https://observablehq.com/@observablehq/plot-connected-scatterplot),
 which in turn adapts Hannah Fairfield's [New York Times
 article](http://www.nytimes.com/imagepages/2010/05/02/business/02metrics.html)).
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 spec <-
   vg_create() |>
   vg_meta(
@@ -51,7 +50,7 @@ spec <-
   vg_guide_y(label = "Cost of gasoline ($ per gallon)") |>
   vg_plot()
 
-vg_render(spec)
+vg_render(spec, height = 400)
 ```
 
 <details>

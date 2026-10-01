@@ -12,6 +12,8 @@ Multiple sports can be selected by using shift or command while clicking.
 
 ```{r}
 #| label: ecdf-plot
+#| code-fold: true
+
 library(vgplotr)
 spec <-
   vg_create() |>
@@ -67,7 +69,7 @@ spec <-
       vg_scale_color(scheme = "turbo")
   )
 
-spec |> vg_render()
+spec |> vg_render(height = 480)
 ```
 
 :::{.callout-note}

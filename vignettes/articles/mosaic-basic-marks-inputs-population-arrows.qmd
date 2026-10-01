@@ -10,11 +10,10 @@ Arrows](https://idl.uw.edu/mosaic/examples/population-arrows.html) from
 the mosaic/vgplot example gallery (adapted from an [Observable Plot
 example](https://observablehq.com/@observablehq/plot-arrow-variation-chart)).
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 bend <- param(bend)
 
 arrows <-
@@ -63,7 +62,7 @@ spec <-
     vg_menu(label = "Bend Arrows?", options = c(TRUE, FALSE), as = bend)
   )
 
-vg_render(spec)
+vg_render(spec, height = 470)
 ```
 
 <details>

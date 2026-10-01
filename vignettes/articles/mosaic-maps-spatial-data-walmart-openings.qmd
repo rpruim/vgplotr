@@ -11,11 +11,10 @@ from the mosaic/vgplot example gallery (adapted from an [Observable
 Plot example](https://observablehq.com/@observablehq/plot-map-large-multiples)).
 Requires the DuckDB `spatial` extension.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 spec <-
   vg_create() |>
   vg_meta(
@@ -49,7 +48,7 @@ spec <-
   vg_mark_axis_fy(frame_anchor = "top", dy = 30, tick_format = "d") |>
   vg_plot(margin = 0, fy_label = NULL, projection_type = "albers")
 
-vg_render(spec)
+vg_render(spec, height = 2070)
 ```
 
 <details>

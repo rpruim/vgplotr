@@ -18,11 +18,10 @@ provides the spatial functions used here (`ST_Transform()`, `ST_Point()`,
 histogram) share one `crossfilter` Selection (`filter`), each
 contributing its own `intervalX`/`intervalXY` brush to it.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 filter_p <- param(filter)
 
 rides_url <- "https://pub-1da360b43ceb401c809f68ca37c7f8a4.r2.dev/data/nyc-rides-2010.parquet"
@@ -91,7 +90,7 @@ spec <-
       vg_plot(y_tick_format = "s", x_label = "Pickup Hour →", width = 680, height = 100)
   )
 
-vg_render(spec)
+vg_render(spec, height = 660)
 ```
 
 <details>

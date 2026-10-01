@@ -9,11 +9,10 @@ Recreates [Flights Density](https://idl.uw.edu/mosaic/examples/flights-density.h
 from the mosaic/vgplot example gallery. The sliders adjust the
 smoothing (bandwidth) and number of contour thresholds.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 bandwidth <- param(bandwidth)
 thresholds <- param(thresholds)
 
@@ -47,7 +46,7 @@ spec <-
       )
   )
 
-vg_render(spec)
+vg_render(spec, height = 530)
 ```
 
 <details>

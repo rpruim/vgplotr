@@ -15,11 +15,10 @@ Piped onto a spec that has no layout yet, as here, it becomes the spec's
 whole layout; to combine it with plots or other inputs, use
 `vg_vconcat()`/`vg_hconcat()` instead.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 spec <-
   vg_create() |>
   vg_meta(
@@ -33,7 +32,7 @@ spec <-
   vg_data(name = "flights", file = vg_example_url("flights-200k.parquet")) |>
   vg_table(data_from = "flights", height = 300)
 
-vg_render(spec)
+vg_render(spec, height = 300)
 ```
 
 <details>

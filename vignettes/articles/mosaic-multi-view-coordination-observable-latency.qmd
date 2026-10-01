@@ -20,11 +20,10 @@ grid resolution) are distinct from the *plot's* `width`/`height`
 (680x300, its rendered size) -- these are per-mark properties, kept
 separate from the plot-level attributes of the same name.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 filter_p <- param(filter)
 highlight_p <- param(highlight)
 
@@ -33,30 +32,56 @@ latency_url <- "https://pub-1da360b43ceb401c809f68ca37c7f8a4.r2.dev/data/observa
 heatmap_plot <-
   vg_mark_frame(fill = "black") |>
   vg_mark_raster(
-    data_from = "latency", filter_by = filter_p, x = ~time, y = ~latency,
-    fill = ~ vg_argmax(route, count), fill_opacity = ~ vg_sum(count),
-    width = 2016, height = 500, image_rendering = "pixelated"
+    data_from = "latency",
+    filter_by = filter_p,
+    x = ~time,
+    y = ~latency,
+    fill = ~ vg_argmax(route, count),
+    fill_opacity = ~ vg_sum(count),
+    width = 2016,
+    height = 500,
+    image_rendering = "pixelated"
   ) |>
   vg_interval_xy(as = filter_p) |>
   vg_plot(
-    color_domain = "Fixed", color_scheme = "observable10",
-    opacity_domain = c(0, 25), opacity_clamp = TRUE,
-    y_scale = "log", y_label = "↑ Duration (ms)", y_domain = c(0.5, 10000), y_tick_format = "s",
-    x_scale = "utc", x_label = NULL, x_domain = c(1706227200000, 1706832000000),
-    width = 680, height = 300, margins = list(left = 35, top = 20, bottom = 30, right = 20)
+    color_domain = "Fixed",
+    color_scheme = "observable10",
+    opacity_domain = c(0, 25),
+    opacity_clamp = TRUE,
+    y_scale = "log",
+    y_label = "↑ Duration (ms)",
+    y_domain = c(0.5, 10000),
+    y_tick_format = "s",
+    x_scale = "utc",
+    x_label = NULL,
+    x_domain = c(1706227200000, 1706832000000),
+    width = 680,
+    height = 300,
+    margins = list(left = 35, top = 20, bottom = 30, right = 20)
   )
 
 routes_plot <-
   vg_mark_bar_x(
-    data_from = "latency", filter_by = filter_p, x = ~ vg_sum(count), y = ~route, fill = ~route,
+    data_from = "latency",
+    filter_by = filter_p,
+    x = ~ vg_sum(count),
+    y = ~route,
+    fill = ~route,
     sort = list(y = "-x", limit = 15)
   ) |>
   vg_toggle_y(as = filter_p) |>
   vg_toggle_y(as = highlight_p) |>
   vg_highlight(by = highlight_p) |>
   vg_plot(
-    color_domain = "Fixed", x_label = "Routes by Total Requests", x_tick_format = "s", y_label = NULL,
-    width = 680, height = 300, margin_top = 5, margin_left = 220, margin_bottom = 35
+    color_domain = "Fixed",
+    x_label = "Routes by Total Requests",
+    x_tick_format = "s",
+    y_label = NULL,
+    width = 680,
+    height = 300,
+    margin_top = 5,
+    margin_left = 220,
+    margin_bottom = 35
   )
 
 spec <-
@@ -77,7 +102,7 @@ spec <-
   vg_params(filter = list(select = "crossfilter")) |>
   vg_vconcat(heatmap_plot, routes_plot)
 
-vg_render(spec)
+vg_render(spec, width = 680, height = 600)
 ```
 
 <details>

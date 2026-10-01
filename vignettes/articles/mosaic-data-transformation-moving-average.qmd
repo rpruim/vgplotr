@@ -11,11 +11,10 @@ COVID-19 cases from March 3 (day 1) to May 5, 2020 (day 64) in Berlin,
 Germany. We can smooth the raw counts using a moving average over
 various choices of window query frames.
 
-```{r setup}
-library(vgplotr)
-```
-
 ```{r}
+#| code-fold: true
+
+library(vgplotr)
 frame <- param(frame)
 
 spec <-
@@ -52,7 +51,7 @@ spec <-
     )
   )
 
-vg_render(spec)
+vg_render(spec, height = 320)
 ```
 
 <details>
