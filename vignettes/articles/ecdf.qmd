@@ -1,0 +1,104 @@
+---
+title: "ECDF Plot for athlete heights"
+subtitle: "Selection via plot elements, sorting, and fixed scale domains."
+format: html
+engine: knitr
+---
+
+
+Click on the bars below to select sports to be shown in the empirical
+cumulative distribution plot on the right.
+Multiple sports can be selected by using shift or command while clicking.
+
+```{r}
+#| label: ecdf-plot
+library(vgplotr)
+spec <-
+  vg_create() |>
+  vg_data(name = "athletes", file = vg_example_url("athletes.parquet")) |>
+  vg_params(sports = vg_selection("union")) |>
+  vg_hconcat(
+    vg_mark_bar_x(
+      sport ~ vg_count(),
+      fill = ~sport,
+      sort = list(y = "-x", color = "-x")
+    ) |>
+      vg_toggle_y(as = param(sports)) |> # click a bar; Shift-click for more
+      vg_highlight(by = param(sports)) |> # dim the bars not selected
+      vg_scale_color(scheme = "turbo", domain = "Fixed") |>
+      vg_plot(
+        width = 320,
+        height = 480,
+        y_label = NULL,
+        margin_left = 120
+      ) |>
+      vg_guide_x(
+        label = "number of athletes",
+        label_anchor = "center",
+        label_arrow = FALSE
+      ) |>
+      vg_mark_grid_x(),
+    vg_mark_line(
+      y = ~ vg_cume_dist(order_by = "height", partition_by = ~sport),
+      x = ~ sql("height * 100"),
+      fy = ~sex,
+      stroke = ~sport,
+      sort = list(
+        color = list(value = "y", reduce = "count", order = "descending")
+      ),
+      curve = "step-after",
+      filter_by = param(sports),
+      title = ~sport,
+      tip = TRUE
+    ) |>
+      vg_guide_x(
+        label = "height (cm)",
+        label_anchor = "center",
+        label_arrow = FALSE
+      ) |>
+      vg_guide_y(
+        label = "cumulative proportion",
+        label_anchor = "center",
+        label_arrow = FALSE
+      ) |>
+      vg_plot(height = 480, width = 400, color_domain = "Fixed") |>
+      vg_mark_frame() |>
+      vg_scale_y(domain = c(0, 1)) |>
+      vg_scale_color(scheme = "turbo")
+  )
+
+spec |> vg_render()
+```
+
+:::{.callout-note}
+#### Things to note:
+
+* `domain = "Fixed"` -- keep the scale domain fixed (using all the data) rather than
+updating it based on the selection.
+
+* `vg_cume_dist(..., partition_by = ~ sport)` 
+  calculates the cumulative distribution (for each sport) in DuckDB.
+
+* `sql("height * 100")` convert from meters to centimeters (in DuckDB).
+
+* `sort = list(...)` is used to make sure the color schemes for the bars 
+and lines match. In that way, the bar graph also serves as a legend for color.
+
+:::
+
+<details>
+<summary>JSON specification</summary>
+
+```{r}
+spec |> to_json() |> cat()
+```
+
+</details>
+
+<details>
+<summary>YAML specification</summary>
+
+```{r}
+spec |> to_yaml() |> cat()
+```
+</details>
