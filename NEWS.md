@@ -1,4 +1,4 @@
-# vgplotr (development version)
+# vgplotr 0.1.0
 
 * Initial public beta. The main functionality is in place, built on Mosaic
   0.31.0 (bundled with the package, so no JavaScript setup is needed).
