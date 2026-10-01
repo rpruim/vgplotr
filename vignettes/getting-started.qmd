@@ -38,7 +38,7 @@ are created by taking a snapshot of an underlying interactive graphic.
 
 vgplotr is designed so that beginners can get up and running quickly by
 simply installing the R package and using it in a quarto document.
-For now, the package is only available via GitHub:
+Install it from GitHub with
 
 ```{r}
 #| eval: false

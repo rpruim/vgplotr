@@ -49,7 +49,7 @@ Births2015 |>
 
 Here is an example that shows some of the interactive
 capabilities of vgplotr. (Live interaction not available on GitHub, see
-<https://rpruim.github.io/vgplotr>.)
+<https://rpruim.github.io/vgplotr/>.)
 
 ```{r}
 #| label: stocks
