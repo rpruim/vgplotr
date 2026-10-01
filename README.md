@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# vgplotr: An R interface to Mosaic vgplot
+# vgplotr: An R interface to Mosaic/vgplot
 
 ## What is Mosaic?
 
@@ -133,4 +133,8 @@ vgplotr can be installed from GitHub:
 pak::pak("rpruim/vgplotr")
 ```
 
-Eventually it will also be available via CRAN.
+Eventually it will also be available via CRAN via
+
+``` r
+pak::pak("vgplotr")
+```
