@@ -129,6 +129,8 @@ vgplotr provides a way to produce specifications in R.
 
 ## snake_case
 
+### Argument names
+
 Various mosaic APIs use either camelCase or snake_case
 for names of elements of a mosaic specification.
 vgplotr adopts snake_case (as does the Python API).
@@ -151,6 +153,40 @@ tribble(
 This makes it easy to translate documentation written
 for one naming style into the other.
 
+:::{.callout-warning}
+#### A few important exceptions
+
+There are few important exceptions to the direct translation
+of camelCase to snake_case. 
+
+```{r}
+#| label: camel-to-snake-exceptions
+#| echo: false
+tribble(
+  ~camelCase    , ~snake_case    ,
+  "from",     "data_from",
+  "orderby" , "order_by" ,
+  "partitionby"      , "partition_by",
+  "minstep",    "min_step"
+) |>
+  gt()
+```
+
+In the case of `data_from`, this is often nested in Mosaic:
+
+```yaml
+data:
+  from: "foo.csv"
+```
+and this naming allows us type `data_from = "foo.csv"` rather than `data = list(from = "foo.csv")`.  The other three are 
+adopted for easier readability and better internal consistency.  (In these cases, `paritionby`, `orderby`, and `minstep` will
+also work, but `partion_by`, `order_by` and `min_step` 
+are preferred.)
+:::
+
+
+### Function names
+
 Nearly all functions in vgplotr begin `vg_`.
 Functions for specifying marks begin `vg_mark_`,
 for scales, `vg_scale_`, for guides `vg_guide_`, etc.
@@ -165,9 +201,25 @@ and legends.
 
 ## Formulas for mapping
 
-Attributes can be mapped to data or set to constant values.
-To map an attribute to a variable, we use a formula. This 
-reduces the need for quoting or non-standard evaluation.
+Attributes can be mapped (scaled) or set (no scale).
+To map an attribute, we use a formula. 
+This reduces the need for quoting and allows us to distinguish between `~ foo` (which looks for a column
+named `foo` in the data) and `~ "foo"` 
+(which interprets `"foo"` as a string literal).
+
+```{r}
+#| echo: false
+#| include: false
+#| eval: false
+
+tribble(
+~ expression, ~ meaning,
+"~ column", "map domain values in column to range values (use scale)",
+"~ constant", "map the constant value to its range value (use scale)",
+) |>
+  gt()
+```
+
 
 ## Use of the pipe (`|>`)
 
