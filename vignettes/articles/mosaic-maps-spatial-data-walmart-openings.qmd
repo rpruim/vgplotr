@@ -49,6 +49,8 @@ spec <-
   vg_plot(margin = 0, fy_label = NULL, projection_type = "albers")
 
 vg_render(spec, height = 2070)
+
+vg_data_registry()
 ```
 
 <details>
