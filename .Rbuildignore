@@ -17,3 +17,4 @@
 ^man/figures/README-.*\.html$
 ^doc$
 ^Meta$
+^cran-comments\.md$
