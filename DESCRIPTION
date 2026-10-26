@@ -7,8 +7,8 @@ Authors@R: c(
            comment = "Copyright holder of Mosaic (BSD-3-Clause), bundled in inst/htmlwidgets/lib/mosaic-bundle.min.js; see inst/COPYRIGHTS"),
     person("Observable, Inc.", role = "cph",
            comment = "Copyright holder of Observable Plot (ISC), portions embedded within Mosaic; see inst/COPYRIGHTS"))
-Description: Provides a piped, tidyverse-flavored R API for building
-    declarative 'Mosaic' vgplot specifications
+Description: Provides a piped, 'tidyverse'-flavored R API for building
+    declarative 'Mosaic/vgplot' specifications
     (<https://github.com/uwdata/mosaic>), which can be rendered as
     interactive, database-backed graphics in HTML output (e.g., via
     'htmlwidgets' and Quarto/R Markdown documents).

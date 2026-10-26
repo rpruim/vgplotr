@@ -1,5 +1,9 @@
 ## R CMD check results
 
+### Resubmit
+
+Fixed quoting of software packages in DESCRIPTION.
+
 ### Local: R version 4.6.1 (2026-06-24), macOS Tahoe 26.5.1, aarch64, darwin25.4.0Mac
 
 0 errors | 0 warnings | 0 notes
